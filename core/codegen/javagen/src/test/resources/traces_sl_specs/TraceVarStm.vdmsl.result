@@ -1,129 +1,137 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 final public class Entry implements java.io.Serializable {
-    private static St St = new St(0L);
+  private static St St = new St(0L);
 
-    private Entry() {
+  private Entry() {}
+
+  public static Number op() {
+
+    St.x = St.x.longValue() + 1L;
+    return St.x;
+  }
+
+  public static Number id(final Number a) {
+
+    return a;
+  }
+
+  public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    {
+      final Number ID_1 = gen.inc();
+      store.staticReg(ID_1, Entry.class);
     }
 
-    public static Number op() {
-        St.x = St.x.longValue() + 1L;
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    {
+      final Number a = op();
+      final Number b = op();
 
-        return St.x;
+      SequenceTraceNode sequence_2 = new SequenceTraceNode();
+      final Number arg_1 = a;
+      CallStatement callStm_1 =
+          new CallStatement() {
+            public Object execute() {
+
+              return id(arg_1);
+            }
+
+            public String toString() {
+
+              return "id(" + Utils.toString(arg_1) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+      sequence_2.add(apply_1);
+
+      final Number arg_2 = b;
+      CallStatement callStm_2 =
+          new CallStatement() {
+            public Object execute() {
+
+              return id(arg_2);
+            }
+
+            public String toString() {
+
+              return "id(" + Utils.toString(arg_2) + ")";
+            }
+          };
+      StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+      sequence_2.add(apply_2);
+
+      CallStatement callStm_3 =
+          new CallStatement() {
+            public Object execute() {
+
+              return op();
+            }
+
+            public String toString() {
+
+              return "op()";
+            }
+          };
+      StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+      RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_3, 1L, 3L);
+
+      sequence_2.add(repeat_1);
+
+      sequence_2.addVarFirst(new TraceVariable("b", "nat", Utils.toString(b)));
+      sequence_2.addVarFirst(new TraceVariable("a", "nat", Utils.toString(a)));
+      sequence_1.add(sequence_2);
     }
 
-    public static Number id(final Number a) {
-        return a;
+    TraceNode.executeTests(sequence_1, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{" + "St := " + Utils.toString(St) + "}";
+  }
+
+  public static class St implements Record {
+    public Number x;
+
+    public St(final Number _x) {
+
+      x = _x;
     }
 
-    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
+    public boolean equals(final Object obj) {
 
-        {
-            final Number ID_1 = gen.inc();
-            store.staticReg(ID_1, Entry.class);
-        }
+      if (!(obj instanceof St)) {
+        return false;
+      }
 
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+      St other = ((St) obj);
 
-        {
-            final Number a = op();
-            final Number b = op();
+      return Utils.equals(x, other.x);
+    }
 
-            SequenceTraceNode sequence_2 = new SequenceTraceNode();
-            final Number arg_1 = a;
-            CallStatement callStm_1 = new CallStatement() {
-                    public Object execute() {
-                        return id(arg_1);
-                    }
+    public int hashCode() {
 
-                    public String toString() {
-                        return "id(" + Utils.toString(arg_1) + ")";
-                    }
-                };
+      return Utils.hashCode(x);
+    }
 
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-            sequence_2.add(apply_1);
+    public St copy() {
 
-            final Number arg_2 = b;
-            CallStatement callStm_2 = new CallStatement() {
-                    public Object execute() {
-                        return id(arg_2);
-                    }
-
-                    public String toString() {
-                        return "id(" + Utils.toString(arg_2) + ")";
-                    }
-                };
-
-            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-            sequence_2.add(apply_2);
-
-            CallStatement callStm_3 = new CallStatement() {
-                    public Object execute() {
-                        return op();
-                    }
-
-                    public String toString() {
-                        return "op()";
-                    }
-                };
-
-            StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
-
-            RepeatTraceNode repeat_1 = new RepeatTraceNode(apply_3, 1L, 3L);
-
-            sequence_2.add(repeat_1);
-
-            sequence_2.addVarFirst(new TraceVariable("b", "nat",
-                    Utils.toString(b)));
-            sequence_2.addVarFirst(new TraceVariable("a", "nat",
-                    Utils.toString(a)));
-            sequence_1.add(sequence_2);
-        }
-
-        TraceNode.executeTests(sequence_1, testAccumulator, store);
+      return new St(x);
     }
 
     public String toString() {
-        return "Entry{" + "St := " + Utils.toString(St) + "}";
+
+      return "mk_Entry`St" + Utils.formatFields(x);
     }
-
-    public static class St implements Record {
-        public Number x;
-
-        public St(final Number _x) {
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof St)) {
-                return false;
-            }
-
-            St other = ((St) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public St copy() {
-            return new St(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`St" + Utils.formatFields(x);
-        }
-    }
+  }
 }
 
 ##########

@@ -1,1 +1,0 @@
-["class Test\nprivate  x:nat :\u003d (undefined)\npublic  Op1(nat)([n]nat)\n\text [rd[x]nat]\n\tpre (n \u003c\u003e 42)\n\tpost (n \u003d x)\nend Test\n"]

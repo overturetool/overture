@@ -1,44 +1,40 @@
 package my.model;
 
-import org.overture.codegen.runtime.*;
-
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public Number x = 42L;
+  public Number x = 42L;
 
-    public A() {
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{" + "x := " + Utils.toString(x) + "}";
-    }
+  public String toString() {
+
+    return "A{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
 package my.model;
 
-import org.overture.codegen.runtime.*;
-
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final A a = new A();
+    final A a = new A();
+    return a.x;
+  }
 
-        return a.x;
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

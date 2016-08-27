@@ -26,43 +26,44 @@ import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.declarations.ABusClassDeclIR;
 import org.overture.codegen.ir.declarations.ACpuClassDeclIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.ASystemClassDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class ClassVisitorIR extends AbstractVisitorIR<IRInfo, SClassDeclIR>
 {
 	public ClassVisitorIR()
 	{
 	}
-	
+
 	@Override
-	public ADefaultClassDeclIR caseAClassClassDefinition(AClassClassDefinition node,
-			IRInfo question) throws AnalysisException
+	public ADefaultClassDeclIR caseAClassClassDefinition(
+			AClassClassDefinition node, IRInfo question)
+			throws AnalysisException
 	{
 		return question.getDeclAssistant().buildClass(node, question, new ADefaultClassDeclIR());
 	}
-	
+
 	@Override
-	public SClassDeclIR caseACpuClassDefinition(ACpuClassDefinition node, IRInfo question)
-			throws AnalysisException
+	public SClassDeclIR caseACpuClassDefinition(ACpuClassDefinition node,
+			IRInfo question) throws AnalysisException
 	{
 		return question.getDeclAssistant().buildClass(node, question, new ACpuClassDeclIR());
 	}
-	
+
 	@Override
-	public SClassDeclIR caseASystemClassDefinition(ASystemClassDefinition node, IRInfo question)
-			throws AnalysisException
+	public SClassDeclIR caseASystemClassDefinition(ASystemClassDefinition node,
+			IRInfo question) throws AnalysisException
 	{
 		return question.getDeclAssistant().buildClass(node, question, new ASystemClassDeclIR());
 	}
-	
+
 	@Override
-	public SClassDeclIR caseABusClassDefinition(ABusClassDefinition node, IRInfo question)
-			throws AnalysisException
+	public SClassDeclIR caseABusClassDefinition(ABusClassDefinition node,
+			IRInfo question) throws AnalysisException
 	{
 		return question.getDeclAssistant().buildClass(node, question, new ABusClassDeclIR());
 	}

@@ -17,7 +17,7 @@ public class JavaTemplateManager extends TemplateManager
 	protected void initNodeTemplateFileNames()
 	{
 		super.initNodeTemplateFileNames();
-		
+
 		setUserTemplatePath(getTemplateLoaderRef(), ALenUnaryExpIR.class, getTemplatePath(ACardUnaryExpIR.class));
 		setUserTemplatePath(getTemplateLoaderRef(), ASystemClassDeclIR.class, getTemplatePath(ADefaultClassDeclIR.class));
 	}

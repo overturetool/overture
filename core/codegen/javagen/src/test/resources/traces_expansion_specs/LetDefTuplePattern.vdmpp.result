@@ -1,86 +1,86 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    public Entry() {
-    }
+  public Entry() {}
 
-    public static Number f(final Number x) {
-        return x;
-    }
+  public static Number f(final Number x) {
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    return x;
+  }
 
-        {
-            final Number ID_1 = gen.inc();
-            final Number ID_2 = gen.inc();
-            final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
-            Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                    Number.class);
-            Number a = null;
-            Number b = null;
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
 
-            if (success_1) {
-                a = ((Number) tuplePattern_1.get(0));
-                b = ((Number) tuplePattern_1.get(1));
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    {
+      final Number ID_1 = gen.inc();
+      final Number ID_2 = gen.inc();
+      final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L);
+      Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+      Number a = null;
+      Number b = null;
+      if (success_1) {
+        a = ((Number) tuplePattern_1.get(0));
+        b = ((Number) tuplePattern_1.get(1));
+      }
+
+      if (!(success_1)) {
+        throw new RuntimeException("Tuple pattern match failed");
+      }
+
+      store.register(ID_1, a);
+      store.register(ID_2, b);
+
+      SequenceTraceNode sequence_2 = new SequenceTraceNode();
+      CallStatementPp callStm_1 =
+          new CallStatementPp() {
+            public Object execute() {
+
+              return f(((Number) store.getValue(ID_1)));
             }
 
-            if (!(success_1)) {
-                throw new RuntimeException("Tuple pattern match failed");
+            public String toString() {
+
+              return "f(" + Utils.toString(store.getValue(ID_1)) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+      sequence_2.add(apply_1);
+
+      CallStatementPp callStm_2 =
+          new CallStatementPp() {
+            public Object execute() {
+
+              return f(((Number) store.getValue(ID_2)));
             }
 
-            store.register(ID_1, a);
-            store.register(ID_2, b);
+            public String toString() {
 
-            SequenceTraceNode sequence_2 = new SequenceTraceNode();
-            CallStatementPp callStm_1 = new CallStatementPp() {
-                    public Object execute() {
-                        return f(((Number) store.getValue(ID_1)));
-                    }
+              return "f(" + Utils.toString(store.getValue(ID_2)) + ")";
+            }
+          };
+      StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+      sequence_2.add(apply_2);
 
-                    public String toString() {
-                        return "f(" + Utils.toString(store.getValue(ID_1)) +
-                        ")";
-                    }
-                };
-
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-            sequence_2.add(apply_1);
-
-            CallStatementPp callStm_2 = new CallStatementPp() {
-                    public Object execute() {
-                        return f(((Number) store.getValue(ID_2)));
-                    }
-
-                    public String toString() {
-                        return "f(" + Utils.toString(store.getValue(ID_2)) +
-                        ")";
-                    }
-                };
-
-            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-            sequence_2.add(apply_2);
-
-            sequence_2.addVarFirst(new TraceVariable("b", "nat1",
-                    Utils.toString(((Number) store.getValue(ID_2)))));
-            sequence_2.addVarFirst(new TraceVariable("a", "nat1",
-                    Utils.toString(((Number) store.getValue(ID_1)))));
-            sequence_1.add(sequence_2);
-        }
-
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+      sequence_2.addVarFirst(
+          new TraceVariable("b", "nat1", Utils.toString(((Number) store.getValue(ID_2)))));
+      sequence_2.addVarFirst(
+          new TraceVariable("a", "nat1", Utils.toString(((Number) store.getValue(ID_1)))));
+      sequence_1.add(sequence_2);
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -164,7 +164,7 @@ public class TraceTestEngine
 						}
 					});
 					conn.start();
-					p = new TestEngineDelegate().launch(texe, preferences, traceFolder, port);
+					p = new TestEngineDelegate().launch(texe, preferences, traceFolder, port, monitor);
 
 				} catch (Exception e)
 				{

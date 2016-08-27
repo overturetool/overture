@@ -1,25 +1,23 @@
 package my.model;
 
-import org.overture.codegen.runtime.*;
-
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final my.model.quotes.AQuote q = my.model.quotes.AQuote.getInstance();
-        final my.model.quotes.AQuote b = q;
+    final my.model.quotes.AQuote q = my.model.quotes.AQuote.getInstance();
+    final my.model.quotes.AQuote b = q;
+    return Utils.equals(b, q);
+  }
 
-        return Utils.equals(b, q);
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

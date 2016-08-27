@@ -19,7 +19,8 @@ public class UnknownLeaf extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
+	public String consCheckExp(String enclosingClass, String javaRootPackage,
+			String arg, NameGen nameGen)
 	{
 		return "true";
 	}

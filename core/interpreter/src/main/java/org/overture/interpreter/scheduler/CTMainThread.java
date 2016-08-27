@@ -99,55 +99,17 @@ public class CTMainThread extends MainThread
 				{
 					DebuggerReader.stopped(e.ctxt, e.location);
 				}
-
-				result.add(Verdict.FAILED);
-			} else
-			{
-				// These exceptions are inconclusive if they occur
-				// in a call directly from the test because it could
-				// be a test error, but if the test call has made
-				// further call(s), then they are real failures.
-
-				switch (e.number)
-				{
-					case 4055: // precondition fails for functions
-
-						if (e.ctxt.outer != null && e.ctxt.outer.outer == ctxt)
-						{
-							result.add(Verdict.INCONCLUSIVE);
-						} else
-						{
-							result.add(Verdict.FAILED);
-						}
-						break;
-
-					case 4071: // precondition fails for operations
-
-						if (e.ctxt.outer == ctxt)
-						{
-							result.add(Verdict.INCONCLUSIVE);
-						} else
-						{
-							result.add(Verdict.FAILED);
-						}
-						break;
-					default:
-						if (e.ctxt == ctxt)
-						{
-							result.add(Verdict.INCONCLUSIVE);
-						} else
-						{
-							result.add(Verdict.FAILED);
-						}
-						break;
-				}
 			}
+			
+			setVerdict(e);
+			
 		} catch (Throwable e)
 		{
 			if (e instanceof ThreadDeath)
 			{
 				return;
 			}
+			
 			if (result.lastIndexOf(Verdict.FAILED) < 0)
 			{
 				if (!getExceptions().isEmpty())
@@ -155,11 +117,60 @@ public class CTMainThread extends MainThread
 					result.addAll(getExceptions());
 				} else
 				{
-					result.add(e.getMessage());
+					if(e instanceof StackOverflowError)
+					{
+						result.add("Thread died due to stack overflow");
+					}
+					else
+					{
+						result.add(e.getMessage());
+					}
 				}
 
 				result.add(Verdict.FAILED);
 			}
+		}
+	}
+
+	private void setVerdict(ContextException e)
+	{
+		// These exceptions are inconclusive if they occur
+		// in a call directly from the test because it could
+		// be a test error, but if the test call has made
+		// further call(s), then they are real failures.
+		
+		switch (e.number)
+		{
+			case 4055: // precondition fails for functions
+
+				if (e.ctxt.outer != null && e.ctxt.outer.outer == ctxt)
+				{
+					result.add(Verdict.INCONCLUSIVE);
+				} else
+				{
+					result.add(Verdict.FAILED);
+				}
+				break;
+
+			case 4071: // precondition fails for operations
+
+				if (e.ctxt.outer == ctxt)
+				{
+					result.add(Verdict.INCONCLUSIVE);
+				} else
+				{
+					result.add(Verdict.FAILED);
+				}
+				break;
+			default:
+				if (e.ctxt == ctxt)
+				{
+					result.add(Verdict.INCONCLUSIVE);
+				} else
+				{
+					result.add(Verdict.FAILED);
+				}
+				break;
 		}
 	}
 

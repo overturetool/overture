@@ -1,120 +1,136 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final A a = new A(SeqUtil.seq(new B(new C(new Entry()))));
+    return op(Utils.copy(a));
+  }
+
+  public static Number op(final A a) {
+
+    return ((B) Utils.get(a.bs, 1L)).c.e.getConst();
+  }
+
+  public Number getConst() {
+
+    return 5L;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class A implements Record {
+    public VDMSeq bs;
+
+    public A(final VDMSeq _bs) {
+
+      bs = _bs != null ? Utils.copy(_bs) : null;
     }
 
-    public static Object Run() {
-        final A a = new A(SeqUtil.seq(new B(new C(new Entry()))));
+    public boolean equals(final Object obj) {
 
-        return op(Utils.copy(a));
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(bs, other.bs);
     }
 
-    public static Number op(final A a) {
-        return ((B) Utils.get(a.bs, 1L)).c.e.getConst();
+    public int hashCode() {
+
+      return Utils.hashCode(bs);
     }
 
-    public Number getConst() {
-        return 5L;
+    public A copy() {
+
+      return new A(bs);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`A" + Utils.formatFields(bs);
+    }
+  }
+
+  public static class B implements Record {
+    public C c;
+
+    public B(final C _c) {
+
+      c = _c != null ? Utils.copy(_c) : null;
     }
 
-    public static class A implements Record {
-        public VDMSeq bs;
+    public boolean equals(final Object obj) {
 
-        public A(final VDMSeq _bs) {
-            bs = (_bs != null) ? Utils.copy(_bs) : null;
-        }
+      if (!(obj instanceof B)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof A)) {
-                return false;
-            }
+      B other = ((B) obj);
 
-            A other = ((A) obj);
-
-            return Utils.equals(bs, other.bs);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(bs);
-        }
-
-        public A copy() {
-            return new A(bs);
-        }
-
-        public String toString() {
-            return "mk_Entry`A" + Utils.formatFields(bs);
-        }
+      return Utils.equals(c, other.c);
     }
 
-    public static class B implements Record {
-        public C c;
+    public int hashCode() {
 
-        public B(final C _c) {
-            c = (_c != null) ? Utils.copy(_c) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof B)) {
-                return false;
-            }
-
-            B other = ((B) obj);
-
-            return Utils.equals(c, other.c);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(c);
-        }
-
-        public B copy() {
-            return new B(c);
-        }
-
-        public String toString() {
-            return "mk_Entry`B" + Utils.formatFields(c);
-        }
+      return Utils.hashCode(c);
     }
 
-    public static class C implements Record {
-        public Entry e;
+    public B copy() {
 
-        public C(final Entry _e) {
-            e = (_e != null) ? _e : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof C)) {
-                return false;
-            }
-
-            C other = ((C) obj);
-
-            return Utils.equals(e, other.e);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(e);
-        }
-
-        public C copy() {
-            return new C(e);
-        }
-
-        public String toString() {
-            return "mk_Entry`C" + Utils.formatFields(e);
-        }
+      return new B(c);
     }
+
+    public String toString() {
+
+      return "mk_Entry`B" + Utils.formatFields(c);
+    }
+  }
+
+  public static class C implements Record {
+    public Entry e;
+
+    public C(final Entry _e) {
+
+      e = _e != null ? _e : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof C)) {
+        return false;
+      }
+
+      C other = ((C) obj);
+
+      return Utils.equals(e, other.e);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(e);
+    }
+
+    public C copy() {
+
+      return new C(e);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`C" + Utils.formatFields(e);
+    }
+  }
 }
 
 ##########

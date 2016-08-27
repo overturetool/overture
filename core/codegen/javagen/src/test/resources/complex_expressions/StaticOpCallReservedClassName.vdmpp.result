@@ -1,42 +1,42 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        cg_Utils.op();
+    cg_Utils.op();
+    return 0L;
+  }
 
-        return 0L;
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class cg_Utils {
-    public cg_Utils() {
-    }
+  public static void op() {
 
-    public static void op() {
-        /* skip */
-    }
+    /* skip */
 
-    public String toString() {
-        return "cg_Utils{}";
-    }
+  }
+
+  public cg_Utils() {}
+
+  public String toString() {
+
+    return "cg_Utils{}";
+  }
 }
 
 ##########

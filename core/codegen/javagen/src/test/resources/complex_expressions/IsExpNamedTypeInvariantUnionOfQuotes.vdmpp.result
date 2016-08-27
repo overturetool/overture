@@ -1,37 +1,36 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        quotes.QQuote isExpSubject_1 = quotes.QQuote.getInstance();
-        quotes.AQuote isExpSubject_2 = quotes.AQuote.getInstance();
-        quotes.AQuote isExpSubject_3 = quotes.AQuote.getInstance();
-        quotes.DQuote isExpSubject_4 = quotes.DQuote.getInstance();
+    quotes.QQuote isExpSubject_1 = quotes.QQuote.getInstance();
+    quotes.AQuote isExpSubject_2 = quotes.AQuote.getInstance();
+    quotes.AQuote isExpSubject_3 = quotes.AQuote.getInstance();
+    quotes.DQuote isExpSubject_4 = quotes.DQuote.getInstance();
+    return SeqUtil.seq(
+        (Utils.equals(isExpSubject_1, quotes.AQuote.getInstance()))
+            || (Utils.equals(isExpSubject_1, quotes.BQuote.getInstance()))
+            || (Utils.equals(isExpSubject_1, quotes.CQuote.getInstance()))
+            || (Utils.equals(isExpSubject_1, quotes.DQuote.getInstance())),
+        (Utils.equals(isExpSubject_2, quotes.AQuote.getInstance()))
+            || (Utils.equals(isExpSubject_2, quotes.BQuote.getInstance()))
+            || (Utils.equals(isExpSubject_2, quotes.CQuote.getInstance()))
+            || (Utils.equals(isExpSubject_2, quotes.DQuote.getInstance())),
+        (Utils.equals(isExpSubject_3, quotes.CQuote.getInstance()))
+            || (Utils.equals(isExpSubject_3, quotes.DQuote.getInstance())),
+        (Utils.equals(isExpSubject_4, quotes.CQuote.getInstance()))
+            || (Utils.equals(isExpSubject_4, quotes.DQuote.getInstance())));
+  }
 
-        return SeqUtil.seq((Utils.equals(isExpSubject_1,
-                quotes.AQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_1, quotes.BQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_1, quotes.CQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_1, quotes.DQuote.getInstance())),
-            (Utils.equals(isExpSubject_2, quotes.AQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_2, quotes.BQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_2, quotes.CQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_2, quotes.DQuote.getInstance())),
-            (Utils.equals(isExpSubject_3, quotes.CQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_3, quotes.DQuote.getInstance())),
-            (Utils.equals(isExpSubject_4, quotes.CQuote.getInstance())) ||
-            (Utils.equals(isExpSubject_4, quotes.DQuote.getInstance())));
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

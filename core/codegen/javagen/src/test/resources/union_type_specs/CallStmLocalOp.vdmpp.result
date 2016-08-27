@@ -1,47 +1,47 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number op(final Number a, final Boolean b) {
 
-    public Number op(final Number a, final Boolean b) {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public Number go() {
-        final Object a = 1L;
-        final Boolean b = true;
+  public Number go() {
 
-        return op(((Number) a), b);
-    }
+    final Object a = 1L;
+    final Boolean b = true;
+    return op(((Number) a), b);
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return new A().go();
-    }
+    return new A().go();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

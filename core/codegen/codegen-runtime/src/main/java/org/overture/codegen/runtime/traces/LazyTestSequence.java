@@ -5,7 +5,7 @@ import java.util.Iterator;
 public class LazyTestSequence extends TestSequence
 {
 	private static final long serialVersionUID = -8449551289160946386L;
-	
+
 	private IIterableTraceNode node;
 
 	public LazyTestSequence(IIterableTraceNode node)
@@ -18,7 +18,7 @@ public class LazyTestSequence extends TestSequence
 	{
 		return this.node.size();
 	}
-	
+
 	@Override
 	public synchronized boolean isEmpty()
 	{
@@ -48,9 +48,9 @@ public class LazyTestSequence extends TestSequence
 			public CallSequence next()
 			{
 				CallSequence test = LazyTestSequence.this.get(index++);
-				
+
 				markFiltered(test);
-				
+
 				return test;
 			}
 

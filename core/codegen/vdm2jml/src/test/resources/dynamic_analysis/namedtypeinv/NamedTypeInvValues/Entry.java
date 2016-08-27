@@ -1,58 +1,64 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    //@ public static invariant ((fOk == null) || ((Utils.is_char(fOk) && inv_Entry_C(fOk)) || (Utils.is_nat(fOk) && inv_Entry_N(fOk))) && inv_Entry_CN(fOk));
-    public static final Object fOk = 'a';
+  //@ public static invariant ((fOk == null) || ((Utils.is_char(fOk) && inv_Entry_C(fOk)) || (Utils.is_nat(fOk) && inv_Entry_N(fOk))) && inv_Entry_CN(fOk));
 
-    //@ public static invariant ((fBreak == null) || ((Utils.is_char(fBreak) && inv_Entry_C(fBreak)) || (Utils.is_nat(fBreak) && inv_Entry_N(fBreak))) && inv_Entry_CN(fBreak));
-    public static final Object fBreak = 'b';
+  public static final Object fOk = 'a';
+  //@ public static invariant ((fBreak == null) || ((Utils.is_char(fBreak) && inv_Entry_C(fBreak)) || (Utils.is_nat(fBreak) && inv_Entry_N(fBreak))) && inv_Entry_CN(fBreak));
 
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  public static final Object fBreak = 'b';
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  public static Object Run() {
+
+    return 0L;
+  }
+
+  public String toString() {
+
+    return "Entry{" + "fOk = " + Utils.toString(fOk) + ", fBreak = " + Utils.toString(fBreak) + "}";
+  }
+
+  /*@ pure @*/
+  /*@ helper @*/
+
+  public static Boolean inv_Entry_CN(final Object check_cn) {
+
+    Object cn = ((Object) check_cn);
+
+    Boolean orResult_1 = false;
+
+    if (!(Utils.is_char(cn))) {
+      orResult_1 = true;
+    } else {
+      orResult_1 = Utils.equals(cn, 'a');
     }
 
-    public static Object Run() {
-        return 0L;
-    }
+    return orResult_1;
+  }
 
-    public String toString() {
-        return "Entry{" + "fOk = " + Utils.toString(fOk) + ", fBreak = " +
-        Utils.toString(fBreak) + "}";
-    }
+  /*@ pure @*/
+  /*@ helper @*/
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_CN(final Object check_cn) {
-        Object cn = ((Object) check_cn);
+  public static Boolean inv_Entry_N(final Object check_elem) {
 
-        Boolean orResult_1 = false;
+    return true;
+  }
 
-        if (!(Utils.is_char(cn))) {
-            orResult_1 = true;
-        } else {
-            orResult_1 = Utils.equals(cn, 'a');
-        }
+  /*@ pure @*/
+  /*@ helper @*/
 
-        return orResult_1;
-    }
+  public static Boolean inv_Entry_C(final Object check_elem) {
 
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_N(final Object check_elem) {
-        return true;
-    }
-
-    /*@ pure @*/
-    /*@ helper @*/
-    public static Boolean inv_Entry_C(final Object check_elem) {
-        return true;
-    }
+    return true;
+  }
 }

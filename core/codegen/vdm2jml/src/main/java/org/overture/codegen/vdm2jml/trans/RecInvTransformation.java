@@ -1,10 +1,12 @@
 package org.overture.codegen.vdm2jml.trans;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -19,8 +21,6 @@ import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -30,6 +30,8 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 	private JavaCodeGen javaGen;
 	private String paramName;
 	private ARecordDeclIR rec;
+
+	private Logger log = Logger.getLogger(this.getClass().getName());
 
 	public RecInvTransformation(JavaCodeGen javaGen, ARecordDeclIR rec)
 			throws AnalysisException
@@ -43,9 +45,8 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 	{
 		if (!(rec.getInvariant() instanceof AMethodDeclIR))
 		{
-			Logger.getLog().printErrorln("Expected invariant to be a method declaration. Got: "
-					+ rec.getInvariant() + " in '"
-					+ this.getClass().getSimpleName() + "'");
+			log.error("Expected invariant to be a method declaration. Got: "
+					+ rec.getInvariant());
 			terminate();
 		}
 
@@ -53,9 +54,8 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 
 		if (invMethod.getFormalParams().size() != 1)
 		{
-			Logger.getLog().printErrorln("Expected invariant to take a single argument. Instead it takes "
-					+ invMethod.getFormalParams().size() + " in '"
-					+ this.getClass().getSimpleName() + "'");
+			log.error("Expected invariant to take a single argument. Instead it takes "
+					+ invMethod.getFormalParams().size());
 
 			if (invMethod.getFormalParams().isEmpty())
 			{
@@ -67,9 +67,8 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 
 		if (!(param.getPattern() instanceof AIdentifierPatternIR))
 		{
-			Logger.getLog().printErrorln("Expected pattern of formal parameter to be an identifier pattern at this point. Got "
-					+ param.getPattern() + " in '"
-					+ this.getClass().getSimpleName() + "'");
+			log.error("Expected pattern of formal parameter to be an identifier pattern at this point. Got "
+					+ param.getPattern());
 
 			terminate();
 		}
@@ -118,8 +117,8 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 				classType.setName(pack + "." + classType.getName());
 			} else
 			{
-				Logger.getLog().printErrorln("Expected type of explicit variable to be a class type at this point in '"
-						+ this.getClass().getSimpleName() + "'. Got: " + type);
+				log.error("Expected type of explicit variable to be a class type at this point. Got: "
+						+ type);
 			}
 		}
 	}
@@ -175,14 +174,12 @@ public class RecInvTransformation extends DepthFirstAnalysisAdaptor
 							func.setName(node.getName());
 
 							javaGen.getTransAssistant().replaceNodeWith(node, func);
-						}
-						else
+						} else
 						{
-							Logger.getLog().printErrorln("Could not find enclosing class of record "
-									+ rec.getName() + " in '"
-									+ this.getClass().getSimpleName() + "'");
+							log.error("Could not find enclosing class of record "
+									+ rec.getName());
 						}
-					} 
+					}
 				}
 			}
 		}

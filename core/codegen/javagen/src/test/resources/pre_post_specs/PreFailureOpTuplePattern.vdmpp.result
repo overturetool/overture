@@ -1,60 +1,59 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Number op(final Tuple tuplePattern_1) {
+
+    if (!(pre_op(tuplePattern_1))) {
+      throw new RuntimeException("Precondition failure: pre_op");
     }
 
-    public static Number op(final Tuple tuplePattern_1) {
-        if (!(pre_op(tuplePattern_1))) {
-            throw new RuntimeException("Precondition failure: pre_op");
-        }
-
-        Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
-        Number a = null;
-        Number b = null;
-
-        if (success_1) {
-            a = ((Number) tuplePattern_1.get(0));
-            b = ((Number) tuplePattern_1.get(1));
-        }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        Number c = 3L;
-
-        return a.longValue() + b.longValue() + c.longValue();
+    Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+    Number a = null;
+    Number b = null;
+    if (success_1) {
+      a = ((Number) tuplePattern_1.get(0));
+      b = ((Number) tuplePattern_1.get(1));
     }
 
-    public static Number Run() {
-        return op(Tuple.mk_(2L, 3L));
+    if (!(success_1)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
 
-    private static Boolean pre_op(final Tuple tuplePattern_2) {
-        Boolean success_2 = tuplePattern_2.compatible(Number.class, Number.class);
-        Number a = null;
-        Number b = null;
+    Number c = 3L;
+    return a.longValue() + b.longValue() + c.longValue();
+  }
 
-        if (success_2) {
-            a = ((Number) tuplePattern_2.get(0));
-            b = ((Number) tuplePattern_2.get(1));
-        }
+  public static Number Run() {
 
-        if (!(success_2)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
+    return op(Tuple.mk_(2L, 3L));
+  }
 
-        return a.longValue() > b.longValue();
+  public Entry() {}
+
+  private static Boolean pre_op(final Tuple tuplePattern_2) {
+
+    Boolean success_2 = tuplePattern_2.compatible(Number.class, Number.class);
+    Number a = null;
+    Number b = null;
+    if (success_2) {
+      a = ((Number) tuplePattern_2.get(0));
+      b = ((Number) tuplePattern_2.get(1));
     }
 
-    public String toString() {
-        return "Entry{}";
+    if (!(success_2)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
+
+    return a.longValue() > b.longValue();
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

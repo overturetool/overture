@@ -6,15 +6,17 @@ import java.util.Collection;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class JmlSlTraceOutputTest extends JmlSlOutputTestBase
 {
-	public static final String ROOT = "src" + File.separatorChar + "test" + File.separatorChar + "resources"
-			+ File.separatorChar + "traces_sl_specs";
+	public static final String ROOT = "src" + File.separatorChar + "test"
+			+ File.separatorChar + "resources" + File.separatorChar
+			+ "traces_sl_specs";
 
-	public JmlSlTraceOutputTest(String nameParameter, String inputParameter, String resultParameter)
+	public JmlSlTraceOutputTest(String nameParameter, String inputParameter,
+			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}

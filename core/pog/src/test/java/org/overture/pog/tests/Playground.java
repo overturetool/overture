@@ -19,14 +19,14 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.ParseTcFacade;
+import org.overture.core.testing.ParseTcFacade;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.newtests.PogTestResult;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.overture.pog.tests.newtests.PogTestResult;
 
 /**
  * Class for quick testing and work on the pog

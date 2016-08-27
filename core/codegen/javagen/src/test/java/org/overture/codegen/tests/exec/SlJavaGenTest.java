@@ -24,7 +24,7 @@ public class SlJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(SlOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_SL));
+		return collectTests(new File(SlOutputTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_SL));
 	}
 
 	@Override

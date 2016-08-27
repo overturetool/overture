@@ -1,32 +1,35 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Number sum = 0L;
+    {
+      final Number x = 999L;
+      {
+        sum = sum.longValue() + x.longValue();
+      }
     }
 
-    public static Object Run() {
-        Number sum = 0L;
-
-        {
-            final Number x = 999L;
-            sum = sum.longValue() + x.longValue();
-        }
-
-        {
-            final Number x = 999L;
-            sum = sum.longValue() + x.longValue();
-        }
-
-        return sum;
+    {
+      final Number x = 999L;
+      {
+        sum = sum.longValue() + x.longValue();
+      }
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return sum;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

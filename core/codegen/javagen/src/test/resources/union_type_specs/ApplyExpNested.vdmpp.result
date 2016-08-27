@@ -1,86 +1,81 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number op(final Number x) {
 
-    public Number op(final Number x) {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public Number op(final Number x) {
 
-    public Number op(final Number x) {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public String toString() {
-        return "B{}";
-    }
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Number Run() {
+
+    final VDMMap xs = MapUtil.map(new Maplet(1L, new A()), new Maplet(2L, new B()));
+    final Object x = Utils.get(xs, 1L);
+    Number apply_1 = null;
+    if (x instanceof A) {
+      apply_1 = ((A) x).op(1L);
+    } else if (x instanceof B) {
+      apply_1 = ((B) x).op(1L);
+    } else {
+      throw new RuntimeException("Missing member: op");
     }
 
-    public static Number Run() {
-        final VDMMap xs = MapUtil.map(new Maplet(1L, new A()),
-                new Maplet(2L, new B()));
-        final Object x = Utils.get(xs, 1L);
-
-        Number apply_1 = null;
-
-        if (x instanceof A) {
-            apply_1 = ((A) x).op(1L);
-        } else if (x instanceof B) {
-            apply_1 = ((B) x).op(1L);
-        } else {
-            throw new RuntimeException("Missing member: op");
-        }
-
-        Number apply_2 = null;
-
-        if (x instanceof A) {
-            apply_2 = ((A) x).op(apply_1);
-        } else if (x instanceof B) {
-            apply_2 = ((B) x).op(apply_1);
-        } else {
-            throw new RuntimeException("Missing member: op");
-        }
-
-        final Number q = apply_2;
-
-        return 1L;
+    Number apply_2 = null;
+    if (x instanceof A) {
+      apply_2 = ((A) x).op(apply_1);
+    } else if (x instanceof B) {
+      apply_2 = ((B) x).op(apply_1);
+    } else {
+      throw new RuntimeException("Missing member: op");
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    final Number q = apply_2;
+    return 1L;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

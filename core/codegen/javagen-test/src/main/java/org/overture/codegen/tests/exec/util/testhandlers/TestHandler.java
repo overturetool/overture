@@ -37,7 +37,7 @@ public class TestHandler
 {
 	private Release release;
 	private Dialect dialect;
-	
+
 	public TestHandler(Release release, Dialect dialect)
 	{
 		this.release = release;
@@ -50,7 +50,7 @@ public class TestHandler
 		Settings.release = release;
 		Settings.dialect = dialect;
 	}
-	
+
 	public void writeToFile(String toWrite, File file) throws IOException
 	{
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
@@ -71,7 +71,7 @@ public class TestHandler
 
 		return file;
 	}
-	
+
 	@Override
 	public String toString()
 	{

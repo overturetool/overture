@@ -11,7 +11,7 @@ public abstract class AbstractCollectionInfo extends AbstractTypeInfo
 {
 	public static final String ITE_VAR_NAME_PREFIX = "i";
 	public static final String SIZE__METHOD = "size";
-	
+
 	public AbstractCollectionInfo(boolean optional)
 	{
 		super(optional);
@@ -23,18 +23,20 @@ public abstract class AbstractCollectionInfo extends AbstractTypeInfo
 		return new LinkedList<>();
 	}
 
-	abstract public String consElementCheck(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen, String iteVar);
-	
+	abstract public String consElementCheck(String enclosingClass,
+			String javaRootPackage, String arg, NameGen nameGen, String iteVar);
+
 	abstract public String consCollectionCheck(String arg);
-	
+
 	@Override
-	public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen)
+	public String consCheckExp(String enclosingClass, String javaRootPackage,
+			String arg, NameGen nameGen)
 	{
 		String isColCheck = consCollectionCheck(arg);
 		String sizeCall = consSubjectCheck(V2J.class.getSimpleName(), SIZE__METHOD, arg);
 		String iteVar = nameGen.getName(ITE_VAR_NAME_PREFIX);
 		String elementCheck = consElementCheck(enclosingClass, javaRootPackage, arg, nameGen, iteVar);
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(isColCheck);
 		sb.append(JmlGenerator.JML_AND);
@@ -44,14 +46,14 @@ public abstract class AbstractCollectionInfo extends AbstractTypeInfo
 		sb.append("; ");
 		sb.append(elementCheck);
 		sb.append(')');
-		
+
 		String seqCheckExp = "(" + sb.toString() + ")";
-		
-		if(isOptional())
+
+		if (isOptional())
 		{
-			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR + seqCheckExp + ")";
-		}
-		else
+			return "(" + consIsNullCheck(arg) + JmlGenerator.JML_OR
+					+ seqCheckExp + ")";
+		} else
 		{
 			return seqCheckExp;
 		}

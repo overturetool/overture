@@ -1,28 +1,30 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number op() {
 
-    public Number op() {
-        return this.f(1L);
-    }
+    return this.f(1L);
+  }
 
-    public Number op1() {
-        return this.f(1L);
-    }
+  public Number op1() {
 
-    public static Number f(final Number x) {
-        return x;
-    }
+    return this.f(1L);
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public static Number f(final Number x) {
+
+    return x;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

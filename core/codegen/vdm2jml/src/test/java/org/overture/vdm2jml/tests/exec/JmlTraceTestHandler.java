@@ -16,13 +16,13 @@ public class JmlTraceTestHandler extends TraceHandler
 	{
 		super(release, dialect);
 	}
-	
+
 	@Override
 	public String getMainClassAnnotation()
 	{
 		return JmlGenerator.JML_NULLABLE_BY_DEFAULT;
 	}
-	
+
 	@Override
 	public ExecutionResult runJava(File folder)
 	{
@@ -30,19 +30,20 @@ public class JmlTraceTestHandler extends TraceHandler
 		Assume.assumeTrue("Could not find OpenJML installation directory", openJmlDir != null);
 
 		File cgRuntime = new File(JmlExecTestBase.CODEGEN_RUNTIME);
-		
+
 		File openJml = new File(openJmlDir, JmlExecTestBase.OPEN_JML);
 		JmlExecTestBase.assumeFile(JmlExecTestBase.OPEN_JML, openJml);
-		
+
 		File vdm2jmlRuntime = new File(JmlExecTestBase.VDM_TO_JML_RUNTIME);
 		JmlExecTestBase.assumeFile(JmlExecTestBase.VDM_TO_JML_RUNTIME, vdm2jmlRuntime);
-		
+
 		File jmlRuntime = new File(openJmlDir, JmlExecTestBase.JML_RUNTIME);
 		JmlExecTestBase.assumeFile(JmlExecTestBase.JML_RUNTIME, jmlRuntime);
-		
-		ExecutionResult produceExecResult = produceExecResult(folder, new String[] { JavaToolsUtils.ENABLE_ASSERTIONS_ARG }, new File[] { jmlRuntime,
-				openJml, cgRuntime, vdm2jmlRuntime });
-		
+
+		ExecutionResult produceExecResult = produceExecResult(folder, new String[] {
+				JavaToolsUtils.ENABLE_ASSERTIONS_ARG }, new File[] { jmlRuntime,
+						openJml, cgRuntime, vdm2jmlRuntime });
+
 		return processTraceResult(produceExecResult);
 	}
 }

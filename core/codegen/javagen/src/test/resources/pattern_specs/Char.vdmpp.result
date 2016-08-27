@@ -1,70 +1,67 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public Character charPatternOp(final Character charPattern_1) {
+
+    Boolean success_1 = Utils.equals(charPattern_1, 'q');
+    if (!(success_1)) {
+      throw new RuntimeException("Char pattern match failed");
     }
 
-    public Character charPatternOp(final Character charPattern_1) {
-        Boolean success_1 = Utils.equals(charPattern_1, 'q');
-
-        if (!(success_1)) {
-            throw new RuntimeException("Char pattern match failed");
-        }
-
-        final Character charPattern_2 = 'a';
-        Boolean success_2 = Utils.equals(charPattern_2, 'a');
-
-        if (!(success_2)) {
-            throw new RuntimeException("Char pattern match failed");
-        }
-
-        return 'b';
+    final Character charPattern_2 = 'a';
+    Boolean success_2 = Utils.equals(charPattern_2, 'a');
+    if (!(success_2)) {
+      throw new RuntimeException("Char pattern match failed");
     }
 
-    public static Character charPatternFun(final Character charPattern_3) {
-        Boolean success_3 = Utils.equals(charPattern_3, 'q');
+    return 'b';
+  }
 
-        if (!(success_3)) {
-            throw new RuntimeException("Char pattern match failed");
-        }
+  public A() {}
 
-        final Character charPattern_4 = 'a';
-        Boolean success_4 = Utils.equals(charPattern_4, 'a');
+  public static Character charPatternFun(final Character charPattern_3) {
 
-        if (!(success_4)) {
-            throw new RuntimeException("Char pattern match failed");
-        }
-
-        return 'b';
+    Boolean success_3 = Utils.equals(charPattern_3, 'q');
+    if (!(success_3)) {
+      throw new RuntimeException("Char pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
+    final Character charPattern_4 = 'a';
+    Boolean success_4 = Utils.equals(charPattern_4, 'a');
+    if (!(success_4)) {
+      throw new RuntimeException("Char pattern match failed");
     }
+
+    return 'b';
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return SeqUtil.seq(new A().charPatternOp('q'), A.charPatternFun('q'));
-    }
+    return SeqUtil.seq(new A().charPatternOp('q'), A.charPatternFun('q'));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

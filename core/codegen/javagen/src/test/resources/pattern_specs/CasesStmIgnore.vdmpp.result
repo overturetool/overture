@@ -1,63 +1,66 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Number casesInt(final Number n) {
 
-    public static Number casesInt(final Number n) {
-        Number intPattern_1 = n;
-        Boolean success_1 = Utils.equals(intPattern_1, 1L);
+    Number intPattern_1 = n;
+    Boolean success_1 = Utils.equals(intPattern_1, 1L);
+
+    if (!(success_1)) {
+      Number intPattern_2 = n;
+      success_1 = Utils.equals(intPattern_2, 2L);
+
+      if (!(success_1)) {
+        Number intPattern_3 = n;
+        success_1 = Utils.equals(intPattern_3, 3L);
 
         if (!(success_1)) {
-            Number intPattern_2 = n;
-            success_1 = Utils.equals(intPattern_2, 2L);
+          success_1 = true;
 
-            if (!(success_1)) {
-                Number intPattern_3 = n;
-                success_1 = Utils.equals(intPattern_3, 3L);
-
-                if (!(success_1)) {
-                    success_1 = true;
-
-                    if (success_1) {
-                        {
-                            final Number x = 1L;
-                            final Number y = 2L;
-
-                            return x.longValue() + y.longValue();
-                        }
-                    } else {
-                        return 999L;
-                    }
-                } else {
-                    return n.longValue() + 3L;
-                }
-            } else {
-                return n.longValue() + 2L;
+          if (success_1) {
+            {
+              final Number x = 1L;
+              final Number y = 2L;
+              return x.longValue() + y.longValue();
             }
+
+          } else {
+            return 999L;
+          }
+
         } else {
-            return n.longValue() + 1L;
-        }
-    }
-
-    public static Object Run() {
-        VDMSeq result = SeqUtil.seq();
-        long toVar_1 = 5L;
-
-        for (Long i = 0L; i <= toVar_1; i++) {
-            result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(casesInt(i)));
+          return n.longValue() + 3L;
         }
 
-        return Utils.copy(result);
-    }
+      } else {
+        return n.longValue() + 2L;
+      }
 
-    public String toString() {
-        return "Entry{}";
+    } else {
+      return n.longValue() + 1L;
     }
+  }
+
+  public static Object Run() {
+
+    VDMSeq result = SeqUtil.seq();
+    long toVar_1 = 5L;
+
+    for (Long i = 0L; i <= toVar_1; i++) {
+      result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(casesInt(i)));
+    }
+    return Utils.copy(result);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

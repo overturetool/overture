@@ -15,7 +15,8 @@ import org.overture.codegen.ir.IRInfo;
 
 public class ObjectMethodComparison extends NamingComparison
 {
-	public ObjectMethodComparison(String[] names, IRInfo irInfo, String correctionPrefix)
+	public ObjectMethodComparison(String[] names, IRInfo irInfo,
+			String correctionPrefix)
 	{
 		super(names, irInfo, correctionPrefix);
 	}
@@ -23,32 +24,28 @@ public class ObjectMethodComparison extends NamingComparison
 	@Override
 	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
-		if(nameToken.parent() instanceof SOperationDefinition)
+		if (nameToken.parent() instanceof SOperationDefinition)
 		{
 			// Rename operation definition
 			return names.contains(nameToken.getName());
-		}
-		else if(nameToken.parent() instanceof SFunctionDefinition)
+		} else if (nameToken.parent() instanceof SFunctionDefinition)
 		{
 			// Rename function definition
 			return names.contains(nameToken.getName());
-		}
-		else if(nameToken.parent() instanceof ACallStm)
+		} else if (nameToken.parent() instanceof ACallStm)
 		{
-			//Rename call statement, e.g. wait()
+			// Rename call statement, e.g. wait()
 			return names.contains(nameToken.getName());
-		}
-		else if(nameToken.parent() instanceof ACallObjectStm){
-			
-			//Rename call object statement, e.g. e.wait()
-			return names.contains(nameToken.getName());
-		}
-		else if(nameToken.parent() instanceof AFieldExp)
+		} else if (nameToken.parent() instanceof ACallObjectStm)
 		{
-			//Rename field expression, e.notify()
+
+			// Rename call object statement, e.g. e.wait()
 			return names.contains(nameToken.getName());
-		}
-		else if (nameToken.parent() instanceof AVariableExp)
+		} else if (nameToken.parent() instanceof AFieldExp)
+		{
+			// Rename field expression, e.notify()
+			return names.contains(nameToken.getName());
+		} else if (nameToken.parent() instanceof AVariableExp)
 		{
 			AVariableExp var = (AVariableExp) nameToken.parent();
 
@@ -58,10 +55,11 @@ public class ObjectMethodComparison extends NamingComparison
 			{
 				unfolded = ((AInheritedDefinition) unfolded).getSuperdef();
 			}
-			
-			if(unfolded instanceof SFunctionDefinition || unfolded instanceof SOperationDefinition)
+
+			if (unfolded instanceof SFunctionDefinition
+					|| unfolded instanceof SOperationDefinition)
 			{
-				if(names.contains(nameToken.getName()))
+				if (names.contains(nameToken.getName()))
 				{
 					return true;
 				}
@@ -74,16 +72,15 @@ public class ObjectMethodComparison extends NamingComparison
 	@Override
 	public boolean mustHandleLexIdentifierToken(LexIdentifierToken lexId)
 	{
-		// Then 'lexId' must be the field 
-		if(lexId.parent() instanceof ACallObjectStm)
+		// Then 'lexId' must be the field
+		if (lexId.parent() instanceof ACallObjectStm)
 		{
-			return names.contains(lexId.getName());  
-		}
-		else if(lexId.parent() instanceof AFieldExp)
+			return names.contains(lexId.getName());
+		} else if (lexId.parent() instanceof AFieldExp)
 		{
 			return names.contains(lexId.getName());
 		}
-	
+
 		return false;
 	}
 }

@@ -16,35 +16,36 @@ public class TestUtil
 	public static List<File> collectStoredJavaJmlFiles(File folder)
 	{
 		List<File> files = GeneralUtils.getFiles(folder);
-		
+
 		LinkedList<File> javaFiles = new LinkedList<File>();
-		
-		for(File f : files)
+
+		for (File f : files)
 		{
-			if(f.getName().endsWith(IJavaConstants.JAVA_FILE_EXTENSION))
+			if (f.getName().endsWith(IJavaConstants.JAVA_FILE_EXTENSION))
 			{
 				javaFiles.add(f);
 			}
 		}
-		
+
 		return javaFiles;
 	}
-	
+
 	public static List<File> collectGenJavaJmlFiles(File folder)
 	{
 		List<File> files = GeneralUtils.getFilesRecursively(folder);
-		
-		String projDir = File.separatorChar + JmlExecTestBase.DEFAULT_JAVA_ROOT_PACKAGE
+
+		String projDir = File.separatorChar
+				+ JmlExecTestBase.DEFAULT_JAVA_ROOT_PACKAGE
 				+ File.separatorChar;
 		String quotesDir = File.separatorChar + JavaCodeGen.JAVA_QUOTES_PACKAGE
 				+ File.separatorChar;
-		
+
 		List<File> filesToStore = new LinkedList<File>();
-	
+
 		for (File file : files)
 		{
 			String absPath = file.getAbsolutePath();
-	
+
 			if (absPath.endsWith(IJavaConstants.JAVA_FILE_EXTENSION)
 					&& absPath.contains(projDir)
 					&& !absPath.contains(quotesDir))
@@ -52,10 +53,10 @@ public class TestUtil
 				filesToStore.add(file);
 			}
 		}
-		
+
 		return filesToStore;
 	}
-	
+
 	public static Collection<Object[]> collectVdmslFiles(List<File> files)
 	{
 		List<Object[]> testInputFiles = new LinkedList<Object[]>();

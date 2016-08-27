@@ -15,7 +15,7 @@ public class NameCollector extends DepthFirstAnalysisAdaptor
 	{
 		this.names = new HashSet<String>();
 	}
-	
+
 	public Set<String> namesToAvoid()
 	{
 		return names;

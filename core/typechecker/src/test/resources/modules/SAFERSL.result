@@ -9,6 +9,8 @@
 <message column="5" line="448" message="Operation GEOM`ShowThrust is not in scope" messageType="error" number="3213" resource="SAFERSL"/>
 <message column="4" line="453" message="Operation GEOM`ShowThrust is not in scope" messageType="error" number="3213" resource="SAFERSL"/>
 <message column="4" line="457" message="Operation GEOM`ShowThrust is not in scope" messageType="error" number="3213" resource="SAFERSL"/>
+<message column="7" line="169" message="Exported operation GetCommand not defined in module" messageType="error" number="3185" resource="SAFERSL"/>
+<message column="7" line="170" message="Exported operation GUI_Init_Tcl not defined in module" messageType="error" number="3185" resource="SAFERSL"/>
 <message column="10" line="299" message="No such module as GEOM" messageType="error" number="3196" resource="SAFERSL"/>
 <result/>
 </testResult>

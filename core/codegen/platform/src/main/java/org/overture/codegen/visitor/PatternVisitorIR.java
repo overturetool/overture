@@ -35,6 +35,7 @@ import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.patterns.ABoolPatternIR;
@@ -48,7 +49,6 @@ import org.overture.codegen.ir.patterns.ARealPatternIR;
 import org.overture.codegen.ir.patterns.ARecordPatternIR;
 import org.overture.codegen.ir.patterns.AStringPatternIR;
 import org.overture.codegen.ir.patterns.ATuplePatternIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class PatternVisitorIR extends AbstractVisitorIR<IRInfo, SPatternIR>
 {
@@ -119,7 +119,7 @@ public class PatternVisitorIR extends AbstractVisitorIR<IRInfo, SPatternIR>
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
-		
+
 		AQuotePatternIR quotePatternCg = new AQuotePatternIR();
 		quotePatternCg.setValue(value);
 
@@ -160,12 +160,11 @@ public class PatternVisitorIR extends AbstractVisitorIR<IRInfo, SPatternIR>
 		for (PPattern currentPattern : node.getPlist())
 		{
 			SPatternIR patternCg = currentPattern.apply(question.getPatternVisitor(), question);
-			
-			if(patternCg != null)
+
+			if (patternCg != null)
 			{
 				tuplePatternCg.getPatterns().add(patternCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -190,12 +189,11 @@ public class PatternVisitorIR extends AbstractVisitorIR<IRInfo, SPatternIR>
 		for (PPattern currentPattern : node.getPlist())
 		{
 			SPatternIR patternCg = currentPattern.apply(question.getPatternVisitor(), question);
-			
-			if(patternCg != null)
+
+			if (patternCg != null)
 			{
 				recordPatternCg.getPatterns().add(patternCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}

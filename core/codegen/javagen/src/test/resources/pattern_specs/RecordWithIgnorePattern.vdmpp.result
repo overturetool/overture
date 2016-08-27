@@ -1,90 +1,92 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public static Number recPatternFun() {
+
+    final Rec recordPattern_1 = new Rec(1L, new Rec(2L, new Rec(3L, null)));
+    Boolean success_1 = true;
+    Number c = null;
+    Rec recordPattern_2 = Utils.copy(recordPattern_1.next);
+    success_1 = true;
+    Rec recordPattern_3 = Utils.copy(recordPattern_2.next);
+    success_1 = true;
+    c = recordPattern_3.n;
+    Rec nullPattern_1 = Utils.copy(recordPattern_3.next);
+    success_1 = Utils.equals(nullPattern_1, null);
+
+    if (!(success_1)) {
+      throw new RuntimeException("Record pattern match failed");
     }
 
-    public static Number recPatternFun() {
-        final Rec recordPattern_1 = new Rec(1L, new Rec(2L, new Rec(3L, null)));
-        Boolean success_1 = true;
-        Number c = null;
-        Rec recordPattern_2 = Utils.copy(recordPattern_1.next);
-        success_1 = true;
+    return c;
+  }
 
-        Rec recordPattern_3 = Utils.copy(recordPattern_2.next);
-        success_1 = true;
-        c = recordPattern_3.n;
+  public String toString() {
 
-        Rec nullPattern_1 = Utils.copy(recordPattern_3.next);
-        success_1 = Utils.equals(nullPattern_1, null);
+    return "A{}";
+  }
 
-        if (!(success_1)) {
-            throw new RuntimeException("Record pattern match failed");
-        }
+  public static class Rec implements Record {
+    public Number n;
+    public Rec next;
 
-        return c;
+    public Rec(final Number _n, final Rec _next) {
+
+      n = _n;
+      next = _next != null ? Utils.copy(_next) : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
+
+      Rec other = ((Rec) obj);
+
+      return (Utils.equals(n, other.n)) && (Utils.equals(next, other.next));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(n, next);
+    }
+
+    public Rec copy() {
+
+      return new Rec(n, next);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Rec" + Utils.formatFields(n, next);
     }
-
-    public static class Rec implements Record {
-        public Number n;
-        public Rec next;
-
-        public Rec(final Number _n, final Rec _next) {
-            n = _n;
-            next = (_next != null) ? Utils.copy(_next) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return (Utils.equals(n, other.n)) &&
-            (Utils.equals(next, other.next));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(n, next);
-        }
-
-        public Rec copy() {
-            return new Rec(n, next);
-        }
-
-        public String toString() {
-            return "mk_A`Rec" + Utils.formatFields(n, next);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return A.recPatternFun();
-    }
+    return A.recPatternFun();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

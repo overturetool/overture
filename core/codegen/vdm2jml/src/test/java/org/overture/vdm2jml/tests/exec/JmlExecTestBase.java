@@ -31,7 +31,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 {
 	public static final String TEST_RES_DYNAMIC_ANALYSIS_ROOT = AnnotationTestsBase.TEST_RESOURCES_ROOT
 			+ "dynamic_analysis" + File.separatorChar;
-	
+
 	public static final String MAIN_CLASS_NAME = "Main";
 	public static final String MAIN_CLASS_RES = "exec_entry_point";
 	public static final String RESULT_FILE_EXT = ".result";
@@ -50,7 +50,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	{
 		Assume.assumeTrue(String.format("Execution test will only run if the "
 				+ "property '%s' is passed", EXEC_PROPERTY), System.getProperty(EXEC_PROPERTY) != null);
-		
+
 		assumeOpenJml();
 		assumeJmlRuntime();
 	}
@@ -62,11 +62,11 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		try
 		{
 			configureResultGeneration();
-	
+
 			compileJmlJava();
-			
+
 			String actualRes = processResultStr(execJmlJava().toString());
-	
+
 			if (Properties.recordTestResults)
 			{
 				storeResult(actualRes.toString());
@@ -92,12 +92,12 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	{
 		Assume.assumeFalse("OpenJML cannot compile this test - OpenJML has a bug", getSkippedTestsNames().contains(testName));
 	}
-	
+
 	protected List<String> getSkippedTestsNames()
 	{
 		return new LinkedList<>();
 	}
-	
+
 	protected void checkOpenJmlOutput(String actualRes) throws IOException
 	{
 		String expectedRes = GeneralUtils.readFromFile(getResultFile()).trim();
@@ -112,23 +112,24 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	protected void storeJmlOutput(String resultStr)
 	{
 		resultStr = processResultStr(resultStr);
-		
+
 		File resultFile = getResultFile();
-	
+
 		PrintWriter printWriter = null;
 		try
 		{
 			FileOutputStream fileOutStream = new FileOutputStream(resultFile, false);
 			OutputStreamWriter outStream = new OutputStreamWriter(fileOutStream, "UTF-8");
-			
+
 			printWriter = new PrintWriter(outStream);
 			printWriter.write(resultStr);
 			printWriter.flush();
-			
+
 		} catch (UnsupportedEncodingException | FileNotFoundException e)
 		{
 			e.printStackTrace();
-			Assert.assertTrue("Could not store result: " + e.getMessage(), false);
+			Assert.assertTrue("Could not store result: "
+					+ e.getMessage(), false);
 		} finally
 		{
 			if (printWriter != null)
@@ -142,26 +143,25 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	{
 		resultStr = resultStr.trim();
 		resultStr = resultStr.replaceAll("\r", "");
-	
+
 		String[] lines = resultStr.split("\n");
 		StringBuilder sb = new StringBuilder();
 		Pattern pattern = Pattern.compile("(?m)^.*?[^a-zA-Z]([a-zA-Z]+\\.java:[0-9]+:.*?)(:|$)");
-		
-		for(String line : lines)
+
+		for (String line : lines)
 		{
 			Matcher matcher = pattern.matcher(line);
-			
-			if(matcher.find())
+
+			if (matcher.find())
 			{
 				sb.append(matcher.group(1));
-			}
-			else
+			} else
 			{
 				sb.append(line);
 			}
 			sb.append('\n');
 		}
-		
+
 		return sb.toString().trim();
 	}
 
@@ -170,7 +170,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		File mainClassRes = new File(AnnotationTestsBase.TEST_RESOURCES_ROOT, MAIN_CLASS_RES);
 		File mainClassJavaFile = new File(genJavaFolder, MAIN_CLASS_NAME
 				+ IJavaConstants.JAVA_FILE_EXTENSION);
-	
+
 		try
 		{
 			// Create a Main.java (a class with a main method)
@@ -184,22 +184,23 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	protected void compileJmlJava()
 	{
 		ProcessResult processResult = runOpenJmlProcess();
-	
+
 		assertNoProcessErrors(processResult);
-	
+
 		isTypeChecked = true;
 	}
 
 	protected StringBuilder execJmlJava()
 	{
 		ProcessResult processResult = runOpenJmlProcess();
-	
+
 		assertNoProcessErrors(processResult);
-	
+
 		return processResult.getOutput();
 	}
 
-	protected static String[] getTypeCheckArgs(File genJavaFolder, File cgRuntime, File vdm2jmlRuntime, File openJml)
+	protected static String[] getTypeCheckArgs(File genJavaFolder,
+			File cgRuntime, File vdm2jmlRuntime, File openJml)
 	{
 		// Compiles files with runtime assertions in preparation to execution
 		// of the JML annotated Java code
@@ -212,20 +213,23 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		// -racCompileToJavaAssert (currently disabled)
 		// -no-purityCheck
 		// <javafiles>
-	
-		String[] openJmlConfig = new String[] { JavaToolsUtils.JAVA, JavaToolsUtils.JAR_ARG, openJml.getAbsolutePath(),
+
+		String[] openJmlConfig = new String[] { JavaToolsUtils.JAVA,
+				JavaToolsUtils.JAR_ARG, openJml.getAbsolutePath(),
 				IOpenJmlConsts.CP_ARG,
-				"\"" + cgRuntime.getAbsolutePath() + File.pathSeparator + vdm2jmlRuntime.getAbsolutePath() + "\"",
+				"\"" + cgRuntime.getAbsolutePath() + File.pathSeparator
+						+ vdm2jmlRuntime.getAbsolutePath() + "\"",
 				IOpenJmlConsts.RAC_ARG,
 				/* IOpenJmlConsts.RAC_TO_ASSERT_ARG, */
 				IOpenJmlConsts.NO_PURITY_CHECKS_ARG };
-	
+
 		String[] javaFiles = JavaCodeGenUtil.findJavaFilePathsRec(genJavaFolder);
-	
+
 		return GeneralUtils.concat(openJmlConfig, javaFiles);
 	}
 
-	protected static String[] getExecArgs(File genJavaFolder, File cgRuntime, File vdm2jmlRuntime, File openJml, File jmlRuntime)
+	protected static String[] getExecArgs(File genJavaFolder, File cgRuntime,
+			File vdm2jmlRuntime, File openJml, File jmlRuntime)
 	{
 		// Executes the OpenJML runtime assertion checker
 		// java
@@ -233,7 +237,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 		// ".:codegen-runtime.jar:jmlruntime.jar"
 		// -ea (currently disabled)
 		// Main
-	
+
 		// Note that use of File.pathSeparatorChar makes it a platform dependent construction
 		// of the classpath
 		String runtimes = jmlRuntime.getAbsolutePath() + File.pathSeparatorChar
@@ -241,11 +245,11 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 				+ genJavaFolder.getAbsolutePath() + File.pathSeparatorChar
 				+ cgRuntime.getAbsolutePath() + File.pathSeparatorChar
 				+ vdm2jmlRuntime.getAbsolutePath();
-		
+
 		String[] args = new String[] { JavaToolsUtils.JAVA,
 				JavaToolsUtils.CP_ARG, runtimes,
-				/*JavaToolsUtils.ENABLE_ASSERTIONS_ARG,*/ MAIN_CLASS_NAME };
-	
+				/* JavaToolsUtils.ENABLE_ASSERTIONS_ARG, */ MAIN_CLASS_NAME };
+
 		return args;
 	}
 
@@ -253,7 +257,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 	{
 		File resultFile = new File(inputFile.getAbsolutePath()
 				+ RESULT_FILE_EXT);
-	
+
 		if (!resultFile.exists())
 		{
 			resultFile.getParentFile().mkdirs();
@@ -268,7 +272,7 @@ public abstract class JmlExecTestBase extends OpenJmlValidationBase
 				return null;
 			}
 		}
-	
+
 		return resultFile;
 	}
 

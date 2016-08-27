@@ -1,101 +1,107 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final VDMSeq inlines = SeqUtil.seq(new R1(4L), new R2(5L));
+    Object obj_1 = Utils.copy(Utils.get(inlines, 1L));
+    Number apply_1 = null;
+    if (obj_1 instanceof R1) {
+      apply_1 = ((R1) obj_1).x;
+    } else {
+      throw new RuntimeException("Missing member: x");
     }
 
-    public static Object Run() {
-        final VDMSeq inlines = SeqUtil.seq(new R1(4L), new R2(5L));
-        Object obj_1 = Utils.copy(Utils.get(inlines, 1L));
+    Object obj_2 = Utils.copy(Utils.get(inlines, 2L));
+    Number apply_2 = null;
+    if (obj_2 instanceof R2) {
+      apply_2 = ((R2) obj_2).y;
+    } else {
+      throw new RuntimeException("Missing member: y");
+    }
 
-        Number apply_1 = null;
+    return apply_1.longValue() + apply_2.longValue();
+  }
 
-        if (obj_1 instanceof R1) {
-            apply_1 = ((R1) obj_1).x;
-        } else {
-            throw new RuntimeException("Missing member: x");
-        }
+  public Entry() {}
 
-        Object obj_2 = Utils.copy(Utils.get(inlines, 2L));
+  public String toString() {
 
-        Number apply_2 = null;
+    return "Entry{}";
+  }
 
-        if (obj_2 instanceof R2) {
-            apply_2 = ((R2) obj_2).y;
-        } else {
-            throw new RuntimeException("Missing member: y");
-        }
+  private static class R1 implements Record {
+    public Number x;
 
-        return apply_1.longValue() + apply_2.longValue();
+    public R1(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R1)) {
+        return false;
+      }
+
+      R1 other = ((R1) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public R1 copy() {
+
+      return new R1(x);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`R1" + Utils.formatFields(x);
+    }
+  }
+
+  private static class R2 implements Record {
+    public Number y;
+
+    public R2(final Number _y) {
+
+      y = _y;
     }
 
-    private static class R1 implements Record {
-        public Number x;
+    public boolean equals(final Object obj) {
 
-        public R1(final Number _x) {
-            x = _x;
-        }
+      if (!(obj instanceof R2)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R1)) {
-                return false;
-            }
+      R2 other = ((R2) obj);
 
-            R1 other = ((R1) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public R1 copy() {
-            return new R1(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`R1" + Utils.formatFields(x);
-        }
+      return Utils.equals(y, other.y);
     }
 
-    private static class R2 implements Record {
-        public Number y;
+    public int hashCode() {
 
-        public R2(final Number _y) {
-            y = _y;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R2)) {
-                return false;
-            }
-
-            R2 other = ((R2) obj);
-
-            return Utils.equals(y, other.y);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(y);
-        }
-
-        public R2 copy() {
-            return new R2(y);
-        }
-
-        public String toString() {
-            return "mk_Entry`R2" + Utils.formatFields(y);
-        }
+      return Utils.hashCode(y);
     }
+
+    public R2 copy() {
+
+      return new R2(y);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R2" + Utils.formatFields(y);
+    }
+  }
 }
 
 ##########

@@ -1,75 +1,76 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Rec r1 = new Rec(5L, true);
+    Number x = 1L;
+    Rec recModifierExp_1 = Utils.copy(r1);
+
+    recModifierExp_1.x = 6L;
+    Long exists1Counter_1 = 0L;
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator();
+        iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);
+        ) {
+      Number p = ((Number) iterator_1.next());
+      if (Utils.equals(p, 2L)) {
+        exists1Counter_1++;
+      }
+    }
+    recModifierExp_1.b = Utils.equals(exists1Counter_1, 1L);
+
+    Rec r2 = Utils.copy(recModifierExp_1);
+    Number y = 2L;
+    return Tuple.mk_(r2.x, r2.b);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class Rec implements Record {
+    public Number x;
+    public Boolean b;
+
+    public Rec(final Number _x, final Boolean _b) {
+
+      x = _x;
+      b = _b;
     }
 
-    public static Object Run() {
-        Rec r1 = new Rec(5L, true);
-        Number x = 1L;
-        Rec recModifierExp_1 = Utils.copy(r1);
+    public boolean equals(final Object obj) {
 
-        recModifierExp_1.x = 6L;
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
 
-        Long exists1Counter_1 = 0L;
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+      Rec other = ((Rec) obj);
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
-            Number p = ((Number) iterator_1.next());
+      return (Utils.equals(x, other.x)) && (Utils.equals(b, other.b));
+    }
 
-            if (Utils.equals(p, 2L)) {
-                exists1Counter_1++;
-            }
-        }
+    public int hashCode() {
 
-        recModifierExp_1.b = Utils.equals(exists1Counter_1, 1L);
+      return Utils.hashCode(x, b);
+    }
 
-        Rec r2 = Utils.copy(recModifierExp_1);
-        Number y = 2L;
+    public Rec copy() {
 
-        return Tuple.mk_(r2.x, r2.b);
+      return new Rec(x, b);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(x, b);
     }
-
-    public static class Rec implements Record {
-        public Number x;
-        public Boolean b;
-
-        public Rec(final Number _x, final Boolean _b) {
-            x = _x;
-            b = _b;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return (Utils.equals(x, other.x)) && (Utils.equals(b, other.b));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x, b);
-        }
-
-        public Rec copy() {
-            return new Rec(x, b);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(x, b);
-        }
-    }
+  }
 }
 
 ##########

@@ -16,7 +16,8 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class UnionTypeJavaGenTest extends JavaGenTestBase
 {
-	public UnionTypeJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
+	public UnionTypeJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}

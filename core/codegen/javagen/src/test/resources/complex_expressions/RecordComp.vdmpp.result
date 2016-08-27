@@ -1,77 +1,80 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public Tuple op() {
+
+    final Vector2D v1 = new Vector2D(1.5, 2.5);
+    final Vector2D v2 = new Vector2D(2L, 3L);
+    final Vector2D v3 = new Vector2D(1.5, 2.5);
+    return Tuple.mk_(Utils.equals(v1, v1), Utils.equals(v1, v2), Utils.equals(v1, v3));
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
+
+  public static class Vector2D implements Record {
+    public Number x;
+    public Number y;
+
+    public Vector2D(final Number _x, final Number _y) {
+
+      x = _x;
+      y = _y;
     }
 
-    public Tuple op() {
-        final Vector2D v1 = new Vector2D(1.5, 2.5);
-        final Vector2D v2 = new Vector2D(2L, 3L);
-        final Vector2D v3 = new Vector2D(1.5, 2.5);
+    public boolean equals(final Object obj) {
 
-        return Tuple.mk_(Utils.equals(v1, v1), Utils.equals(v1, v2),
-            Utils.equals(v1, v3));
+      if (!(obj instanceof Vector2D)) {
+        return false;
+      }
+
+      Vector2D other = ((Vector2D) obj);
+
+      return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x, y);
+    }
+
+    public Vector2D copy() {
+
+      return new Vector2D(x, y);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Vector2D" + Utils.formatFields(x, y);
     }
-
-    public static class Vector2D implements Record {
-        public Number x;
-        public Number y;
-
-        public Vector2D(final Number _x, final Number _y) {
-            x = _x;
-            y = _y;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Vector2D)) {
-                return false;
-            }
-
-            Vector2D other = ((Vector2D) obj);
-
-            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x, y);
-        }
-
-        public Vector2D copy() {
-            return new Vector2D(x, y);
-        }
-
-        public String toString() {
-            return "mk_A`Vector2D" + Utils.formatFields(x, y);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return new A().op();
-    }
+    return new A().op();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -45,7 +45,7 @@ public class  VdmRtKeywords implements IVdmKeywords {
 	      "protected", "psubset", "public", "pure", "rat", "rd", "real",
 	      "rem", "responsibility", "return", "reverse", "rng",
 	      "samebaseclass", "sameclass", "self", "seq", "seq1",
-	      "set", "skip", "specified", "sporadic", "st", "static",
+	      "set", "set1", "skip", "specified", "sporadic", "st", "static",
 		  "start", "startlist", "stop", "stoplist","subclass",
 		  "subset", "sync", "system", "then", "thread", "threadid",
 	      "time",

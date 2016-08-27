@@ -34,15 +34,15 @@ public abstract class JavaGenTestBase extends CheckerTestBase
 		super(vdmSpec, testHandler);
 	}
 
-	public  JavaCodeGen getJavaGen()
+	public JavaCodeGen getJavaGen()
 	{
 		JavaCodeGen javaCg = new JavaCodeGen();
 		javaCg.setJavaSettings(getJavaSettings());
 		javaCg.setSettings(getIrSettings());
-		
+
 		return javaCg;
 	}
-	
+
 	public JavaSettings getJavaSettings()
 	{
 		JavaSettings javaSettings = new JavaSettings();
@@ -52,34 +52,32 @@ public abstract class JavaGenTestBase extends CheckerTestBase
 
 		return javaSettings;
 	}
-	
+
 	public static GeneratedData genData(JavaCodeGen javaCg, List<File> files)
 			throws AnalysisException, ParserException, LexException
 	{
 		GeneratedData data = null;
-		if(Settings.dialect == Dialect.VDM_SL)
+		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			TypeCheckResult<List<AModuleModules>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckSl(files));
 			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
-			
-		}
-		else if(Settings.dialect == Dialect.VDM_PP)
+
+		} else if (Settings.dialect == Dialect.VDM_PP)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckPp(files));
 			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
-		}
-		else if(Settings.dialect == Dialect.VDM_RT)
+		} else if (Settings.dialect == Dialect.VDM_RT)
 		{
 			TypeCheckResult<List<SClassDefinition>> tcResult = checkTcResult(TypeCheckerUtil.typeCheckRt(files));
 			data = javaCg.generate(CodeGenBase.getNodes(tcResult.result));
 		}
 		return data;
 	}
-	
+
 	public void genJavaSources(File vdmSource)
 	{
 		JavaCodeGen javaCg = getJavaGen();
-		
+
 		try
 		{
 			if (testHandler instanceof ExpressionTestHandler)
@@ -90,10 +88,10 @@ public abstract class JavaGenTestBase extends CheckerTestBase
 			{
 				List<File> files = new LinkedList<File>();
 				files.add(vdmSource);
-				
+
 				GeneratedData data = genData(javaCg, files);
-				
-				if(data == null)
+
+				if (data == null)
 				{
 					Assert.fail("Problems encountered when trying to code generate VDM model!");
 				}
@@ -119,7 +117,7 @@ public abstract class JavaGenTestBase extends CheckerTestBase
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void genSourcesAndCompile()
 	{
 		genJavaSources(file);

@@ -1,54 +1,59 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Records {
-    private Vector2D v = new Vector2D(1L, 1L);
+  private Vector2D v = new Vector2D(1L, 1L);
 
-    public Records() {
+  public Records() {}
+
+  public static Vector2D f() {
+
+    return new Vector2D(1L, 2L);
+  }
+
+  public String toString() {
+
+    return "Records{" + "v := " + Utils.toString(v) + "}";
+  }
+
+  public static class Vector2D implements Record {
+    public Number x;
+    public Number y;
+
+    public Vector2D(final Number _x, final Number _y) {
+
+      x = _x;
+      y = _y;
     }
 
-    public static Vector2D f() {
-        return new Vector2D(1L, 2L);
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Vector2D)) {
+        return false;
+      }
+
+      Vector2D other = ((Vector2D) obj);
+
+      return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x, y);
+    }
+
+    public Vector2D copy() {
+
+      return new Vector2D(x, y);
     }
 
     public String toString() {
-        return "Records{" + "v := " + Utils.toString(v) + "}";
+
+      return "mk_Records`Vector2D" + Utils.formatFields(x, y);
     }
-
-    public static class Vector2D implements Record {
-        public Number x;
-        public Number y;
-
-        public Vector2D(final Number _x, final Number _y) {
-            x = _x;
-            y = _y;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Vector2D)) {
-                return false;
-            }
-
-            Vector2D other = ((Vector2D) obj);
-
-            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x, y);
-        }
-
-        public Vector2D copy() {
-            return new Vector2D(x, y);
-        }
-
-        public String toString() {
-            return "mk_Records`Vector2D" + Utils.formatFields(x, y);
-        }
-    }
+  }
 }
 
 ##########

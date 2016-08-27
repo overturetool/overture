@@ -1,52 +1,55 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Number casesInt(final Number n) {
 
-    public static Number casesInt(final Number n) {
-        Number intPattern_1 = n;
-        Boolean success_1 = Utils.equals(intPattern_1, 1L);
+    Number intPattern_1 = n;
+    Boolean success_1 = Utils.equals(intPattern_1, 1L);
 
-        if (!(success_1)) {
-            Number intPattern_2 = n;
-            success_1 = Utils.equals(intPattern_2, 2L);
+    if (!(success_1)) {
+      Number intPattern_2 = n;
+      success_1 = Utils.equals(intPattern_2, 2L);
 
-            if (!(success_1)) {
-                Number intPattern_3 = n;
-                success_1 = Utils.equals(intPattern_3, 3L);
+      if (!(success_1)) {
+        Number intPattern_3 = n;
+        success_1 = Utils.equals(intPattern_3, 3L);
 
-                if (success_1) {
-                    return n.longValue() + 3L;
-                } else {
-                    return 999L;
-                }
-            } else {
-                return n.longValue() + 2L;
-            }
+        if (success_1) {
+          return n.longValue() + 3L;
+
         } else {
-            return n.longValue() + 1L;
-        }
-    }
-
-    public static Object Run() {
-        VDMSeq result = SeqUtil.seq();
-        long toVar_1 = 5L;
-
-        for (Long i = 0L; i <= toVar_1; i++) {
-            result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(casesInt(i)));
+          return 999L;
         }
 
-        return Utils.copy(result);
-    }
+      } else {
+        return n.longValue() + 2L;
+      }
 
-    public String toString() {
-        return "Entry{}";
+    } else {
+      return n.longValue() + 1L;
     }
+  }
+
+  public static Object Run() {
+
+    VDMSeq result = SeqUtil.seq();
+    long toVar_1 = 5L;
+
+    for (Long i = 0L; i <= toVar_1; i++) {
+      result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(casesInt(i)));
+    }
+    return Utils.copy(result);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

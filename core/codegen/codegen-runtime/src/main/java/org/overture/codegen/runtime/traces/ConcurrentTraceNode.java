@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class ConcurrentTraceNode extends TraceNode implements
-		IIterableTraceNode
+public class ConcurrentTraceNode extends TraceNode implements IIterableTraceNode
 {
 	private Map<Integer, Pair<Integer, Integer>> indics;
 	public List<TraceNode> nodes;

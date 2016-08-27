@@ -1,124 +1,130 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    private static Number e = 0L;
+  private static Number e = 0L;
 
-    public Entry() {
+  public static Number inc() {
+
+    e = Entry.e.longValue() + 1L;
+    return Entry.e;
+  }
+
+  public Entry() {}
+
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    {
+      final Number ID_1 = gen.inc();
+      store.staticReg(ID_1, Other.class);
     }
 
-    public static Number inc() {
-        e = Entry.e.longValue() + 1L;
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    SequenceTraceNode sequence_2 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+    SequenceTraceNode sequence_3 = new SequenceTraceNode();
+    CallStatementPp callStm_1 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        return Entry.e;
-    }
+            return Entry.inc();
+          }
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
+          public String toString() {
 
-        {
-            final Number ID_1 = gen.inc();
-            store.staticReg(ID_1, Other.class);
-        }
+            return "Entry`inc()";
+          }
+        };
+    StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+    sequence_3.add(apply_1);
 
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
-        SequenceTraceNode sequence_3 = new SequenceTraceNode();
-        CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute() {
-                    return Entry.inc();
-                }
+    CallStatementPp callStm_2 =
+        new CallStatementPp() {
+          public Object execute() {
 
-                public String toString() {
-                    return "Entry`inc()";
-                }
-            };
+            return Other.inc();
+          }
 
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-        sequence_3.add(apply_1);
+          public String toString() {
 
-        CallStatementPp callStm_2 = new CallStatementPp() {
-                public Object execute() {
-                    return Other.inc();
-                }
+            return "Other`inc()";
+          }
+        };
+    StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+    sequence_3.add(apply_2);
 
-                public String toString() {
-                    return "Other`inc()";
-                }
-            };
+    SequenceTraceNode sequence_4 = new SequenceTraceNode();
+    CallStatementPp callStm_3 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-        sequence_3.add(apply_2);
+            return Entry.inc();
+          }
 
-        SequenceTraceNode sequence_4 = new SequenceTraceNode();
-        CallStatementPp callStm_3 = new CallStatementPp() {
-                public Object execute() {
-                    return Entry.inc();
-                }
+          public String toString() {
 
-                public String toString() {
-                    return "Entry`inc()";
-                }
-            };
+            return "Entry`inc()";
+          }
+        };
+    StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+    sequence_4.add(apply_3);
 
-        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
-        sequence_4.add(apply_3);
+    CallStatementPp callStm_4 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        CallStatementPp callStm_4 = new CallStatementPp() {
-                public Object execute() {
-                    return Other.inc();
-                }
+            return Other.inc();
+          }
 
-                public String toString() {
-                    return "Other`inc()";
-                }
-            };
+          public String toString() {
 
-        StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
-        sequence_4.add(apply_4);
+            return "Other`inc()";
+          }
+        };
+    StatementTraceNode apply_4 = new StatementTraceNode(callStm_4);
+    sequence_4.add(apply_4);
 
-        alternatives_2.add(sequence_3);
-        alternatives_2.add(sequence_4);
-        sequence_2.add(alternatives_2);
+    alternatives_2.add(sequence_3);
+    alternatives_2.add(sequence_4);
+    sequence_2.add(alternatives_2);
 
-        sequence_1.add(sequence_2);
+    sequence_1.add(sequence_2);
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
-    }
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
 
-    public String toString() {
-        return "Entry{" + "e := " + Utils.toString(e) + "}";
-    }
+  public String toString() {
+
+    return "Entry{" + "e := " + Utils.toString(e) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Other implements java.io.Serializable {
-    private static Number c = 0L;
+  private static Number c = 0L;
 
-    public Other() {
-    }
+  public static Number inc() {
 
-    public static Number inc() {
-        c = Other.c.longValue() + 1L;
+    c = Other.c.longValue() + 1L;
+    return Other.c;
+  }
 
-        return Other.c;
-    }
+  public Other() {}
 
-    public String toString() {
-        return "Other{" + "c := " + Utils.toString(c) + "}";
-    }
+  public String toString() {
+
+    return "Other{" + "c := " + Utils.toString(c) + "}";
+  }
 }
 
 ##########

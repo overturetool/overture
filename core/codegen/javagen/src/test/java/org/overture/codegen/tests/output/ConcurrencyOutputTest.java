@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.output.base.JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class ConcurrencyOutputTest extends JavaOutputTestBase
@@ -23,7 +23,7 @@ public class ConcurrencyOutputTest extends JavaOutputTestBase
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "concurrency";
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{
@@ -32,7 +32,7 @@ public class ConcurrencyOutputTest extends JavaOutputTestBase
 
 		return irSettings;
 	}
-	
+
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{

@@ -1,66 +1,75 @@
 package project.Entrytypes;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class R implements Record {
-    public Boolean b;
+  public Boolean b;
 
-    public R(final Boolean _b) {
-        //@ assert Utils.is_bool(_b);
-        b = _b;
+  public R(final Boolean _b) {
 
-        //@ assert Utils.is_bool(b);
+    //@ assert Utils.is_bool(_b);
+
+    b = _b;
+    //@ assert Utils.is_bool(b);
+
+  }
+  /*@ pure @*/
+
+  public boolean equals(final Object obj) {
+
+    if (!(obj instanceof project.Entrytypes.R)) {
+      return false;
     }
 
-    /*@ pure @*/
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof project.Entrytypes.R)) {
-            return false;
-        }
+    project.Entrytypes.R other = ((project.Entrytypes.R) obj);
 
-        project.Entrytypes.R other = ((project.Entrytypes.R) obj);
+    return Utils.equals(b, other.b);
+  }
+  /*@ pure @*/
 
-        return Utils.equals(b, other.b);
-    }
+  public int hashCode() {
 
-    /*@ pure @*/
-    public int hashCode() {
-        return Utils.hashCode(b);
-    }
+    return Utils.hashCode(b);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public project.Entrytypes.R copy() {
-        return new project.Entrytypes.R(b);
-    }
+  public project.Entrytypes.R copy() {
 
-    /*@ pure @*/
-    public String toString() {
-        return "mk_Entry`R" + Utils.formatFields(b);
-    }
+    return new project.Entrytypes.R(b);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public Boolean get_b() {
-        Boolean ret_2 = b;
+  public String toString() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(ret_2));
-        return ret_2;
-    }
+    return "mk_Entry`R" + Utils.formatFields(b);
+  }
+  /*@ pure @*/
 
-    public void set_b(final Boolean _b) {
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(_b));
-        b = _b;
+  public Boolean get_b() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(b));
-    }
+    Boolean ret_2 = b;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(ret_2));
 
-    /*@ pure @*/
-    public Boolean valid() {
-        return true;
-    }
+    return ret_2;
+  }
+
+  public void set_b(final Boolean _b) {
+
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(_b));
+
+    b = _b;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_bool(b));
+
+  }
+  /*@ pure @*/
+
+  public Boolean valid() {
+
+    return true;
+  }
 }

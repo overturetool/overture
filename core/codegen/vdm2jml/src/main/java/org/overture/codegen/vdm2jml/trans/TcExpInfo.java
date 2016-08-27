@@ -10,7 +10,8 @@ public class TcExpInfo
 	private String traceEnclosingClass;
 	private String name;
 
-	public TcExpInfo(String expRef, STypeIR formalParamType, AMetaStmIR typeCheck, String traceEnclosingClass)
+	public TcExpInfo(String expRef, STypeIR formalParamType,
+			AMetaStmIR typeCheck, String traceEnclosingClass)
 	{
 		super();
 		this.name = expRef;
@@ -23,7 +24,7 @@ public class TcExpInfo
 	{
 		return name;
 	}
-	
+
 	public STypeIR getFormalParamType()
 	{
 		return formalParamType;

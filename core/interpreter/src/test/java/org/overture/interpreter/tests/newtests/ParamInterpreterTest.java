@@ -17,7 +17,7 @@ import java.util.Vector;
 import org.junit.Assert;
 import org.overture.ast.node.INode;
 import org.overture.config.Settings;
-import org.overture.core.tests.ParamStandardTest;
+import org.overture.core.testing.ParamStandardTest;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ICollectedRuntimeExceptions;
 import org.overture.interpreter.runtime.ValueException;

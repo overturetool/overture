@@ -174,6 +174,18 @@ public class MainThread extends SchedulablePoolThread
 	public void setException(Exception e)
 	{
 		Console.err.println(e.getMessage());
+		if(e.getCause()!=null)
+		{
+			if(e.getCause() instanceof Error)
+			{
+				e.getCause().printStackTrace(Console.err);
+			}
+			else
+			{
+				Console.err.println(e.getCause().getMessage());
+				e.getCause().printStackTrace(Console.err);
+			}
+		}
 		exception.add(e);
 
 		if (ctxt.threadState.dbgp != null)

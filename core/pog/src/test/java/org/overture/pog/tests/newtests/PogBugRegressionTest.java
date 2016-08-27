@@ -11,16 +11,15 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Quick usage example of new overture tests. Takes an AST and dumps the entire content into a string.
+ * Quick usage example of new overture testing. Takes an AST and dumps the entire content into a string.
  * 
  * @author ldc
  */
@@ -28,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
 public class PogBugRegressionTest extends ParamStandardTest<PogTestResult>
 {
 
-	private static final String UPDATE_PROPERTY = "tests.update.pog.bugreg";
+	private static final String UPDATE_PROPERTY = "testing.update.pog.bugregression";
 
 	public PogBugRegressionTest(String name, String testParameter,
 			String resultParameter)
@@ -43,16 +42,6 @@ public class PogBugRegressionTest extends ParamStandardTest<PogTestResult>
 	public static Collection<Object[]> testData()
 	{
 		return PathsProvider.computePaths(BUG_REGRESSION_ROOT);
-	}
-
-	@Override
-	public void compareResults(PogTestResult actual, PogTestResult expected)
-	{
-		ResultComparison r = PogTestResult.compare(actual, expected);
-
-		if (!r.isMatch()) {
-			fail(r.getMessage() + getTestResultUpdateMessage());
-		}
 	}
 
 	@Override

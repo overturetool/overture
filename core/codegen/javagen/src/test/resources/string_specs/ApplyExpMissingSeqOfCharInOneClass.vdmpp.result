@@ -1,73 +1,67 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public String xs = "h";
+  public String xs = "h";
 
-    public A() {
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{" + "xs := " + Utils.toString(xs) + "}";
-    }
+  public String toString() {
+
+    return "A{" + "xs := " + Utils.toString(xs) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public B() {}
 
-    public String toString() {
-        return "B{}";
-    }
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final VDMSeq xs = SeqUtil.seq(new A(), new A());
-
-        {
-            String str = "";
-
-            for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
-                Object x = (Object) iterator_1.next();
-                Character apply_1 = null;
-
-                if (x instanceof A) {
-                    apply_1 = ((A) x).xs.charAt(Utils.index(1L));
-                } else {
-                    throw new RuntimeException("Missing member: xs");
-                }
-
-                str = str + new String(new char[] { apply_1 });
-            }
-
-            return str;
+    final VDMSeq xs = SeqUtil.seq(new A(), new A());
+    {
+      String str = "";
+      for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext(); ) {
+        Object x = (Object) iterator_1.next();
+        Character apply_1 = null;
+        if (x instanceof A) {
+          apply_1 = ((A) x).xs.charAt(Utils.index(1L));
+        } else {
+          throw new RuntimeException("Missing member: xs");
         }
-    }
 
-    public String toString() {
-        return "Entry{}";
+        str = str + new String(new char[] {apply_1});
+      }
+      return str;
     }
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

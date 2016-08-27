@@ -1,114 +1,106 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        VDMSeq result = SeqUtil.seq();
-        long toVar_3 = 2L;
+    VDMSeq result = SeqUtil.seq();
+    long toVar_3 = 2L;
 
-        for (Long i = 1L; i <= toVar_3; i++) {
-            long toVar_2 = 2L;
+    for (Long i = 1L; i <= toVar_3; i++) {
+      long toVar_2 = 2L;
 
-            for (Long j = 1L; j <= toVar_2; j++) {
-                long toVar_1 = 3L;
+      for (Long j = 1L; j <= toVar_2; j++) {
+        long toVar_1 = 3L;
 
-                for (Long k = 1L; k <= toVar_1; k++) {
-                    result = SeqUtil.conc(Utils.copy(result),
-                            SeqUtil.seq(casesTup(Tuple.mk_(i, j, k))));
-                }
-            }
+        for (Long k = 1L; k <= toVar_1; k++) {
+          result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(casesTup(Tuple.mk_(i, j, k))));
         }
-
-        return Utils.copy(result);
+      }
     }
+    return Utils.copy(result);
+  }
 
-    public static Number casesTup(final Tuple t) {
-        Number casesExpResult_1 = null;
+  public Entry() {}
 
-        Tuple tuplePattern_1 = Utils.copy(t);
-        Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                Number.class, Number.class);
+  public static Number casesTup(final Tuple t) {
+
+    Number casesExpResult_1 = null;
+
+    Tuple tuplePattern_1 = Utils.copy(t);
+    Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class, Number.class);
+    if (success_1) {
+      Number intPattern_1 = ((Number) tuplePattern_1.get(0));
+      success_1 = Utils.equals(intPattern_1, 2L);
+
+      if (success_1) {
+        Number intPattern_2 = ((Number) tuplePattern_1.get(1));
+        success_1 = Utils.equals(intPattern_2, 2L);
 
         if (success_1) {
-            Number intPattern_1 = ((Number) tuplePattern_1.get(0));
-            success_1 = Utils.equals(intPattern_1, 2L);
+          Number intPattern_3 = ((Number) tuplePattern_1.get(2));
+          success_1 = Utils.equals(intPattern_3, 2L);
+        }
+      }
+    }
 
-            if (success_1) {
-                Number intPattern_2 = ((Number) tuplePattern_1.get(1));
-                success_1 = Utils.equals(intPattern_2, 2L);
+    if (!(success_1)) {
+      Tuple tuplePattern_2 = Utils.copy(t);
+      Number a = null;
+      success_1 = tuplePattern_2.compatible(Number.class, Number.class, Number.class);
+      if (success_1) {
+        a = ((Number) tuplePattern_2.get(0));
+        Number intPattern_4 = ((Number) tuplePattern_2.get(2));
+        success_1 = Utils.equals(intPattern_4, 1L);
+      }
 
-                if (success_1) {
-                    Number intPattern_3 = ((Number) tuplePattern_1.get(2));
-                    success_1 = Utils.equals(intPattern_3, 2L);
-                }
-            }
+      if (!(success_1)) {
+        Tuple tuplePattern_3 = Utils.copy(t);
+        Number b = null;
+        Number c = null;
+        success_1 = tuplePattern_3.compatible(Number.class, Number.class, Number.class);
+        if (success_1) {
+          Number intPattern_5 = ((Number) tuplePattern_3.get(0));
+          success_1 = Utils.equals(intPattern_5, 1L);
+
+          if (success_1) {
+            b = ((Number) tuplePattern_3.get(1));
+            c = ((Number) tuplePattern_3.get(2));
+          }
         }
 
         if (!(success_1)) {
-            Tuple tuplePattern_2 = Utils.copy(t);
-            Number a = null;
-            success_1 = tuplePattern_2.compatible(Number.class, Number.class,
-                    Number.class);
+          Tuple tuplePattern_4 = Utils.copy(t);
+          success_1 = tuplePattern_4.compatible(Number.class, Number.class, Number.class);
+          if (success_1) {}
 
-            if (success_1) {
-                a = ((Number) tuplePattern_2.get(0));
+          if (success_1) {
+            casesExpResult_1 = -1L;
+          } else {
+            casesExpResult_1 = 0L;
+          }
 
-                Number intPattern_4 = ((Number) tuplePattern_2.get(2));
-                success_1 = Utils.equals(intPattern_4, 1L);
-            }
-
-            if (!(success_1)) {
-                Tuple tuplePattern_3 = Utils.copy(t);
-                Number b = null;
-                Number c = null;
-                success_1 = tuplePattern_3.compatible(Number.class,
-                        Number.class, Number.class);
-
-                if (success_1) {
-                    Number intPattern_5 = ((Number) tuplePattern_3.get(0));
-                    success_1 = Utils.equals(intPattern_5, 1L);
-
-                    if (success_1) {
-                        b = ((Number) tuplePattern_3.get(1));
-                        c = ((Number) tuplePattern_3.get(2));
-                    }
-                }
-
-                if (!(success_1)) {
-                    Tuple tuplePattern_4 = Utils.copy(t);
-                    success_1 = tuplePattern_4.compatible(Number.class,
-                            Number.class, Number.class);
-
-                    if (success_1) {
-                    }
-
-                    if (success_1) {
-                        casesExpResult_1 = -1L;
-                    } else {
-                        casesExpResult_1 = 0L;
-                    }
-                } else {
-                    casesExpResult_1 = 1L + b.longValue() + c.longValue();
-                }
-            } else {
-                casesExpResult_1 = a.longValue() + 1L;
-            }
         } else {
-            casesExpResult_1 = 6L;
+          casesExpResult_1 = 1L + b.longValue() + c.longValue();
         }
 
-        return casesExpResult_1;
+      } else {
+        casesExpResult_1 = a.longValue() + 1L;
+      }
+
+    } else {
+      casesExpResult_1 = 6L;
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return casesExpResult_1;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

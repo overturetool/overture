@@ -46,11 +46,15 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRGenerator;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AFuncDeclIR;
@@ -80,11 +84,6 @@ import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRGenerator;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantIR extends AssistantBase
@@ -93,44 +92,47 @@ public class DeclAssistantIR extends AssistantBase
 	{
 		super(assistantManager);
 	}
-	
-	public void addDependencies(SClassDeclIR clazz, List<ClonableString> extraDeps, boolean prepend)
+
+	public void addDependencies(SClassDeclIR clazz,
+			List<ClonableString> extraDeps, boolean prepend)
 	{
 		NodeAssistantIR nodeAssistant = assistantManager.getNodeAssistant();
 		clazz.setDependencies(nodeAssistant.buildData(clazz.getDependencies(), extraDeps, prepend));
 	}
-	
+
 	public boolean isInnerClass(SClassDeclIR node)
 	{
-		return node.parent() != null && node.parent().getAncestor(SClassDeclIR.class) != null;
+		return node.parent() != null
+				&& node.parent().getAncestor(SClassDeclIR.class) != null;
 	}
-	
+
 	public boolean isTestCase(INode node)
 	{
-		if(!(node instanceof SClassDefinition))
+		if (!(node instanceof SClassDefinition))
 		{
 			return false;
 		}
-		
+
 		SClassDefinition clazz = (SClassDefinition) node;
-		
-		for(SClassDefinition d : clazz.getSuperDefs())
+
+		for (SClassDefinition d : clazz.getSuperDefs())
 		{
-			if(d.getName().getName().equals(IRConstants.TEST_CASE))
+			if (d.getName().getName().equals(IRConstants.TEST_CASE))
 			{
 				return true;
 			}
-			
-			if(isTestCase(d))
+
+			if (isTestCase(d))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	public <T extends SClassDeclIR> T buildClass(SClassDefinition node, IRInfo question, T classCg) throws AnalysisException
+
+	public <T extends SClassDeclIR> T buildClass(SClassDefinition node,
+			IRInfo question, T classCg) throws AnalysisException
 	{
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
@@ -145,16 +147,16 @@ public class DeclAssistantIR extends AssistantBase
 		classCg.setStatic(isStatic);
 		classCg.setStatic(false);
 
-		for(ILexNameToken s : superNames)
+		for (ILexNameToken s : superNames)
 		{
 			ATokenNameIR superName = new ATokenNameIR();
 			superName.setName(s.getName());
-			
+
 			classCg.getSuperNames().add(superName);
 		}
 
 		LinkedList<PDefinition> defs = node.getDefinitions();
-		
+
 		for (PDefinition def : defs)
 		{
 			SDeclIR decl = def.apply(question.getDeclVisitor(), question);
@@ -181,27 +183,24 @@ public class DeclAssistantIR extends AssistantBase
 				{
 					classCg.setThread((AThreadDeclIR) decl);
 				}
-			}
-			else if (decl instanceof APersyncDeclIR)
+			} else if (decl instanceof APersyncDeclIR)
 			{
 				classCg.getPerSyncs().add((APersyncDeclIR) decl);
-			}
-			else if (decl instanceof AMutexSyncDeclIR)
+			} else if (decl instanceof AMutexSyncDeclIR)
 			{
 				classCg.getMutexSyncs().add((AMutexSyncDeclIR) decl);
-			}
-			else if(decl instanceof ANamedTraceDeclIR)
+			} else if (decl instanceof ANamedTraceDeclIR)
 			{
 				classCg.getTraces().add((ANamedTraceDeclIR) decl);
-			}
-			else
+			} else
 			{
-				Logger.getLog().printErrorln("Unexpected definition in class: "
-						+ name + ": " + def.getName().getName() + " at " + def.getLocation());
+				log.error("Unexpected definition in class: " + name + ": "
+						+ def.getName().getName() + " at " + def.getLocation());
 			}
 		}
-		
-		if(node.getInvariant() != null && question.getSettings().generateInvariants())
+
+		if (node.getInvariant() != null
+				&& question.getSettings().generateInvariants())
 		{
 			SDeclIR invCg = node.getInvariant().apply(question.getDeclVisitor(), question);
 			classCg.setInvariant(invCg);
@@ -223,12 +222,12 @@ public class DeclAssistantIR extends AssistantBase
 			defaultContructor.setSourceNode(new SourceNode(node));
 			classCg.getMethods().add(defaultContructor);
 		}
-		
+
 		question.addClass(classCg);
 
 		return classCg;
 	}
-	
+
 	public AMethodDeclIR funcToMethod(AFuncDeclIR node)
 	{
 		SDeclIR preCond = node.getPreCond();
@@ -245,10 +244,12 @@ public class DeclAssistantIR extends AssistantBase
 		AMethodDeclIR method = new AMethodDeclIR();
 		method.setSourceNode(sourceNode);
 
-		if (preCond != null) {
+		if (preCond != null)
+		{
 			method.setPreCond(preCond.clone());
 		}
-		if (postCond != null) {
+		if (postCond != null)
+		{
 			method.setPostCond(postCond.clone());
 		}
 
@@ -275,26 +276,28 @@ public class DeclAssistantIR extends AssistantBase
 		}
 		return method;
 	}
-	
+
 	public String getNodeName(INode node)
 	{
-		if(node instanceof SClassDefinition)
+		if (node instanceof SClassDefinition)
 		{
 			return ((SClassDefinition) node).getName().getName();
-		}
-		else if(node instanceof AModuleModules)
+		} else if (node instanceof AModuleModules)
 		{
 			return ((AModuleModules) node).getName().getName();
 		}
-		
+
 		// Fall back
 		return node.toString();
 	}
 
-	public boolean isLibrary(INode node) {
-		if (node instanceof SClassDefinition) {
+	public boolean isLibrary(INode node)
+	{
+		if (node instanceof SClassDefinition)
+		{
 			return isLibraryName(((SClassDefinition) node).getName().getName());
-		} else if (node instanceof AModuleModules) {
+		} else if (node instanceof AModuleModules)
+		{
 			return isLibraryName(((AModuleModules) node).getName().getName());
 		}
 
@@ -322,12 +325,12 @@ public class DeclAssistantIR extends AssistantBase
 		allDecls.addAll(strategy.getDecls(classDecl));
 
 		Set<String> allSuperNames = getSuperClasses(classDecl, classes);
-		
-		for(String s : allSuperNames)
+
+		for (String s : allSuperNames)
 		{
 			SClassDeclIR superClassDecl = findClass(classes, s);
-			
-			if(superClassDecl != null)
+
+			if (superClassDecl != null)
 			{
 				for (T superDecl : strategy.getDecls(superClassDecl))
 				{
@@ -342,28 +345,28 @@ public class DeclAssistantIR extends AssistantBase
 		return allDecls;
 	}
 
-	public Set<String> getSuperClasses(SClassDeclIR classDecl, List<SClassDeclIR> classes)
+	public Set<String> getSuperClasses(SClassDeclIR classDecl,
+			List<SClassDeclIR> classes)
 	{
-		if(classDecl.getSuperNames().isEmpty())
+		if (classDecl.getSuperNames().isEmpty())
 		{
 			return new HashSet<>();
-		}
-		else
+		} else
 		{
 			Set<String> superClasses = new HashSet<>();
-			
-			for(ATokenNameIR s : classDecl.getSuperNames())
+
+			for (ATokenNameIR s : classDecl.getSuperNames())
 			{
 				superClasses.add(s.getName());
 
 				SClassDeclIR clazz = findClass(classes, s.getName());
-				
-				if(clazz != null)
+
+				if (clazz != null)
 				{
 					superClasses.addAll(getSuperClasses(clazz, classes));
 				}
 			}
-			
+
 			return superClasses;
 		}
 	}
@@ -438,8 +441,7 @@ public class DeclAssistantIR extends AssistantBase
 				localDecls.add(varDecl);
 			} else
 			{
-				Logger.getLog().printErrorln("Problems encountered when trying to construct local variable in '"
-						+ this.getClass().getSimpleName() + "'");
+				log.error("Problems encountered when trying to construct local variable");
 			}
 		}
 	}
@@ -464,14 +466,14 @@ public class DeclAssistantIR extends AssistantBase
 		for (ATypeDeclIR typeDecl : definingClass.getTypeDecls())
 		{
 			SDeclIR decl = typeDecl.getDecl();
-			
-			if(!(decl instanceof ARecordDeclIR))
+
+			if (!(decl instanceof ARecordDeclIR))
 			{
 				continue;
 			}
-			
+
 			ARecordDeclIR recordDecl = (ARecordDeclIR) decl;
-			
+
 			if (recordDecl.getName().equals(recordName))
 			{
 				return recordDecl;
@@ -480,26 +482,26 @@ public class DeclAssistantIR extends AssistantBase
 
 		return null;
 	}
-	
+
 	// This method assumes that the record is defined in definingClass and not a super class
 	public List<ARecordDeclIR> getRecords(SClassDeclIR definingClass)
 	{
 		List<ARecordDeclIR> records = new LinkedList<ARecordDeclIR>();
-		
+
 		for (ATypeDeclIR typeDecl : definingClass.getTypeDecls())
 		{
 			SDeclIR decl = typeDecl.getDecl();
-			
-			if(!(decl instanceof ARecordDeclIR))
+
+			if (!(decl instanceof ARecordDeclIR))
 			{
 				continue;
 			}
-			
+
 			ARecordDeclIR recordDecl = (ARecordDeclIR) decl;
-			
+
 			records.add(recordDecl);
 		}
-		
+
 		return records;
 	}
 
@@ -534,10 +536,11 @@ public class DeclAssistantIR extends AssistantBase
 
 	}
 
-	public AVarDeclIR consLocalVarDecl(STypeIR type,
-			SPatternIR pattern, SExpIR exp)
+	public AVarDeclIR consLocalVarDecl(STypeIR type, SPatternIR pattern,
+			SExpIR exp)
 	{
-		return consLocalVarDecl((exp.getSourceNode() != null ? exp.getSourceNode().getVdmNode() : null), type, pattern, exp);
+		return consLocalVarDecl(exp.getSourceNode() != null
+				? exp.getSourceNode().getVdmNode() : null, type, pattern, exp);
 	}
 
 	public AVarDeclIR consLocalVarDecl(INode node, STypeIR type,
@@ -549,7 +552,7 @@ public class DeclAssistantIR extends AssistantBase
 		localVarDecl.setSourceNode(node != null ? new SourceNode(node) : null);
 		localVarDecl.setPattern(pattern);
 		localVarDecl.setExp(exp);
-		
+
 		return localVarDecl;
 	}
 
@@ -643,14 +646,13 @@ public class DeclAssistantIR extends AssistantBase
 		} else if (typeCg instanceof AIntNumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultIntValue());
-		} else if(typeCg instanceof ANat1NumericBasicTypeIR)
+		} else if (typeCg instanceof ANat1NumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultNat1Value());
-		} else if(typeCg instanceof ANatNumericBasicTypeIR)
+		} else if (typeCg instanceof ANatNumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultNatValue());
-		}
-		else if (typeCg instanceof ARealNumericBasicTypeIR)
+		} else if (typeCg instanceof ARealNumericBasicTypeIR)
 		{
 			localDecl.setExp(expAssistant.getDefaultRealValue());
 		} else if (typeCg instanceof ABoolBasicTypeIR)
@@ -669,17 +671,17 @@ public class DeclAssistantIR extends AssistantBase
 
 		return record.getFields().get(number);
 	}
-	
+
 	public AFieldDeclIR getFieldDecl(SClassDeclIR clazz, String fieldName)
 	{
-		for(AFieldDeclIR field : clazz.getFields())
+		for (AFieldDeclIR field : clazz.getFields())
 		{
-			if(field.getName().equals(fieldName))
+			if (field.getName().equals(fieldName))
 			{
 				return field;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -754,11 +756,12 @@ public class DeclAssistantIR extends AssistantBase
 				field = currentField;
 			}
 		}
-		
+
 		return field;
 	}
-	
-	public AMethodDeclIR initMethod(SOperationDefinition node, IRInfo question) throws AnalysisException
+
+	public AMethodDeclIR initMethod(SOperationDefinition node, IRInfo question)
+			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
@@ -773,12 +776,12 @@ public class DeclAssistantIR extends AssistantBase
 
 		AMethodTypeIR methodType = (AMethodTypeIR) type;
 
-		SStmIR bodyCg = null; 
+		SStmIR bodyCg = null;
 		if (node.getBody() != null)
 		{
 			bodyCg = node.getBody().apply(question.getStmVisitor(), question);
 		}
-		
+
 		boolean isConstructor = node.getIsConstructor();
 		boolean isAbstract = node.getBody() instanceof ASubclassResponsibilityStm;
 
@@ -794,42 +797,43 @@ public class DeclAssistantIR extends AssistantBase
 		method.setIsConstructor(isConstructor);
 		method.setAbstract(isAbstract);
 		method.setImplicit(node instanceof AImplicitOperationDefinition);
-		
+
 		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclIR preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR preCondCg = preCond != null
+				? preCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPreCond(preCondCg);
-		
+
 		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclIR postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		SDeclIR postCondCg = postCond != null
+				? postCond.apply(question.getDeclVisitor(), question) : null;
 		method.setPostCond(postCondCg);
-		
+
 		return method;
 	}
-	
 
 	public List<AFormalParamLocalParamIR> consFormalParams(
 			List<APatternListTypePair> params, IRInfo question)
 			throws AnalysisException
 	{
 		List<AFormalParamLocalParamIR> paramsCg = new LinkedList<>();
-		for(APatternListTypePair patternListPair : params)
+		for (APatternListTypePair patternListPair : params)
 		{
 			STypeIR pairTypeCg = patternListPair.getType().apply(question.getTypeVisitor(), question);
-			
-			for(PPattern p : patternListPair.getPatterns())
+
+			for (PPattern p : patternListPair.getPatterns())
 			{
 				SPatternIR patternCg = p.apply(question.getPatternVisitor(), question);
-				
+
 				AFormalParamLocalParamIR paramCg = new AFormalParamLocalParamIR();
 				paramCg.setPattern(patternCg);
 				paramCg.setType(pairTypeCg.clone());
-				
+
 				paramsCg.add(paramCg);
 			}
 		}
 		return paramsCg;
 	}
-	
+
 	/**
 	 * Based on the definition table computed by {@link IRGenerator#computeDefTable(List)} this method determines
 	 * whether a identifier state designator is local or not.
@@ -846,64 +850,64 @@ public class DeclAssistantIR extends AssistantBase
 
 		if (idDef == null)
 		{
-			Logger.getLog().printErrorln("Could not find definition for identifier state designator " + id + " in '"
-					+ this.getClass().getSimpleName());
+			log.error("Could not find definition for identifier state designator ");
 			return false;
 		} else
 		{
 			return idDef instanceof AAssignmentDefinition;
 		}
 	}
-	
+
 	public boolean inFunc(INode node)
 	{
-		if(node.getAncestor(SFunctionDefinition.class) != null)
+		if (node.getAncestor(SFunctionDefinition.class) != null)
 		{
 			return true;
 		}
-	
+
 		// If a node appears in a pre or post condition of an operation then the pre/post
 		// expression might be directly linked to the operation. Therefore the above ancestor
 		// check will not work.
-		
+
 		return appearsInPreOrPosOfEnclosingOp(node);
 	}
-	
+
 	public boolean appearsInPreOrPosOfEnclosingFunc(INode node)
 	{
 		SFunctionDefinition encFunc = node.getAncestor(SFunctionDefinition.class);
-		
-		if(encFunc == null)
+
+		if (encFunc == null)
 		{
 			return false;
 		}
-		
+
 		PExp preCond = encFunc.getPrecondition();
 		PExp postCond = encFunc.getPostcondition();
-		
+
 		return appearsInPreOrPostExp(node, preCond, postCond);
 	}
 
 	public boolean appearsInPreOrPosOfEnclosingOp(INode node)
 	{
 		SOperationDefinition encOp = node.getAncestor(SOperationDefinition.class);
-		
-		if(encOp == null)
+
+		if (encOp == null)
 		{
 			return false;
 		}
-		
+
 		PExp preCond = encOp.getPrecondition();
 		PExp postCond = encOp.getPostcondition();
-		
+
 		return appearsInPreOrPostExp(node, preCond, postCond);
 	}
 
-	private boolean appearsInPreOrPostExp(INode node, PExp preCond, PExp postCond)
+	private boolean appearsInPreOrPostExp(INode node, PExp preCond,
+			PExp postCond)
 	{
 		INode next = node;
 		Set<INode> visited = new HashSet<INode>();
-		
+
 		while (next.parent() != null
 				&& !(next.parent() instanceof SOperationDefinition)
 				&& !visited.contains(next))
@@ -917,7 +921,7 @@ public class DeclAssistantIR extends AssistantBase
 
 		return preCond == next || postCond == next;
 	}
-	
+
 	public AMethodDeclIR consDefaultContructor(String name)
 	{
 		AMethodDeclIR constructor = new AMethodDeclIR();
@@ -935,7 +939,7 @@ public class DeclAssistantIR extends AssistantBase
 		constructor.setName(name);
 		constructor.setImplicit(false);
 		constructor.setBody(new ABlockStmIR());
-		
+
 		return constructor;
 	}
 }

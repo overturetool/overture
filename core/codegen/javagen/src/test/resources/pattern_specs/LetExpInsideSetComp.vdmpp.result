@@ -1,39 +1,35 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final Number v = 1L;
-    private static Number iv = 5L;
+  private static final Number v = 1L;
+  private static Number iv = 5L;
 
-    public Entry() {
+  public static Object Run() {
+
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = SetUtil.set(1L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number c = ((Number) iterator_1.next());
+      if (Utils.equals(c, 0L)) {
+        final Number x = c;
+        final Number ignorePattern_1 = Entry.v;
+        final Number ignorePattern_2 = Entry.iv;
+
+        setCompResult_1.add(x.longValue() * 2L);
+      }
     }
+    return setCompResult_1.size();
+  }
 
-    public static Object Run() {
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = SetUtil.set(1L);
+  public Entry() {}
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number c = ((Number) iterator_1.next());
+  public String toString() {
 
-            if (Utils.equals(c, 0L)) {
-                final Number x = c;
-                final Number ignorePattern_1 = Entry.v;
-                final Number ignorePattern_2 = Entry.iv;
-
-                setCompResult_1.add(x.longValue() * 2L);
-            }
-        }
-
-        return setCompResult_1.size();
-    }
-
-    public String toString() {
-        return "Entry{" + "v = " + Utils.toString(v) + ", iv := " +
-        Utils.toString(iv) + "}";
-    }
+    return "Entry{" + "v = " + Utils.toString(v) + ", iv := " + Utils.toString(iv) + "}";
+  }
 }
 
 ##########

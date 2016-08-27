@@ -25,8 +25,9 @@ package org.overture.codegen.runtime.traces;
 
 public enum TraceReductionType
 {
-	NONE("None"), RANDOM("Random"), SHAPES_NOVARS("No variables"), SHAPES_VARNAMES(
-			"Variable names"), SHAPES_VARVALUES("Variable values");
+	NONE("None"), RANDOM("Random"), SHAPES_NOVARS(
+			"No variables"), SHAPES_VARNAMES(
+					"Variable names"), SHAPES_VARVALUES("Variable values");
 
 	private String displayName;
 

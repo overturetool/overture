@@ -37,14 +37,31 @@
 <message column="3" line="143" message="Definition 'ffff' not used" messageType="warning" number="5000" resource="polymorph.vdm"/>
 <message column="3" line="144" message="Definition 'fffff' not used" messageType="warning" number="5000" resource="polymorph.vdm"/>
 <message column="3" line="120" message="Name 'POLY2`r' is not in scope" messageType="error" number="3182" resource="polymorph.vdm"/>
+<message column="16" line="104" message="Parameter type @q not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="104" message="Exported f function type incorrect" messageType="error" number="3184" resource="polymorph.vdm"/>
+<message column="11" line="105" message="Parameter type @r not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="105" message="Exported ff function type incorrect" messageType="error" number="3184" resource="polymorph.vdm"/>
+<message column="3" line="106" message="Exported fff function type parameters incorrect" messageType="error" number="3353" resource="polymorph.vdm"/>
+<message column="3" line="107" message="Exported ffff function type parameters incorrect" messageType="error" number="3353" resource="polymorph.vdm"/>
+<message column="10" line="108" message="Parameter type @a not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="16" line="108" message="Parameter type @c not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
 <message column="16" line="133" message="Parameter type @q not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="133" message="Imported f function type incorrect" messageType="error" number="3184" resource="polymorph.vdm"/>
 <message column="11" line="134" message="Parameter type @r not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="134" message="Imported ff function type incorrect" messageType="error" number="3184" resource="polymorph.vdm"/>
 <message column="12" line="135" message="Parameter type @w not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="135" message="Imported fff function type parameters incorrect" messageType="error" number="3353" resource="polymorph.vdm"/>
+<message column="3" line="136" message="Imported ffff function type parameters incorrect" messageType="error" number="3353" resource="polymorph.vdm"/>
 <message column="10" line="137" message="Parameter type @a not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
 <message column="16" line="137" message="Parameter type @c not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
 <message column="16" line="140" message="Parameter type @q not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="140" message="Imported f function type incorrect" messageType="error" number="3184" resource="polymorph.vdm"/>
 <message column="11" line="141" message="Parameter type @r not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="141" message="Imported ff function type incorrect" messageType="error" number="3184" resource="polymorph.vdm"/>
 <message column="12" line="142" message="Parameter type @w not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
+<message column="3" line="142" message="Imported fff function type parameters incorrect" messageType="error" number="3353" resource="polymorph.vdm"/>
+<message column="3" line="143" message="Imported ffff function type parameters incorrect" messageType="error" number="3353" resource="polymorph.vdm"/>
+<message column="3" line="143" message="Imported ffff function type incorrect" messageType="error" number="3184" resource="polymorph.vdm"/>
 <message column="10" line="144" message="Parameter type @a not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
 <message column="16" line="144" message="Parameter type @c not defined" messageType="error" number="3433" resource="polymorph.vdm"/>
 <result/>

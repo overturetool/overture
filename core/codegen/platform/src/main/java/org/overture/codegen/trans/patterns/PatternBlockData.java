@@ -93,21 +93,21 @@ public class PatternBlockData
 	{
 		this.declBlock = declBlock;
 	}
-	
+
 	public void setRootPatternVar(AIdentifierVarExpIR var)
 	{
 		// There can only be one root pattern variable
-		if(this.rootPatternVar == null)
+		if (this.rootPatternVar == null)
 		{
 			this.rootPatternVar = var;
 		}
 	}
-	
+
 	public AIdentifierVarExpIR getRootPatternVar()
 	{
 		return rootPatternVar;
 	}
-	
+
 	public void setMismatchHandling(MismatchHandling mismatchHandling)
 	{
 		this.mismatchHandling = mismatchHandling;
@@ -122,7 +122,6 @@ public class PatternBlockData
 	public String toString()
 	{
 		return String.format("Pattern %s\nSuccess var: %s\n"
-				+ "Mismatch handling: %s\nDeclaration block: %s"
-				, pattern, successVar, mismatchHandling, declBlock);
+				+ "Mismatch handling: %s\nDeclaration block: %s", pattern, successVar, mismatchHandling, declBlock);
 	}
 }

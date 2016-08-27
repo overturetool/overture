@@ -4,7 +4,7 @@
 <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
-    <version>2.3.5-SNAPSHOT</version>
+    <version>2.3.9-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
 </parent>
 
@@ -31,12 +31,6 @@
     <dependency>
         <groupId>org.overturetool.core.testing</groupId>
         <artifactId>framework</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.overturetool.core.testing</groupId>
-        <artifactId>exsupport</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
     </dependency>

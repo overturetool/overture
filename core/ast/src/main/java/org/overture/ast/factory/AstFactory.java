@@ -124,6 +124,8 @@ import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.ARecordPattern;
+import org.overture.ast.patterns.ASeqBind;
+import org.overture.ast.patterns.ASeqMultipleBind;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -209,7 +211,8 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ASet1SetType;
+import org.overture.ast.types.ASetSetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
@@ -379,6 +382,17 @@ public class AstFactory
 		return result;
 	}
 
+	public static ASeqBind newASeqBind(PPattern pattern, PExp readExpression)
+	{
+		ASeqBind result = new ASeqBind();
+
+		result.setLocation(pattern.getLocation());
+		result.setPattern(pattern);
+		result.setSeq(readExpression);
+
+		return result;
+	}
+
 	public static ATypeBind newATypeBind(PPattern pattern, PType readType)
 	{
 		ATypeBind result = new ATypeBind();
@@ -390,14 +404,24 @@ public class AstFactory
 		return result;
 	}
 
-	public static ASetMultipleBind newASetMultipleBind(List<PPattern> plist,
-			PExp readExpression)
+	public static ASetMultipleBind newASetMultipleBind(List<PPattern> plist, PExp readExpression)
 	{
 		ASetMultipleBind result = new ASetMultipleBind();
 
 		result.setLocation(plist.get(0).getLocation());
 		result.setPlist(plist);
 		result.setSet(readExpression);
+
+		return result;
+	}
+
+	public static ASeqMultipleBind newASeqMultipleBind(List<PPattern> plist, PExp readExpression)
+	{
+		ASeqMultipleBind result = new ASeqMultipleBind();
+
+		result.setLocation(plist.get(0).getLocation());
+		result.setPlist(plist);
+		result.setSeq(readExpression);
 
 		return result;
 	}
@@ -880,13 +904,22 @@ public class AstFactory
 	}
 
 	public static AEqualsDefinition newAEqualsDefinition(ILexLocation location,
-			ASetBind setbind, PExp test)
+			PBind bind, PExp test)
 	{
 		AEqualsDefinition result = AstFactory.newAEqualsDefinition(location);
 
 		result.setPattern(null);
 		result.setTypebind(null);
-		result.setSetbind(setbind);
+		
+		if (bind instanceof ASetBind)
+		{
+			result.setSetbind((ASetBind) bind);
+		}
+		else
+		{
+			result.setSeqbind((ASeqBind) bind);
+		}
+		
 		result.setTest(test);
 
 		return result;
@@ -1860,13 +1893,22 @@ public class AstFactory
 	}
 
 	public static ASeqCompSeqExp newASeqCompSeqExp(ILexLocation start,
-			PExp first, ASetBind setbind, PExp predicate)
+			PExp first, PBind bind, PExp predicate)
 	{
 		ASeqCompSeqExp result = new ASeqCompSeqExp();
 		initExpression(result, start);
 
 		result.setFirst(first);
-		result.setSetBind(setbind);
+		
+		if (bind instanceof ASetBind)
+		{
+			result.setSetBind((ASetBind) bind);
+		}
+		else // ASeqBind
+		{
+			result.setSeqBind((ASeqBind) bind);
+		}
+		
 		result.setPredicate(predicate);
 
 		return result;
@@ -2227,12 +2269,13 @@ public class AstFactory
 	}
 
 	public static AFunctionExport newAFunctionExport(ILexLocation location,
-			List<ILexNameToken> nameList, PType type)
+			List<ILexNameToken> nameList, PType type, List<ILexNameToken> typeParams)
 	{
 		AFunctionExport result = new AFunctionExport();
 		result.setLocation(location);
 		result.setNameList(nameList);
 		result.setExportType(type);
+		result.setTypeParams(typeParams);
 		return result;
 	}
 
@@ -2965,9 +3008,20 @@ public class AstFactory
 		return result;
 	}
 
-	public static ASetType newASetType(ILexLocation location, PType type)
+	public static ASetSetType newASetSetType(ILexLocation location, PType type)
 	{
-		ASetType result = new ASetType();
+		ASetSetType result = new ASetSetType();
+
+		initType(result, location);
+		result.setSetof(type);
+		result.setEmpty(false);
+
+		return result;
+	}
+
+	public static ASet1SetType newASet1SetType(ILexLocation location, PType type)
+	{
+		ASet1SetType result = new ASet1SetType();
 
 		initType(result, location);
 		result.setSetof(type);
@@ -3144,9 +3198,20 @@ public class AstFactory
 		return result;
 	}
 
-	public static ASetType newASetType(ILexLocation location)
+	public static ASetSetType newASetSetType(ILexLocation location)
 	{
-		ASetType result = new ASetType();
+		ASetSetType result = new ASetSetType();
+		initType(result, location);
+
+		result.setSetof(AstFactory.newAUnknownType(location));
+		result.setEmpty(true);
+
+		return result;
+	}
+
+	public static ASet1SetType newASet1SetType(ILexLocation location)
+	{
+		ASet1SetType result = new ASet1SetType();
 		initType(result, location);
 
 		result.setSetof(AstFactory.newAUnknownType(location));

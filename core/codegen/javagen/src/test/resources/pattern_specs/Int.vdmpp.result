@@ -1,70 +1,67 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public Number intPatternOp(final Number intPattern_1) {
+
+    Boolean success_1 = Utils.equals(intPattern_1, 3L);
+    if (!(success_1)) {
+      throw new RuntimeException("Integer pattern match failed");
     }
 
-    public Number intPatternOp(final Number intPattern_1) {
-        Boolean success_1 = Utils.equals(intPattern_1, 3L);
-
-        if (!(success_1)) {
-            throw new RuntimeException("Integer pattern match failed");
-        }
-
-        final Number intPattern_2 = 1L;
-        Boolean success_2 = Utils.equals(intPattern_2, 1L);
-
-        if (!(success_2)) {
-            throw new RuntimeException("Integer pattern match failed");
-        }
-
-        return 2L;
+    final Number intPattern_2 = 1L;
+    Boolean success_2 = Utils.equals(intPattern_2, 1L);
+    if (!(success_2)) {
+      throw new RuntimeException("Integer pattern match failed");
     }
 
-    public static Number intPatternFun(final Number intPattern_3) {
-        Boolean success_3 = Utils.equals(intPattern_3, 3L);
+    return 2L;
+  }
 
-        if (!(success_3)) {
-            throw new RuntimeException("Integer pattern match failed");
-        }
+  public A() {}
 
-        final Number intPattern_4 = 1L;
-        Boolean success_4 = Utils.equals(intPattern_4, 1L);
+  public static Number intPatternFun(final Number intPattern_3) {
 
-        if (!(success_4)) {
-            throw new RuntimeException("Integer pattern match failed");
-        }
-
-        return 2L;
+    Boolean success_3 = Utils.equals(intPattern_3, 3L);
+    if (!(success_3)) {
+      throw new RuntimeException("Integer pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
+    final Number intPattern_4 = 1L;
+    Boolean success_4 = Utils.equals(intPattern_4, 1L);
+    if (!(success_4)) {
+      throw new RuntimeException("Integer pattern match failed");
     }
+
+    return 2L;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return SeqUtil.seq(new A().intPatternOp(3L), A.intPatternFun(3L));
-    }
+    return SeqUtil.seq(new A().intPatternOp(3L), A.intPatternFun(3L));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

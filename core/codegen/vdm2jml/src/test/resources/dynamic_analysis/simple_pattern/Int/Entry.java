@@ -1,49 +1,50 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  public static Object Run() {
+
+    {
+      final Number ignorePattern_1 = f(1L);
+      //@ assert Utils.is_nat(ignorePattern_1);
+
+      /* skip */
     }
 
-    public static Object Run() {
-        {
-            final Number ignorePattern_1 = f(1L);
+    IO.println("Done! Expected no violations");
+    return 0L;
+  }
+  /*@ pure @*/
 
-            //@ assert Utils.is_nat(ignorePattern_1);
+  public static Number f(final Number intPattern_1) {
 
-            /* skip */
-        }
+    //@ assert Utils.is_nat(intPattern_1);
 
-        IO.println("Done! Expected no violations");
+    Boolean success_1 = Utils.equals(intPattern_1, 1L);
+    //@ assert Utils.is_bool(success_1);
 
-        return 0L;
+    if (!(success_1)) {
+      throw new RuntimeException("Integer pattern match failed");
     }
 
-    /*@ pure @*/
-    public static Number f(final Number intPattern_1) {
-        //@ assert Utils.is_nat(intPattern_1);
-        Boolean success_1 = Utils.equals(intPattern_1, 1L);
+    Number ret_1 = 2L;
+    //@ assert Utils.is_nat(ret_1);
 
-        //@ assert Utils.is_bool(success_1);
-        if (!(success_1)) {
-            throw new RuntimeException("Integer pattern match failed");
-        }
+    return ret_1;
+  }
 
-        Number ret_1 = 2L;
+  public String toString() {
 
-        //@ assert Utils.is_nat(ret_1);
-        return ret_1;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }

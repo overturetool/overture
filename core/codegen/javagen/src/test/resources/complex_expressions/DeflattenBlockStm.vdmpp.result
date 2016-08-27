@@ -1,46 +1,40 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Number a = 1L;
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      setCompResult_1.add(x.longValue() + a.longValue());
     }
-
-    public static Object Run() {
-        Number a = 1L;
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
-
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
-            setCompResult_1.add(x.longValue() + a.longValue());
-        }
-
-        VDMSet b = Utils.copy(setCompResult_1);
-        Number c = 2L;
-
-        {
-            Number d = 10L;
-            VDMSet setCompResult_2 = SetUtil.set();
-            VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
-
-            for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-                Number x = ((Number) iterator_2.next());
-                setCompResult_2.add(x.longValue() + d.longValue());
-            }
-
-            VDMSet e = Utils.copy(setCompResult_2);
-            Number f = 20L;
-
-            return SetUtil.union(Utils.copy(b), Utils.copy(e));
-        }
+    VDMSet b = Utils.copy(setCompResult_1);
+    Number c = 2L;
+    {
+      Number d = 10L;
+      VDMSet setCompResult_2 = SetUtil.set();
+      VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
+      for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext(); ) {
+        Number x = ((Number) iterator_2.next());
+        setCompResult_2.add(x.longValue() + d.longValue());
+      }
+      VDMSet e = Utils.copy(setCompResult_2);
+      Number f = 20L;
+      return SetUtil.union(Utils.copy(b), Utils.copy(e));
     }
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

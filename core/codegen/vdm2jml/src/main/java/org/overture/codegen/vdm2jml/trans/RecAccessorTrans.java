@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2jml.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -22,7 +23,6 @@ import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.vdm2java.JavaValueSemantics;
 import org.overture.codegen.vdm2jml.JmlGenerator;
 import org.overture.codegen.vdm2jml.data.RecClassInfo;
@@ -59,7 +59,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		registerAccessors(accessors);
 		node.getMethods().addAll(accessors);
 
-		if(!this.jmlGen.getJmlSettings().genInvariantFor())
+		if (!this.jmlGen.getJmlSettings().genInvariantFor())
 		{
 			node.getMethods().add(consValidMethod());
 		}
@@ -82,7 +82,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 
 				SExpIR obj = target.getObject().clone();
 				jmlGen.getJavaGen().getJavaFormat().getValueSemantics().addCloneFreeNode(obj);
-				
+
 				setCall.setObj(obj);
 				setCall.setSourceNode(node.getSourceNode());
 
@@ -91,7 +91,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 				 * owner
 				 */
 				jmlGen.getStateDesInfo().replaceStateDesOwner(node, setCall);
-				
+
 				jmlGen.getJavaGen().getTransAssistant().replaceNodeWith(node, setCall);
 
 				inTarget = true;
@@ -114,7 +114,8 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 	{
 		node.getObject().apply(this);
 
-		if (node.getObject().getType() instanceof ARecordTypeIR && !(node.parent() instanceof AApplyExpIR))
+		if (node.getObject().getType() instanceof ARecordTypeIR
+				&& !(node.parent() instanceof AApplyExpIR))
 		{
 			AMethodTypeIR getterType = new AMethodTypeIR();
 			getterType.setResult(node.getType().clone());
@@ -150,8 +151,13 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 
 	private boolean cloneFieldRead(AFieldExpIR node)
 	{
+		if (jmlGen.getJavaSettings().getDisableCloning())
+		{
+			return false;
+		}
+
 		AVarDeclIR decl = node.getAncestor(AVarDeclIR.class);
-		
+
 		/*
 		 * Normalized state designators do not need cloning
 		 */
@@ -159,14 +165,14 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		{
 			return false;
 		}
-		
-		if(jmlGen.getJavaGen().getJavaFormat().getValueSemantics().isCloneFree(node))
+
+		if (jmlGen.getJavaGen().getJavaFormat().getValueSemantics().isCloneFree(node))
 		{
 			return false;
 		}
-		
+
 		JavaValueSemantics valSem = jmlGen.getJavaGen().getJavaFormat().getValueSemantics();
-		
+
 		return !inTarget && !isObjOfFieldExp(node) && !isColOfMapSeq(node)
 				&& valSem.mayBeValueType(node.getType());
 	}
@@ -179,10 +185,10 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 
 	private boolean isColOfMapSeq(AFieldExpIR node)
 	{
-		return (node.parent() instanceof AMapSeqGetExpIR
-				&& ((AMapSeqGetExpIR) node.parent()).getCol() == node)
-				|| (node.parent() instanceof AMapSeqUpdateStmIR
-						&& ((AMapSeqUpdateStmIR) node.parent()).getCol() == node);
+		return node.parent() instanceof AMapSeqGetExpIR
+				&& ((AMapSeqGetExpIR) node.parent()).getCol() == node
+				|| node.parent() instanceof AMapSeqUpdateStmIR
+						&& ((AMapSeqUpdateStmIR) node.parent()).getCol() == node;
 	}
 
 	private List<AMethodDeclIR> consAccessors(ARecordDeclIR node)
@@ -253,7 +259,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		getter.setBody(returnField);
 
 		jmlGen.getAnnotator().makePure(getter);
-		
+
 		return getter;
 	}
 
@@ -277,7 +283,7 @@ public class RecAccessorTrans extends DepthFirstAnalysisAdaptor
 		body.setExp(jmlGen.getJavaGen().getInfo().getExpAssistant().consBoolLiteral(true));
 
 		validMethod.setBody(body);
-		
+
 		jmlGen.getAnnotator().makePure(validMethod);
 
 		return validMethod;

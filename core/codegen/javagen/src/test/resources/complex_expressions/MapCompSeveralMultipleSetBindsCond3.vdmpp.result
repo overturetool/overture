@@ -1,48 +1,44 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return Test();
-    }
+    return Test();
+  }
 
-    public static VDMMap Test() {
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+  public static VDMMap Test() {
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
-
-            for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                Number y = ((Number) iterator_2.next());
-                VDMSet set_2 = SetUtil.set(2L, 3L, 4L);
-
-                for (Iterator iterator_3 = set_2.iterator();
-                        iterator_3.hasNext();) {
-                    Number z = ((Number) iterator_3.next());
-
-                    if (false) {
-                        MapUtil.mapAdd(mapCompResult_1,
-                            new Maplet(x.longValue() + y.longValue() +
-                                z.longValue(),
-                                z.longValue() + y.longValue() + x.longValue()));
-                    }
-                }
-            }
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext(); ) {
+        Number y = ((Number) iterator_2.next());
+        VDMSet set_2 = SetUtil.set(2L, 3L, 4L);
+        for (Iterator iterator_3 = set_2.iterator(); iterator_3.hasNext(); ) {
+          Number z = ((Number) iterator_3.next());
+          if (false) {
+            MapUtil.mapAdd(
+                mapCompResult_1,
+                new Maplet(
+                    x.longValue() + y.longValue() + z.longValue(),
+                    z.longValue() + y.longValue() + x.longValue()));
+          }
         }
-
-        return Utils.copy(mapCompResult_1);
+      }
     }
+    return Utils.copy(mapCompResult_1);
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -1,70 +1,69 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  protected Number op(final Character a, final Number b) {
 
-    protected Number op(final Character a, final Number b) {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B extends A {
-    public B() {
-    }
+  public Number go() {
 
-    public Number go() {
-        final Object obj = new B();
-        final Object a = 'a';
-        final Number b = 2L;
-
-        if (obj instanceof A) {
-            return ((A) obj).op(((Character) a), b);
-        } else if (obj instanceof B) {
-            return ((B) obj).op(((Character) a), b);
-        } else {
-            throw new RuntimeException("Missing operation member: op");
-        }
+    final Object obj = new B();
+    final Object a = 'a';
+    final Number b = 2L;
+    if (obj instanceof A) {
+      return ((A) obj).op(((Character) a), b);
+    } else if (obj instanceof B) {
+      return ((B) obj).op(((Character) a), b);
+    } else {
+      throw new RuntimeException("Missing operation member: op");
     }
+  }
 
-    public String toString() {
-        return "B{}";
-    }
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return new B().go();
-    }
+    return new B().go();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

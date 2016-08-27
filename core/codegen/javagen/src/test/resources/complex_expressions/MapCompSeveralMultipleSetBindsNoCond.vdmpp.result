@@ -1,64 +1,62 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return Test();
-    }
+    return Test();
+  }
 
-    public static VDMMap Test() {
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = SetUtil.set(1L, 2L);
+  public static VDMMap Test() {
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number a = ((Number) iterator_1.next());
-
-            for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                Number b = ((Number) iterator_2.next());
-                VDMSet set_2 = SetUtil.set(2L, 3L);
-
-                for (Iterator iterator_3 = set_2.iterator();
-                        iterator_3.hasNext();) {
-                    Number c = ((Number) iterator_3.next());
-
-                    for (Iterator iterator_4 = set_2.iterator();
-                            iterator_4.hasNext();) {
-                        Number d = ((Number) iterator_4.next());
-                        VDMSet set_3 = SetUtil.set(3L, 4L);
-
-                        for (Iterator iterator_5 = set_3.iterator();
-                                iterator_5.hasNext();) {
-                            Number e = ((Number) iterator_5.next());
-
-                            for (Iterator iterator_6 = set_3.iterator();
-                                    iterator_6.hasNext();) {
-                                Number f = ((Number) iterator_6.next());
-                                MapUtil.mapAdd(mapCompResult_1,
-                                    new Maplet(a.longValue() + b.longValue() +
-                                        c.longValue() + d.longValue() +
-                                        e.longValue() + f.longValue(),
-                                        f.longValue() + e.longValue() +
-                                        d.longValue() + c.longValue() +
-                                        b.longValue() + a.longValue()));
-                            }
-                        }
-                    }
-                }
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_1 = SetUtil.set(1L, 2L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number a = ((Number) iterator_1.next());
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext(); ) {
+        Number b = ((Number) iterator_2.next());
+        VDMSet set_2 = SetUtil.set(2L, 3L);
+        for (Iterator iterator_3 = set_2.iterator(); iterator_3.hasNext(); ) {
+          Number c = ((Number) iterator_3.next());
+          for (Iterator iterator_4 = set_2.iterator(); iterator_4.hasNext(); ) {
+            Number d = ((Number) iterator_4.next());
+            VDMSet set_3 = SetUtil.set(3L, 4L);
+            for (Iterator iterator_5 = set_3.iterator(); iterator_5.hasNext(); ) {
+              Number e = ((Number) iterator_5.next());
+              for (Iterator iterator_6 = set_3.iterator(); iterator_6.hasNext(); ) {
+                Number f = ((Number) iterator_6.next());
+                MapUtil.mapAdd(
+                    mapCompResult_1,
+                    new Maplet(
+                        a.longValue()
+                            + b.longValue()
+                            + c.longValue()
+                            + d.longValue()
+                            + e.longValue()
+                            + f.longValue(),
+                        f.longValue()
+                            + e.longValue()
+                            + d.longValue()
+                            + c.longValue()
+                            + b.longValue()
+                            + a.longValue()));
+              }
             }
+          }
         }
-
-        return Utils.copy(mapCompResult_1);
+      }
     }
+    return Utils.copy(mapCompResult_1);
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

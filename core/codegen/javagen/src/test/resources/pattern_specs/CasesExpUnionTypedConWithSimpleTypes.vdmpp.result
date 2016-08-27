@@ -1,42 +1,44 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return SeqUtil.seq(f(true), f('a'), f('b'), f(false));
+  }
+
+  public Entry() {}
+
+  public static Number f(final Object c) {
+
+    Number casesExpResult_1 = null;
+
+    Object boolPattern_1 = c;
+    Boolean success_1 = Utils.equals(boolPattern_1, true);
+
+    if (!(success_1)) {
+      Object charPattern_1 = c;
+      success_1 = Utils.equals(charPattern_1, 'a');
+
+      if (success_1) {
+        casesExpResult_1 = 2L;
+      } else {
+        casesExpResult_1 = 3L;
+      }
+
+    } else {
+      casesExpResult_1 = 1L;
     }
 
-    public static Object Run() {
-        return SeqUtil.seq(f(true), f('a'), f('b'), f(false));
-    }
+    return casesExpResult_1;
+  }
 
-    public static Number f(final Object c) {
-        Number casesExpResult_1 = null;
+  public String toString() {
 
-        Object boolPattern_1 = c;
-        Boolean success_1 = Utils.equals(boolPattern_1, true);
-
-        if (!(success_1)) {
-            Object charPattern_1 = c;
-            success_1 = Utils.equals(charPattern_1, 'a');
-
-            if (success_1) {
-                casesExpResult_1 = 2L;
-            } else {
-                casesExpResult_1 = 3L;
-            }
-        } else {
-            casesExpResult_1 = 1L;
-        }
-
-        return casesExpResult_1;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

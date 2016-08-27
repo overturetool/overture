@@ -21,6 +21,7 @@
  */
 package org.overture.codegen.visitor;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AUndefinedExp;
@@ -30,6 +31,8 @@ import org.overture.codegen.ir.IRInfo;
 public class AbstractVisitorIR<Q extends IRInfo, A extends org.overture.codegen.ir.INode>
 		extends QuestionAnswerAdaptor<Q, A>
 {
+	protected Logger log = Logger.getLogger(this.getClass().getName());
+
 	@Override
 	public A defaultINode(INode node, Q question) throws AnalysisException
 	{

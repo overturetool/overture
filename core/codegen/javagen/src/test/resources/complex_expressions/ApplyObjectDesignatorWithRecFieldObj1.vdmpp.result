@@ -1,60 +1,66 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final A a = new A(SeqUtil.seq(new Entry()));
+    return op(Utils.copy(a));
+  }
+
+  public static Number op(final A a) {
+
+    return ((Entry) Utils.get(a.es, 1L)).getConst();
+  }
+
+  public Number getConst() {
+
+    return 5L;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class A implements Record {
+    public VDMSeq es;
+
+    public A(final VDMSeq _es) {
+
+      es = _es != null ? Utils.copy(_es) : null;
     }
 
-    public static Object Run() {
-        final A a = new A(SeqUtil.seq(new Entry()));
+    public boolean equals(final Object obj) {
 
-        return op(Utils.copy(a));
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(es, other.es);
     }
 
-    public static Number op(final A a) {
-        return ((Entry) Utils.get(a.es, 1L)).getConst();
+    public int hashCode() {
+
+      return Utils.hashCode(es);
     }
 
-    public Number getConst() {
-        return 5L;
+    public A copy() {
+
+      return new A(es);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`A" + Utils.formatFields(es);
     }
-
-    public static class A implements Record {
-        public VDMSeq es;
-
-        public A(final VDMSeq _es) {
-            es = (_es != null) ? Utils.copy(_es) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof A)) {
-                return false;
-            }
-
-            A other = ((A) obj);
-
-            return Utils.equals(es, other.es);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(es);
-        }
-
-        public A copy() {
-            return new A(es);
-        }
-
-        public String toString() {
-            return "mk_Entry`A" + Utils.formatFields(es);
-        }
-    }
+  }
 }
 
 ##########

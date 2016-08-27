@@ -1,226 +1,253 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class SharedCounter implements EvaluatePP {
-    public volatile Number counter = 0L;
-    public volatile Sentinel sentinel;
 
-    public SharedCounter() {
-        sentinel = new SharedCounter_sentinel(this);
+  public static class SharedCounter_sentinel extends Sentinel {
+    public static final int inc = 0;
+    public static final int getValue = 1;
+    public static final int SharedCounter = 2;
+    public static final int toString = 3;
+    public final int function_sum = 4;
+
+    public SharedCounter_sentinel() {}
+
+    public SharedCounter_sentinel(final EvaluatePP instance) {
+
+      init(instance, function_sum);
     }
+  }
 
-    public void inc() {
-        sentinel.entering(((SharedCounter_sentinel) sentinel).inc);
+  public volatile Number counter = 0L;
+  public volatile Sentinel sentinel;
 
-        try {
-            counter = counter.longValue() + 1L;
-            sentinel.stateChanged();
-        } finally {
-            sentinel.leaving(((SharedCounter_sentinel) sentinel).inc);
-        }
+  public void inc() {
+
+    sentinel.entering(((SharedCounter_sentinel) sentinel).inc);
+    try {
+      counter = counter.longValue() + 1L;
+      sentinel.stateChanged();
+
+    } finally {
+      sentinel.leaving(((SharedCounter_sentinel) sentinel).inc);
     }
+  }
 
-    public Number getValue() {
-        sentinel.entering(((SharedCounter_sentinel) sentinel).getValue);
+  public Number getValue() {
 
-        try {
-            return counter;
-        } finally {
-            sentinel.leaving(((SharedCounter_sentinel) sentinel).getValue);
-        }
+    sentinel.entering(((SharedCounter_sentinel) sentinel).getValue);
+    try {
+      return counter;
+
+    } finally {
+      sentinel.leaving(((SharedCounter_sentinel) sentinel).getValue);
     }
+  }
 
-    public String toString() {
-        return "SharedCounter{" + "counter := " + Utils.toString(counter) +
-        "}";
+  public SharedCounter() {
+
+    sentinel = new SharedCounter_sentinel(this);
+  }
+
+  public String toString() {
+
+    return "SharedCounter{" + "counter := " + Utils.toString(counter) + "}";
+  }
+
+  public Boolean evaluatePP(final Number fnr) {
+
+    if (Utils.equals(fnr, 0L)) {
+      return (Utils.equals(sentinel.fin[((SharedCounter_sentinel) sentinel).inc], counter))
+          && (Utils.equals(sentinel.active[((SharedCounter_sentinel) sentinel).inc], 0L));
+
+    } else if (Utils.equals(fnr, 1L)) {
+      return true;
+
+    } else if (Utils.equals(fnr, 2L)) {
+      return true;
+
+    } else if (Utils.equals(fnr, 3L)) {
+      return true;
+
+    } else {
+      return true;
     }
-
-    public Boolean evaluatePP(final Number fnr) {
-        if (Utils.equals(fnr, 0L)) {
-            return (Utils.equals(sentinel.fin[((SharedCounter_sentinel) sentinel).inc],
-                counter)) &&
-            (Utils.equals(sentinel.active[((SharedCounter_sentinel) sentinel).inc],
-                0L));
-        } else if (Utils.equals(fnr, 1L)) {
-            return true;
-        } else if (Utils.equals(fnr, 2L)) {
-            return true;
-        } else if (Utils.equals(fnr, 3L)) {
-            return true;
-        } else {
-            return true;
-        }
-    }
-
-    public static class SharedCounter_sentinel extends Sentinel {
-        public static final int inc = 0;
-        public static final int getValue = 1;
-        public static final int SharedCounter = 2;
-        public static final int toString = 3;
-        public final int function_sum = 4;
-
-        public SharedCounter_sentinel() {
-        }
-
-        public SharedCounter_sentinel(final EvaluatePP instance) {
-            init(instance, function_sum);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Incrementer extends VDMThread implements EvaluatePP {
-    private volatile SharedCounter sharedCounter;
-    private volatile Boolean isFinished = false;
-    public volatile Sentinel sentinel;
 
-    public Incrementer(final SharedCounter s) {
-        cg_init_Incrementer_1(s);
+  public static class Incrementer_sentinel extends Sentinel {
+    public static final int Incrementer = 0;
+    public static final int joined = 1;
+    public static final int incCounter = 2;
+    public static final int toString = 3;
+    public final int function_sum = 4;
+
+    public Incrementer_sentinel() {}
+
+    public Incrementer_sentinel(final EvaluatePP instance) {
+
+      init(instance, function_sum);
     }
+  }
 
-    public Incrementer() {
-        sentinel = new Incrementer_sentinel(this);
+  private volatile SharedCounter sharedCounter;
+  private volatile Boolean isFinished = false;
+  public volatile Sentinel sentinel;
+
+  public void cg_init_Incrementer_1(final SharedCounter s) {
+
+    sentinel = new Incrementer_sentinel(this);
+    sharedCounter = s;
+  }
+
+  public Incrementer(final SharedCounter s) {
+
+    cg_init_Incrementer_1(s);
+  }
+
+  public void joined() {
+
+    sentinel.entering(((Incrementer_sentinel) sentinel).joined);
+    try {
+      /* skip */
+
+    } finally {
+      sentinel.leaving(((Incrementer_sentinel) sentinel).joined);
     }
+  }
 
-    public void cg_init_Incrementer_1(final SharedCounter s) {
-        sentinel = new Incrementer_sentinel(this);
-        sharedCounter = s;
+  public void incCounter() {
+
+    sentinel.entering(((Incrementer_sentinel) sentinel).incCounter);
+    try {
+      long toVar_1 = 100L;
+
+      for (Long i = 1L; i <= toVar_1; i++) {
+        sharedCounter.inc();
+      }
+      isFinished = true;
+      sentinel.stateChanged();
+
+    } finally {
+      sentinel.leaving(((Incrementer_sentinel) sentinel).incCounter);
     }
+  }
 
-    public void joined() {
-        sentinel.entering(((Incrementer_sentinel) sentinel).joined);
+  public Incrementer() {
 
-        try {
-            /* skip */
-        } finally {
-            sentinel.leaving(((Incrementer_sentinel) sentinel).joined);
-        }
+    sentinel = new Incrementer_sentinel(this);
+  }
+
+  public String toString() {
+
+    return "Incrementer{"
+        + "sharedCounter := "
+        + Utils.toString(sharedCounter)
+        + ", isFinished := "
+        + Utils.toString(isFinished)
+        + "}";
+  }
+
+  public Boolean evaluatePP(final Number fnr) {
+
+    if (Utils.equals(fnr, 0L)) {
+      return true;
+
+    } else if (Utils.equals(fnr, 1L)) {
+      return isFinished;
+
+    } else if (Utils.equals(fnr, 2L)) {
+      return true;
+
+    } else if (Utils.equals(fnr, 3L)) {
+      return true;
+
+    } else {
+      return true;
     }
+  }
 
-    public void incCounter() {
-        sentinel.entering(((Incrementer_sentinel) sentinel).incCounter);
-
-        try {
-            long toVar_1 = 100L;
-
-            for (Long i = 1L; i <= toVar_1; i++) {
-                sharedCounter.inc();
-            }
-
-            isFinished = true;
-            sentinel.stateChanged();
-        } finally {
-            sentinel.leaving(((Incrementer_sentinel) sentinel).incCounter);
-        }
-    }
-
-    public String toString() {
-        return "Incrementer{" + "sharedCounter := " +
-        Utils.toString(sharedCounter) + ", isFinished := " +
-        Utils.toString(isFinished) + "}";
-    }
-
-    public Boolean evaluatePP(final Number fnr) {
-        if (Utils.equals(fnr, 0L)) {
-            return true;
-        } else if (Utils.equals(fnr, 1L)) {
-            return isFinished;
-        } else if (Utils.equals(fnr, 2L)) {
-            return true;
-        } else if (Utils.equals(fnr, 3L)) {
-            return true;
-        } else {
-            return true;
-        }
-    }
-
-    public void run() {
-        incCounter();
-    }
-
-    public static class Incrementer_sentinel extends Sentinel {
-        public static final int Incrementer = 0;
-        public static final int joined = 1;
-        public static final int incCounter = 2;
-        public static final int toString = 3;
-        public final int function_sum = 4;
-
-        public Incrementer_sentinel() {
-        }
-
-        public Incrementer_sentinel(final EvaluatePP instance) {
-            init(instance, function_sum);
-        }
-    }
+  public void run() {
+    incCounter();
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry implements EvaluatePP {
-    public volatile Sentinel sentinel;
 
-    public Entry() {
-        sentinel = new Entry_sentinel(this);
+  public static class Entry_sentinel extends Sentinel {
+    public static final int Run = 0;
+    public static final int Entry = 1;
+    public static final int toString = 2;
+    public final int function_sum = 3;
+
+    public Entry_sentinel() {}
+
+    public Entry_sentinel(final EvaluatePP instance) {
+
+      init(instance, function_sum);
     }
+  }
 
-    public static Object Run() {
-        final SharedCounter s = new SharedCounter();
-        final Incrementer i1 = new Incrementer(s);
-        final Incrementer i2 = new Incrementer(s);
-        final Incrementer i3 = new Incrementer(s);
-        i1.start();
-        i2.start();
-        i3.start();
-        i1.joined();
-        i2.joined();
-        i3.joined();
+  public volatile Sentinel sentinel;
 
-        return s.getValue();
+  public static Object Run() {
+
+    final SharedCounter s = new SharedCounter();
+    final Incrementer i1 = new Incrementer(s);
+    final Incrementer i2 = new Incrementer(s);
+    final Incrementer i3 = new Incrementer(s);
+    {
+      i1.start();
+      i2.start();
+      i3.start();
+      i1.joined();
+      i2.joined();
+      i3.joined();
+      return s.getValue();
     }
+  }
 
-    public String toString() {
-        return "Entry{}";
+  public Entry() {
+
+    sentinel = new Entry_sentinel(this);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public Boolean evaluatePP(final Number fnr) {
+
+    if (Utils.equals(fnr, 0L)) {
+      return true;
+
+    } else if (Utils.equals(fnr, 1L)) {
+      return true;
+
+    } else if (Utils.equals(fnr, 2L)) {
+      return true;
+
+    } else {
+      return true;
     }
-
-    public Boolean evaluatePP(final Number fnr) {
-        if (Utils.equals(fnr, 0L)) {
-            return true;
-        } else if (Utils.equals(fnr, 1L)) {
-            return true;
-        } else if (Utils.equals(fnr, 2L)) {
-            return true;
-        } else {
-            return true;
-        }
-    }
-
-    public static class Entry_sentinel extends Sentinel {
-        public static final int Run = 0;
-        public static final int Entry = 1;
-        public static final int toString = 2;
-        public final int function_sum = 3;
-
-        public Entry_sentinel() {
-        }
-
-        public Entry_sentinel(final EvaluatePP instance) {
-            init(instance, function_sum);
-        }
-    }
+  }
 }
 
 ##########

@@ -39,8 +39,7 @@ public class IfExpTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inATernaryIfExpIR(ATernaryIfExpIR node)
-			throws AnalysisException
+	public void inATernaryIfExpIR(ATernaryIfExpIR node) throws AnalysisException
 	{
 		INode parent = node.parent();
 

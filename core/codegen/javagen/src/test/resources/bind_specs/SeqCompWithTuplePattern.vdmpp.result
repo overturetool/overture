@@ -1,59 +1,57 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return fun();
-    }
+    return fun();
+  }
 
-    public static VDMSeq fun() {
-        VDMSeq seqCompResult_1 = SeqUtil.seq();
-        VDMSet set_1 = SetUtil.set(Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
-                Tuple.mk_(20L, Tuple.mk_(3L, 10L)),
-                Tuple.mk_(1L, Tuple.mk_(2L, 20L)),
-                Tuple.mk_(1L, Tuple.mk_(3L, 4L)));
+  public Entry() {}
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
-            Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                    Tuple.class);
-            Number a = null;
+  public static VDMSeq fun() {
 
-            if (success_1) {
-                Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(1)));
-                success_1 = tuplePattern_2.compatible(Number.class, Number.class);
+    VDMSeq seqCompResult_1 = SeqUtil.seq();
+    VDMSet set_1 =
+        SetUtil.set(
+            Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
+            Tuple.mk_(20L, Tuple.mk_(3L, 10L)),
+            Tuple.mk_(1L, Tuple.mk_(2L, 20L)),
+            Tuple.mk_(1L, Tuple.mk_(3L, 4L)));
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
+      Boolean success_1 = tuplePattern_1.compatible(Number.class, Tuple.class);
+      Number a = null;
+      if (success_1) {
+        Tuple tuplePattern_2 = Utils.copy(((Tuple) tuplePattern_1.get(1)));
+        success_1 = tuplePattern_2.compatible(Number.class, Number.class);
+        if (success_1) {
+          Number intPattern_1 = ((Number) tuplePattern_2.get(0));
+          success_1 = Utils.equals(intPattern_1, 2L);
 
-                if (success_1) {
-                    Number intPattern_1 = ((Number) tuplePattern_2.get(0));
-                    success_1 = Utils.equals(intPattern_1, 2L);
-
-                    if (success_1) {
-                        a = ((Number) tuplePattern_2.get(1));
-                    }
-                }
-            }
-
-            if (!(success_1)) {
-                continue;
-            }
-
-            if (Utils.equals(1L, 1L)) {
-                seqCompResult_1.add(a);
-            }
+          if (success_1) {
+            a = ((Number) tuplePattern_2.get(1));
+          }
         }
+      }
 
-        return Utils.copy(seqCompResult_1);
-    }
+      if (!(success_1)) {
+        continue;
+      }
 
-    public String toString() {
-        return "Entry{}";
+      if (Utils.equals(1L, 1L)) {
+        seqCompResult_1.add(a);
+      }
     }
+    return Utils.copy(seqCompResult_1);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

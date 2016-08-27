@@ -19,7 +19,9 @@ public class VarRenamer
 	}
 
 	public Set<Renaming> computeRenamings(List<? extends INode> nodes,
-			ITypeCheckerAssistantFactory af, Map<AIdentifierStateDesignator, PDefinition> idDefs) throws AnalysisException
+			ITypeCheckerAssistantFactory af,
+			Map<AIdentifierStateDesignator, PDefinition> idDefs)
+			throws AnalysisException
 	{
 		VarShadowingRenameCollector renamer = new VarShadowingRenameCollector(af, idDefs);
 

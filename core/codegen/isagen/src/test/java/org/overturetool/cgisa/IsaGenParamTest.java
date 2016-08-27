@@ -39,8 +39,8 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 
 import com.google.gson.reflect.TypeToken;
 

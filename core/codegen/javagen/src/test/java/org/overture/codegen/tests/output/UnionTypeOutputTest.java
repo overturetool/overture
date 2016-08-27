@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.tests.output.base.JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class UnionTypeOutputTest extends JavaOutputTestBase

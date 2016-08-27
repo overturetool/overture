@@ -47,21 +47,21 @@ public class TemplateCallable
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((callable == null) ? 0 : callable.hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + (callable == null ? 0 : callable.hashCode());
+		result = prime * result + (key == null ? 0 : key.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj)
-	{		
-		if(!(obj instanceof TemplateCallable))
+	{
+		if (!(obj instanceof TemplateCallable))
 		{
 			return false;
 		}
-		
+
 		TemplateCallable other = (TemplateCallable) obj;
-		
+
 		return key.equals(other.getKey());
 	}
 }

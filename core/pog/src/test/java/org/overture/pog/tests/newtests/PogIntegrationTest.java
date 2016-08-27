@@ -1,23 +1,21 @@
 package org.overture.pog.tests.newtests;
 
-import static org.junit.Assert.fail;
-
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-
+import com.google.gson.reflect.TypeToken;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamStandardTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.ParamStandardTest;
+import org.overture.core.testing.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
 public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
@@ -26,7 +24,7 @@ public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
 	private final static String INTEGRATION_ROOT = "src/test/resources/integration";
 	
 
-	private static final String UPDATE_PROPERTY = "tests.update.pog.legacy";
+	private static final String UPDATE_PROPERTY = "testing.update.pog.integration";
 
 	public PogIntegrationTest(String nameParameter, String testParameter,
 			String resultParameter)
@@ -59,17 +57,6 @@ public class PogIntegrationTest extends ParamStandardTest<PogTestResult>
 	protected String getUpdatePropertyString()
 	{
 		return UPDATE_PROPERTY;
-	}
-
-	@Override
-	public void compareResults(PogTestResult actual, PogTestResult expected)
-	{
-		ResultComparison r = PogTestResult.compare(actual, expected);
-
-		if (!r.isMatch())
-		{
-			fail(r.getMessage() + getTestResultUpdateMessage());
-		}
 	}
 
 	@Override

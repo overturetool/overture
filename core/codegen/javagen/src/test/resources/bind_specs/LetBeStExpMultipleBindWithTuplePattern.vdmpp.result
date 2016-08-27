@@ -1,80 +1,77 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return fun();
-    }
+    return fun();
+  }
 
-    public static Number fun() {
-        Number letBeStExp_1 = null;
-        Tuple tuplePattern_1 = null;
-        Tuple tuplePattern_2 = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = SetUtil.set(Tuple.mk_(3L, 3L), Tuple.mk_(10L, 1L),
-                Tuple.mk_(4L, 4L), Tuple.mk_(5L, 5L), Tuple.mk_(2L, 20L),
-                Tuple.mk_(10L, 11L));
-        Number a = null;
-        Number b = null;
+  public Entry() {}
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            tuplePattern_1 = ((Tuple) iterator_1.next());
-            success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+  public static Number fun() {
 
-            if (success_1) {
-                a = ((Number) tuplePattern_1.get(0));
+    Number letBeStExp_1 = null;
+    Tuple tuplePattern_1 = null;
+    Tuple tuplePattern_2 = null;
+    Boolean success_1 = false;
+    VDMSet set_1 =
+        SetUtil.set(
+            Tuple.mk_(3L, 3L),
+            Tuple.mk_(10L, 1L),
+            Tuple.mk_(4L, 4L),
+            Tuple.mk_(5L, 5L),
+            Tuple.mk_(2L, 20L),
+            Tuple.mk_(10L, 11L));
+    Number a = null;
+    Number b = null;
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      tuplePattern_1 = ((Tuple) iterator_1.next());
+      success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+      if (success_1) {
+        a = ((Number) tuplePattern_1.get(0));
+        Number intPattern_1 = ((Number) tuplePattern_1.get(1));
+        success_1 = Utils.equals(intPattern_1, 1L);
+      }
 
-                Number intPattern_1 = ((Number) tuplePattern_1.get(1));
-                success_1 = Utils.equals(intPattern_1, 1L);
-            }
+      if (!(success_1)) {
+        continue;
+      }
 
-            if (!(success_1)) {
-                continue;
-            }
+      success_1 = false;
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext() && !(success_1); ) {
+        tuplePattern_2 = ((Tuple) iterator_2.next());
+        success_1 = tuplePattern_2.compatible(Number.class, Number.class);
+        if (success_1) {
+          Number intPattern_2 = ((Number) tuplePattern_2.get(0));
+          success_1 = Utils.equals(intPattern_2, 2L);
 
-            success_1 = false;
-
-            for (Iterator iterator_2 = set_1.iterator();
-                    iterator_2.hasNext() && !(success_1);) {
-                tuplePattern_2 = ((Tuple) iterator_2.next());
-                success_1 = tuplePattern_2.compatible(Number.class, Number.class);
-
-                if (success_1) {
-                    Number intPattern_2 = ((Number) tuplePattern_2.get(0));
-                    success_1 = Utils.equals(intPattern_2, 2L);
-
-                    if (success_1) {
-                        b = ((Number) tuplePattern_2.get(1));
-                    }
-                }
-
-                if (!(success_1)) {
-                    continue;
-                }
-
-                success_1 = true;
-            }
+          if (success_1) {
+            b = ((Number) tuplePattern_2.get(1));
+          }
         }
 
         if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
+          continue;
         }
 
-        letBeStExp_1 = a.longValue() + b.longValue();
-
-        return letBeStExp_1;
+        success_1 = true;
+      }
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    letBeStExp_1 = a.longValue() + b.longValue();
+    return letBeStExp_1;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

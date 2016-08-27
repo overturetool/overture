@@ -31,10 +31,10 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.logging.Logger;
+import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.core.tests.ParseTcFacade;
+import org.overture.core.testing.ParseTcFacade;
 
 public class AdHoc
 {
@@ -55,44 +55,44 @@ public class AdHoc
 		
 		for (GeneratedModule generatedClass : result)
 		{
-			Logger.getLog().println("(**********)");
+			MsgPrinter.getPrinter().println("(**********)");
 
 			if (generatedClass.hasMergeErrors())
 			{
-				Logger.getLog().println(String.format("Class %s could not be merged. Following merge errors were found:", generatedClass.getName()));
+				MsgPrinter.getPrinter().println(String.format("Class %s could not be merged. Following merge errors were found:", generatedClass.getName()));
 
 				GeneralCodeGenUtils.printMergeErrors(generatedClass.getMergeErrors());
 			} else if (!generatedClass.canBeGenerated())
 			{
-				Logger.getLog().println("Could not generate class: "
+				MsgPrinter.getPrinter().println("Could not generate class: "
 						+ generatedClass.getName() + "\n");
 				
 				if(generatedClass.hasUnsupportedIrNodes())
 				{
-					Logger.getLog().println("Following VDM constructs are not supported by the IR:");
+					MsgPrinter.getPrinter().println("Following VDM constructs are not supported by the IR:");
 					GeneralCodeGenUtils.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
 				}
 				
 				if(generatedClass.hasUnsupportedTargLangNodes())
 				{
-					Logger.getLog().println("Following IR constructs are not supported by the backend/target languages:");
+					MsgPrinter.getPrinter().println("Following IR constructs are not supported by the backend/target languages:");
 					GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
 				}
 				
 			} else
 			{
-				Logger.getLog().println(generatedClass.getContent());
+				MsgPrinter.getPrinter().println(generatedClass.getContent());
 				
 				Set<IrNodeInfo> warnings = generatedClass.getTransformationWarnings();
 				
 				if(!warnings.isEmpty())
 				{
-					Logger.getLog().println("Following transformation warnings were found:");
+					MsgPrinter.getPrinter().println("Following transformation warnings were found:");
 					GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getTransformationWarnings());
 				}
 			}
 
-			Logger.getLog().println("\n");
+			MsgPrinter.getPrinter().println("\n");
 		}
 		
 	}

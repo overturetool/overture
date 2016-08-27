@@ -1,131 +1,142 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return SeqUtil.seq(f(new R1(1L, 2L)), f(new R2(true, 'c')), f(new R2(false, 'c')));
+  }
+
+  public Entry() {}
+
+  public static Number f(final Object r) {
+
+    Number casesExpResult_1 = null;
+
+    Boolean success_1 = true;
+    if (r instanceof R1) {
+      R1 recordPattern_1 = ((R1) Utils.copy(r));
+      Number intPattern_1 = recordPattern_1.a;
+      success_1 = Utils.equals(intPattern_1, 1L);
+
+      if (success_1) {
+        Number intPattern_2 = recordPattern_1.b;
+        success_1 = Utils.equals(intPattern_2, 2L);
+      }
+
+    } else {
+      success_1 = false;
     }
 
-    public static Object Run() {
-        return SeqUtil.seq(f(new R1(1L, 2L)), f(new R2(true, 'c')),
-            f(new R2(false, 'c')));
+    if (!(success_1)) {
+      if (r instanceof R2) {
+        R2 recordPattern_2 = ((R2) Utils.copy(r));
+        success_1 = true;
+        Boolean boolPattern_1 = recordPattern_2.c;
+        success_1 = Utils.equals(boolPattern_1, true);
+
+        if (success_1) {
+          Character charPattern_1 = recordPattern_2.d;
+          success_1 = Utils.equals(charPattern_1, 'c');
+        }
+
+      } else {
+        success_1 = false;
+      }
+
+      if (success_1) {
+        casesExpResult_1 = 20L;
+      } else {
+        casesExpResult_1 = 30L;
+      }
+
+    } else {
+      casesExpResult_1 = 10L;
     }
 
-    public static Number f(final Object r) {
-        Number casesExpResult_1 = null;
+    return casesExpResult_1;
+  }
 
-        Boolean success_1 = true;
+  public String toString() {
 
-        if (r instanceof R1) {
-            R1 recordPattern_1 = ((R1) Utils.copy(r));
-            Number intPattern_1 = recordPattern_1.a;
-            success_1 = Utils.equals(intPattern_1, 1L);
+    return "Entry{}";
+  }
 
-            if (success_1) {
-                Number intPattern_2 = recordPattern_1.b;
-                success_1 = Utils.equals(intPattern_2, 2L);
-            }
-        } else {
-            success_1 = false;
-        }
+  public static class R1 implements Record {
+    public Number a;
+    public Number b;
 
-        if (!(success_1)) {
-            if (r instanceof R2) {
-                R2 recordPattern_2 = ((R2) Utils.copy(r));
-                success_1 = true;
+    public R1(final Number _a, final Number _b) {
 
-                Boolean boolPattern_1 = recordPattern_2.c;
-                success_1 = Utils.equals(boolPattern_1, true);
+      a = _a;
+      b = _b;
+    }
 
-                if (success_1) {
-                    Character charPattern_1 = recordPattern_2.d;
-                    success_1 = Utils.equals(charPattern_1, 'c');
-                }
-            } else {
-                success_1 = false;
-            }
+    public boolean equals(final Object obj) {
 
-            if (success_1) {
-                casesExpResult_1 = 20L;
-            } else {
-                casesExpResult_1 = 30L;
-            }
-        } else {
-            casesExpResult_1 = 10L;
-        }
+      if (!(obj instanceof R1)) {
+        return false;
+      }
 
-        return casesExpResult_1;
+      R1 other = ((R1) obj);
+
+      return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(a, b);
+    }
+
+    public R1 copy() {
+
+      return new R1(a, b);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`R1" + Utils.formatFields(a, b);
+    }
+  }
+
+  public static class R2 implements Record {
+    public Boolean c;
+    public Character d;
+
+    public R2(final Boolean _c, final Character _d) {
+
+      c = _c;
+      d = _d;
     }
 
-    public static class R1 implements Record {
-        public Number a;
-        public Number b;
+    public boolean equals(final Object obj) {
 
-        public R1(final Number _a, final Number _b) {
-            a = _a;
-            b = _b;
-        }
+      if (!(obj instanceof R2)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R1)) {
-                return false;
-            }
+      R2 other = ((R2) obj);
 
-            R1 other = ((R1) obj);
-
-            return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a, b);
-        }
-
-        public R1 copy() {
-            return new R1(a, b);
-        }
-
-        public String toString() {
-            return "mk_Entry`R1" + Utils.formatFields(a, b);
-        }
+      return (Utils.equals(c, other.c)) && (Utils.equals(d, other.d));
     }
 
-    public static class R2 implements Record {
-        public Boolean c;
-        public Character d;
+    public int hashCode() {
 
-        public R2(final Boolean _c, final Character _d) {
-            c = _c;
-            d = _d;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R2)) {
-                return false;
-            }
-
-            R2 other = ((R2) obj);
-
-            return (Utils.equals(c, other.c)) && (Utils.equals(d, other.d));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(c, d);
-        }
-
-        public R2 copy() {
-            return new R2(c, d);
-        }
-
-        public String toString() {
-            return "mk_Entry`R2" + Utils.formatFields(c, d);
-        }
+      return Utils.hashCode(c, d);
     }
+
+    public R2 copy() {
+
+      return new R2(c, d);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R2" + Utils.formatFields(c, d);
+    }
+  }
 }
 
 ##########

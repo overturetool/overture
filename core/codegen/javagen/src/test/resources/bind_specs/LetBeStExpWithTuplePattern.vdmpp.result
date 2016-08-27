@@ -1,56 +1,51 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    return f();
+  }
+
+  public Entry() {}
+
+  public static Number f() {
+
+    Number letBeStExp_1 = null;
+    Tuple tuplePattern_1 = null;
+    Boolean success_1 = false;
+    VDMSet set_1 =
+        SetUtil.set(Tuple.mk_(1L, 11L), Tuple.mk_(2L, 22L), Tuple.mk_(3L, 33L), Tuple.mk_(4L, 44L));
+    Number a = null;
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      tuplePattern_1 = ((Tuple) iterator_1.next());
+      success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+      if (success_1) {
+        a = ((Number) tuplePattern_1.get(0));
+        Number intPattern_1 = ((Number) tuplePattern_1.get(1));
+        success_1 = Utils.equals(intPattern_1, 33L);
+      }
+
+      if (!(success_1)) {
+        continue;
+      }
+
+      success_1 = true;
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public static Object Run() {
-        return f();
-    }
+    letBeStExp_1 = a;
+    return letBeStExp_1;
+  }
 
-    public static Number f() {
-        Number letBeStExp_1 = null;
-        Tuple tuplePattern_1 = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = SetUtil.set(Tuple.mk_(1L, 11L), Tuple.mk_(2L, 22L),
-                Tuple.mk_(3L, 33L), Tuple.mk_(4L, 44L));
-        Number a = null;
+  public String toString() {
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            tuplePattern_1 = ((Tuple) iterator_1.next());
-            success_1 = tuplePattern_1.compatible(Number.class, Number.class);
-
-            if (success_1) {
-                a = ((Number) tuplePattern_1.get(0));
-
-                Number intPattern_1 = ((Number) tuplePattern_1.get(1));
-                success_1 = Utils.equals(intPattern_1, 33L);
-            }
-
-            if (!(success_1)) {
-                continue;
-            }
-
-            success_1 = true;
-        }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
-
-        letBeStExp_1 = a;
-
-        return letBeStExp_1;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -1,80 +1,81 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, new A(5L), 6L,
-            7L, 8L);
+  private static final VDMSet xs = SetUtil.set(1L, 2L, 3L, 4L, new A(5L), 6L, 7L, 8L);
 
-    public Entry() {
+  public static Object Run() {
+
+    Object recordPattern_1 = null;
+    Boolean success_1 = false;
+    VDMSet set_1 = Utils.copy(Entry.xs);
+    Number a = null;
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      recordPattern_1 = ((Object) iterator_1.next());
+      if (recordPattern_1 instanceof A) {
+        success_1 = true;
+        a = ((A) recordPattern_1).a;
+
+      } else {
+        success_1 = false;
+      }
+
+      if (!(success_1)) {
+        continue;
+      }
+
+      success_1 = Utils.equals(a, 5L);
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public static Object Run() {
-        Object recordPattern_1 = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = Utils.copy(Entry.xs);
-        Number a = null;
+    return a;
+  }
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            recordPattern_1 = ((Object) iterator_1.next());
+  public Entry() {}
 
-            if (recordPattern_1 instanceof A) {
-                success_1 = true;
-                a = ((A) recordPattern_1).a;
-            } else {
-                success_1 = false;
-            }
+  public String toString() {
 
-            if (!(success_1)) {
-                continue;
-            }
+    return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+  }
 
-            success_1 = Utils.equals(a, 5L);
-        }
+  private static class A implements Record {
+    public Number a;
 
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
+    public A(final Number _a) {
 
-        return a;
+      a = _a;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(a, other.a);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(a);
+    }
+
+    public A copy() {
+
+      return new A(a);
     }
 
     public String toString() {
-        return "Entry{" + "xs = " + Utils.toString(xs) + "}";
+
+      return "mk_Entry`A" + Utils.formatFields(a);
     }
-
-    private static class A implements Record {
-        public Number a;
-
-        public A(final Number _a) {
-            a = _a;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof A)) {
-                return false;
-            }
-
-            A other = ((A) obj);
-
-            return Utils.equals(a, other.a);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a);
-        }
-
-        public A copy() {
-            return new A(a);
-        }
-
-        public String toString() {
-            return "mk_Entry`A" + Utils.formatFields(a);
-        }
-    }
+  }
 }
 
 ##########

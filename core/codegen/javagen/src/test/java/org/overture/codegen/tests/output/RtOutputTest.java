@@ -13,7 +13,7 @@ import org.overture.codegen.tests.output.base.JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class RtOutputTest extends JavaOutputTestBase
@@ -26,16 +26,16 @@ public class RtOutputTest extends JavaOutputTestBase
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Before
 	public void init()
 	{
 		super.init();
-		
+
 		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{

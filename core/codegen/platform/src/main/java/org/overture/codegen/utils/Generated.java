@@ -38,8 +38,7 @@ public class Generated
 	protected List<Exception> mergeErrors;
 
 	public Generated(String content, Set<VdmNodeInfo> unsupportedInIr,
-			Set<IrNodeInfo> unsupportedInTargLang,
-			List<Exception> mergeErrors)
+			Set<IrNodeInfo> unsupportedInTargLang, List<Exception> mergeErrors)
 	{
 		this.content = content;
 		this.unsupportedInIr = unsupportedInIr;
@@ -50,17 +49,18 @@ public class Generated
 
 	public Generated(String content)
 	{
-		this(content, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(),new LinkedList<Exception>());
+		this(content, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(), new LinkedList<Exception>());
 	}
 
-	public Generated(Set<VdmNodeInfo> unsupportedNodes, Set<IrNodeInfo> unsupportedInTargLang)
+	public Generated(Set<VdmNodeInfo> unsupportedNodes,
+			Set<IrNodeInfo> unsupportedInTargLang)
 	{
-		this(null, unsupportedNodes, unsupportedInTargLang,new LinkedList<Exception>());
+		this(null, unsupportedNodes, unsupportedInTargLang, new LinkedList<Exception>());
 	}
 
 	public Generated(List<Exception> mergeErrrors)
 	{
-		this(null, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(),mergeErrrors);
+		this(null, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(), mergeErrrors);
 	}
 
 	public String getContent()
@@ -72,7 +72,7 @@ public class Generated
 	{
 		return unsupportedInIr;
 	}
-	
+
 	public Set<IrNodeInfo> getUnsupportedInTargLang()
 	{
 		return unsupportedInTargLang;
@@ -87,17 +87,18 @@ public class Generated
 	{
 		return unsupportedInIr.isEmpty() && unsupportedInTargLang.isEmpty();
 	}
-	
+
 	public boolean hasErrors()
 	{
-		return !unsupportedInIr.isEmpty() || !unsupportedInTargLang.isEmpty() || !mergeErrors.isEmpty();
+		return !unsupportedInIr.isEmpty() || !unsupportedInTargLang.isEmpty()
+				|| !mergeErrors.isEmpty();
 	}
-	
+
 	public boolean hasUnsupportedIrNodes()
 	{
 		return !unsupportedInIr.isEmpty();
 	}
-	
+
 	public boolean hasUnsupportedTargLangNodes()
 	{
 		return !unsupportedInTargLang.isEmpty();
@@ -108,7 +109,8 @@ public class Generated
 		return transformationWarnings;
 	}
 
-	public void setTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
+	public void setTransformationWarnings(
+			Set<IrNodeInfo> transformationWarnings)
 	{
 		this.transformationWarnings = transformationWarnings;
 	}

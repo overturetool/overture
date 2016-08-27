@@ -27,7 +27,7 @@ public class ConfiguredCloningJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ConfiguredCloningOutputTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
+		return collectTests(new File(ConfiguredCloningOutputTest.ROOT), new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class ConfiguredCloningJavaGenTest extends JavaGenTestBase
 
 		return javaSettings;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

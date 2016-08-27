@@ -41,11 +41,11 @@ public class ExpressionTestHandler extends ExecutableTestHandler
 	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
 		initVdmEnv();
-		
+
 		String input = GeneralUtils.readFromFile(intputFile);
 
 		Value val = InterpreterUtil.interpret(input);
-		
+
 		return new ExecutionResult(val.toString(), val);
 	}
 }

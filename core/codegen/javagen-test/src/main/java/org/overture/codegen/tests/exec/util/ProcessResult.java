@@ -4,7 +4,7 @@ public class ProcessResult
 {
 	// The exit code returned by the process
 	private int exitCode;
-	
+
 	// The output of the process read from the input and error streams
 	private StringBuilder output;
 

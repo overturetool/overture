@@ -52,7 +52,7 @@ public class PatternInfo
 	{
 		return actualValue;
 	}
-	
+
 	@Override
 	public String toString()
 	{

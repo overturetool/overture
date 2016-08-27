@@ -1,77 +1,78 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static VDMMap Run() {
+
+    VDMSet ternaryIfExp_1 = null;
+
+    if (Utils.equals(1L, 1L)) {
+      ternaryIfExp_1 = SetUtil.set(SeqUtil.seq(new Rec(2L)));
+    } else {
+      ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
     }
 
-    public static VDMMap Run() {
-        VDMSet ternaryIfExp_1 = null;
+    final VDMSet hr = Utils.copy(ternaryIfExp_1);
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_1 = Utils.copy(hr);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      VDMSeq ss = ((VDMSeq) iterator_1.next());
+      Object obj_1 = Utils.copy(Utils.get(ss, 1L));
+      Number apply_1 = null;
+      if (obj_1 instanceof Rec) {
+        apply_1 = ((Number) ((Rec) obj_1).x);
+      } else {
+        throw new RuntimeException("Missing member: x");
+      }
 
-        if (Utils.equals(1L, 1L)) {
-            ternaryIfExp_1 = SetUtil.set(SeqUtil.seq(new Rec(2L)));
-        } else {
-            ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
-        }
+      MapUtil.mapAdd(mapCompResult_1, new Maplet(1L, apply_1));
+    }
+    return Utils.copy(mapCompResult_1);
+  }
 
-        final VDMSet hr = Utils.copy(ternaryIfExp_1);
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = Utils.copy(hr);
+  public Entry() {}
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            VDMSeq ss = ((VDMSeq) iterator_1.next());
-            Object obj_1 = Utils.copy(Utils.get(ss, 1L));
+  public String toString() {
 
-            Number apply_1 = null;
+    return "Entry{}";
+  }
 
-            if (obj_1 instanceof Rec) {
-                apply_1 = ((Number) ((Rec) obj_1).x);
-            } else {
-                throw new RuntimeException("Missing member: x");
-            }
+  public static class Rec implements Record {
+    public Number x;
 
-            MapUtil.mapAdd(mapCompResult_1, new Maplet(1L, apply_1));
-        }
+    public Rec(final Number _x) {
 
-        return Utils.copy(mapCompResult_1);
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
+
+      Rec other = ((Rec) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public Rec copy() {
+
+      return new Rec(x);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(x);
     }
-
-    public static class Rec implements Record {
-        public Number x;
-
-        public Rec(final Number _x) {
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public Rec copy() {
-            return new Rec(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(x);
-        }
-    }
+  }
 }
 
 ##########

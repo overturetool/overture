@@ -1,78 +1,153 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.overturetool</groupId>
-    <artifactId>ide</artifactId>
-    <version>2.3.5-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+	<parent>
+		<groupId>org.overturetool</groupId>
+		<artifactId>ide</artifactId>
+		<version>2.3.9-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-  <packaging>eclipse-repository</packaging>
+	<packaging>eclipse-repository</packaging>
 
-  <groupId>org.overturetool.ide</groupId>
-  <artifactId>org.overture.ide.product</artifactId>
-  <name>Overture IDE Standalone Product</name>
+	<groupId>org.overturetool.ide</groupId>
+	<artifactId>org.overture.ide.product</artifactId>
+	<name>Overture IDE Standalone Product</name>
 
-  <properties>
-    <repo.root>${project.basedir}/../..</repo.root>
-    <documentation.root>${repo.root}/externals/docrepo/documentation</documentation.root>
-  </properties>
-
-  <build>
-    <resources>
-      <resource>
+	<build>
+		<resources>
+			<resource>
+				<targetPath>${basedir}</targetPath>
+				<directory>${basedir}/src/main/resources/p2</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
         <targetPath>${basedir}</targetPath>
-        <directory>${basedir}/src/main/resources</directory>
-        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources/product</directory>
+        <filtering>false</filtering>
       </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>p2-inf</id>
-            <goals>
-              <goal>resources</goal>
-            </goals>
-            <phase>process-resources</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-p2-director-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>materialize-products</id>
-            <goals>
-              <goal>materialize-products</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>archive-products</id>
-            <goals>
-              <goal>archive-products</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <products>
-            <product>
-              <id>org.overture.ide.platform.product</id>
-              <archiveFileName>Overture-${project.version}</archiveFileName>
-              <rootFolder>Overture</rootFolder>
-<rootFolders>
-          <macosx>Overture.app</macosx>
-        </rootFolders>
-            </product>
-          </products>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>p2-inf</id>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+						<phase>generate-resources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<overwrite>true</overwrite>
         </configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>materialize-products</id>
+						<goals>
+							<goal>materialize-products</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>archive-products</id>
+						<goals>
+							<goal>archive-products</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<products>
+						<product>
+							<id>org.overture.ide.platform.product</id>
+							<archiveFileName>Overture-${project.version}</archiveFileName>
+							<rootFolder>Overture</rootFolder>
+							<rootFolders>
+								<macosx>Overture.app</macosx>
+							</rootFolders>
+						</product>
+					</products>
+				</configuration>
+			</plugin>
+
+			<plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <configuration>
+              <tasks>
+
+                <replace dir="${basedir}/" >
+                  <include name="*.product"/>
+                  <replacefilter     token="VERSION" value="${project.version}"/>
+                </replace>
+								<replace dir="${basedir}/" >
+                  <include name="*.product"/>
+                  <replacefilter     token="-SNAPSHOT" value=".qualifier"/>
+                </replace>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
-    </plugins>
-  </build>
+
+		</plugins>
+	</build>
+
+
+
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>process-resources</phase>
+								<configuration>
+									<tasks>
+
+										<replace dir="${basedir}/" >
+											<include name="*.product"/>
+											<replacefilter     token="DELETE.FOR.RELEASE.osgi.instance.area.default" value="osgi.instance.area.default"/>
+											<replacefilter     token="VERSION" value="${project.version}"/>
+											<replacefilter     token="-SNAPSHOT" value=".qualifier"/>
+										</replace>
+										
+										<replace dir="${basedir}/" >
+											<include name="overture.p2.inf"/>
+											<replacefilter     token="name:Overture,enabled:false" value="name:Overture,enabled:true"/>
+											<replacefilter     token="name:Overture Development,enabled:true" value="name:Overture Development,enabled:false"/>
+										</replace>
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
 
 </project>

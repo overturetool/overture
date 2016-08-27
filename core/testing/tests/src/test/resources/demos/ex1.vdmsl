@@ -1,5 +1,0 @@
-types
-Inf = <INFINITY>;
-
-Kg = real|Inf
-  inv k == k <> <INFINITY> => k >= 0;

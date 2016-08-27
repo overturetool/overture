@@ -20,8 +20,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public abstract class JavaCodeGenTestCase extends
-		TestResourcesResultTestCase4<Object>
+public abstract class JavaCodeGenTestCase
+		extends TestResourcesResultTestCase4<Object>
 {
 	private static final String TESTS_PROPERTY_PREFIX = "tests.javagen.override.";
 
@@ -136,7 +136,8 @@ public abstract class JavaCodeGenTestCase extends
 		LexLocation.absoluteToStringLocation = false;
 		if (System.getProperty(getTestsPropertyPrefix() + "all") != null
 				|| getPropertyId() != null
-				&& System.getProperty(getTestsPropertyPrefix() + getPropertyId()) != null)
+						&& System.getProperty(getTestsPropertyPrefix()
+								+ getPropertyId()) != null)
 		{
 			Properties.recordTestResults = true;
 		}

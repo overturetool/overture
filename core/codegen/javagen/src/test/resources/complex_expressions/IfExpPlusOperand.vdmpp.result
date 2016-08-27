@@ -1,35 +1,35 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  private void op() {
+
+    Number x = 0.0;
+    Number ternaryIfExp_1 = null;
+
+    if (x.doubleValue() > 10L) {
+      ternaryIfExp_1 = 1.0;
+    } else {
+      ternaryIfExp_1 = 2.0;
     }
 
-    private void op() {
-        Number x = 0.0;
-        Number ternaryIfExp_1 = null;
+    x = x.doubleValue() * 2L + (ternaryIfExp_1.longValue());
+  }
 
-        if (x.doubleValue() > 10L) {
-            ternaryIfExp_1 = 1.0;
-        } else {
-            ternaryIfExp_1 = 2.0;
-        }
+  public static Object Run() {
 
-        x = (x.doubleValue() * 2L) + (ternaryIfExp_1.longValue());
-    }
+    new Entry().op();
+    return 0L;
+  }
 
-    public static Object Run() {
-        new Entry().op();
+  public Entry() {}
 
-        return 0L;
-    }
+  public String toString() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

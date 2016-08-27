@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.codegen.tests.output.base.JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.testing.PathsProvider;
 
 @RunWith(Parameterized.class)
 public class PackageOutputTest extends JavaOutputTestBase
@@ -23,13 +23,13 @@ public class PackageOutputTest extends JavaOutputTestBase
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	@Override
 	public JavaSettings getJavaSettings()
 	{
 		JavaSettings javaSettings = super.getJavaSettings();
 		javaSettings.setJavaRootPackage("my.model");
-		
+
 		return javaSettings;
 	}
 

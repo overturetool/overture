@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class AlternativeTraceNode extends TraceNode implements
-		IIterableTraceNode
+public class AlternativeTraceNode extends TraceNode
+		implements IIterableTraceNode
 {
 	public List<TraceNode> alternatives;
-	
+
 	public void add(TraceNode node)
 	{
 		alternatives.add(node);
@@ -54,22 +54,22 @@ public class AlternativeTraceNode extends TraceNode implements
 		}
 
 		Pair<Integer, Integer> v = indics.get(index);
-		
+
 		TraceNode tmp = alternatives.get(v.getFirst());
-		
-		if(tmp instanceof IIterableTraceNode)
+
+		if (tmp instanceof IIterableTraceNode)
 		{
 			IIterableTraceNode in = (IIterableTraceNode) tmp;
-			
+
 			CallSequence callSeq = tmp.getVars();
 			callSeq.addAll(in.get(v.getSecond()));
-			
+
 			return callSeq;
-		}else
+		} else
 		{
 			CallSequence callSeq = tmp.getVars();
 			callSeq.addAll(tmp.getTests().get(v.getSecond()));
-			
+
 			return callSeq;
 		}
 	}
@@ -79,40 +79,40 @@ public class AlternativeTraceNode extends TraceNode implements
 	{
 		return new LazyTestSequence(this);
 	}
-	
+
 	@Override
 	public int size()
 	{
 		int size = 0;
-		
-		if(indics!=null)
+
+		if (indics != null)
 		{
 			return indics.size();
 		}
-		
+
 		indics = new HashMap<Integer, Pair<Integer, Integer>>();
-		int k=0;
-		
+		int k = 0;
+
 		for (TraceNode node : alternatives)
 		{
 			// Alternatives within an alternative are just like larger alts,
 			// so we add all the lower alts to the list...
-			
+
 			int s = 0;
-			if(node instanceof IIterableTraceNode)
+			if (node instanceof IIterableTraceNode)
 			{
-				s = ((IIterableTraceNode)node).size();
-			}else
+				s = ((IIterableTraceNode) node).size();
+			} else
 			{
 				s = node.getTests().size();
 			}
-			
+
 			for (int i = 0; i < s; i++)
 			{
-				indics.put(size+i, new Pair<Integer,Integer>(k,i));
+				indics.put(size + i, new Pair<Integer, Integer>(k, i));
 			}
-			
-			size+=s;
+
+			size += s;
 			k++;
 		}
 		return size;

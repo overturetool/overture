@@ -32,6 +32,7 @@ import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
 
 /***************************************
@@ -100,7 +101,8 @@ public class NamedValueLister extends
 			{
 				VdmRuntimeError.abort(e, initialContext);
 			}
-		} else if (def.getTypebind() != null)
+		}
+		else if (def.getTypebind() != null)
 		{
 			try
 			{
@@ -113,7 +115,8 @@ public class NamedValueLister extends
 			{
 				VdmRuntimeError.abort(def.getLocation(), e);
 			}
-		} else if (def.getSetbind() != null)
+		}
+		else if (def.getSetbind() != null)
 		{
 			try
 			{
@@ -125,7 +128,34 @@ public class NamedValueLister extends
 				}
 
 				nvpl = af.createPPatternAssistant().getNamedValues(def.getSetbind().getPattern(), v, initialContext);
-			} catch (AnalysisException e)
+			}
+			catch (AnalysisException e)
+			{
+				if (e instanceof PatternMatchException)
+				{
+					VdmRuntimeError.abort((PatternMatchException) e, initialContext);
+				}
+
+				if (e instanceof ValueException)
+				{
+					VdmRuntimeError.abort(def.getLocation(), (ValueException) e);
+				}
+			}
+		}
+		else if (def.getSeqbind() != null)
+		{
+			try
+			{
+				ValueList seq = def.getSeqbind().getSeq().apply(VdmRuntime.getExpressionEvaluator(), initialContext).seqValue(initialContext);
+
+				if (!seq.contains(v))
+				{
+					VdmRuntimeError.abort(def.getLocation(), 4002, "Expression value is not in seq bind", initialContext);
+				}
+
+				nvpl = af.createPPatternAssistant().getNamedValues(def.getSeqbind().getPattern(), v, initialContext);
+			}
+			catch (AnalysisException e)
 			{
 				if (e instanceof PatternMatchException)
 				{

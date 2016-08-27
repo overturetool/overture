@@ -29,12 +29,12 @@ public class JmlOutputTests extends JmlGenTestBase
 	{
 		super(inputFile);
 	}
-	
+
 	@Test
 	public void run()
 	{
 		JmlGenMain.main(getJmlGenMainProcessArgs(genJavaFolder));
-		
+
 		try
 		{
 			configureResultGeneration();
@@ -51,26 +51,27 @@ public class JmlOutputTests extends JmlGenTestBase
 			unconfigureResultGeneration();
 		}
 	}
-	
+
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data()
 	{
 		return TestUtil.collectVdmslFiles(GeneralUtils.getFilesRecursively(new File(JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT)));
 	}
-	
+
 	protected void storeGeneratedJml()
 	{
-		for(File file : TestUtil.collectStoredJavaJmlFiles(getTestDataFolder()))
+		for (File file : TestUtil.collectStoredJavaJmlFiles(getTestDataFolder()))
 		{
-			Assert.assertTrue("Problems deleting stored Java/JML file", file.exists() && file.delete());
+			Assert.assertTrue("Problems deleting stored Java/JML file", file.exists()
+					&& file.delete());
 		}
-		
+
 		try
 		{
 			List<File> filesToStore = TestUtil.collectGenJavaJmlFiles(genJavaFolder);
-	
+
 			File testFolder = getTestDataFolder();
-	
+
 			for (File file : filesToStore)
 			{
 				File javaFile = new File(testFolder, file.getName());
@@ -83,54 +84,57 @@ public class JmlOutputTests extends JmlGenTestBase
 					+ e.getMessage(), false);
 		}
 	}
-	
+
 	protected void checkGenJavaJml()
 	{
 		List<File> storedJavaJmlFiles = TestUtil.collectStoredJavaJmlFiles(getTestDataFolder());
 		List<File> genJavaJmlFiles = TestUtil.collectGenJavaJmlFiles(genJavaFolder);
-		
+
 		Assert.assertTrue("The number of stored Java/JML files differs "
 				+ "from the number of generated Java/JML files", storedJavaJmlFiles.size() == genJavaJmlFiles.size());
-	
-		Comparator<File> comp = new Comparator<File>() {
-			
-	        @Override
-	        public int compare(File f1, File f2) {
-	        	
-	        	// Reverse paths because root folders differ
-	        	String f1PathRev = new StringBuilder(f1.getAbsolutePath()).reverse().toString();
-	        	String f2PathRev = new StringBuilder(f2.getAbsolutePath()).reverse().toString();
-	        	
-	        	return f1PathRev.compareTo(f2PathRev);
-	        }
-	    };
-	    
-	    Collections.sort(storedJavaJmlFiles, comp);
-	    Collections.sort(genJavaJmlFiles, comp);
-	    
-	    for(int i = 0; i < storedJavaJmlFiles.size(); i++)
-	    {
-	    	try
+
+		Comparator<File> comp = new Comparator<File>()
+		{
+
+			@Override
+			public int compare(File f1, File f2)
+			{
+
+				// Reverse paths because root folders differ
+				String f1PathRev = new StringBuilder(f1.getAbsolutePath()).reverse().toString();
+				String f2PathRev = new StringBuilder(f2.getAbsolutePath()).reverse().toString();
+
+				return f1PathRev.compareTo(f2PathRev);
+			}
+		};
+
+		Collections.sort(storedJavaJmlFiles, comp);
+		Collections.sort(genJavaJmlFiles, comp);
+
+		for (int i = 0; i < storedJavaJmlFiles.size(); i++)
+		{
+			try
 			{
 				String storedContent = GeneralUtils.readFromFile(storedJavaJmlFiles.get(i)).trim();
 				String genContent = GeneralUtils.readFromFile(genJavaJmlFiles.get(i)).trim();
-	
+
 				Assert.assertEquals("Stored Java/JML is different from generared Java/JML", storedContent, genContent);
 			} catch (IOException e)
 			{
 				Assert.fail("Problems comparing stored and generated Java/JML");
 				e.printStackTrace();
 			}
-	    }
+		}
 	}
-	
+
 	@Override
 	public String[] getJmlGenMainProcessArgs(File outputFolder)
 	{
 		if (inputFile.getAbsolutePath().contains(JmlInvariantForExecTests.TEST_DIR))
 		{
 			String[] stdArgs = super.getJmlGenMainProcessArgs(outputFolder);
-			String[] invariantForArg = new String[] { JmlGenMain.INVARIANT_FOR };
+			String[] invariantForArg = new String[] {
+					JmlGenMain.INVARIANT_FOR };
 
 			return GeneralUtils.concat(stdArgs, invariantForArg);
 		} else

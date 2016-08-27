@@ -28,16 +28,16 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.types.PType;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStateDesignatorIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.statements.AFieldStateDesignatorIR;
 import org.overture.codegen.ir.statements.AIdentifierStateDesignatorIR;
 import org.overture.codegen.ir.statements.AMapSeqStateDesignatorIR;
-import org.overture.codegen.ir.IRInfo;
 
-public class StateDesignatorVisitorIR extends
-		AbstractVisitorIR<IRInfo, SStateDesignatorIR>
+public class StateDesignatorVisitorIR
+		extends AbstractVisitorIR<IRInfo, SStateDesignatorIR>
 {
 	@Override
 	public SStateDesignatorIR caseAFieldStateDesignator(
@@ -69,7 +69,7 @@ public class StateDesignatorVisitorIR extends
 		String className = node.getName().getModule();
 		boolean explicit = node.getName().getExplicit();
 		boolean isLocal = question.getDeclAssistant().isLocal(node, question);
-		
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 
 		AIdentifierStateDesignatorIR idStateDesignatorCg = new AIdentifierStateDesignatorIR();

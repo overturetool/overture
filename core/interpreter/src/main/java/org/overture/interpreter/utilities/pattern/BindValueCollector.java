@@ -3,6 +3,7 @@ package org.overture.interpreter.utilities.pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -30,6 +31,13 @@ public class BindValueCollector extends
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getValues(bind.getSet(), ctxt);
+	}
+
+	@Override
+	public ValueList caseASeqBind(ASeqBind bind, ObjectContext ctxt)
+			throws AnalysisException
+	{
+		return af.createPExpAssistant().getValues(bind.getSeq(), ctxt);
 	}
 
 	@Override

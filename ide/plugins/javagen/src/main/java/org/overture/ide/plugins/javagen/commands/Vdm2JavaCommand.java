@@ -201,8 +201,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 						
 					} catch (Exception e)
 					{
-						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
-						CodeGenConsole.GetInstance().printErrorln("Try to run Overture with write permissions.\n");
+						CodeGenConsole.GetInstance().errorln("Problems saving the code generated Java source files to disk.");
+						CodeGenConsole.GetInstance().errorln("Try to run Overture with write permissions.\n");
 						
 						if(SystemUtils.IS_OS_WINDOWS)
 						{
@@ -224,8 +224,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					}
 					catch(Exception e)
 					{
-						CodeGenConsole.GetInstance().printErrorln("Problems copying the Java code generator runtime library to " + libFolder.getAbsolutePath());
-						CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+						CodeGenConsole.GetInstance().errorln("Problems copying the Java code generator runtime library to " + libFolder.getAbsolutePath());
+						CodeGenConsole.GetInstance().errorln("Reason: " + e.getMessage());
 					}
 					
 					try
@@ -235,8 +235,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					}
 					catch(Exception e)
 					{
-						CodeGenConsole.GetInstance().printErrorln("Problems copying the Java code generator runtime library sources to " + libFolder.getAbsolutePath());
-						CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+						CodeGenConsole.GetInstance().errorln("Problems copying the Java code generator runtime library sources to " + libFolder.getAbsolutePath());
+						CodeGenConsole.GetInstance().errorln("Reason: " + e.getMessage());
 					}
 					
 					if(generateJml(vdmProject))
@@ -248,8 +248,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 						}
 						catch(Exception e)
 						{
-							CodeGenConsole.GetInstance().printErrorln("Problems copying the VDM-to-JML runtime library to " + libFolder.getAbsolutePath());
-							CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+							CodeGenConsole.GetInstance().errorln("Problems copying the VDM-to-JML runtime library to " + libFolder.getAbsolutePath());
+							CodeGenConsole.GetInstance().errorln("Reason: " + e.getMessage());
 						}
 						
 						try
@@ -259,8 +259,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 						}
 						catch(Exception e)
 						{
-							CodeGenConsole.GetInstance().printErrorln("Problems copying the VDM-to-JML runtime library sources to " + libFolder.getAbsolutePath());
-							CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+							CodeGenConsole.GetInstance().errorln("Problems copying the VDM-to-JML runtime library sources to " + libFolder.getAbsolutePath());
+							CodeGenConsole.GetInstance().errorln("Reason: " + e.getMessage());
 						}
 					}
 					
@@ -292,8 +292,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					} catch (Exception e)
 					{
 						e.printStackTrace();
-						CodeGenConsole.GetInstance().printErrorln("Problems generating the eclipse project with the generated Java code");
-						CodeGenConsole.GetInstance().printErrorln("Reason: "
+						CodeGenConsole.GetInstance().errorln("Problems generating the eclipse project with the generated Java code");
+						CodeGenConsole.GetInstance().errorln("Reason: "
 								+ e.getMessage());
 					}
 					
@@ -457,7 +457,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				CodeGenConsole.GetInstance().println(PluginVdm2JavaUtil.WARNING + " " + warning);
 			}
 			
-			CodeGenConsole.GetInstance().printErrorln("");
+			CodeGenConsole.GetInstance().errorln("");
 		}
 	}
 	
@@ -536,13 +536,13 @@ public class Vdm2JavaCommand extends AbstractHandler
 		{
 			if (generatedModule.hasMergeErrors())
 			{
-				CodeGenConsole.GetInstance().printErrorln(String.format("Could not generate Java for class %s. Following errors were found:", generatedModule.getName()));
+				CodeGenConsole.GetInstance().errorln(String.format("Could not generate Java for class %s. Following errors were found:", generatedModule.getName()));
 
 				List<Exception> mergeErrors = generatedModule.getMergeErrors();
 
 				for (Exception error : mergeErrors)
 				{
-					CodeGenConsole.GetInstance().printErrorln(error.toString());
+					CodeGenConsole.GetInstance().errorln(error.toString());
 				}
 			} else if (!generatedModule.canBeGenerated())
 			{
@@ -626,7 +626,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				+ "The details of this problem have been reported in the Error Log.";
 
 		Activator.log(errorMessage, ex);
-		CodeGenConsole.GetInstance().printErrorln(errorMessage);
+		CodeGenConsole.GetInstance().errorln(errorMessage);
 		ex.printStackTrace();
 	}
 

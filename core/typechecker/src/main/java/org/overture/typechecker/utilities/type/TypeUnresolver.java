@@ -33,7 +33,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
@@ -226,7 +226,7 @@ public class TypeUnresolver extends AnalysisAdaptor
 	}
 
 	@Override
-	public void caseASetType(ASetType type) throws AnalysisException
+	public void defaultSSetType(SSetType type) throws AnalysisException
 	{
 		if (!type.getResolved())
 		{

@@ -34,8 +34,8 @@ public class InvalidNamesResult
 	private String correctionPrefix;
 
 	public InvalidNamesResult(Set<Violation> reservedWordViolations,
-			Set<Violation> typenameViolations,
-			Set<Violation> tempVarViolations, Set<Violation> objectMethodViolations, String correctionPrefix)
+			Set<Violation> typenameViolations, Set<Violation> tempVarViolations,
+			Set<Violation> objectMethodViolations, String correctionPrefix)
 	{
 		this.reservedWordViolations = reservedWordViolations;
 		this.typenameViolations = typenameViolations;
@@ -67,7 +67,7 @@ public class InvalidNamesResult
 	{
 		return tempVarViolations;
 	}
-	
+
 	public Set<Violation> getObjectMethodViolations()
 	{
 		return objectMethodViolations;
@@ -76,7 +76,8 @@ public class InvalidNamesResult
 	public boolean isEmpty()
 	{
 		return reservedWordViolations.isEmpty() && typenameViolations.isEmpty()
-				&& tempVarViolations.isEmpty() && objectMethodViolations.isEmpty();
+				&& tempVarViolations.isEmpty()
+				&& objectMethodViolations.isEmpty();
 	}
 
 	public String getCorrectionPrefix()

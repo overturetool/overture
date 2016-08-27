@@ -1,48 +1,51 @@
+
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 
-import java.util.*;
-
-
 @SuppressWarnings("all")
 public class Entry implements java.io.Serializable {
-    public Entry() {
-    }
+  private void op() {
 
-    private void op() {
-        /* skip */
-    }
+    /* skip */
 
-    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        CallStatementPp callStm_1 = new CallStatementPp() {
-                public Object execute() {
-                    ((Entry) instance).op();
+  }
 
-                    return Utils.VOID_VALUE;
-                }
+  public Entry() {}
 
-                public String toString() {
-                    return "op()";
-                }
-            };
+  public void Entry_T1_Run(final TestAccumulator testAccumulator) {
 
-        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-        sequence_2.add(apply_1);
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    SequenceTraceNode sequence_2 = new SequenceTraceNode();
+    CallStatementPp callStm_1 =
+        new CallStatementPp() {
+          public Object execute() {
 
-        RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 50L);
+            ((Entry) instance).op();
+            return Utils.VOID_VALUE;
+          }
 
-        sequence_1.add(repeat_1);
+          public String toString() {
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
-    }
+            return "op()";
+          }
+        };
+    StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+    sequence_2.add(apply_1);
 
-    public String toString() {
-        return "Entry{}";
-    }
+    RepeatTraceNode repeat_1 = new RepeatTraceNode(sequence_2, 1L, 50L);
+
+    sequence_1.add(repeat_1);
+
+    TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

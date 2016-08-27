@@ -47,12 +47,12 @@ public class LexNameTokenWrapper
 	public int hashCode()
 	{
 		int hashCode = 0;
-		
-		if(name != null)
+
+		if (name != null)
 		{
 			hashCode += name.hashCode();
 		}
-		
+
 		return hashCode;
 	}
 

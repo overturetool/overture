@@ -1,40 +1,37 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return Test();
-    }
+    return Test();
+  }
 
-    public static VDMSet Test() {
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+  public static VDMSet Test() {
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Number x = ((Number) iterator_1.next());
-            VDMSet set_2 = SetUtil.set(6L, 7L, 8L);
-
-            for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-                Number y = ((Number) iterator_2.next());
-
-                if (Utils.equals(1L, 1L)) {
-                    setCompResult_1.add(x.longValue() * y.longValue());
-                }
-            }
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      VDMSet set_2 = SetUtil.set(6L, 7L, 8L);
+      for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext(); ) {
+        Number y = ((Number) iterator_2.next());
+        if (Utils.equals(1L, 1L)) {
+          setCompResult_1.add(x.longValue() * y.longValue());
         }
-
-        return Utils.copy(setCompResult_1);
+      }
     }
+    return Utils.copy(setCompResult_1);
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

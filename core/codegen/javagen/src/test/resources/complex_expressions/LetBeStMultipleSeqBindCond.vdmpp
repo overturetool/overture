@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run: () ==> ?
+Run() ==
+let x,y in seq [3,2,1] be st x < 3 and y < 3
+in 
+  return x + y;
+
+end Entry

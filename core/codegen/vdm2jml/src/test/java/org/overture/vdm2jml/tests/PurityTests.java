@@ -52,11 +52,11 @@ public class PurityTests extends AnnotationTestsBase
 	@Test
 	public void testNoStateInvInGenModule()
 	{
-		for(ClonableString m : genModule.getMetaData())
+		for (ClonableString m : genModule.getMetaData())
 		{
 			// A bit naive way to check that no instance or static invariant is declared
 			Assert.assertTrue("Expected no state annotations", !m.value.contains("invariant"));
 		}
-		
+
 	}
 }

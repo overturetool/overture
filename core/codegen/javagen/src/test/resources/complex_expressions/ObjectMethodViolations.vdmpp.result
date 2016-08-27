@@ -1,81 +1,97 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    {
+      final Entry e = new Entry();
+      e.cg_wait();
     }
 
-    public static Object Run() {
-        {
-            final Entry e = new Entry();
-            e.cg_wait();
-        }
-
-        {
-            final Number ignorePattern_1 = cg_notify();
-
-            /* skip */
-        }
-
-        {
-            final Entry e = new Entry();
-            final Number ignorePattern_2 = e.cg_notify();
-
-            /* skip */
-        }
-
-        cg_wait();
-
-        return 0L;
+    {
+      final Number ignorePattern_1 = cg_notify();
+      /* skip */
     }
 
-    private void cg_clone() {
-        /* skip */
+    {
+      final Entry e = new Entry();
+      final Number ignorePattern_2 = e.cg_notify();
+      /* skip */
     }
 
-    private void cg_equals() {
-        /* skip */
-    }
+    cg_wait();
+    return 0L;
+  }
 
-    private void cg_finalize() {
-        /* skip */
-    }
+  private void cg_clone() {
 
-    private void cg_getClass() {
-        /* skip */
-    }
+    /* skip */
 
-    private void cg_hashCode() {
-        /* skip */
-    }
+  }
 
-    private void cg_notifyAll() {
-        /* skip */
-    }
+  private void cg_equals() {
 
-    private void cg_toString() {
-        /* skip */
-    }
+    /* skip */
 
-    public static void cg_wait() {
-        /* skip */
-    }
+  }
 
-    private static Number cg_notify() {
-        return 1L;
-    }
+  private void cg_finalize() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    /* skip */
+
+  }
+
+  private void cg_getClass() {
+
+    /* skip */
+
+  }
+
+  private void cg_hashCode() {
+
+    /* skip */
+
+  }
+
+  private void cg_notifyAll() {
+
+    /* skip */
+
+  }
+
+  private void cg_toString() {
+
+    /* skip */
+
+  }
+
+  public static void cg_wait() {
+
+    /* skip */
+
+  }
+
+  public Entry() {}
+
+  private static Number cg_notify() {
+
+    return 1L;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
+
+
 public interface Func_1<T_1> {
-    public abstract T_1 eval();
+  public abstract T_1 eval();
 }
 
 ##########

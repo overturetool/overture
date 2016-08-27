@@ -16,44 +16,45 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 {
 	protected JmlGenerator jmlGen;
 	private List<AMetaStmIR> recVarChecks = null;
-	
+
 	public AtomicAssertTrans(JmlGenerator jmlGen)
 	{
 		this.jmlGen = jmlGen;
 	}
-	
+
 	@Override
 	public void caseAAtomicStmIR(AAtomicStmIR node) throws AnalysisException
 	{
 		recVarChecks = new LinkedList<AMetaStmIR>();
-		
-		for(SStmIR stm : node.getStatements())
+
+		for (SStmIR stm : node.getStatements())
 		{
 			stm.apply(this);
 		}
-		
+
 		ADefaultClassDeclIR encClass = node.getAncestor(ADefaultClassDeclIR.class);
-		
+
 		node.getStatements().addFirst(consInvChecksStm(false, encClass));
 		node.getStatements().add(consInvChecksStm(true, encClass));
-		
-		for(AMetaStmIR as : recVarChecks)
+
+		for (AMetaStmIR as : recVarChecks)
 		{
 			node.getStatements().add(as);
 		}
-		
+
 		recVarChecks = null;
 	}
-	
+
 	public AMetaStmIR consMetaStm(String str)
 	{
 		AMetaStmIR assertion = new AMetaStmIR();
 		jmlGen.getAnnotator().appendMetaData(assertion, jmlGen.getAnnotator().consMetaData(str));
-		
+
 		return assertion;
 	}
-	
-	protected AMetaStmIR consInvChecksStm(boolean val, ADefaultClassDeclIR encClass)
+
+	protected AMetaStmIR consInvChecksStm(boolean val,
+			ADefaultClassDeclIR encClass)
 	{
 		AMetaStmIR setStm = new AMetaStmIR();
 
@@ -63,33 +64,33 @@ public abstract class AtomicAssertTrans extends DepthFirstAnalysisAdaptor
 
 		return setStm;
 	}
-	
+
 	public JmlGenerator getJmlGen()
 	{
 		return jmlGen;
 	}
-	
+
 	public void addPostAtomicCheck(AMetaStmIR check)
 	{
-		if(!contains(check))
+		if (!contains(check))
 		{
 			recVarChecks.add(check);
 		}
 	}
-	
+
 	private boolean contains(AMetaStmIR check)
 	{
-		for(AMetaStmIR as : recVarChecks)
+		for (AMetaStmIR as : recVarChecks)
 		{
-			if(jmlGen.getJavaGen().getInfo().getStmAssistant().equal(as,check))
+			if (jmlGen.getJavaGen().getInfo().getStmAssistant().equal(as, check))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean inAtomic()
 	{
 		return recVarChecks != null;

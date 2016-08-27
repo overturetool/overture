@@ -1,29 +1,29 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final Number x = 1.1;
+    Boolean andResult_1 = false;
+
+    if (!(Utils.equals(x, null))) {
+      if (!(Utils.equals(null, x))) {
+        andResult_1 = true;
+      }
     }
 
-    public static Object Run() {
-        final Number x = 1.1;
-        Boolean andResult_1 = false;
+    return andResult_1;
+  }
 
-        if (!(Utils.equals(x, null))) {
-            if (!(Utils.equals(null, x))) {
-                andResult_1 = true;
-            }
-        }
+  public Entry() {}
 
-        return andResult_1;
-    }
+  public String toString() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

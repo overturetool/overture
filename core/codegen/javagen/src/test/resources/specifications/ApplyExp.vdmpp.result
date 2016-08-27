@@ -1,30 +1,31 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number op1() {
 
-    public Number op1() {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public Number op2() {
-        return new A().op1();
-    }
+  public Number op2() {
 
-    public Number op4() {
-        final A a = new A();
+    return new A().op1();
+  }
 
-        return a.op1();
-    }
+  public Number op4() {
 
-    public String toString() {
-        return "A{}";
-    }
+    final A a = new A();
+    return a.op1();
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

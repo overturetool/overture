@@ -1,56 +1,53 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public static Tuple tuplePatternFun() {
+
+    final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L, Tuple.mk_(3L, 4L, Tuple.mk_(5L, 6L)));
+    Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class, Tuple.class);
+    Number a = null;
+    Tuple c = null;
+    if (success_1) {
+      a = ((Number) tuplePattern_1.get(0));
+      c = Utils.copy(((Tuple) tuplePattern_1.get(2)));
     }
 
-    public static Tuple tuplePatternFun() {
-        final Tuple tuplePattern_1 = Tuple.mk_(1L, 2L,
-                Tuple.mk_(3L, 4L, Tuple.mk_(5L, 6L)));
-        Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                Number.class, Tuple.class);
-        Number a = null;
-        Tuple c = null;
-
-        if (success_1) {
-            a = ((Number) tuplePattern_1.get(0));
-            c = Utils.copy(((Tuple) tuplePattern_1.get(2)));
-        }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        return Utils.copy(c);
+    if (!(success_1)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
-    }
+    return Utils.copy(c);
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return A.tuplePatternFun();
-    }
+    return A.tuplePatternFun();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

@@ -17,7 +17,8 @@ import org.overture.config.Settings;
 @RunWith(value = Parameterized.class)
 public class ClassicJavaGenTest extends JavaGenTestBase
 {
-	public ClassicJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
+	public ClassicJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}
@@ -25,9 +26,9 @@ public class ClassicJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(ClassicOutputTest.ROOT),new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
+		return collectTests(new File(ClassicOutputTest.ROOT), new ExecutableSpecTestHandler(Release.CLASSIC, Dialect.VDM_PP));
 	}
-	
+
 	@Override
 	public void setUp() throws Exception
 	{

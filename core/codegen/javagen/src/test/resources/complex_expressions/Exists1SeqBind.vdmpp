@@ -1,0 +1,8 @@
+class Entry
+
+operations
+
+public static Run: () ==> ?
+Run() == return exists1 x in seq [true, true] & x;
+
+end Entry

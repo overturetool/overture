@@ -1,53 +1,57 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    A a = new A(MapUtil.map(new Maplet(1L, true)));
+    Utils.mapSeqUpdate(a.x, 10L, false);
+    return Utils.copy(a.x);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class A implements Record {
+    public VDMMap x;
+
+    public A(final VDMMap _x) {
+
+      x = _x != null ? Utils.copy(_x) : null;
     }
 
-    public static Object Run() {
-        A a = new A(MapUtil.map(new Maplet(1L, true)));
-        Utils.mapSeqUpdate(a.x, 10L, false);
+    public boolean equals(final Object obj) {
 
-        return Utils.copy(a.x);
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public A copy() {
+
+      return new A(x);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`A" + Utils.formatFields(x);
     }
-
-    public static class A implements Record {
-        public VDMMap x;
-
-        public A(final VDMMap _x) {
-            x = (_x != null) ? Utils.copy(_x) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof A)) {
-                return false;
-            }
-
-            A other = ((A) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public A copy() {
-            return new A(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`A" + Utils.formatFields(x);
-        }
-    }
+  }
 }
 
 ##########
