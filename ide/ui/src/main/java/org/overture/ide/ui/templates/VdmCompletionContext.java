@@ -88,7 +88,7 @@ public class VdmCompletionContext
 			    regexp.append("]");
 			}
 			regexp.append("]");
-			String[] bits = proposalPrefix.split(regexp.toString());
+			String[] bits = proposalPrefix.trim().split(regexp.toString());
 			proposalPrefix = bits[bits.length-1];
 			proposalPrefix = proposalPrefix.trim();
 
