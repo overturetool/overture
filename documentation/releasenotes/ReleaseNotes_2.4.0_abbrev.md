@@ -7,7 +7,9 @@
 
 Overture has been updated to include two new language features. The first language feature, which is based on Request for Modification (RM) 35, adds a set1 type constructor to the language. Second, VDM-10 now supports sequence bindings (RM 36), which allows iterating over sequences in a more concise way. For example, one can now write [ f(x) | x in seq s & P(x) ] rather than [ f(s(i)) | i in set inds s & P(s(i)) ].
 
-In the previous release, Overture was upgraded to support self-update using Eclipse p2. It should therefore be possible to update Overture 2.3.8 to version 2.4.0 (this version) using p2. Updating Overture to a newer version is similar to updating any other Eclipse application. From the menu choose
+In the previous release, Overture was upgraded to support self-update using Eclipse p2. It should therefore be possible to update Overture 2.3.8 to version 2.4.0 (this version) using p2. Make sure that the Eclipse release site is available: http://download.eclipse.org/releases/neon
+
+Updating Overture to a newer version is similar to updating any other Eclipse application. From the menu choose
 
 Help -> Install New Software...
 
