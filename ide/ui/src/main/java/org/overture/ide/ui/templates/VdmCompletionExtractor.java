@@ -13,16 +13,13 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
-import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 
 public final class VdmCompletionExtractor {
 	
-	private static VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 	private static VdmCompletionHelper VdmHelper = new VdmCompletionHelper();
 	private static VdmFunctionCompletionExtractor VdmFunctionHelper = new VdmFunctionCompletionExtractor();
 	private static VdmOperationCompletionExtractor VdmOperationHelper = new VdmOperationCompletionExtractor();

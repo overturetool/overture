@@ -69,18 +69,10 @@ public class VdmCompletionHelper  extends VdmTemplateAssistProcessor{
 		sbDisplayName.append(functionName[1]);
 		if((parameterNames != null && !parameterNames.isEmpty())){
 			List<String> checkedParamenterNames = parameterNameChecker(parameterNames);
-			String firstStr = checkedParamenterNames.get(0);
 			for (int i = 0; i < checkedParamenterNames.size(); i++) {
 				String str = checkedParamenterNames.get(i);
-				
-				//The hyphen is a special character and has the same id even for two different strings,
-				//therefore it is not possbile to compare them by id.
-				if(str == "-" && i > 0){
-					sbPattern.append(", ");
-					sbDisplayName.append(", ");
-				}
-			
-				if(str != firstStr){
+
+				if(str != checkedParamenterNames.get(0)){
 					sbPattern.append(", ");
 					sbDisplayName.append(", ");
 				}
