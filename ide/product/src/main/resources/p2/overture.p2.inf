@@ -7,10 +7,10 @@ instructions.configure=\
   addRepository(type:1,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/master/repository/);\
   addRepository(type:0,name:Overture Graphics Plugin,enabled:true,location:http${#58}//overture.au.dk/overture-graphics-plugin/master/repository/);\
   addRepository(type:1,name:Overture Graphics Plugin,enabled:true,location:http${#58}//overture.au.dk/overture-graphics-plugin/master/repository/);\
-  addRepository(type:0,name:Subclipse,enabled:true,location:http${#58}//subclipse.tigris.org/update_1.12.x);\
-  addRepository(type:1,name:Subclipse,enabled:true,location:http${#58}//subclipse.tigris.org/update_1.12.x);\
-  addRepository(type:0,name:EGit,enabled:true,location:http${#58}//download.eclipse.org/egit/updates);\
-  addRepository(type:1,name:EGit,enabled:true,location:http${#58}//download.eclipse.org/egit/updates);\
+  addRepository(type:0,name:Neon,enabled:true,location:http${#58}//download.eclipse.org/releases/neon/);\
+  addRepository(type:1,name:Neon,enabled:true,location:http${#58}//download.eclipse.org/releases/neon/);\
+  addRepository(type:0,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.6);\
+  addRepository(type:1,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.6);\
   addRepository(type:0,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);\
   addRepository(type:1,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);
 instructions.configure.import=\
