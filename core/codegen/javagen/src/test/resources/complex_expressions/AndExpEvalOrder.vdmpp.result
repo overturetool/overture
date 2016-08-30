@@ -1,71 +1,70 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public A() {}
 
-    public static Number f() {
-        return 1L;
-    }
+  public static Number f() {
 
-    public String toString() {
-        return "A{}";
-    }
+    return 1L;
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_1 = SetUtil.set(new A(), null, new A(), null, null, new A());
+    VDMSet setCompResult_1 = SetUtil.set();
+    VDMSet set_1 = SetUtil.set(new A(), null, new A(), null, null, new A());
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Object x = ((Object) iterator_1.next());
+      Boolean andResult_1 = false;
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            Object x = ((Object) iterator_1.next());
-            Boolean andResult_1 = false;
-
-            if (!(Utils.equals(x, null))) {
-                Number apply_1 = null;
-
-                if (x instanceof A) {
-                    apply_1 = ((A) x).f();
-                } else {
-                    throw new RuntimeException("Missing member: f");
-                }
-
-                if (Utils.equals(apply_1, 1L)) {
-                    andResult_1 = true;
-                }
-            }
-
-            if (andResult_1) {
-                setCompResult_1.add(x);
-            }
+      if (!(Utils.equals(x, null))) {
+        Number apply_1 = null;
+        if (x instanceof A) {
+          apply_1 = ((A) x).f();
+        } else {
+          throw new RuntimeException("Missing member: f");
         }
 
-        return setCompResult_1.size();
-    }
+        if (Utils.equals(apply_1, 1L)) {
+          andResult_1 = true;
+        }
+      }
 
-    public String toString() {
-        return "Entry{}";
+      if (andResult_1) {
+        setCompResult_1.add(x);
+      }
     }
+    return setCompResult_1.size();
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
+
+
 public interface Func_1<T_1> {
-    public abstract T_1 eval();
+  public abstract T_1 eval();
 }
 
 ##########

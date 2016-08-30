@@ -81,17 +81,19 @@ public class LeafTypeCallTests
 	{
 		assertMethod(ARecordTypeIR.class, Object.class, Class.class);
 	}
-	
+
 	@Test
 	public void stringTest()
 	{
 		assertMethod(AStringTypeIR.class, Object.class, Class.class);
 	}
 
-	private void assertMethod(Class<? extends STypeIR> type, Class<?>... paramTypes)
+	private void assertMethod(Class<? extends STypeIR> type,
+			Class<?>... paramTypes)
 	{
 		String methodName = LeafTypeInfo.getUtilsCallMap().get(type);
-		Assert.assertNotNull("Could not find method name corresponding to type '" + type + "'", methodName);
+		Assert.assertNotNull("Could not find method name corresponding to type '"
+				+ type + "'", methodName);
 
 		Method method = null;
 		try
@@ -102,7 +104,8 @@ public class LeafTypeCallTests
 			// Do nothing
 		}
 
-		Assert.assertNotNull("Could not find method corresponding to type ;" + type + "' with arguments "
+		Assert.assertNotNull("Could not find method corresponding to type ;"
+				+ type + "' with arguments "
 				+ Arrays.toString(paramTypes), method);
 	}
 }

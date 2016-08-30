@@ -1,244 +1,289 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class PhoneBook {
-    private VDMMap phoneNumbers = MapUtil.map();
+  private VDMMap phoneNumbers = MapUtil.map();
 
-    public PhoneBook(final VDMMap pPhoneNumbers) {
-        cg_init_PhoneBook_1(Utils.copy(pPhoneNumbers));
+  public void cg_init_PhoneBook_1(final VDMMap pPhoneNumbers) {
+
+    phoneNumbers = Utils.copy(pPhoneNumbers);
+  }
+
+  public static void Test() {
+
+    final PhoneBook pb1 = new PhoneBook();
+    final PhoneBook pb2 = new PhoneBook();
+    {
+      IO.print(
+          SeqUtil.seq(
+              'C', 'r', 'e', 'a', 't', 'i', 'n', 'g', ' ', 'p', 'h', 'o', 'n', 'e', ' ', 'b', 'o',
+              'o', 'k', 's', ' ', 'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'p',
+              'o', 'p', 'u', 'l', 'a', 't', 'e', 'd', ' ', 'w', 'i', 't', 'h', ' ', 't', 'h', 'e',
+              ' ', 's', 'a', 'm', 'e', ' ', 'd', 'e', 'f', 'a', 'u', 'l', 't', ' ', 'e', 'n', 't',
+              'r', 'i', 'e', 's', '\n'));
+      pb1.loadDemo();
+      pb2.loadDemo();
+      IO.print(SeqUtil.seq('\n'));
+      IO.printf(
+          SeqUtil.seq(
+              'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'e',
+              'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
+          SeqUtil.seq(pb1.eq(pb2)));
+      IO.printf(
+          SeqUtil.seq(
+              'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'N',
+              'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
+          SeqUtil.seq(pb1.neq(pb2)));
+      IO.print(SeqUtil.seq('\n'));
+      IO.println(
+          SeqUtil.seq(
+              'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
+              'i', 'n', ' ', 'p', 'b', '1'));
+      pb1.listEntries();
+      IO.print(SeqUtil.seq('\n'));
+      IO.println(
+          SeqUtil.seq(
+              'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
+              'i', 'n', ' ', 'p', 'b', '1', ' ', 'a', 's', ' ', '<', 'n', 'u', 'm', 'b', 'e', 'r',
+              '>', ',', ' ', '<', 'n', 'a', 'm', 'e', '>', ':'));
+      for (Iterator iterator_1 = pb1.getNumbers().iterator(); iterator_1.hasNext(); ) {
+        VDMSeq number = (VDMSeq) iterator_1.next();
+        IO.print(
+            SeqUtil.conc(
+                SeqUtil.conc(
+                    SeqUtil.conc(
+                        SeqUtil.conc(
+                            SeqUtil.seq('N', 'u', 'm', 'b', 'e', 'r', ':', ' '),
+                            Utils.copy(number)),
+                        SeqUtil.seq('.', ' ', 'N', 'a', 'm', 'e', ':', ' ')),
+                    pb1.getName(Utils.copy(number))),
+                SeqUtil.seq('\n')));
+      }
+      IO.print(SeqUtil.seq('\n'));
+      IO.println(
+          SeqUtil.seq(
+              'O', 'v', 'e', 'r', 'r', 'i', 'd', 'i', 'n', 'g', ' ', 'M', 'a', 'r', 't', 'i', 'n',
+              ' ', '|', '-', '>', ' ', '1', '1', ',', ' ', 'J', 'e', 'n', 's', ' ', '|', '-', '>',
+              ' ', '2', '2', ',', ' ', 'D', 'e', 'n', 'v', 'e', 'r', ' ', '|', '-', '>', ' ', '8'));
+      IO.println(
+          SeqUtil.seq(
+              'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
+              'i', 'n', ' ', 'p', 'b', '1'));
+      pb1.override(
+          MapUtil.map(
+              new Maplet(SeqUtil.seq('M', 'a', 'r', 't', 'i', 'n'), SeqUtil.seq('1', '1')),
+              new Maplet(SeqUtil.seq('J', 'e', 'n', 's'), SeqUtil.seq('2', '2')),
+              new Maplet(SeqUtil.seq('D', 'e', 'n', 'v', 'e', 'r'), SeqUtil.seq('8'))));
+      pb1.listEntries();
+      IO.print(SeqUtil.seq('\n'));
+      IO.printf(
+          SeqUtil.seq(
+              'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'e',
+              'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
+          SeqUtil.seq(pb1.eq(pb2)));
+      IO.printf(
+          SeqUtil.seq(
+              'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'N',
+              'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
+          SeqUtil.seq(pb1.neq(pb2)));
+      IO.print(SeqUtil.seq('\n'));
+      IO.println(
+          SeqUtil.seq(
+              'L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd', 'e', 'f', 'a', 'u', 'l', 't', ' ', 'e',
+              'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
+      pb1.loadDemo();
+      IO.print(
+          SeqUtil.seq(
+              'R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 't', 'o', ' ', 'n', 'a', 'm', 'e', 's',
+              ':', ' ', 'J', 'e', 'n', 's', ',', ' ', 'L', 'a', 'l', 'a', '\n'));
+      pb1.restrictToNames(
+          SetUtil.set(
+              SeqUtil.seq('J', 'e', 'n', 's'),
+              SeqUtil.seq('D', 'e', 'n', 'v', 'e', 'r'),
+              SeqUtil.seq('L', 'a', 'l', 'a')));
+      IO.println(
+          SeqUtil.seq(
+              'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
+              'i', 'n', ' ', 'p', 'b', '1'));
+      pb1.listEntries();
+      IO.print(SeqUtil.seq('\n'));
+      IO.println(
+          SeqUtil.seq(
+              'L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd', 'e', 'f', 'a', 'u', 'l', 't', ' ', 'e',
+              'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
+      pb1.loadDemo();
+      IO.print(
+          SeqUtil.seq(
+              'R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 'b', 'y', ' ', 'n', 'a', 'm', 'e', 's',
+              ':', ' ', 'M', 'a', 'd', 's', ',', ' ', 'C', 'a', 't', ',', ' ', 'L', 'a', 'l', 'a',
+              '\n'));
+      pb1.restrictByNames(
+          SetUtil.set(
+              SeqUtil.seq('M', 'a', 'd', 's'),
+              SeqUtil.seq('C', 'a', 't'),
+              SeqUtil.seq('L', 'a', 'l', 'a')));
+      IO.println(
+          SeqUtil.seq(
+              'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
+              'i', 'n', ' ', 'p', 'b', '1'));
+      pb1.listEntries();
+      IO.print(SeqUtil.seq('\n'));
+      IO.println(
+          SeqUtil.seq(
+              'L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd', 'e', 'f', 'a', 'u', 'l', 't', ' ', 'e',
+              'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
+      pb1.loadDemo();
+      IO.print(
+          SeqUtil.seq(
+              'R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 't', 'o', ' ', 'n', 'u', 'm', 'b', 'e',
+              'r', 's', ' ', '2', ',', ' ', '4', ',', ' ', '6', ',', ' ', '8', '\n'));
+      pb1.restrictToNumbers(
+          SetUtil.set(SeqUtil.seq('2'), SeqUtil.seq('4'), SeqUtil.seq('6'), SeqUtil.seq('8')));
+      IO.println(
+          SeqUtil.seq(
+              'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
+              'i', 'n', ' ', 'p', 'b', '1'));
+      pb1.listEntries();
+      IO.print(SeqUtil.seq('\n'));
+      IO.println(
+          SeqUtil.seq(
+              'L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd', 'e', 'f', 'a', 'u', 'l', 't', ' ', 'e',
+              'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
+      pb1.loadDemo();
+      IO.print(
+          SeqUtil.seq(
+              'R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 'b', 'y', ' ', 'n', 'u', 'm', 'b', 'e',
+              'r', 's', ' ', '0', ',', '1', ',', '2', ',', '3', '\n'));
+      pb1.restrictByNumbers(
+          SetUtil.set(SeqUtil.seq('0'), SeqUtil.seq('1'), SeqUtil.seq('2'), SeqUtil.seq('3')));
+      IO.println(
+          SeqUtil.seq(
+              'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
+              'i', 'n', ' ', 'p', 'b', '1'));
+      pb1.listEntries();
     }
+  }
 
-    public PhoneBook() {
+  public PhoneBook(final VDMMap pPhoneNumbers) {
+
+    cg_init_PhoneBook_1(Utils.copy(pPhoneNumbers));
+  }
+
+  public void loadDemo() {
+
+    phoneNumbers = MapUtil.map();
+    addEntry(SeqUtil.seq('M', 'a', 'r', 't', 'i', 'n'), SeqUtil.seq('1'));
+    addEntry(SeqUtil.seq('J', 'e', 'n', 's'), SeqUtil.seq('2'));
+    addEntry(SeqUtil.seq('M', 'o', 'r', 't', 'e', 'n'), SeqUtil.seq('3'));
+    addEntry(SeqUtil.seq('C', 'a', 't'), SeqUtil.seq('4'));
+    addEntry(SeqUtil.seq('D', 'o', 'g'), SeqUtil.seq('5'));
+    addTwoEntries(
+        Tuple.mk_(SeqUtil.seq('T', 'o', 'm'), SeqUtil.seq('6')),
+        Tuple.mk_(SeqUtil.seq('M', 'a', 'd', 's'), SeqUtil.seq('7')));
+  }
+
+  public void listEntries() {
+
+    for (Iterator iterator_2 = getNames().iterator(); iterator_2.hasNext(); ) {
+      VDMSeq name = (VDMSeq) iterator_2.next();
+      IO.print(
+          SeqUtil.conc(
+              SeqUtil.conc(
+                  SeqUtil.conc(
+                      SeqUtil.conc(SeqUtil.seq('N', 'a', 'm', 'e', ':', ' '), Utils.copy(name)),
+                      SeqUtil.seq('.', ' ', 'N', 'u', 'm', 'b', 'e', 'r', ':', ' ')),
+                  getNumber(Utils.copy(name))),
+              SeqUtil.seq('\n')));
     }
+  }
 
-    public void cg_init_PhoneBook_1(final VDMMap pPhoneNumbers) {
-        phoneNumbers = Utils.copy(pPhoneNumbers);
-    }
+  public void addEntry(final VDMSeq name, final VDMSeq number) {
 
-    public static void Test() {
-        final PhoneBook pb1 = new PhoneBook();
-        final PhoneBook pb2 = new PhoneBook();
-        IO.print(SeqUtil.seq('C', 'r', 'e', 'a', 't', 'i', 'n', 'g', ' ', 'p',
-                'h', 'o', 'n', 'e', ' ', 'b', 'o', 'o', 'k', 's', ' ', 'p',
-                'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'p',
-                'o', 'p', 'u', 'l', 'a', 't', 'e', 'd', ' ', 'w', 'i', 't',
-                'h', ' ', 't', 'h', 'e', ' ', 's', 'a', 'm', 'e', ' ', 'd',
-                'e', 'f', 'a', 'u', 'l', 't', ' ', 'e', 'n', 't', 'r', 'i',
-                'e', 's', '\n'));
-        pb1.loadDemo();
-        pb2.loadDemo();
-        IO.print(SeqUtil.seq('\n'));
-        IO.printf(SeqUtil.seq('p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b',
-                '2', ' ', 'a', 'r', 'e', ' ', 'e', 'q', 'u', 'a', 'l', ':',
-                ' ', '%', 's', '\n'), SeqUtil.seq(pb1.eq(pb2)));
-        IO.printf(SeqUtil.seq('p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b',
-                '2', ' ', 'a', 'r', 'e', ' ', 'N', 'O', 'T', ' ', 'e', 'q',
-                'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-            SeqUtil.seq(pb1.neq(pb2)));
-        IO.print(SeqUtil.seq('\n'));
-        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
-                'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
-                'b', '1'));
-        pb1.listEntries();
-        IO.print(SeqUtil.seq('\n'));
-        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
-                'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
-                'b', '1', ' ', 'a', 's', ' ', '<', 'n', 'u', 'm', 'b', 'e',
-                'r', '>', ',', ' ', '<', 'n', 'a', 'm', 'e', '>', ':'));
+    phoneNumbers =
+        MapUtil.munion(
+            Utils.copy(phoneNumbers),
+            MapUtil.map(new Maplet(Utils.copy(name), Utils.copy(number))));
+  }
 
-        for (Iterator iterator_1 = pb1.getNumbers().iterator();
-                iterator_1.hasNext();) {
-            VDMSeq number = (VDMSeq) iterator_1.next();
-            IO.print(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(
-                                SeqUtil.seq('N', 'u', 'm', 'b', 'e', 'r', ':',
-                                    ' '), Utils.copy(number)),
-                            SeqUtil.seq('.', ' ', 'N', 'a', 'm', 'e', ':', ' ')),
-                        pb1.getName(Utils.copy(number))), SeqUtil.seq('\n')));
-        }
+  public void addTwoEntries(final Tuple first, final Tuple second) {
 
-        IO.print(SeqUtil.seq('\n'));
-        IO.println(SeqUtil.seq('O', 'v', 'e', 'r', 'r', 'i', 'd', 'i', 'n',
-                'g', ' ', 'M', 'a', 'r', 't', 'i', 'n', ' ', '|', '-', '>',
-                ' ', '1', '1', ',', ' ', 'J', 'e', 'n', 's', ' ', '|', '-',
-                '>', ' ', '2', '2', ',', ' ', 'D', 'e', 'n', 'v', 'e', 'r',
-                ' ', '|', '-', '>', ' ', '8'));
-        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
-                'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
-                'b', '1'));
-        pb1.override(MapUtil.map(
-                new Maplet(SeqUtil.seq('M', 'a', 'r', 't', 'i', 'n'),
-                    SeqUtil.seq('1', '1')),
-                new Maplet(SeqUtil.seq('J', 'e', 'n', 's'),
-                    SeqUtil.seq('2', '2')),
-                new Maplet(SeqUtil.seq('D', 'e', 'n', 'v', 'e', 'r'),
-                    SeqUtil.seq('8'))));
-        pb1.listEntries();
-        IO.print(SeqUtil.seq('\n'));
-        IO.printf(SeqUtil.seq('p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b',
-                '2', ' ', 'a', 'r', 'e', ' ', 'e', 'q', 'u', 'a', 'l', ':',
-                ' ', '%', 's', '\n'), SeqUtil.seq(pb1.eq(pb2)));
-        IO.printf(SeqUtil.seq('p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b',
-                '2', ' ', 'a', 'r', 'e', ' ', 'N', 'O', 'T', ' ', 'e', 'q',
-                'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-            SeqUtil.seq(pb1.neq(pb2)));
-        IO.print(SeqUtil.seq('\n'));
-        IO.println(SeqUtil.seq('L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd',
-                'e', 'f', 'a', 'u', 'l', 't', ' ', 'e', 'n', 't', 'r', 'i',
-                'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
-        pb1.loadDemo();
-        IO.print(SeqUtil.seq('R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 't',
-                'o', ' ', 'n', 'a', 'm', 'e', 's', ':', ' ', 'J', 'e', 'n',
-                's', ',', ' ', 'L', 'a', 'l', 'a', '\n'));
-        pb1.restrictToNames(SetUtil.set(SeqUtil.seq('J', 'e', 'n', 's'),
-                SeqUtil.seq('D', 'e', 'n', 'v', 'e', 'r'),
-                SeqUtil.seq('L', 'a', 'l', 'a')));
-        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
-                'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
-                'b', '1'));
-        pb1.listEntries();
-        IO.print(SeqUtil.seq('\n'));
-        IO.println(SeqUtil.seq('L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd',
-                'e', 'f', 'a', 'u', 'l', 't', ' ', 'e', 'n', 't', 'r', 'i',
-                'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
-        pb1.loadDemo();
-        IO.print(SeqUtil.seq('R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 'b',
-                'y', ' ', 'n', 'a', 'm', 'e', 's', ':', ' ', 'M', 'a', 'd',
-                's', ',', ' ', 'C', 'a', 't', ',', ' ', 'L', 'a', 'l', 'a', '\n'));
-        pb1.restrictByNames(SetUtil.set(SeqUtil.seq('M', 'a', 'd', 's'),
-                SeqUtil.seq('C', 'a', 't'), SeqUtil.seq('L', 'a', 'l', 'a')));
-        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
-                'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
-                'b', '1'));
-        pb1.listEntries();
-        IO.print(SeqUtil.seq('\n'));
-        IO.println(SeqUtil.seq('L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd',
-                'e', 'f', 'a', 'u', 'l', 't', ' ', 'e', 'n', 't', 'r', 'i',
-                'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
-        pb1.loadDemo();
-        IO.print(SeqUtil.seq('R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 't',
-                'o', ' ', 'n', 'u', 'm', 'b', 'e', 'r', 's', ' ', '2', ',',
-                ' ', '4', ',', ' ', '6', ',', ' ', '8', '\n'));
-        pb1.restrictToNumbers(SetUtil.set(SeqUtil.seq('2'), SeqUtil.seq('4'),
-                SeqUtil.seq('6'), SeqUtil.seq('8')));
-        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
-                'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
-                'b', '1'));
-        pb1.listEntries();
-        IO.print(SeqUtil.seq('\n'));
-        IO.println(SeqUtil.seq('L', 'o', 'a', 'd', 'i', 'n', 'g', ' ', 'd',
-                'e', 'f', 'a', 'u', 'l', 't', ' ', 'e', 'n', 't', 'r', 'i',
-                'e', 's', ' ', 'i', 'n', ' ', 'p', 'b', '1', '.', '.', '.'));
-        pb1.loadDemo();
-        IO.print(SeqUtil.seq('R', 'e', 's', 'i', 't', 'r', 'c', 't', ' ', 'b',
-                'y', ' ', 'n', 'u', 'm', 'b', 'e', 'r', 's', ' ', '0', ',',
-                '1', ',', '2', ',', '3', '\n'));
-        pb1.restrictByNumbers(SetUtil.set(SeqUtil.seq('0'), SeqUtil.seq('1'),
-                SeqUtil.seq('2'), SeqUtil.seq('3')));
-        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
-                'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
-                'b', '1'));
-        pb1.listEntries();
-    }
+    phoneNumbers =
+        MapUtil.merge(
+            SetUtil.set(
+                Utils.copy(phoneNumbers),
+                MapUtil.map(new Maplet(SeqUtil.toSeq(first.get(0)), SeqUtil.toSeq(first.get(1)))),
+                MapUtil.map(
+                    new Maplet(SeqUtil.toSeq(second.get(0)), SeqUtil.toSeq(second.get(1))))));
+  }
 
-    public void loadDemo() {
-        phoneNumbers = MapUtil.map();
-        addEntry(SeqUtil.seq('M', 'a', 'r', 't', 'i', 'n'), SeqUtil.seq('1'));
-        addEntry(SeqUtil.seq('J', 'e', 'n', 's'), SeqUtil.seq('2'));
-        addEntry(SeqUtil.seq('M', 'o', 'r', 't', 'e', 'n'), SeqUtil.seq('3'));
-        addEntry(SeqUtil.seq('C', 'a', 't'), SeqUtil.seq('4'));
-        addEntry(SeqUtil.seq('D', 'o', 'g'), SeqUtil.seq('5'));
-        addTwoEntries(Tuple.mk_(SeqUtil.seq('T', 'o', 'm'), SeqUtil.seq('6')),
-            Tuple.mk_(SeqUtil.seq('M', 'a', 'd', 's'), SeqUtil.seq('7')));
-    }
+  public VDMSet getNames() {
 
-    public void listEntries() {
-        for (Iterator iterator_2 = getNames().iterator(); iterator_2.hasNext();) {
-            VDMSeq name = (VDMSeq) iterator_2.next();
-            IO.print(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(SeqUtil.conc(
-                                SeqUtil.seq('N', 'a', 'm', 'e', ':', ' '),
-                                Utils.copy(name)),
-                            SeqUtil.seq('.', ' ', 'N', 'u', 'm', 'b', 'e', 'r',
-                                ':', ' ')), getNumber(Utils.copy(name))),
-                    SeqUtil.seq('\n')));
-        }
-    }
+    return MapUtil.dom(Utils.copy(phoneNumbers));
+  }
 
-    public void addEntry(final VDMSeq name, final VDMSeq number) {
-        phoneNumbers = MapUtil.munion(Utils.copy(phoneNumbers),
-                MapUtil.map(new Maplet(Utils.copy(name), Utils.copy(number))));
-    }
+  public VDMSet getNumbers() {
 
-    public void addTwoEntries(final Tuple first, final Tuple second) {
-        phoneNumbers = MapUtil.merge(SetUtil.set(Utils.copy(phoneNumbers),
-                    MapUtil.map(
-                        new Maplet(SeqUtil.toSeq(first.get(0)),
-                            SeqUtil.toSeq(first.get(1)))),
-                    MapUtil.map(
-                        new Maplet(SeqUtil.toSeq(second.get(0)),
-                            SeqUtil.toSeq(second.get(1))))));
-    }
+    return MapUtil.rng(Utils.copy(phoneNumbers));
+  }
 
-    public VDMSet getNames() {
-        return MapUtil.dom(Utils.copy(phoneNumbers));
-    }
+  public VDMSeq getNumber(final VDMSeq name) {
 
-    public VDMSet getNumbers() {
-        return MapUtil.rng(Utils.copy(phoneNumbers));
-    }
+    return Utils.copy(((VDMSeq) Utils.get(phoneNumbers, name)));
+  }
 
-    public VDMSeq getNumber(final VDMSeq name) {
-        return Utils.copy(((VDMSeq) Utils.get(phoneNumbers, name)));
-    }
+  public VDMSeq getName(final VDMSeq number) {
 
-    public VDMSeq getName(final VDMSeq number) {
-        return Utils.copy(((VDMSeq) Utils.get(MapUtil.inverse(Utils.copy(
-                        phoneNumbers)), number)));
-    }
+    return Utils.copy(((VDMSeq) Utils.get(MapUtil.inverse(Utils.copy(phoneNumbers)), number)));
+  }
 
-    public PhoneBook invertPhoneBook() {
-        return new PhoneBook(MapUtil.inverse(Utils.copy(phoneNumbers)));
-    }
+  public PhoneBook invertPhoneBook() {
 
-    public void override(final VDMMap overrides) {
-        phoneNumbers = MapUtil.override(Utils.copy(phoneNumbers),
-                Utils.copy(overrides));
-    }
+    return new PhoneBook(MapUtil.inverse(Utils.copy(phoneNumbers)));
+  }
 
-    public void restrictToNames(final VDMSet names) {
-        phoneNumbers = MapUtil.domResTo(Utils.copy(names),
-                Utils.copy(phoneNumbers));
-    }
+  public void override(final VDMMap overrides) {
 
-    public void restrictByNames(final VDMSet names) {
-        phoneNumbers = MapUtil.domResBy(Utils.copy(names),
-                Utils.copy(phoneNumbers));
-    }
+    phoneNumbers = MapUtil.override(Utils.copy(phoneNumbers), Utils.copy(overrides));
+  }
 
-    public void restrictToNumbers(final VDMSet numbers) {
-        phoneNumbers = MapUtil.rngResTo(Utils.copy(phoneNumbers),
-                Utils.copy(numbers));
-    }
+  public void restrictToNames(final VDMSet names) {
 
-    public void restrictByNumbers(final VDMSet numbers) {
-        phoneNumbers = MapUtil.rngResBy(Utils.copy(phoneNumbers),
-                Utils.copy(numbers));
-    }
+    phoneNumbers = MapUtil.domResTo(Utils.copy(names), Utils.copy(phoneNumbers));
+  }
 
-    public Boolean eq(final PhoneBook other) {
-        return Utils.equals(phoneNumbers, other.phoneNumbers);
-    }
+  public void restrictByNames(final VDMSet names) {
 
-    public Boolean neq(final PhoneBook other) {
-        return !(Utils.equals(phoneNumbers, other.phoneNumbers));
-    }
+    phoneNumbers = MapUtil.domResBy(Utils.copy(names), Utils.copy(phoneNumbers));
+  }
 
-    public String toString() {
-        return "PhoneBook{" + "phoneNumbers := " +
-        Utils.toString(phoneNumbers) + "}";
-    }
+  public void restrictToNumbers(final VDMSet numbers) {
+
+    phoneNumbers = MapUtil.rngResTo(Utils.copy(phoneNumbers), Utils.copy(numbers));
+  }
+
+  public void restrictByNumbers(final VDMSet numbers) {
+
+    phoneNumbers = MapUtil.rngResBy(Utils.copy(phoneNumbers), Utils.copy(numbers));
+  }
+
+  public Boolean eq(final PhoneBook other) {
+
+    return Utils.equals(phoneNumbers, other.phoneNumbers);
+  }
+
+  public Boolean neq(final PhoneBook other) {
+
+    return !(Utils.equals(phoneNumbers, other.phoneNumbers));
+  }
+
+  public PhoneBook() {}
+
+  public String toString() {
+
+    return "PhoneBook{" + "phoneNumbers := " + Utils.toString(phoneNumbers) + "}";
+  }
 }
 
 ##########

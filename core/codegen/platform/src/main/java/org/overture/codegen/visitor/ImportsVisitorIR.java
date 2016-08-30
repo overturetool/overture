@@ -7,72 +7,71 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.PImport;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SImportIR;
 import org.overture.codegen.ir.SImportsIR;
 import org.overture.codegen.ir.declarations.AFromModuleImportsIR;
 import org.overture.codegen.ir.declarations.AModuleImportsIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.logging.Logger;
 
-public class ImportsVisitorIR  extends AbstractVisitorIR<IRInfo, SImportsIR> {
+public class ImportsVisitorIR extends AbstractVisitorIR<IRInfo, SImportsIR>
+{
 
 	@Override
-	public SImportsIR caseAModuleImports(AModuleImports node,
-			IRInfo question) throws AnalysisException {
-		
+	public SImportsIR caseAModuleImports(AModuleImports node, IRInfo question)
+			throws AnalysisException
+	{
+
 		String name = node.getName() != null ? node.getName().getName() : null;
 
 		AModuleImportsIR moduleImportsCg = new AModuleImportsIR();
 		moduleImportsCg.setName(name);
-		
-		for(AFromModuleImports fromModuleImport : node.getImports())
+
+		for (AFromModuleImports fromModuleImport : node.getImports())
 		{
 			SImportsIR fromModuleImportCg = fromModuleImport.apply(question.getImportsVisitor(), question);
-			
-			if(fromModuleImportCg instanceof AFromModuleImportsIR)
+
+			if (fromModuleImportCg instanceof AFromModuleImportsIR)
 			{
 				moduleImportsCg.getImports().add((AFromModuleImportsIR) fromModuleImportCg);
-			}
-			else
+			} else
 			{
-				Logger.getLog().printErrorln(
-						"Expected fromModuleImportCg to be of type '"
-								+ AFromModuleImportsIR.class.getSimpleName()
-								+ "'. Got: " + fromModuleImportCg + " in " + this.getClass().getSimpleName());
+				log.error("Expected fromModuleImportCg to be of type '"
+						+ AFromModuleImportsIR.class.getSimpleName()
+						+ "'. Got: " + fromModuleImportCg);
 				return null;
 			}
 		}
-		
+
 		return moduleImportsCg;
 	}
-	
+
 	@Override
 	public SImportsIR caseAFromModuleImports(AFromModuleImports node,
-			IRInfo question) throws AnalysisException {
-		
+			IRInfo question) throws AnalysisException
+	{
+
 		String name = node.getName() != null ? node.getName().getName() : null;
-		
+
 		AFromModuleImportsIR fromImportCg = new AFromModuleImportsIR();
 		fromImportCg.setName(name);
-		
-		for(List<PImport> sig : node.getSignatures())
+
+		for (List<PImport> sig : node.getSignatures())
 		{
 			List<SImportIR> sigCg = new LinkedList<SImportIR>();
-			
-			for(PImport imp : sig)
+
+			for (PImport imp : sig)
 			{
 				SImportIR impCg = imp.apply(question.getImportVisitor(), question);
-				
+
 				if (impCg != null)
 				{
 					sigCg.add(impCg);
-				}
-				else
+				} else
 				{
 					return null;
 				}
 			}
-			
+
 			fromImportCg.getSignatures().add(sigCg);
 		}
 

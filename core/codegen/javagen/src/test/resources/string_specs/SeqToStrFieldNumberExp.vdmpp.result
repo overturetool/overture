@@ -1,48 +1,48 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Tuple Run() {
 
-    public static Tuple Run() {
-        return GetLine("hej\nmed");
-    }
+    return GetLine("hej\nmed");
+  }
 
-    private static Tuple GetLine(final String text) {
-        if (Utils.equals(text, SeqUtil.toStr(SeqUtil.seq()))) {
-            return Tuple.mk_(SeqUtil.seq(), SeqUtil.seq());
-        } else {
-            if (Utils.equals(text.charAt(0), '\n')) {
-                return Tuple.mk_(SeqUtil.seq(), SeqUtil.tail(text));
-            } else {
-                final Tuple tuplePattern_1 = GetLine(SeqUtil.tail(text));
-                Boolean success_1 = tuplePattern_1.compatible(String.class,
-                        String.class);
-                String line = null;
-                String rest = null;
+  public Entry() {}
 
-                if (success_1) {
-                    line = SeqUtil.toStr(tuplePattern_1.get(0));
-                    rest = SeqUtil.toStr(tuplePattern_1.get(1));
-                }
+  private static Tuple GetLine(final String text) {
 
-                if (!(success_1)) {
-                    throw new RuntimeException("Tuple pattern match failed");
-                }
+    if (Utils.equals(text, SeqUtil.toStr(SeqUtil.seq()))) {
+      return Tuple.mk_(SeqUtil.seq(), SeqUtil.seq());
 
-                return Tuple.mk_(new String(new char[] { text.charAt(0) }) +
-                    line, rest);
-            }
+    } else {
+      if (Utils.equals(text.charAt(0), '\n')) {
+        return Tuple.mk_(SeqUtil.seq(), SeqUtil.tail(text));
+
+      } else {
+        final Tuple tuplePattern_1 = GetLine(SeqUtil.tail(text));
+        Boolean success_1 = tuplePattern_1.compatible(String.class, String.class);
+        String line = null;
+        String rest = null;
+        if (success_1) {
+          line = SeqUtil.toStr(tuplePattern_1.get(0));
+          rest = SeqUtil.toStr(tuplePattern_1.get(1));
         }
-    }
 
-    public String toString() {
-        return "Entry{}";
+        if (!(success_1)) {
+          throw new RuntimeException("Tuple pattern match failed");
+        }
+
+        return Tuple.mk_(new String(new char[] {text.charAt(0)}) + line, rest);
+      }
     }
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

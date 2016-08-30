@@ -40,7 +40,7 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -71,7 +71,7 @@ public class Vdm2UmlUtil
 	public static int extractUpper(PType type)
 	{
 		if (!isOptional(type)
-				&& (type instanceof ASetType || type instanceof SSeqType || type instanceof SMapType))
+				&& (type instanceof SSetType || type instanceof SSeqType || type instanceof SMapType))
 		{
 			return LiteralUnlimitedNatural.UNLIMITED;
 
@@ -82,7 +82,7 @@ public class Vdm2UmlUtil
 
 	public static int extractLower(PType type)
 	{
-		if (type instanceof ASetType || type instanceof ASeqSeqType
+		if (type instanceof SSetType || type instanceof ASeqSeqType
 				|| type instanceof SMapType || isOptional(type))// PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 			return 0;
@@ -95,7 +95,7 @@ public class Vdm2UmlUtil
 	{
 		Boolean isOrdered = false;
 
-		if (assistantFactory.createPTypeAssistant().isType(type, ASetType.class))
+		if (assistantFactory.createPTypeAssistant().isType(type, SSetType.class))
 		{
 			isOrdered = false;
 		} else if (assistantFactory.createPTypeAssistant().isType(type, ASeqSeqType.class))
@@ -119,7 +119,7 @@ public class Vdm2UmlUtil
 	{
 		Boolean isUnique = true;
 
-		if (assistantFactory.createPTypeAssistant().isType(type, ASetType.class))
+		if (assistantFactory.createPTypeAssistant().isType(type, SSetType.class))
 		{
 		} else if (assistantFactory.createPTypeAssistant().isType(type, ASeqSeqType.class))
 		{

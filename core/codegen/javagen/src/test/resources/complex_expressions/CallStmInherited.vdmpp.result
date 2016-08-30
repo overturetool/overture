@@ -1,62 +1,61 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number op() {
 
-    public Number op() {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B extends A {
-    public B() {
-    }
+  public Number op() {
 
-    public Number op() {
-        return super.op();
-    }
+    return super.op();
+  }
 
-    public String toString() {
-        return "B{}";
-    }
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Number Run() {
 
-    public static Number Run() {
-        final B b = new B();
+    final B b = new B();
+    return b.op();
+  }
 
-        return b.op();
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

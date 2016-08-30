@@ -18,8 +18,8 @@ public class TracesStateOutputTest extends JavaOutputTestBase
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "traces_state_specs";
 
-	public TracesStateOutputTest(String nameParameter,
-			String inputParameter, String resultParameter)
+	public TracesStateOutputTest(String nameParameter, String inputParameter,
+			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}

@@ -1,27 +1,33 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final Object a = 1.2;
-    private static final Object b = 2.2;
-    private static final Object c = 3L;
+  private static final Object a = 1.2;
+  private static final Object b = 2.2;
+  private static final Object c = 3L;
 
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return ((Number) Utils.copy(Entry.a)).doubleValue() +
-        ((Number) Utils.copy(Entry.b)).doubleValue() +
-        ((Number) Entry.c).doubleValue();
-    }
+    return ((Number) Utils.copy(Entry.a)).doubleValue()
+        + ((Number) Utils.copy(Entry.b)).doubleValue()
+        + ((Number) Entry.c).doubleValue();
+  }
 
-    public String toString() {
-        return "Entry{" + "a = " + Utils.toString(a) + ", b = " +
-        Utils.toString(b) + ", c = " + Utils.toString(c) + "}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{"
+        + "a = "
+        + Utils.toString(a)
+        + ", b = "
+        + Utils.toString(b)
+        + ", c = "
+        + Utils.toString(c)
+        + "}";
+  }
 }
 
 ##########

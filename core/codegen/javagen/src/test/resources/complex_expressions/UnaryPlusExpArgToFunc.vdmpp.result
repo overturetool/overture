@@ -1,26 +1,26 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final Number x = 1.1;
+    final Number x = 1.1;
+    return f(+x.doubleValue());
+  }
 
-        return f(+x.doubleValue());
-    }
+  public Entry() {}
 
-    public static Number f(final Number x) {
-        return x;
-    }
+  public static Number f(final Number x) {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return x;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

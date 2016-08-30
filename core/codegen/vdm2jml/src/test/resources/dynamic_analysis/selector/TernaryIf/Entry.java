@@ -1,79 +1,80 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  public static Object Run() {
+
+    {
+      final Number ignorePattern_1 = f();
+      //@ assert Utils.is_nat(ignorePattern_1);
+
+      /* skip */
     }
 
-    public static Object Run() {
-        {
-            final Number ignorePattern_1 = f();
+    {
+      final Number ignorePattern_2 = g();
+      //@ assert Utils.is_nat(ignorePattern_2);
 
-            //@ assert Utils.is_nat(ignorePattern_1);
-
-            /* skip */
-        }
-
-        {
-            final Number ignorePattern_2 = g();
-
-            //@ assert Utils.is_nat(ignorePattern_2);
-
-            /* skip */
-        }
-
-        IO.println("Done! Expected no violations");
-
-        return 0L;
+      /* skip */
     }
 
-    /*@ pure @*/
-    public static Number g() {
-        Number ternaryIfExp_1 = null;
+    IO.println("Done! Expected no violations");
+    return 0L;
+  }
+  /*@ pure @*/
 
-        if (Utils.equals(1L, 1L)) {
-            ternaryIfExp_1 = 1L;
+  public static Number g() {
 
-            //@ assert Utils.is_nat1(ternaryIfExp_1);
-        } else {
-            ternaryIfExp_1 = 2L;
+    Number ternaryIfExp_1 = null;
 
-            //@ assert Utils.is_nat1(ternaryIfExp_1);
-        }
+    if (Utils.equals(1L, 1L)) {
+      ternaryIfExp_1 = 1L;
+      //@ assert Utils.is_nat1(ternaryIfExp_1);
 
-        final Number x = ternaryIfExp_1;
+    } else {
+      ternaryIfExp_1 = 2L;
+      //@ assert Utils.is_nat1(ternaryIfExp_1);
 
-        //@ assert Utils.is_nat1(x);
-        Number ret_1 = x;
-
-        //@ assert Utils.is_nat(ret_1);
-        return ret_1;
     }
 
-    /*@ pure @*/
-    public static Number f() {
-        if (Utils.equals(1L, 1L)) {
-            Number ret_2 = 1L;
+    final Number x = ternaryIfExp_1;
+    //@ assert Utils.is_nat1(x);
 
-            //@ assert Utils.is_nat(ret_2);
-            return ret_2;
-        } else {
-            Number ret_3 = 2L;
+    Number ret_1 = x;
+    //@ assert Utils.is_nat(ret_1);
 
-            //@ assert Utils.is_nat(ret_3);
-            return ret_3;
-        }
+    return ret_1;
+  }
+  /*@ pure @*/
+
+  public static Number f() {
+
+    if (Utils.equals(1L, 1L)) {
+      Number ret_2 = 1L;
+      //@ assert Utils.is_nat(ret_2);
+
+      return ret_2;
+
+    } else {
+      Number ret_3 = 2L;
+      //@ assert Utils.is_nat(ret_3);
+
+      return ret_3;
     }
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }

@@ -19,24 +19,24 @@ public class JmlReuseSlTraceJavaGenTest extends JmlSlJavaGenTestBase
 {
 	/* OpenJML crashes on these tests although the tests are correct.. */
 	private static final List<String> SKIPPED = Arrays.asList("StateOtherModule.vdmsl");
-	
+
 	public JmlReuseSlTraceJavaGenTest(String name, File vdmSpec,
 			TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}
-	
+
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(JmlReuseSlTraceOutputTest.ROOT),new JmlTraceTestHandler(Release.VDM_10, Dialect.VDM_SL));
+		return collectTests(new File(JmlReuseSlTraceOutputTest.ROOT), new JmlTraceTestHandler(Release.VDM_10, Dialect.VDM_SL));
 	}
-	
+
 	public void assumeTest()
 	{
 		Assume.assumeFalse("OpenJML crashes on this test although it is correct", SKIPPED.contains(file.getName()));
 	};
-	
+
 	@Override
 	protected String getPropertyId()
 	{

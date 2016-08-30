@@ -1,26 +1,32 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private static final VDMSet a = SetUtil.set(1L, 2L, 3L);
-    private static final VDMSet b = SetUtil.powerset(SetUtil.set(Utils.copy(A.a),
-                Utils.copy(A.a), Utils.copy(A.a)));
-    private static final VDMSet c = SetUtil.powerset(op());
+  private static final VDMSet a = SetUtil.set(1L, 2L, 3L);
+  private static final VDMSet b =
+      SetUtil.powerset(SetUtil.set(Utils.copy(A.a), Utils.copy(A.a), Utils.copy(A.a)));
+  private static final VDMSet c = SetUtil.powerset(op());
 
-    public A() {
-    }
+  public static VDMSet op() {
 
-    public static VDMSet op() {
-        return SetUtil.set(1L, 2L, 3L);
-    }
+    return SetUtil.set(1L, 2L, 3L);
+  }
 
-    public String toString() {
-        return "A{" + "a = " + Utils.toString(a) + ", b = " +
-        Utils.toString(b) + ", c = " + Utils.toString(c) + "}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{"
+        + "a = "
+        + Utils.toString(a)
+        + ", b = "
+        + Utils.toString(b)
+        + ", c = "
+        + Utils.toString(c)
+        + "}";
+  }
 }
 
 ##########

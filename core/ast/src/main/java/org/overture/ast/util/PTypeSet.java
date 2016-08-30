@@ -31,6 +31,8 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASet1SetType;
+import org.overture.ast.types.ASetSetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
@@ -95,7 +97,34 @@ public class PTypeSet extends TreeSet<PType>
 			{
 				remove(s1t); // Replace seq with seq1
 			}
-		} else if (t instanceof SNumericBasicType)
+		}
+		else if (t instanceof ASet1SetType)
+		{
+			// If we add a Set1Type, and there is already a SetType in the set
+			// we ignore the Set1Type.
+			
+			ASet1SetType s1t = (ASet1SetType)t;
+			ASetSetType st = AstFactory.newASetSetType(s1t.getLocation(), s1t.getSetof());
+			
+			if (contains(st))
+			{
+				return false;	// Was already there
+			}
+		}
+		else if (t instanceof ASetSetType)
+		{
+			// If we add a SetType, and there is already a Set1Type in the set
+			// we replace the Set1Type.
+			
+			ASetSetType st = (ASetSetType)t;
+			ASet1SetType s1t = AstFactory.newASet1SetType(st.getLocation(), st.getSetof());
+			
+			if (contains(s1t))
+			{
+				remove(s1t);	// Replace set1 with set
+			}
+		}
+		else if (t instanceof SNumericBasicType)
 		{
 			for (PType x : this)// what the this keyword refer to.. gkanos
 			{

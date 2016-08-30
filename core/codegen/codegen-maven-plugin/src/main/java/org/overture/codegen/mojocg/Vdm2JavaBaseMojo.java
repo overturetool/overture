@@ -15,13 +15,13 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 {
-	 /**
+	/**
 	 * The package of the generated classes.
 	 *
 	 * @parameter
 	 * @required
 	 */
-	 protected String packageName;
+	protected String packageName;
 
 	/**
 	 * The name of the folder under resources where the specification is stored.
@@ -37,7 +37,7 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter property="outputDirectory" default-value="${project.build.directory}/generated-sources/javacode"
 	 */
 	protected File outputDirectory;
-	
+
 	/**
 	 * Dialect to use. Can be either 'sl' or 'pp'
 	 * 
@@ -53,20 +53,27 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @required
 	 */
 	protected String release;
-	
+
 	/**
 	 * A flag to configure formatting of the generated code
 	 * 
 	 * @parameter
 	 */
 	protected boolean formatCode = true;
-	
+
 	/**
 	 * Generate VDM location information for code generated constructs
 	 * 
 	 * @parameter
 	 */
 	protected boolean printVdmLocations = false;
+
+	/**
+	 * Print detailed information about the code generation process
+	 * 
+	 * @parameter
+	 */
+	protected boolean verbose = false;
 
 	/**
 	 * @parameter property="project" default-value="${project}"
@@ -81,23 +88,18 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter
 	 */
 	private File projectOutputDirectory;
-	
+
 	/**
-	 * 
-	 * 
 	 * @parameter
 	 */
 	protected Properties delegates;
-	
-	
+
 	/**
-	 * 
 	 * @parameter
 	 */
 	protected boolean genJUnit4Tests = false;
 
 	/**
-	 * 
 	 * @parameter
 	 */
 	protected boolean separateTestCode = false;
@@ -109,12 +111,16 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 		{
 			File output = new File(project.getFile().getParentFile(), "target");
 			if (!output.exists())
+			{
 				output.mkdirs();
+			}
 
 			return output;
 
 		} else
+		{
 			return projectOutputDirectory;
+		}
 	}
 
 	protected File getProjectJavaSrcDirectory()
@@ -123,7 +129,7 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 		return output;
 	}
 
-	public abstract void execute() throws MojoExecutionException,
-			MojoFailureException;
+	public abstract void execute()
+			throws MojoExecutionException, MojoFailureException;
 
 }

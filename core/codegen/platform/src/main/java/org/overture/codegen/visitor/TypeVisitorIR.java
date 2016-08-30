@@ -47,7 +47,6 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -56,6 +55,9 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.SSetType;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.IRNamedTypeInvariantTag;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
@@ -76,9 +78,6 @@ import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.IRNamedTypeInvariantTag;
-import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
@@ -87,62 +86,60 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 	public STypeIR caseAUnresolvedType(AUnresolvedType node, IRInfo question)
 			throws AnalysisException
 	{
-		Logger.getLog().printErrorln("Found unresolved type in the VDM AST");
-		//To guard against unresolved type in the type checker
+		log.error("Found unresolved type in the VDM AST");
+		// To guard against unresolved type in the type checker
 		return new AUnknownTypeIR();
 	}
-	
+
 	@Override
 	public STypeIR caseAUnionType(AUnionType node, IRInfo question)
 			throws AnalysisException
 	{
 		List<PType> types = node.getTypes();
-		
+
 		question.getTypeAssistant().removeIllegalQuoteTypes(types);
-		
+
 		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
 
-		if (question.getTypeAssistant().isUnionOfType(node, ASetType.class, typeAssistant))
+		if (question.getTypeAssistant().isUnionOfType(node, SSetType.class, typeAssistant))
 		{
-			ASetType setType = typeAssistant.getSet(node);
-			
+			SSetType setType = typeAssistant.getSet(node);
+
 			return setType.apply(question.getTypeVisitor(), question);
 
 		} else if (question.getTypeAssistant().isUnionOfType(node, SSeqType.class, typeAssistant))
 		{
 			SSeqType seqType = typeAssistant.getSeq(node);
-			
+
 			return seqType.apply(question.getTypeVisitor(), question);
 
 		} else if (question.getTypeAssistant().isUnionOfType(node, SMapType.class, typeAssistant))
 		{
 			SMapType mapType = typeAssistant.getMap(node);
-			
+
 			return mapType.apply(question.getTypeVisitor(), question);
-		} else if(question.getTypeAssistant().isProductOfSameSize(node, typeAssistant)) 
+		} else if (question.getTypeAssistant().isProductOfSameSize(node, typeAssistant))
 		{
 			AProductType productType = typeAssistant.getProduct(node);
-			
+
 			return productType.apply(question.getTypeVisitor(), question);
 		} else
 		{
-			if(types.size() <= 1)
+			if (types.size() <= 1)
 			{
 				return types.get(0).apply(question.getTypeVisitor(), question);
-			}
-			else
+			} else
 			{
 				AUnionTypeIR unionTypeCg = new AUnionTypeIR();
 
 				for (PType type : types)
 				{
 					STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-					
-					if(typeCg != null)
+
+					if (typeCg != null)
 					{
-						unionTypeCg.getTypes().add(typeCg);	
-					}
-					else
+						unionTypeCg.getTypes().add(typeCg);
+					} else
 					{
 						return null;
 					}
@@ -152,13 +149,13 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 			}
 		}
 	}
-	
+
 	@Override
 	public STypeIR caseABracketType(ABracketType node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
-		
+
 		return type.apply(question.getTypeVisitor(), question);
 	}
 
@@ -177,7 +174,7 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 	}
 
 	@Override
-	public STypeIR caseASetType(ASetType node, IRInfo question)
+	public STypeIR defaultSSetType(SSetType node, IRInfo question)
 			throws AnalysisException
 	{
 		PType setOf = node.getSetof();
@@ -199,11 +196,12 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 	}
 
 	@Override
-	public STypeIR caseAInMapMapType(AInMapMapType node, IRInfo question) throws AnalysisException
+	public STypeIR caseAInMapMapType(AInMapMapType node, IRInfo question)
+			throws AnalysisException
 	{
 		return question.getExpAssistant().handleMapType(node, question, true);
 	}
-	
+
 	@Override
 	public STypeIR caseAProductType(AProductType node, IRInfo question)
 			throws AnalysisException
@@ -215,12 +213,11 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 		for (PType type : types)
 		{
 			STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-			
+
 			if (typeCg != null)
 			{
 				tuple.getTypes().add(typeCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -246,12 +243,12 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 			throws AnalysisException
 	{
 		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
-		if(typeCg != null)
+
+		if (typeCg != null)
 		{
 			typeCg.setOptional(true);
 		}
-		
+
 		return typeCg;
 	}
 
@@ -260,27 +257,27 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
-		STypeIR underlyingType  = type.apply(question.getTypeVisitor(), question);
-		
+		STypeIR underlyingType = type.apply(question.getTypeVisitor(), question);
+
 		// TODO: Morten initially requested some way of knowing whether a type originates
 		// from a named invariant type. With the NamedInvTypeInfo being introduced, using
 		// IR tags for this is redundant. Check if the IR tagging can be removed.
 		underlyingType.setTag(new IRNamedTypeInvariantTag(node.getName().getName()));
-		
+
 		ATypeNameIR typeName = new ATypeNameIR();
 		typeName.setDefiningClass(node.getName().getModule());
 		typeName.setName(node.getName().getName());
-		
+
 		ANamedTypeDeclIR typeDecl = new ANamedTypeDeclIR();
 		typeDecl.setName(typeName);
 
-		if(underlyingType != null)
+		if (underlyingType != null)
 		{
 			typeDecl.setType(underlyingType.clone());
 		}
-		
+
 		underlyingType.setNamedInvType(typeDecl);
-		
+
 		return underlyingType;
 	}
 
@@ -294,7 +291,7 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 		quoteTypeCg.setValue(value);
 
 		question.registerQuoteValue(value);
-		
+
 		return quoteTypeCg;
 	}
 
@@ -391,9 +388,8 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 	}
 
 	@Override
-	public STypeIR caseARationalNumericBasicType(
-			ARationalNumericBasicType node, IRInfo question)
-			throws AnalysisException
+	public STypeIR caseARationalNumericBasicType(ARationalNumericBasicType node,
+			IRInfo question) throws AnalysisException
 	{
 		return new ARatNumericBasicTypeIR();
 	}
@@ -406,8 +402,8 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 	}
 
 	@Override
-	public STypeIR caseABooleanBasicType(ABooleanBasicType node, IRInfo question)
-			throws AnalysisException
+	public STypeIR caseABooleanBasicType(ABooleanBasicType node,
+			IRInfo question) throws AnalysisException
 	{
 		return new ABoolBasicTypeIR();
 	}

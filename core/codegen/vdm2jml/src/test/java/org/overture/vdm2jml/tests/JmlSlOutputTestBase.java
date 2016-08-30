@@ -20,7 +20,8 @@ public abstract class JmlSlOutputTestBase extends OutputTestBase
 {
 	public static final String JML_SL_TRACE_UPDATE_PROPERTY = "tests.vdm2jml.override.";
 
-	public JmlSlOutputTestBase(String nameParameter, String inputParameter, String resultParameter)
+	public JmlSlOutputTestBase(String nameParameter, String inputParameter,
+			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
@@ -49,16 +50,16 @@ public abstract class JmlSlOutputTestBase extends OutputTestBase
 
 		return javaSettings;
 	}
-	
+
 	public JavaCodeGen getJavaGen()
 	{
 		JavaCodeGen javaGen = new JavaCodeGen();
 		javaGen.setSettings(getIrSettings());
 		javaGen.setJavaSettings(getJavaSettings());
-		
+
 		return javaGen;
 	}
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{

@@ -1,108 +1,115 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.runtime.traces.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry implements java.io.Serializable {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
+  /*@ public ghost static boolean invChecksOn = true; @*/
+
+  private Entry() {}
+
+  /*@ pure @*/
+
+  public static Boolean idBool(final Boolean x) {
+
+    //@ assert Utils.is_bool(x);
+
+    Boolean ret_1 = x;
+    //@ assert Utils.is_bool(ret_1);
+
+    return ret_1;
+  }
+  /*@ pure @*/
+
+  public static Number typeErrSecondFrame() {
+
+    final Object a = true;
+    //@ assert (Utils.is_bool(a) || Utils.is_nat(a));
+
+    Number ret_2 = ((Number) a);
+    //@ assert Utils.is_int(ret_2);
+
+    return ret_2;
+  }
+
+  public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+
+    final Store store = new Store();
+    final IdGenerator gen = new IdGenerator();
+    {
+      final Number ID_1 = gen.inc();
+      store.staticReg(ID_1, Entry.class);
     }
 
-    /*@ pure @*/
-    public static Boolean idBool(final Boolean x) {
-        //@ assert Utils.is_bool(x);
-        Boolean ret_1 = x;
+    SequenceTraceNode sequence_1 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_1 = new AlternativeTraceNode();
+    SequenceTraceNode sequence_2 = new SequenceTraceNode();
+    AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
+    VDMSet set_1 = SetUtil.set(1L, true);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      final Object a = ((Object) iterator_1.next());
+      final Object arg_1 = a;
+      CallStatement callStm_1 =
+          new CallStatement() {
+            public Boolean isTypeCorrect() {
 
-        //@ assert Utils.is_bool(ret_1);
-        return ret_1;
+              try {
+                //@ assert Utils.is_bool(arg_1);
+
+              } catch (AssertionError e) {
+                return false;
+              }
+
+              return true;
+            }
+
+            public Object execute() {
+
+              return idBool(((Boolean) arg_1));
+            }
+
+            public String toString() {
+
+              return "idBool(" + Utils.toString(arg_1) + ")";
+            }
+          };
+      StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+      apply_1.addVarFirst(new TraceVariable("a", "(bool | nat1)", Utils.toString(a)));
+      alternatives_3.add(apply_1);
     }
+    sequence_2.add(alternatives_3);
 
-    /*@ pure @*/
-    public static Number typeErrSecondFrame() {
-        final Object a = true;
+    CallStatement callStm_2 =
+        new CallStatement() {
+          public Object execute() {
 
-        //@ assert (Utils.is_bool(a) || Utils.is_nat(a));
-        Number ret_2 = ((Number) a);
+            return typeErrSecondFrame();
+          }
 
-        //@ assert Utils.is_int(ret_2);
-        return ret_2;
-    }
+          public String toString() {
 
-    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
-        final Store store = new Store();
-        final IdGenerator gen = new IdGenerator();
+            return "typeErrSecondFrame()";
+          }
+        };
+    StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
 
-        {
-            final Number ID_1 = gen.inc();
-            store.staticReg(ID_1, Entry.class);
-        }
+    alternatives_1.add(sequence_2);
+    alternatives_1.add(apply_2);
+    sequence_1.add(alternatives_1);
 
-        SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_1 = new AlternativeTraceNode();
-        SequenceTraceNode sequence_2 = new SequenceTraceNode();
-        AlternativeTraceNode alternatives_3 = new AlternativeTraceNode();
-        VDMSet set_1 = SetUtil.set(1L, true);
+    TraceNode.executeTests(sequence_1, testAccumulator, store);
+  }
 
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            final Object a = ((Object) iterator_1.next());
-            final Object arg_1 = a;
-            CallStatement callStm_1 = new CallStatement() {
-                    public Boolean isTypeCorrect() {
-                        try {
-                            //@ assert Utils.is_bool(arg_1);
-                        } catch (AssertionError e) {
-                            return false;
-                        }
+  public String toString() {
 
-                        return true;
-                    }
-
-                    public Object execute() {
-                        return idBool(((Boolean) arg_1));
-                    }
-
-                    public String toString() {
-                        return "idBool(" + Utils.toString(arg_1) + ")";
-                    }
-                };
-
-            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
-
-            apply_1.addVarFirst(new TraceVariable("a", "(bool | nat1)",
-                    Utils.toString(a)));
-            alternatives_3.add(apply_1);
-        }
-
-        sequence_2.add(alternatives_3);
-
-        CallStatement callStm_2 = new CallStatement() {
-                public Object execute() {
-                    return typeErrSecondFrame();
-                }
-
-                public String toString() {
-                    return "typeErrSecondFrame()";
-                }
-            };
-
-        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
-
-        alternatives_1.add(sequence_2);
-        alternatives_1.add(apply_2);
-        sequence_1.add(alternatives_1);
-
-        TraceNode.executeTests(sequence_1, testAccumulator, store);
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

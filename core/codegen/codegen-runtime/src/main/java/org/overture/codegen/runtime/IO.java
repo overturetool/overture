@@ -27,42 +27,47 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
+public class IO
+{
 
-public class IO {
-	
 	private static File BaseDIr = new File(".").getParentFile();
-	
+
 	private static final String NOT_SUPPORTED_MSG = "Operation is currently not supported";
-	
-    public static <p> boolean writeval(p val) {
-        
-    	String text = formatArg(val);
-    	
-    	System.out.print(text);
-    	System.out.flush();
-    	
-    	return true;
-    }
 
-    public static <p> boolean fwriteval(String filename, p val, Object fdir) {
+	public static <p> boolean writeval(p val)
+	{
 
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
-    }
-    
-    public static <p> boolean fwriteval(VDMSeq filename, p val, Object fdir) {
+		String text = formatArg(val);
 
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
-    }
+		System.out.print(text);
+		System.out.flush();
 
-    public static <p> Tuple freadval(String filename) {
-        
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
-    }
-    
-    public static <p> Tuple freadval(VDMSeq filename) {
-        
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
-    }
+		return true;
+	}
+
+	public static <p> boolean fwriteval(String filename, p val, Object fdir)
+	{
+
+		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+	}
+
+	public static <p> boolean fwriteval(VDMSeq filename, p val, Object fdir)
+	{
+
+		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+	}
+
+	public static <p> Tuple freadval(String filename)
+	{
+
+		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+	}
+
+	public static <p> Tuple freadval(VDMSeq filename)
+	{
+
+		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+	}
 
 	private static File getFile(String fileStr)
 	{
@@ -73,17 +78,17 @@ public class IO {
 		{
 			file = new File(BaseDIr, path);
 		}
-		
+
 		/**
 		 * The VDM IO library requires the parent structure of a file to exist before the file is accessed. However,
 		 * when a model is code generated to some location the parent folder structure for a file will not exists. To
 		 * overcome this (and for convenience) the Java code generator runtime library tries to create the folder
 		 * structure
 		 */
-		
+
 		file.getParentFile().mkdirs();
-		
-		if(!file.exists())
+
+		if (!file.exists())
 		{
 			try
 			{
@@ -92,25 +97,28 @@ public class IO {
 			{
 			}
 		}
-		
+
 		return file;
 	}
-    
+
 	protected static File getFile(VDMSeq fval)
 	{
 		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
 	}
-	
-    public boolean echo(String text) {
-    	return fecho("[]", text, null);
-    }
-    
-    public boolean echo(VDMSeq text) {
-    	return fecho("[]", SeqUtil.toStr(text), null);
-    }
 
-    public boolean fecho(String filename, String text, Object fdir) {
-    	
+	public boolean echo(String text)
+	{
+		return fecho("[]", text, null);
+	}
+
+	public boolean echo(VDMSeq text)
+	{
+		return fecho("[]", SeqUtil.toStr(text), null);
+	}
+
+	public boolean fecho(String filename, String text, Object fdir)
+	{
+
 		if (filename.equals("[]"))
 		{
 			System.out.print(text);
@@ -120,8 +128,8 @@ public class IO {
 			try
 			{
 				File file = getFile(filename);
-				FileOutputStream fos = new FileOutputStream(file, fdir != null && fdir.getClass().getName().
-						endsWith("quotes.appendQuote"));
+				FileOutputStream fos = new FileOutputStream(file, fdir != null
+						&& fdir.getClass().getName().endsWith("quotes.appendQuote"));
 
 				fos.write(text.getBytes(Charset.defaultCharset().name()));
 				fos.close();
@@ -132,67 +140,75 @@ public class IO {
 		}
 
 		return true;
-    }
-    
-    public boolean fecho(VDMSeq filename, VDMSeq text, Object fdir) {
-    	
-    	return fecho(filename.toString(), text.toString(), fdir);
-    }
+	}
 
-    public String ferror() {
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
-    }
+	public boolean fecho(VDMSeq filename, VDMSeq text, Object fdir)
+	{
 
-    public static void print(Object arg) {
-    	
+		return fecho(filename.toString(), text.toString(), fdir);
+	}
+
+	public String ferror()
+	{
+		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+	}
+
+	public static void print(Object arg)
+	{
+
 		System.out.printf("%s", formatArg(arg));
 		System.out.flush();
-    }
+	}
 
-    public static void println(Object arg) {
-    	
-    	System.out.printf("%s", formatArg(arg));
-    	System.out.printf("%s", "\n");
-    	System.out.flush();
+	public static void println(Object arg)
+	{
 
-    }
+		System.out.printf("%s", formatArg(arg));
+		System.out.printf("%s", "\n");
+		System.out.flush();
 
-    public static void printf(String format, VDMSeq args) {
-        
+	}
+
+	public static void printf(String format, VDMSeq args)
+	{
+
 		System.out.printf(format, formatList(args));
 		System.out.flush();
-    }
-    
-    public static void printf(VDMSeq seq, VDMSeq args) {
-		
-    	System.out.printf(seq.toString(), formatList(args));
+	}
+
+	public static void printf(VDMSeq seq, VDMSeq args)
+	{
+
+		System.out.printf(seq.toString(), formatList(args));
 		System.out.flush();
-    }
-    
-    public static String sprintf(String format, List<Object> args) {
-        
+	}
+
+	public static String sprintf(String format, List<Object> args)
+	{
+
 		return String.format(format, args.toArray());
-    }
-    
-    public static VDMSeq sprintf(VDMSeq seq, VDMSeq args) {
-		
-    	throw new UnsupportedOperationException("sprintf is only supported for formats of type String");
-    }
-    
-    @SuppressWarnings("unchecked")
+	}
+
+	public static VDMSeq sprintf(VDMSeq seq, VDMSeq args)
+	{
+
+		throw new UnsupportedOperationException("sprintf is only supported for formats of type String");
+	}
+
+	@SuppressWarnings("unchecked")
 	private static Object[] formatList(VDMSeq args)
-    {
-    	for(int i = 0; i < args.size(); i++)
-    	{
-    		Object arg = args.get(i);
-    		args.set(i, formatArg(arg));
-    	}
-    	
-    	return args.toArray();
-    }
-    
-    private static String formatArg(Object arg)
-    {
-    	return Utils.toString(arg);
-    }
+	{
+		for (int i = 0; i < args.size(); i++)
+		{
+			Object arg = args.get(i);
+			args.set(i, formatArg(arg));
+		}
+
+		return args.toArray();
+	}
+
+	private static String formatArg(Object arg)
+	{
+		return Utils.toString(arg);
+	}
 }

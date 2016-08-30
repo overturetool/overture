@@ -9,7 +9,8 @@ import org.overture.codegen.ir.statements.ABlockStmIR;
 public class BlockCleanupTrans extends DepthFirstAnalysisAdaptor
 {
 	@Override
-	public void caseABlockStmIR(ABlockStmIR node) throws org.overture.codegen.ir.analysis.AnalysisException
+	public void caseABlockStmIR(ABlockStmIR node)
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		for (SStmIR s : new LinkedList<>(node.getStatements()))
 		{

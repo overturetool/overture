@@ -34,41 +34,46 @@ public class VDMSet extends LinkedHashSet implements ValueType
 	{
 		VDMSet setClone = new VDMSet();
 
-		for (Object element: this)
+		for (Object element : this)
 		{
 			if (element instanceof ValueType)
-				element = ((ValueType)element).copy();
-			
+			{
+				element = ((ValueType) element).copy();
+			}
+
 			setClone.add(element);
 		}
 
 		return setClone;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		Iterator iterator = this.iterator();
-		
-		if(!iterator.hasNext())
+
+		if (!iterator.hasNext())
+		{
 			return "{}";
+		}
 
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append('{');
-		
-		for(;;)
+
+		for (;;)
 		{
-            Object element = iterator.next();
-            
-            sb.append(element == this ? "(this Collection)" : Utils.toString(element));
-            
-            if (! iterator.hasNext())
-            {
-                return sb.append('}').toString();
-            }
-            
-            sb.append(',').append(' ');
+			Object element = iterator.next();
+
+			sb.append(element == this ? "(this Collection)"
+					: Utils.toString(element));
+
+			if (!iterator.hasNext())
+			{
+				return sb.append('}').toString();
+			}
+
+			sb.append(',').append(' ');
 		}
 	}
 }

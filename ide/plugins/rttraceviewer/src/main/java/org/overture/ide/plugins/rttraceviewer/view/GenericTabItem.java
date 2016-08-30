@@ -202,11 +202,11 @@ public class GenericTabItem
 
     public void exportJPG(String fileName)
     {
-        Image theImage = new Image(null, xmax + 10, ymax + 10);
+        Image theImage = new Image(null, xmax + 50, ymax + 50);
         GC theGC = new GC(theImage);
         Graphics theGraphics = new SWTGraphics(theGC);
         theFigure.paint(theGraphics);
-        theGraphics.fillRectangle(xmax, 0, 10, ymax + 10);
+        theGraphics.fillRectangle(xmax + 50, 0, 10, ymax + 50);
         ImageData imgData[] = new ImageData[1];
         imgData[0] = theImage.getImageData();
         ImageLoader theLoader = new ImageLoader();

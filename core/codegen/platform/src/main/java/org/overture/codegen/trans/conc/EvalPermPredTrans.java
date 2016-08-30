@@ -1,5 +1,7 @@
 package org.overture.codegen.trans.conc;
 
+import org.apache.log4j.Logger;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -14,8 +16,6 @@ import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
 import org.overture.codegen.ir.statements.AMapSeqUpdateStmIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.IRGeneratedTag;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 /**
@@ -30,20 +30,25 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 	private TransAssistantIR transAssistant;
 	private ConcPrefixes concPrefixes;
 
-	public EvalPermPredTrans(TransAssistantIR transAssistant, ConcPrefixes concPrefixes)
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
+	public EvalPermPredTrans(TransAssistantIR transAssistant,
+			ConcPrefixes concPrefixes)
 	{
 		this.transAssistant = transAssistant;
 		this.concPrefixes = concPrefixes;
 	}
 
 	@Override
-	public void caseAAssignmentStmIR(AAssignmentStmIR node) throws AnalysisException
+	public void caseAAssignmentStmIR(AAssignmentStmIR node)
+			throws AnalysisException
 	{
 		handleStateUpdate(node);
 	}
 
 	@Override
-	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
+			throws AnalysisException
 	{
 		if (node.getTarget() instanceof SVarExpIR)
 		{
@@ -58,7 +63,8 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node) throws AnalysisException
+	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node)
+			throws AnalysisException
 	{
 		handleStateUpdate(node);
 	}
@@ -133,7 +139,7 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 			fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(enclosingClass, concPrefixes.sentinelInstanceName(), transAssistant.getInfo().getClasses());
 		} else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing class of assignment statement in InstanceVarPPEvalTransformation");
+			log.error("Could not find enclosing class of assignment statement");
 		}
 		return fieldType;
 	}

@@ -1,126 +1,120 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public void op(final Number a, final Boolean b, final Number c) {
 
-    public void op(final Number a, final Boolean b, final Number c) {
-        Entry.c = Entry.c.longValue() + 1L;
-    }
+    Entry.c = Entry.c.longValue() + 1L;
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public void op(final Number a, final Boolean b, final Boolean c) {
 
-    public void op(final Number a, final Boolean b, final Boolean c) {
-        Entry.c = Entry.c.longValue() + 2L;
-    }
+    Entry.c = Entry.c.longValue() + 2L;
+  }
 
-    public String toString() {
-        return "B{}";
-    }
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class C {
-    public C() {
-    }
+  public void op(final Number a, final Boolean b, final Character c) {
 
-    public void op(final Number a, final Boolean b, final Character c) {
-        Entry.c = Entry.c.longValue() + 3L;
-    }
+    Entry.c = Entry.c.longValue() + 3L;
+  }
 
-    public String toString() {
-        return "C{}";
-    }
+  public C() {}
+
+  public String toString() {
+
+    return "C{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public static Number c = 0L;
+  public static Number c = 0L;
 
-    public Entry() {
-    }
+  public static Number Run() {
 
-    public static Number Run() {
-        final Object a = 1L;
-        final Object b = true;
-        final Object c1 = 1L;
-        final Object c2 = true;
-        final Object c3 = 'a';
-        final VDMSeq objs = SeqUtil.seq(new A(), new B(), new C());
+    final Object a = 1L;
+    final Object b = true;
+    final Object c1 = 1L;
+    final Object c2 = true;
+    final Object c3 = 'a';
+    final VDMSeq objs = SeqUtil.seq(new A(), new B(), new C());
+    {
+      long toVar_1 = 3L;
 
-        {
-            long toVar_1 = 3L;
+      for (Long i = 1L; i <= toVar_1; i++) {
+        Object ternaryIfExp_1 = null;
 
-            for (Long i = 1L; i <= toVar_1; i++) {
-                Object ternaryIfExp_1 = null;
+        if (Utils.equals(i, 1L)) {
+          ternaryIfExp_1 = c1;
+        } else {
+          Object ternaryIfExp_2 = null;
 
-                if (Utils.equals(i, 1L)) {
-                    ternaryIfExp_1 = c1;
-                } else {
-                    Object ternaryIfExp_2 = null;
+          if (Utils.equals(i, 2L)) {
+            ternaryIfExp_2 = c2;
+          } else {
+            ternaryIfExp_2 = c3;
+          }
 
-                    if (Utils.equals(i, 2L)) {
-                        ternaryIfExp_2 = c2;
-                    } else {
-                        ternaryIfExp_2 = c3;
-                    }
-
-                    ternaryIfExp_1 = ternaryIfExp_2;
-                }
-
-                Object callStmObj_1 = Utils.get(objs, i);
-
-                if (callStmObj_1 instanceof A) {
-                    ((A) callStmObj_1).op(((Number) a), ((Boolean) b),
-                        ((Number) ternaryIfExp_1));
-                } else if (callStmObj_1 instanceof B) {
-                    ((B) callStmObj_1).op(((Number) a), ((Boolean) b),
-                        ((Boolean) ternaryIfExp_1));
-                } else if (callStmObj_1 instanceof C) {
-                    ((C) callStmObj_1).op(((Number) a), ((Boolean) b),
-                        ((Character) ternaryIfExp_1));
-                } else {
-                    throw new RuntimeException("Missing operation member: op");
-                }
-            }
-
-            return Entry.c;
+          ternaryIfExp_1 = ternaryIfExp_2;
         }
-    }
 
-    public String toString() {
-        return "Entry{" + "c := " + Utils.toString(c) + "}";
+        Object callStmObj_1 = Utils.get(objs, i);
+        if (callStmObj_1 instanceof A) {
+          ((A) callStmObj_1).op(((Number) a), ((Boolean) b), ((Number) ternaryIfExp_1));
+        } else if (callStmObj_1 instanceof B) {
+          ((B) callStmObj_1).op(((Number) a), ((Boolean) b), ((Boolean) ternaryIfExp_1));
+        } else if (callStmObj_1 instanceof C) {
+          ((C) callStmObj_1).op(((Number) a), ((Boolean) b), ((Character) ternaryIfExp_1));
+        } else {
+          throw new RuntimeException("Missing operation member: op");
+        }
+      }
+      return Entry.c;
     }
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "c := " + Utils.toString(c) + "}";
+  }
 }
 
 ##########

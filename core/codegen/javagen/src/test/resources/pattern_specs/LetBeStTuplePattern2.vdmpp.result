@@ -1,53 +1,54 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        Object tuplePattern_1 = null;
-        Boolean success_1 = false;
-        VDMSet set_1 = SetUtil.set(SeqUtil.seq('o', 'n', 'e'), 1L, 2L,
-                Tuple.mk_(3L, 'x'), 5L, Tuple.mk_('x', 2L), 6L,
-                Tuple.mk_(7L, 8L));
-        Object a = null;
-        Object b = null;
-
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && !(success_1);) {
-            tuplePattern_1 = ((Object) iterator_1.next());
-
-            if (tuplePattern_1 instanceof Tuple) {
-                success_1 = ((Tuple) tuplePattern_1).compatible(Object.class,
-                        Object.class);
-
-                if (success_1) {
-                    a = ((Object) ((Tuple) tuplePattern_1).get(0));
-                    b = ((Object) ((Tuple) tuplePattern_1).get(1));
-                }
-            }
-
-            if (!(success_1)) {
-                continue;
-            }
-
-            success_1 = Utils.equals(a, 3L);
+    Object tuplePattern_1 = null;
+    Boolean success_1 = false;
+    VDMSet set_1 =
+        SetUtil.set(
+            SeqUtil.seq('o', 'n', 'e'),
+            1L,
+            2L,
+            Tuple.mk_(3L, 'x'),
+            5L,
+            Tuple.mk_('x', 2L),
+            6L,
+            Tuple.mk_(7L, 8L));
+    Object a = null;
+    Object b = null;
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      tuplePattern_1 = ((Object) iterator_1.next());
+      if (tuplePattern_1 instanceof Tuple) {
+        success_1 = ((Tuple) tuplePattern_1).compatible(Object.class, Object.class);
+        if (success_1) {
+          a = ((Object) ((Tuple) tuplePattern_1).get(0));
+          b = ((Object) ((Tuple) tuplePattern_1).get(1));
         }
+      }
 
-        if (!(success_1)) {
-            throw new RuntimeException("Let Be St found no applicable bindings");
-        }
+      if (!(success_1)) {
+        continue;
+      }
 
-        return b;
+      success_1 = Utils.equals(a, 3L);
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
     }
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return b;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

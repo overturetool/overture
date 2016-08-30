@@ -1,120 +1,136 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private static final R2 a = new R2(new R1(2L), 3L);
-    private static final R2 b = Utils.copy(A.a);
-    private static final R1 c = Utils.copy(a.r1);
-    private static final Number d = a.r1.x;
+  private static final R2 a = new R2(new R1(2L), 3L);
+  private static final R2 b = Utils.copy(A.a);
+  private static final R1 c = Utils.copy(a.r1);
+  private static final Number d = a.r1.x;
 
-    public A() {
+  public Number op1() {
+
+    R1 r = new R1(2L);
+    r.x = 3L;
+    return r.x;
+  }
+
+  public Number op2() {
+
+    final R1 a_1 = new R1(5L);
+    final R1 b_1 = Utils.copy(a_1);
+    return b_1.x;
+  }
+
+  public Number op3() {
+
+    R2 a = new R2(new R1(2L), 3L);
+    R1 b = Utils.copy(a.r1);
+    a.x = 1L;
+    a.r1.x = 2L;
+    return a.r1.x;
+  }
+
+  public R2 op4() {
+
+    R2 a = new R2(new R1(2L), 3L);
+    return Utils.copy(a);
+  }
+
+  public R1 op5() {
+
+    R2 a = new R2(new R1(2L), 3L);
+    return Utils.copy(a.r1);
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{"
+        + "a = "
+        + Utils.toString(a)
+        + ", b = "
+        + Utils.toString(b)
+        + ", c = "
+        + Utils.toString(c)
+        + ", d = "
+        + Utils.toString(d)
+        + "}";
+  }
+
+  public static class R1 implements Record {
+    public Number x;
+
+    public R1(final Number _x) {
+
+      x = _x;
     }
 
-    public Number op1() {
-        R1 r = new R1(2L);
-        r.x = 3L;
+    public boolean equals(final Object obj) {
 
-        return r.x;
+      if (!(obj instanceof R1)) {
+        return false;
+      }
+
+      R1 other = ((R1) obj);
+
+      return Utils.equals(x, other.x);
     }
 
-    public Number op2() {
-        final R1 a_1 = new R1(5L);
-        final R1 b_1 = Utils.copy(a_1);
+    public int hashCode() {
 
-        return b_1.x;
+      return Utils.hashCode(x);
     }
 
-    public Number op3() {
-        R2 a = new R2(new R1(2L), 3L);
-        R1 b = Utils.copy(a.r1);
-        a.x = 1L;
-        a.r1.x = 2L;
+    public R1 copy() {
 
-        return a.r1.x;
-    }
-
-    public R2 op4() {
-        R2 a = new R2(new R1(2L), 3L);
-
-        return Utils.copy(a);
-    }
-
-    public R1 op5() {
-        R2 a = new R2(new R1(2L), 3L);
-
-        return Utils.copy(a.r1);
+      return new R1(x);
     }
 
     public String toString() {
-        return "A{" + "a = " + Utils.toString(a) + ", b = " +
-        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
-        Utils.toString(d) + "}";
+
+      return "mk_A`R1" + Utils.formatFields(x);
+    }
+  }
+
+  public static class R2 implements Record {
+    public R1 r1;
+    public Number x;
+
+    public R2(final R1 _r1, final Number _x) {
+
+      r1 = _r1 != null ? Utils.copy(_r1) : null;
+      x = _x;
     }
 
-    public static class R1 implements Record {
-        public Number x;
+    public boolean equals(final Object obj) {
 
-        public R1(final Number _x) {
-            x = _x;
-        }
+      if (!(obj instanceof R2)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R1)) {
-                return false;
-            }
+      R2 other = ((R2) obj);
 
-            R1 other = ((R1) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public R1 copy() {
-            return new R1(x);
-        }
-
-        public String toString() {
-            return "mk_A`R1" + Utils.formatFields(x);
-        }
+      return (Utils.equals(r1, other.r1)) && (Utils.equals(x, other.x));
     }
 
-    public static class R2 implements Record {
-        public R1 r1;
-        public Number x;
+    public int hashCode() {
 
-        public R2(final R1 _r1, final Number _x) {
-            r1 = (_r1 != null) ? Utils.copy(_r1) : null;
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R2)) {
-                return false;
-            }
-
-            R2 other = ((R2) obj);
-
-            return (Utils.equals(r1, other.r1)) && (Utils.equals(x, other.x));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(r1, x);
-        }
-
-        public R2 copy() {
-            return new R2(r1, x);
-        }
-
-        public String toString() {
-            return "mk_A`R2" + Utils.formatFields(r1, x);
-        }
+      return Utils.hashCode(r1, x);
     }
+
+    public R2 copy() {
+
+      return new R2(r1, x);
+    }
+
+    public String toString() {
+
+      return "mk_A`R2" + Utils.formatFields(r1, x);
+    }
+  }
 }
 
 ##########

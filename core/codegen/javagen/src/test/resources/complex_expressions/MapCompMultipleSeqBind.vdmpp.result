@@ -1,0 +1,29 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSeq set_1 = SeqUtil.seq(1L, 1L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext(); ) {
+        Number y = ((Number) iterator_2.next());
+        MapUtil.mapAdd(mapCompResult_1, new Maplet(x, y));
+      }
+    }
+    return Utils.copy(mapCompResult_1);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

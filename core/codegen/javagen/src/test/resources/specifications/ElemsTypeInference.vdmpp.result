@@ -1,27 +1,35 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private static final VDMSeq x0 = SeqUtil.seq();
-    private static final VDMSet a = SeqUtil.elems(Utils.copy(A.x0));
-    private static final VDMSeq x1 = SeqUtil.seq(1L, 2L, 3L);
-    private static final VDMSet b = SeqUtil.elems(Utils.copy(A.x1));
-    private static final VDMSet c = SeqUtil.elems(SeqUtil.seq(Utils.copy(A.x1)));
-    private static final VDMSet d = SeqUtil.elems(SeqUtil.seq(SeqUtil.seq(
-                    Utils.copy(A.x1))));
+  private static final VDMSeq x0 = SeqUtil.seq();
+  private static final VDMSet a = SeqUtil.elems(Utils.copy(A.x0));
+  private static final VDMSeq x1 = SeqUtil.seq(1L, 2L, 3L);
+  private static final VDMSet b = SeqUtil.elems(Utils.copy(A.x1));
+  private static final VDMSet c = SeqUtil.elems(SeqUtil.seq(Utils.copy(A.x1)));
+  private static final VDMSet d = SeqUtil.elems(SeqUtil.seq(SeqUtil.seq(Utils.copy(A.x1))));
 
-    public A() {
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{" + "x0 = " + Utils.toString(x0) + ", a = " +
-        Utils.toString(a) + ", x1 = " + Utils.toString(x1) + ", b = " +
-        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
-        Utils.toString(d) + "}";
-    }
+  public String toString() {
+
+    return "A{"
+        + "x0 = "
+        + Utils.toString(x0)
+        + ", a = "
+        + Utils.toString(a)
+        + ", x1 = "
+        + Utils.toString(x1)
+        + ", b = "
+        + Utils.toString(b)
+        + ", c = "
+        + Utils.toString(c)
+        + ", d = "
+        + Utils.toString(d)
+        + "}";
+  }
 }
 
 ##########

@@ -1,22 +1,21 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final Object a = SeqUtil.seq(1L, 2L, 3L);
+    final Object a = SeqUtil.seq(1L, 2L, 3L);
+    return SeqUtil.conc(((VDMSeq) Utils.copy(a)), ((VDMSeq) Utils.copy(a)));
+  }
 
-        return SeqUtil.conc(((VDMSeq) Utils.copy(a)), ((VDMSeq) Utils.copy(a)));
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

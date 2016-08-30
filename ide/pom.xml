@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.3.8</version>
+    <version>2.4.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 <packaging>pom</packaging>
@@ -164,9 +164,9 @@ the manifests, though.
 
   <repositories>
     <repository>
-      <id>eclipse-mars</id>
+      <id>eclipse-neon</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/mars</url>
+      <url>http://download.eclipse.org/releases/neon</url>
     </repository>
   </repositories>
 

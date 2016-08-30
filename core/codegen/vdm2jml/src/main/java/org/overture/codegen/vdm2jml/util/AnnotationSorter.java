@@ -12,30 +12,30 @@ import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 public class AnnotationSorter extends DepthFirstAnalysisAdaptor
 {
 	private Comparator<ClonableString> comparator;
-	
+
 	public AnnotationSorter()
 	{
 		super();
 		this.comparator = new JmlAnnotationComparator();
 	}
-	
+
 	@Override
 	public void defaultInPIR(PIR node) throws AnalysisException
 	{
-		if(!node.getMetaData().isEmpty())
+		if (!node.getMetaData().isEmpty())
 		{
 			Collections.sort(node.getMetaData(), comparator);
 		}
-		
-		if(node instanceof ADefaultClassDeclIR)
+
+		if (node instanceof ADefaultClassDeclIR)
 		{
 			ADefaultClassDeclIR clazz = (ADefaultClassDeclIR) node;
-			
-			if(!clazz.getGlobalMetaData().isEmpty())
+
+			if (!clazz.getGlobalMetaData().isEmpty())
 			{
 				Collections.sort(clazz.getGlobalMetaData(), comparator);
 			}
-			
+
 		}
 	}
 }

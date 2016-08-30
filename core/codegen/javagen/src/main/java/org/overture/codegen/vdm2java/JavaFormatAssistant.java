@@ -23,6 +23,7 @@ package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
 
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -46,7 +47,6 @@ import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.types.AObjectTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class JavaFormatAssistant extends JavaClassCreatorBase
 {
@@ -89,16 +89,16 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 
 		ACastUnaryExpIR cast = new ACastUnaryExpIR();
 		cast.setType(recordType.clone());
-		
+
 		AIdentifierVarExpIR varExp = new AIdentifierVarExpIR();
 		varExp.setType(new AObjectTypeIR());
 		varExp.setName(formalParamName);
 		varExp.setIsLocal(true);
-		
+
 		cast.setExp(varExp);
 
 		AVarDeclIR localVar = info.getDeclAssistant().consLocalVarDecl(recordType, idPattern, cast);
-				
+
 		ABlockStmIR stm = new ABlockStmIR();
 		stm.getLocalDefs().add(localVar);
 
@@ -137,7 +137,7 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		objRef.setType(new AObjectTypeIR());
 		objRef.setIsLocal(true);
 		objRef.setName(formalParamName);
-		
+
 		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
 		instanceOfExp.setType(new ABoolBasicTypeIR());
 		instanceOfExp.setExp(objRef);
@@ -185,8 +185,7 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 	}
 
 	public AEqualsBinaryExpIR consFieldComparison(ARecordDeclIR record,
-			AFieldDeclIR field, String formalParamName)
-			throws AnalysisException
+			AFieldDeclIR field, String formalParamName) throws AnalysisException
 	{
 		// Example: fieldName == formalParamName.fieldName
 

@@ -23,8 +23,8 @@ package org.overture.ide.ui.navigator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
@@ -132,7 +132,7 @@ public class VdmNavigatorCustomContentProvider
 	{
 		if (element instanceof IFile)
 		{
-			IVdmSourceUnit source = (IVdmSourceUnit) Util.getAdapter(((IFile) element), IVdmSourceUnit.class);
+			IVdmSourceUnit source = (IVdmSourceUnit) Adapters.adapt(((IFile) element), IVdmSourceUnit.class);
 			IWorkbenchAdapter adapter = getAdapter(source);
 			return adapter;
 		}

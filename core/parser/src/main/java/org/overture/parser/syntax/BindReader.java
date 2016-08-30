@@ -29,11 +29,12 @@ import java.util.Vector;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.ADefPatternBind;
-import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 
@@ -87,7 +88,7 @@ public class BindReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			PBind bind = readSetBind();
+			PBind bind = readSetSeqBind();
 			reader.unpush();
 			return bind;
 		} catch (ParserException e)
@@ -111,24 +112,37 @@ public class BindReader extends SyntaxReader
 		}
 	}
 
-	public ASetBind readSetBind() throws LexException, ParserException
+	public PBind readSetSeqBind() throws LexException, ParserException
 	{
 		PPattern pattern = getPatternReader().readPattern();
-		ASetBind sb = null;
+		PBind sb = null;
 
 		if (lastToken().is(VDMToken.IN))
 		{
-			if (nextToken().is(VDMToken.SET))
+			switch (nextToken().type)
 			{
+			case SET:
 				nextToken();
 				sb = AstFactory.newASetBind(pattern, getExpressionReader().readExpression());
-			} else
-			{
-				throwMessage(2000, "Expecting 'in set' after pattern in set binding");
+				break;
+
+			case SEQ:
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2328, "Sequence binds are not available in classic");
+				}
+				
+				nextToken();
+				sb = AstFactory.newASeqBind(pattern, getExpressionReader().readExpression());
+				break;
+				
+			default:
+				throwMessage(2000, "Expecting 'in set' or 'in seq' after pattern in binding");
 			}
-		} else
+		}
+		else
 		{
-			throwMessage(2001, "Expecting 'in set' in set bind");
+			throwMessage(2001, "Expecting 'in set' or 'in seq' in bind");
 		}
 
 		return sb;
@@ -174,13 +188,25 @@ public class BindReader extends SyntaxReader
 		switch (lastToken().type)
 		{
 			case IN:
-				if (nextToken().is(VDMToken.SET))
+				switch (nextToken().type)
 				{
+				case SET:
 					nextToken();
 					mb = AstFactory.newASetMultipleBind(plist, getExpressionReader().readExpression());
-				} else
-				{
-					throwMessage(2003, "Expecting 'in set' after pattern in binding");
+					break;
+					
+				case SEQ:
+					if (Settings.release == Release.CLASSIC)
+					{
+						throwMessage(2328, "Sequence binds are not available in classic");
+					}
+					
+					nextToken();
+					mb = AstFactory.newASeqMultipleBind(plist, getExpressionReader().readExpression());
+					break;
+					
+				default:
+					throwMessage(2003, "Expecting 'in set' or 'in seq' after pattern in binding");
 				}
 				break;
 
@@ -190,7 +216,7 @@ public class BindReader extends SyntaxReader
 				break;
 
 			default:
-				throwMessage(2004, "Expecting 'in set' or ':' after patterns");
+				throwMessage(2004, "Expecting 'in set', 'in seq' or ':' after patterns");
 		}
 
 		return mb;

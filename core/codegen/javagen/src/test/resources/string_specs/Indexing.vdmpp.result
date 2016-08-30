@@ -1,32 +1,34 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final String a = "abc";
+  private static final String a = "abc";
 
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return Entry.a + s() + f();
-    }
+    return Entry.a + s() + f();
+  }
 
-    public static String s() {
-        return "def";
-    }
+  public Entry() {}
 
-    public static String f() {
-        return new String(new char[] { "ghi".charAt(Utils.index(1L)) }) +
-        new String(new char[] { a.charAt(Utils.index(1L)) }) +
-        new String(new char[] { s().charAt(Utils.index(1L)) });
-    }
+  public static String s() {
 
-    public String toString() {
-        return "Entry{" + "a = " + Utils.toString(a) + "}";
-    }
+    return "def";
+  }
+
+  public static String f() {
+
+    return new String(new char[] {"ghi".charAt(Utils.index(1L))})
+        + new String(new char[] {a.charAt(Utils.index(1L))})
+        + new String(new char[] {s().charAt(Utils.index(1L))});
+  }
+
+  public String toString() {
+
+    return "Entry{" + "a = " + Utils.toString(a) + "}";
+  }
 }
 
 ##########

@@ -13,26 +13,22 @@ public class PostCondWithStateTests extends PostCondNoStateTests
 	{
 		AnnotationTestsBase.init("PostCondWithState.vdmsl");
 	}
-	
+
 	@Test
 	@Override
 	public void testOpNoResRequiresAnnotation()
 	{
 		AMethodDeclIR opNoRes = getMethod(genModule.getMethods(), "opNoRes");
-		
-		Assert.assertEquals("Got unexpected ensures annotation for operation 'opNoRes'",
-				"//@ ensures post_opNoRes(\\old(St.copy()),St);",
-				getAnnotation(opNoRes, 0));
+
+		Assert.assertEquals("Got unexpected ensures annotation for operation 'opNoRes'", "//@ ensures post_opNoRes(\\old(St.copy()),St);", getAnnotation(opNoRes, 0));
 	}
-	
+
 	@Test
 	@Override
 	public void testOpResRequresAnnotation()
 	{
 		AMethodDeclIR opRes = getMethod(genModule.getMethods(), "opRes");
-		
-		Assert.assertEquals("Got unexpected ensures annotation for operation 'opRes'",
-				"//@ ensures post_opRes(a,\\result,\\old(St.copy()),St);",
-				getAnnotation(opRes, 0));
+
+		Assert.assertEquals("Got unexpected ensures annotation for operation 'opRes'", "//@ ensures post_opRes(a,\\result,\\old(St.copy()),St);", getAnnotation(opRes, 0));
 	}
 }

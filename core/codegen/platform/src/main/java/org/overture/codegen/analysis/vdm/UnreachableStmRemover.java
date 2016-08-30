@@ -19,10 +19,10 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		List<Integer> unreachStmIndices = new LinkedList<Integer>();
-		
+
 		boolean notreached = false;
 
-		for (int i = 0; i <  node.getStatements().size(); i++)
+		for (int i = 0; i < node.getStatements().size(); i++)
 		{
 			PStm stmt = node.getStatements().get(i);
 			stmt.apply(this);
@@ -58,7 +58,7 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 		}
 
 		// Go backwards to not corrupt the stored indices
-		for(int i = unreachStmIndices.size() - 1; i >= 0; i--)
+		for (int i = unreachStmIndices.size() - 1; i >= 0; i--)
 		{
 			node.getStatements().remove(unreachStmIndices.get(i).intValue());
 		}

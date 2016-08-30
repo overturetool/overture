@@ -7,13 +7,14 @@ import org.overture.codegen.ir.statements.ANotImplementedStmIR;
 public class DelegateSearch extends DepthFirstAnalysisAdaptor
 {
 	private boolean isDelegateCall = false;
-	
+
 	@Override
-	public void caseANotImplementedStmIR(ANotImplementedStmIR node) throws AnalysisException
+	public void caseANotImplementedStmIR(ANotImplementedStmIR node)
+			throws AnalysisException
 	{
 		isDelegateCall = true;
 	}
-	
+
 	public boolean isDelegateCall()
 	{
 		return isDelegateCall;

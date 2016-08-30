@@ -75,24 +75,24 @@ public class JavaValueSemantics
 	private JavaFormat javaFormat;
 	private JavaSettings javaSettings;
 	private List<INode> cloneFreeNodes;
-	
+
 	public JavaValueSemantics(JavaFormat javaFormat)
 	{
 		this.javaFormat = javaFormat;
 		this.javaSettings = new JavaSettings();
 		this.cloneFreeNodes = new LinkedList<>();
 	}
-	
+
 	public void clear()
 	{
 		cloneFreeNodes.clear();
 	}
-	
+
 	public void addCloneFreeNode(INode node)
 	{
 		cloneFreeNodes.add(node);
 	}
-	
+
 	public List<INode> getCloneFreeNodes()
 	{
 		return cloneFreeNodes;
@@ -102,7 +102,7 @@ public class JavaValueSemantics
 	{
 		this.javaSettings = javaSettings;
 	}
-	
+
 	public JavaSettings getJavaSettings()
 	{
 		return javaSettings;
@@ -114,8 +114,8 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
-		
-		if(isCloneFree(exp))
+
+		if (isCloneFree(exp))
 		{
 			return false;
 		}
@@ -127,17 +127,17 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
-		
-		if(cloneNotNeededMapPutGet(exp))
+
+		if (cloneNotNeededMapPutGet(exp))
 		{
 			return false;
 		}
-		
-		if(cloneNotNeededAssign(exp))
+
+		if (cloneNotNeededAssign(exp))
 		{
 			return false;
 		}
-		
+
 		List<ATupleTypeIR> tupleTypes = getTypes(exp.getTuple().getType(), ATupleTypeIR.class);
 		final int idx = (int) (exp.getField() - 1);
 
@@ -153,15 +153,15 @@ public class JavaValueSemantics
 
 		return false;
 	}
-	
+
 	public boolean cloneMember(AFieldExpIR exp)
 	{
 		if (javaSettings.getDisableCloning())
 		{
 			return false;
 		}
-		
-		if(isCloneFree(exp))
+
+		if (isCloneFree(exp))
 		{
 			return false;
 		}
@@ -171,13 +171,13 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
-		
-		if(cloneNotNeededMapPutGet(exp))
+
+		if (cloneNotNeededMapPutGet(exp))
 		{
 			return false;
 		}
-		
-		if(cloneNotNeededAssign(exp))
+
+		if (cloneNotNeededAssign(exp))
 		{
 			return false;
 		}
@@ -203,21 +203,20 @@ public class JavaValueSemantics
 	private <T extends STypeIR> List<T> getTypes(STypeIR type, Class<T> filter)
 	{
 		List<T> filteredTypes = new LinkedList<>();
-		
-		if(filter.isInstance(type))
+
+		if (filter.isInstance(type))
 		{
 			filteredTypes.add(filter.cast(type));
-		}
-		else if(type instanceof AUnionTypeIR)
+		} else if (type instanceof AUnionTypeIR)
 		{
 			List<STypeIR> types = ((AUnionTypeIR) type).getTypes();
-			
-			for(STypeIR t : types)
+
+			for (STypeIR t : types)
 			{
 				filteredTypes.addAll(getTypes(t, filter));
 			}
 		}
-		
+
 		return filteredTypes;
 	}
 
@@ -227,22 +226,22 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
-		
-		if(isCloneFree(exp))
+
+		if (isCloneFree(exp))
 		{
 			return false;
 		}
 
-		if(inRecClassNonConstructor(exp))
+		if (inRecClassNonConstructor(exp))
 		{
 			return false;
 		}
-		
-		if(compAdd(exp))
+
+		if (compAdd(exp))
 		{
 			return false;
 		}
-		
+
 		INode parent = exp.parent();
 
 		if (cloneNotNeeded(parent))
@@ -258,27 +257,27 @@ public class JavaValueSemantics
 				return false;
 			}
 		}
-		
-		if(parent instanceof ACallObjectExpStmIR)
+
+		if (parent instanceof ACallObjectExpStmIR)
 		{
 			ACallObjectExpStmIR callObjStm = (ACallObjectExpStmIR) parent;
-			
-			if(callObjStm.getObj() == exp)
+
+			if (callObjStm.getObj() == exp)
 			{
 				return false;
 			}
 		}
-		
-		if(cloneNotNeededMapPutGet(exp))
+
+		if (cloneNotNeededMapPutGet(exp))
 		{
 			return false;
 		}
-		
-		if(isPrePostArgument(exp))
+
+		if (isPrePostArgument(exp))
 		{
 			return false;
 		}
-		
+
 		STypeIR type = exp.getType();
 
 		if (mayBeValueType(type))
@@ -328,40 +327,38 @@ public class JavaValueSemantics
 	private boolean inRecClassNonConstructor(SExpIR exp)
 	{
 		ADefaultClassDeclIR encClass = exp.getAncestor(ADefaultClassDeclIR.class);
-		
-		if(encClass != null)
+
+		if (encClass != null)
 		{
 			LinkedList<AMethodDeclIR> methods = encClass.getMethods();
-			
+
 			boolean isRec = false;
-			for(AMethodDeclIR m : methods)
+			for (AMethodDeclIR m : methods)
 			{
-				if(m.getIsConstructor() && m.getMethodType().getResult() instanceof ARecordTypeIR)
+				if (m.getIsConstructor()
+						&& m.getMethodType().getResult() instanceof ARecordTypeIR)
 				{
 					isRec = true;
 					break;
 				}
 			}
-			
-			if(!isRec)
+
+			if (!isRec)
 			{
 				return false;
-			}
-			else
+			} else
 			{
 				AMethodDeclIR encMethod = exp.getAncestor(AMethodDeclIR.class);
-				
-				if(encMethod != null)
+
+				if (encMethod != null)
 				{
 					return !encMethod.getIsConstructor();
-				}
-				else
+				} else
 				{
 					return false;
 				}
 			}
-		}
-		else
+		} else
 		{
 			return false;
 		}
@@ -370,22 +367,22 @@ public class JavaValueSemantics
 	private boolean cloneNotNeededMapPutGet(SExpIR exp)
 	{
 		INode parent = exp.parent();
-		
-		if(parent instanceof AMapSeqUpdateStmIR)
+
+		if (parent instanceof AMapSeqUpdateStmIR)
 		{
 			AMapSeqUpdateStmIR mapSeqUpd = (AMapSeqUpdateStmIR) parent;
-			
-			if(mapSeqUpd.getCol() == exp)
+
+			if (mapSeqUpd.getCol() == exp)
 			{
 				return true;
 			}
 		}
-		
-		if(parent instanceof AMapSeqGetExpIR)
+
+		if (parent instanceof AMapSeqGetExpIR)
 		{
 			AMapSeqGetExpIR mapSeqGet = (AMapSeqGetExpIR) parent;
-			
-			if(mapSeqGet.getCol() == exp)
+
+			if (mapSeqGet.getCol() == exp)
 			{
 				return true;
 			}
@@ -396,11 +393,11 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeeded(INode parent)
 	{
-		while(parent instanceof ACastUnaryExpIR)
+		while (parent instanceof ACastUnaryExpIR)
 		{
 			parent = parent.parent();
 		}
-		
+
 		if (parent instanceof AApplyExpIR)
 		{
 			// Cloning is not needed if the expression is
@@ -431,28 +428,28 @@ public class JavaValueSemantics
 	private boolean isPrePostArgument(SExpIR exp)
 	{
 		INode parent = exp.parent();
-		
-		if(!(parent instanceof AApplyExpIR))
+
+		if (!(parent instanceof AApplyExpIR))
 		{
 			return false;
 		}
-		
+
 		AApplyExpIR applyExp = (AApplyExpIR) parent;
-		
+
 		Object tag = applyExp.getTag();
-		
-		if(!(tag instanceof JavaValueSemanticsTag))
+
+		if (!(tag instanceof JavaValueSemanticsTag))
 		{
 			return false;
 		}
-		
+
 		JavaValueSemanticsTag javaTag = (JavaValueSemanticsTag) tag;
-		
-		if(javaTag.mustClone())
+
+		if (javaTag.mustClone())
 		{
 			return false;
 		}
-		
+
 		return applyExp.getArgs().contains(exp);
 	}
 
@@ -471,7 +468,7 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeededSetOperators(INode parent)
 	{
-		return 	parent instanceof ACardUnaryExpIR
+		return parent instanceof ACardUnaryExpIR
 				|| parent instanceof AInSetBinaryExpIR
 				|| parent instanceof ASetSubsetBinaryExpIR
 				|| parent instanceof ASetProperSubsetBinaryExpIR;
@@ -502,32 +499,31 @@ public class JavaValueSemantics
 
 	public boolean mayBeValueType(STypeIR type)
 	{
-		if(type instanceof AUnionTypeIR)
+		if (type instanceof AUnionTypeIR)
 		{
 			LinkedList<STypeIR> types = ((AUnionTypeIR) type).getTypes();
-			
-			for(STypeIR t : types)
+
+			for (STypeIR t : types)
 			{
-				if(mayBeValueType(t))
+				if (mayBeValueType(t))
 				{
 					return true;
 				}
 			}
-			
+
 			return false;
-		}
-		else
+		} else
 		{
 			return type instanceof ARecordTypeIR || type instanceof ATupleTypeIR
 					|| type instanceof SSeqTypeIR || type instanceof SSetTypeIR
 					|| type instanceof SMapTypeIR;
 		}
 	}
-	
+
 	private boolean cloneNotNeededAssign(SExpIR exp)
 	{
 		INode parent = exp.parent();
-		
+
 		if (parent instanceof AAssignToExpStmIR)
 		{
 			AAssignToExpStmIR assignment = (AAssignToExpStmIR) parent;
@@ -536,44 +532,43 @@ public class JavaValueSemantics
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean isCloneFree(SExpIR exp)
 	{
-		if(exp == null)
+		if (exp == null)
 		{
 			return false;
 		}
-		
+
 		INode next = exp;
-		
-		while(next != null)
+
+		while (next != null)
 		{
-			if(contains(next))
+			if (contains(next))
 			{
 				return true;
-			}
-			else
+			} else
 			{
 				next = next.parent();
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean contains(INode node)
 	{
-		for(INode n : cloneFreeNodes)
+		for (INode n : cloneFreeNodes)
 		{
-			if(n == node)
+			if (n == node)
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

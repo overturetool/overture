@@ -11,10 +11,12 @@ import org.overture.core.testing.PathsProvider;
 @RunWith(Parameterized.class)
 public class JmlReuseSlTraceOutputTest extends JmlSlOutputTestBase
 {
-	public static final String ROOT = "src" + File.separatorChar + "test" + File.separatorChar + "resources"
-			+ File.separatorChar + "traces_sl_copies";
+	public static final String ROOT = "src" + File.separatorChar + "test"
+			+ File.separatorChar + "resources" + File.separatorChar
+			+ "traces_sl_copies";
 
-	public JmlReuseSlTraceOutputTest(String nameParameter, String inputParameter, String resultParameter)
+	public JmlReuseSlTraceOutputTest(String nameParameter,
+			String inputParameter, String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}

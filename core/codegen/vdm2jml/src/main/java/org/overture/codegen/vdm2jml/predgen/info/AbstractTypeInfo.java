@@ -17,37 +17,40 @@ public abstract class AbstractTypeInfo
 	{
 		return optional;
 	}
-	
+
 	public void setOptional(boolean optional)
 	{
 		this.optional = optional;
 	}
-	
+
 	abstract public List<LeafTypeInfo> getLeafTypesRecursively();
 
-	abstract public String consCheckExp(String enclosingClass, String javaRootPackage, String arg, NameGen nameGen);
-	
+	abstract public String consCheckExp(String enclosingClass,
+			String javaRootPackage, String arg, NameGen nameGen);
+
 	public String consIsNullCheck(String arg)
 	{
 		return "(" + arg + " == null)";
 	}
-	
-	public static String consSubjectCheck(String className, String methodName, String subject)
+
+	public static String consSubjectCheck(String className, String methodName,
+			String subject)
 	{
 		return consSubjectCheckExtraArg(className, methodName, subject, null);
 	}
-	
-	public static String consSubjectCheckExtraArg(String className, String methodName, String subject, String arg)
+
+	public static String consSubjectCheckExtraArg(String className,
+			String methodName, String subject, String arg)
 	{
-		String call =  className + "." + methodName + "(" + subject;
-		
-		if(arg != null)
+		String call = className + "." + methodName + "(" + subject;
+
+		if (arg != null)
 		{
 			call += "," + arg;
 		}
-		
+
 		call += ")";
-		
+
 		return call;
 	}
 }

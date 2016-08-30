@@ -33,6 +33,6 @@ public class TemplateCallableManager
 	{
 		return new TemplateCallable[] {
 				new TemplateCallable(JAVA_FORMAT_KEY, javaFormat),
-				new TemplateCallable(VALUE_SEMANTICS, valueSemantics)};
+				new TemplateCallable(VALUE_SEMANTICS, valueSemantics) };
 	}
 }

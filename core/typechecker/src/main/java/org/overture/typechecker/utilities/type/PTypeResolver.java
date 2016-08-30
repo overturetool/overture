@@ -51,7 +51,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
@@ -563,7 +563,7 @@ public class PTypeResolver extends
 	}
 
 	@Override
-	public PType caseASetType(ASetType type, Newquestion question)
+	public PType defaultSSetType(SSetType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())

@@ -16,11 +16,12 @@ import org.overture.config.Settings;
 
 public abstract class JavaOutputTestBase extends OutputTestBase
 {
-	public JavaOutputTestBase(String nameParameter, String inputParameter, String resultParameter)
+	public JavaOutputTestBase(String nameParameter, String inputParameter,
+			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-	
+
 	public JavaSettings getJavaSettings()
 	{
 		JavaSettings javaSettings = new JavaSettings();
@@ -28,25 +29,24 @@ public abstract class JavaOutputTestBase extends OutputTestBase
 
 		return javaSettings;
 	}
-	
+
 	public JavaCodeGen getJavaGen()
 	{
 		JavaCodeGen javaGen = new JavaCodeGen();
 		javaGen.setSettings(getIrSettings());
 		javaGen.setJavaSettings(getJavaSettings());
-		
+
 		return javaGen;
 	}
-	
+
 	public GeneratedData genCode(List<INode> ast) throws AnalysisException
 	{
-		if(Settings.dialect == Dialect.VDM_SL)
+		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			List<AModuleModules> modules = buildModulesList(ast);
-			
+
 			return getJavaGen().generate(CodeGenBase.getNodes(modules));
-		}
-		else
+		} else
 		{
 			List<SClassDefinition> classes = buildClassList(ast);
 

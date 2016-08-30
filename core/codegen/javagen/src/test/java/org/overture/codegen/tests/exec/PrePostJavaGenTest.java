@@ -17,7 +17,8 @@ import org.overture.config.Release;
 @RunWith(value = Parameterized.class)
 public class PrePostJavaGenTest extends JavaGenTestBase
 {
-	public PrePostJavaGenTest(String name, File vdmSpec, TestHandler testHandler)
+	public PrePostJavaGenTest(String name, File vdmSpec,
+			TestHandler testHandler)
 	{
 		super(vdmSpec, testHandler);
 	}
@@ -25,7 +26,7 @@ public class PrePostJavaGenTest extends JavaGenTestBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		return collectTests(new File(PrePostOutputTest.ROOT),new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
+		return collectTests(new File(PrePostOutputTest.ROOT), new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_PP));
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class PrePostJavaGenTest extends JavaGenTestBase
 
 		return irSettings;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

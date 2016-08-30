@@ -56,19 +56,18 @@ public class JavaCommandLineCompiler
 			String arg = "";
 
 			String cpArg = "";
-			if(cpJars != null && cpJars.length > 0)
+			if (cpJars != null && cpJars.length > 0)
 			{
 				cpArg = consCpArg(cpJars);
 			}
-			
+
 			if (JavaToolsUtils.isWindows())
 			{
 				pb = new ProcessBuilder(javac.getAbsolutePath(), cpArg, arguments.trim());
 			} else
 			{
 				arg = "javac"// -nowarn -J-client -J-Xms100m -J-Xmx100m"
-						+ cpArg + " "
-						+ arguments.replace('\"', ' ').trim();
+						+ cpArg + " " + arguments.replace('\"', ' ').trim();
 			}
 
 			if (pb != null)
@@ -80,9 +79,9 @@ public class JavaCommandLineCompiler
 			{
 				p = Runtime.getRuntime().exec(arg, null, dir);
 			}
-			
+
 			p.waitFor();
-			
+
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 			String secondLastLine = "";
 			while ((line = input.readLine()) != null)
@@ -113,16 +112,16 @@ public class JavaCommandLineCompiler
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(" -cp ");
-		
+
 		String sep = "";
-		
-		for(File jar : cpJars)
+
+		for (File jar : cpJars)
 		{
 			sb.append(sep);
 			sb.append(jar.getAbsolutePath());
 			sep = File.pathSeparator;
 		}
-		
+
 		return sb.toString();
 	}
 

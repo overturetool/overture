@@ -32,7 +32,7 @@ public class IRConstants
 	public static final String CONSTRUCTOR_FORMAL_PREFIX = "_";
 
 	public static final String QUOTES_INTERFACE_NAME = "Quotes";
-	
+
 	public static final String TEST_CASE = "TestCase";
 	public static final String TEST_CASE_RUN_FULL_SUITE = "runFullSuite";
 
@@ -42,6 +42,7 @@ public class IRConstants
 			"TestResult", "TestRunner", "VDMUtil", "CPU", "BUS" };
 
 	public static final String ILLEGAL_QUOTE_VALUE = "?";
-	
-	public static final String[] RESERVED_CLASS_NAMES = (String[]) ArrayUtils.addAll(new String[] { QUOTES_INTERFACE_NAME }, CLASS_NAMES_USED_IN_VDM);
+
+	public static final String[] RESERVED_CLASS_NAMES = (String[]) ArrayUtils.addAll(new String[] {
+			QUOTES_INTERFACE_NAME }, CLASS_NAMES_USED_IN_VDM);
 }

@@ -1,31 +1,31 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private VDMMap m = MapUtil.map(new Maplet(new Token(1L),
-                MapUtil.map(
-                    new Maplet(new Token(1L), quotes.AQuote.getInstance()))));
+  private VDMMap m =
+      MapUtil.map(
+          new Maplet(
+              new Token(1L), MapUtil.map(new Maplet(new Token(1L), quotes.AQuote.getInstance()))));
 
-    public Entry() {
-    }
+  public Object app(final Token id, final Token index) {
 
-    public Object app(final Token id, final Token index) {
-        return Utils.copy(Utils.get(((VDMMap) Utils.get(m, id)), index));
-    }
+    return Utils.copy(Utils.get(((VDMMap) Utils.get(m, id)), index));
+  }
 
-    public static Object Run() {
-        final Entry e = new Entry();
+  public static Object Run() {
 
-        return Utils.equals(quotes.AQuote.getInstance(),
-            e.app(new Token(1L), new Token(1L)));
-    }
+    final Entry e = new Entry();
+    return Utils.equals(quotes.AQuote.getInstance(), e.app(new Token(1L), new Token(1L)));
+  }
 
-    public String toString() {
-        return "Entry{" + "m := " + Utils.toString(m) + "}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "m := " + Utils.toString(m) + "}";
+  }
 }
 
 ##########

@@ -3,6 +3,7 @@ package org.overture.interpreter.utilities.pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASeqMultipleBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -65,6 +66,25 @@ public class MultipleBindValuesCollector extends
 			}
 			return null;
 
+		}
+	}
+
+	@Override
+	public ValueList caseASeqMultipleBind(ASeqMultipleBind node, BindState state)
+			throws AnalysisException
+	{
+		try
+		{
+			return node.getSeq().apply(VdmRuntime.getExpressionEvaluator(), state.ctxt).seqValue(state.ctxt);
+		}
+		catch (AnalysisException e)
+		{
+			if (e instanceof ValueException)
+			{
+				VdmRuntimeError.abort(node.getLocation(), (ValueException) e);
+			}
+			
+			return null;
 		}
 	}
 

@@ -94,7 +94,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidReturnType;
@@ -734,7 +734,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		if (question.assistantFactory.createPTypeAssistant().isSet(node.getType()))
 		{
-			ASetType st = question.assistantFactory.createPTypeAssistant().getSet(node.getType());
+			SSetType st = question.assistantFactory.createPTypeAssistant().getSet(node.getType());
 			List<PDefinition> defs = question.assistantFactory.createPPatternAssistant().getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
 
 			Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
@@ -1239,7 +1239,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		if (question.assistantFactory.createPTypeAssistant().isSet(type))
 		{
-			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
+			SSetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
 
 			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof(), null))
 			{
@@ -1278,7 +1278,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		if (question.assistantFactory.createPTypeAssistant().isSet(type))
 		{
-			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
+			SSetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
 
 			if (!question.assistantFactory.createPTypeAssistant().isClass(set.getSetof(), null))
 			{
@@ -1387,7 +1387,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				ASetBind setbind = (ASetBind) bind;
-				ASetType settype = question.assistantFactory.createPTypeAssistant().getSet(setbind.getSet().apply(THIS, question));
+				SSetType settype = question.assistantFactory.createPTypeAssistant().getSet(setbind.getSet().apply(THIS, question));
 
 				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
 				{

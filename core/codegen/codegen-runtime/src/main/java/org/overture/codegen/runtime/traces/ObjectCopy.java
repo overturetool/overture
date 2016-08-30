@@ -4,11 +4,11 @@ public class ObjectCopy extends ModuleCopy
 {
 	private Object instance;
 	protected Object val;
-	
+
 	public ObjectCopy(Object orig)
 	{
 		super(orig.getClass());
-		
+
 		// Copy instance
 		this.instance = deepCopy(orig);
 		reset();
@@ -20,7 +20,7 @@ public class ObjectCopy extends ModuleCopy
 		super.reset();
 		val = deepCopy(instance);
 	}
-	
+
 	@Override
 	public Object getValue()
 	{

@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.node.INode;
-import org.overture.codegen.ir.PIR;
 
 public final class IRStatus<T extends PIR>
 {
@@ -44,14 +43,17 @@ public final class IRStatus<T extends PIR>
 		this.transformationWarnings = new HashSet<IrNodeInfo>();
 	}
 
-	public IRStatus(INode vdmNode, String nodeName, T node, Set<VdmNodeInfo> unsupportedNodes)
+	public IRStatus(INode vdmNode, String nodeName, T node,
+			Set<VdmNodeInfo> unsupportedNodes)
 	{
 		this(vdmNode, unsupportedNodes);
 		this.irNodeName = nodeName;
 		this.node = node;
 	}
-	
-	public IRStatus(INode vdmNode, String nodeName, T node, Set<VdmNodeInfo> unsupportedNodes, Set<IrNodeInfo> transformationWarnings)
+
+	public IRStatus(INode vdmNode, String nodeName, T node,
+			Set<VdmNodeInfo> unsupportedNodes,
+			Set<IrNodeInfo> transformationWarnings)
 	{
 		this(vdmNode, nodeName, node, unsupportedNodes);
 		this.transformationWarnings = transformationWarnings;
@@ -62,7 +64,8 @@ public final class IRStatus<T extends PIR>
 		return unsupportedInIr;
 	}
 
-	public void addTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
+	public void addTransformationWarnings(
+			Set<IrNodeInfo> transformationWarnings)
 	{
 		this.transformationWarnings.addAll(transformationWarnings);
 	}
@@ -76,17 +79,18 @@ public final class IRStatus<T extends PIR>
 	{
 		return transformationWarnings;
 	}
-	
-	public void setTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
+
+	public void setTransformationWarnings(
+			Set<IrNodeInfo> transformationWarnings)
 	{
 		this.transformationWarnings = transformationWarnings;
 	}
-	
+
 	public INode getVdmNode()
 	{
 		return vdmNode;
 	}
-	
+
 	public void setVdmNode(INode vdmNode)
 	{
 		this.vdmNode = vdmNode;
@@ -111,15 +115,15 @@ public final class IRStatus<T extends PIR>
 	{
 		this.irNodeName = irNodeName;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return getIrNodeName();
 	}
-	
-	public static <T extends PIR> IRStatus<T> extract(
-			IRStatus<PIR> inputStatus, Class<T> type)
+
+	public static <T extends PIR> IRStatus<T> extract(IRStatus<PIR> inputStatus,
+			Class<T> type)
 	{
 		String name = inputStatus.getIrNodeName();
 		INode vdmNode = inputStatus.getVdmNode();
@@ -153,7 +157,7 @@ public final class IRStatus<T extends PIR>
 
 		return outputStatuses;
 	}
-	
+
 	public static <T extends PIR> IRStatus<PIR> extract(IRStatus<T> inputStatus)
 	{
 		String name = inputStatus.getIrNodeName();
@@ -164,12 +168,13 @@ public final class IRStatus<T extends PIR>
 
 		return new IRStatus<PIR>(vdmNode, name, node, unsupportedInIr, warnings);
 	}
-	
-	public static <T extends PIR> List<IRStatus<PIR>> extract(List<IRStatus<T>> inputStatuses)
+
+	public static <T extends PIR> List<IRStatus<PIR>> extract(
+			List<IRStatus<T>> inputStatuses)
 	{
 		List<IRStatus<PIR>> outputStatuses = new LinkedList<IRStatus<PIR>>();
-		
-		for(IRStatus<T> status : inputStatuses)
+
+		for (IRStatus<T> status : inputStatuses)
 		{
 			IRStatus<PIR> converted = extract(status);
 
@@ -178,7 +183,7 @@ public final class IRStatus<T extends PIR>
 				outputStatuses.add(converted);
 			}
 		}
-		
+
 		return outputStatuses;
 	}
 }

@@ -32,8 +32,8 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class TypenameComparison extends NamingComparison
 {
-	public TypenameComparison(String[] names,
-			IRInfo irInfo, String correctionPrefix)
+	public TypenameComparison(String[] names, IRInfo irInfo,
+			String correctionPrefix)
 	{
 		super(names, irInfo, correctionPrefix);
 	}
@@ -41,9 +41,10 @@ public class TypenameComparison extends NamingComparison
 	@Override
 	public boolean isModuleViolation(ILexNameToken nameToken)
 	{
-		return nameToken.parent() instanceof ACallStm && this.getNames().contains(nameToken.getModule());
+		return nameToken.parent() instanceof ACallStm
+				&& this.getNames().contains(nameToken.getModule());
 	}
-	
+
 	@Override
 	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
@@ -51,7 +52,7 @@ public class TypenameComparison extends NamingComparison
 		{
 			PDefinitionAssistantTC defAssistant = irInfo.getTcFactory().createPDefinitionAssistant();
 			TypeAssistantIR typeAssistantCg = irInfo.getAssistantManager().getTypeAssistant();
-			
+
 			PDefinition def = typeAssistantCg.getTypeDef(nameToken, defAssistant);
 
 			if (def instanceof ATypeDefinition)
@@ -61,8 +62,7 @@ public class TypenameComparison extends NamingComparison
 			}
 
 			return def != null;
-		}
-		else if(isModuleViolation(nameToken))
+		} else if (isModuleViolation(nameToken))
 		{
 			return true;
 		}

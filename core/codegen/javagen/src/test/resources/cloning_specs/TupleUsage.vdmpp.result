@@ -1,64 +1,76 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final Tuple a = Tuple.mk_(Tuple.mk_(1L, true), 3L);
-    private static final Tuple b = Entry.a;
-    private static final Tuple c = ((Tuple) a.get(0));
-    private static final Number d = ((Number) ((Tuple) a.get(0)).get(0));
-    private static final Boolean e = ((Boolean) ((Tuple) a.get(0)).get(1));
-    private static final Number f = ((Number) a.get(1));
+  private static final Tuple a = Tuple.mk_(Tuple.mk_(1L, true), 3L);
+  private static final Tuple b = Entry.a;
+  private static final Tuple c = ((Tuple) a.get(0));
+  private static final Number d = ((Number) ((Tuple) a.get(0)).get(0));
+  private static final Boolean e = ((Boolean) ((Tuple) a.get(0)).get(1));
+  private static final Number f = ((Number) a.get(1));
 
-    public Entry() {
-    }
+  public static Number op1() {
 
-    public static Number op1() {
-        Tuple r = Tuple.mk_(1L, 2L);
+    Tuple r = Tuple.mk_(1L, 2L);
+    return ((Number) r.get(0));
+  }
 
-        return ((Number) r.get(0));
-    }
+  public static Number op2() {
 
-    public static Number op2() {
-        final Tuple a_1 = Tuple.mk_(1L, 2L);
-        final Tuple b_1 = a_1;
+    final Tuple a_1 = Tuple.mk_(1L, 2L);
+    final Tuple b_1 = a_1;
+    return ((Number) b_1.get(0));
+  }
 
-        return ((Number) b_1.get(0));
-    }
+  public static Number op3() {
 
-    public static Number op3() {
-        Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
-        Tuple b = ((Tuple) a.get(0));
+    Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+    Tuple b = ((Tuple) a.get(0));
+    return ((Number) ((Tuple) a.get(0)).get(0));
+  }
 
-        return ((Number) ((Tuple) a.get(0)).get(0));
-    }
+  public static Tuple op4() {
 
-    public static Tuple op4() {
-        Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+    Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+    return a;
+  }
 
-        return a;
-    }
+  public static Tuple op5() {
 
-    public static Tuple op5() {
-        Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+    Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
+    return ((Tuple) a.get(0));
+  }
 
-        return ((Tuple) a.get(0));
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return op1().longValue() + op2().longValue() + op3().longValue() +
-        ((Number) ((Tuple) op4().get(0)).get(1)).longValue() +
-        ((Number) op5().get(0)).longValue();
-    }
+    return op1().longValue()
+        + op2().longValue()
+        + op3().longValue()
+        + ((Number) ((Tuple) op4().get(0)).get(1)).longValue()
+        + ((Number) op5().get(0)).longValue();
+  }
 
-    public String toString() {
-        return "Entry{" + "a = " + Utils.toString(a) + ", b = " +
-        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
-        Utils.toString(d) + ", e = " + Utils.toString(e) + ", f = " +
-        Utils.toString(f) + "}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{"
+        + "a = "
+        + Utils.toString(a)
+        + ", b = "
+        + Utils.toString(b)
+        + ", c = "
+        + Utils.toString(c)
+        + ", d = "
+        + Utils.toString(d)
+        + ", e = "
+        + Utils.toString(e)
+        + ", f = "
+        + Utils.toString(f)
+        + "}";
+  }
 }
 
 ##########

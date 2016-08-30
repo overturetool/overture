@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -43,7 +44,6 @@ import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.types.AInterfaceTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class FuncValTrans extends DepthFirstAnalysisAdaptor

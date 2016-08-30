@@ -1,39 +1,39 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private static final Number x = 1L;
+  private static final Number x = 1L;
 
-    public A() {
-    }
+  public void op() {
 
-    public void op() {
-        final Number x0 = MATH.sin(A.x);
-        final Number x1 = MATH.cos(A.x);
-        final Number x2 = MATH.tan(A.x);
-        final Number x3 = MATH.cot(A.x);
-        final Number x4 = MATH.asin(A.x);
-        final Number x5 = MATH.acos(A.x);
-        final Number x6 = MATH.atan(A.x);
-        final Number x7 = MATH.acot(A.x);
-        final Number x8 = MATH.sqrt(A.x);
-        final Number x9 = MATH.pi_f();
-        final Number x10 = MATH.rand(A.x);
-        final Number x11 = MATH.srand2(A.x);
-        final Number x12 = MATH.exp(A.x);
-        final Number x13 = MATH.ln(A.x);
-        final Number x14 = MATH.log(A.x);
-        final Number x15 = MATH.fac(A.x);
-        final Number x16 = MATH.pi;
-        MATH.srand(A.x);
-    }
+    final Number x0 = MATH.sin(A.x);
+    final Number x1 = MATH.cos(A.x);
+    final Number x2 = MATH.tan(A.x);
+    final Number x3 = MATH.cot(A.x);
+    final Number x4 = MATH.asin(A.x);
+    final Number x5 = MATH.acos(A.x);
+    final Number x6 = MATH.atan(A.x);
+    final Number x7 = MATH.acot(A.x);
+    final Number x8 = MATH.sqrt(A.x);
+    final Number x9 = MATH.pi_f();
+    final Number x10 = MATH.rand(A.x);
+    final Number x11 = MATH.srand2(A.x);
+    final Number x12 = MATH.exp(A.x);
+    final Number x13 = MATH.ln(A.x);
+    final Number x14 = MATH.log(A.x);
+    final Number x15 = MATH.fac(A.x);
+    final Number x16 = MATH.pi;
+    MATH.srand(A.x);
+  }
 
-    public String toString() {
-        return "A{" + "x = " + Utils.toString(x) + "}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{" + "x = " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

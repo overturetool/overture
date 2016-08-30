@@ -1,81 +1,77 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public Number x = 2L;
+  public Number x = 2L;
 
-    public B() {
-    }
+  public B() {}
 
-    public String toString() {
-        return "B{" + "x := " + Utils.toString(x) + "}";
-    }
+  public String toString() {
+
+    return "B{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public Number x = 1L;
+  public Number x = 1L;
 
-    public A() {
-    }
+  public static Number StaticOp(final Number a) {
 
-    public static Number StaticOp(final Number a) {
-        return a;
-    }
+    return a;
+  }
 
-    public String toString() {
-        return "A{" + "x := " + Utils.toString(x) + "}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static VDMSeq hr = SeqUtil.seq(new A(), new B(), new B());
+  private static VDMSeq hr = SeqUtil.seq(new A(), new B(), new B());
 
-    public Entry() {
+  public static Object Run() {
+
+    Number sum = 0L;
+    long toVar_1 = Entry.hr.size();
+
+    for (Long i = 1L; i <= toVar_1; i++) {
+      Object obj_1 = Utils.get(hr, i);
+      Number apply_1 = null;
+      if (obj_1 instanceof A) {
+        apply_1 = ((A) obj_1).x;
+      } else if (obj_1 instanceof B) {
+        apply_1 = ((B) obj_1).x;
+      } else {
+        throw new RuntimeException("Missing member: x");
+      }
+
+      sum = sum.longValue() + A.StaticOp(apply_1).longValue();
     }
+    return sum;
+  }
 
-    public static Object Run() {
-        Number sum = 0L;
-        long toVar_1 = Entry.hr.size();
+  public Entry() {}
 
-        for (Long i = 1L; i <= toVar_1; i++) {
-            Object obj_1 = Utils.get(hr, i);
+  public String toString() {
 
-            Number apply_1 = null;
-
-            if (obj_1 instanceof A) {
-                apply_1 = ((A) obj_1).x;
-            } else if (obj_1 instanceof B) {
-                apply_1 = ((B) obj_1).x;
-            } else {
-                throw new RuntimeException("Missing member: x");
-            }
-
-            sum = sum.longValue() + A.StaticOp(apply_1).longValue();
-        }
-
-        return sum;
-    }
-
-    public String toString() {
-        return "Entry{" + "hr := " + Utils.toString(hr) + "}";
-    }
+    return "Entry{" + "hr := " + Utils.toString(hr) + "}";
+  }
 }
 
 ##########

@@ -1,76 +1,69 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public quotes.T1Quote quotePatternOp(final quotes.T1Quote quotePattern_1) {
+
+    Boolean success_1 = Utils.equals(quotePattern_1, quotes.T1Quote.getInstance());
+    if (!(success_1)) {
+      throw new RuntimeException("Quote pattern match failed");
     }
 
-    public quotes.T1Quote quotePatternOp(final quotes.T1Quote quotePattern_1) {
-        Boolean success_1 = Utils.equals(quotePattern_1,
-                quotes.T1Quote.getInstance());
-
-        if (!(success_1)) {
-            throw new RuntimeException("Quote pattern match failed");
-        }
-
-        final quotes.T1Quote quotePattern_2 = quotes.T1Quote.getInstance();
-        Boolean success_2 = Utils.equals(quotePattern_2,
-                quotes.T1Quote.getInstance());
-
-        if (!(success_2)) {
-            throw new RuntimeException("Quote pattern match failed");
-        }
-
-        return quotes.T1Quote.getInstance();
+    final quotes.T1Quote quotePattern_2 = quotes.T1Quote.getInstance();
+    Boolean success_2 = Utils.equals(quotePattern_2, quotes.T1Quote.getInstance());
+    if (!(success_2)) {
+      throw new RuntimeException("Quote pattern match failed");
     }
 
-    public static quotes.T1Quote quotePatternFun(
-        final quotes.T1Quote quotePattern_3) {
-        Boolean success_3 = Utils.equals(quotePattern_3,
-                quotes.T1Quote.getInstance());
+    return quotes.T1Quote.getInstance();
+  }
 
-        if (!(success_3)) {
-            throw new RuntimeException("Quote pattern match failed");
-        }
+  public A() {}
 
-        final quotes.T1Quote quotePattern_4 = quotes.T1Quote.getInstance();
-        Boolean success_4 = Utils.equals(quotePattern_4,
-                quotes.T1Quote.getInstance());
+  public static quotes.T1Quote quotePatternFun(final quotes.T1Quote quotePattern_3) {
 
-        if (!(success_4)) {
-            throw new RuntimeException("Quote pattern match failed");
-        }
-
-        return quotes.T1Quote.getInstance();
+    Boolean success_3 = Utils.equals(quotePattern_3, quotes.T1Quote.getInstance());
+    if (!(success_3)) {
+      throw new RuntimeException("Quote pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
+    final quotes.T1Quote quotePattern_4 = quotes.T1Quote.getInstance();
+    Boolean success_4 = Utils.equals(quotePattern_4, quotes.T1Quote.getInstance());
+    if (!(success_4)) {
+      throw new RuntimeException("Quote pattern match failed");
     }
+
+    return quotes.T1Quote.getInstance();
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return SeqUtil.seq(new A().quotePatternOp(quotes.T1Quote.getInstance()),
-            A.quotePatternFun(quotes.T1Quote.getInstance()));
-    }
+    return SeqUtil.seq(
+        new A().quotePatternOp(quotes.T1Quote.getInstance()),
+        A.quotePatternFun(quotes.T1Quote.getInstance()));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

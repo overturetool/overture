@@ -1,50 +1,53 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public static final Boolean a = Utils.equals(new R(1L), new R(2L));
-    public static final Boolean b = !(Utils.equals(new R(1L), new R(2L)));
+  public static final Boolean a = Utils.equals(new R(1L), new R(2L));
+  public static final Boolean b = !(Utils.equals(new R(1L), new R(2L)));
 
-    public A() {
+  public A() {}
+
+  public String toString() {
+
+    return "A{" + "a = " + Utils.toString(a) + ", b = " + Utils.toString(b) + "}";
+  }
+
+  public static class R implements Record {
+    public Number x;
+
+    public R(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R)) {
+        return false;
+      }
+
+      R other = ((R) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public R copy() {
+
+      return new R(x);
     }
 
     public String toString() {
-        return "A{" + "a = " + Utils.toString(a) + ", b = " +
-        Utils.toString(b) + "}";
+
+      return "mk_A`R" + Utils.formatFields(x);
     }
-
-    public static class R implements Record {
-        public Number x;
-
-        public R(final Number _x) {
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof R)) {
-                return false;
-            }
-
-            R other = ((R) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public R copy() {
-            return new R(x);
-        }
-
-        public String toString() {
-            return "mk_A`R" + Utils.formatFields(x);
-        }
-    }
+  }
 }
 
 ##########

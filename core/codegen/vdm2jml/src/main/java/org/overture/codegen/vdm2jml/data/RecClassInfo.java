@@ -29,7 +29,7 @@ public class RecClassInfo
 			members.add(acc);
 		}
 	}
-	
+
 	private boolean contains(SDeclIR memberToCheck)
 	{
 		for (SDeclIR m : members)
@@ -62,12 +62,12 @@ public class RecClassInfo
 			members.add(newAcc);
 		}
 	}
-	
+
 	public boolean isRecField(AFieldDeclIR field)
 	{
 		return contains(field);
 	}
-	
+
 	public boolean inAccessor(INode node)
 	{
 		AMethodDeclIR anc = node.getAncestor(AMethodDeclIR.class);
@@ -79,41 +79,41 @@ public class RecClassInfo
 
 		return contains(anc);
 	}
-	
+
 	public boolean inRecConstructor(INode node)
 	{
-		if(!inRec(node))
+		if (!inRec(node))
 		{
 			return false;
 		}
-		
+
 		AMethodDeclIR m = node.getAncestor(AMethodDeclIR.class);
-		
-		if(m != null)
+
+		if (m != null)
 		{
 			return m.getIsConstructor();
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean inRec(INode node)
 	{
 		ADefaultClassDeclIR clazz = node.getAncestor(ADefaultClassDeclIR.class);
-		
-		if(clazz == null)
+
+		if (clazz == null)
 		{
 			return false;
 		}
-		
-		for(ADefaultClassDeclIR r : recClasses)
+
+		for (ADefaultClassDeclIR r : recClasses)
 		{
-			if(clazz == r)
+			if (clazz == r)
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 

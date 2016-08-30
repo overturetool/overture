@@ -398,7 +398,7 @@ public class PluginVdm2JavaUtil
 		} catch (CoreException e)
 		{
 
-			CodeGenConsole.GetInstance().printErrorln("Problem looking up launch configurations for project "
+			CodeGenConsole.GetInstance().errorln("Problem looking up launch configurations for project "
 					+ project.getName() + ": " + e.getMessage());
 			e.printStackTrace();
 		}

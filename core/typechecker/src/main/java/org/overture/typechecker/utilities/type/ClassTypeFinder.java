@@ -57,6 +57,8 @@ import org.overture.typechecker.util.LexNameTokenMap;
  */
 public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 {
+	public static final String UNION_CLASS_PREFIX = "*union";
+	
 	protected ITypeCheckerAssistantFactory af;
 	protected Environment env;
 
@@ -102,7 +104,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 			Map<ILexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
 
 			// Derive the pseudoclass name for the combined union
-    		String classString = "*union";	// NB, illegal class name
+    		String classString = UNION_CLASS_PREFIX;	// NB, illegal class name
     		int count = 0;
     		AClassType found = null;
 

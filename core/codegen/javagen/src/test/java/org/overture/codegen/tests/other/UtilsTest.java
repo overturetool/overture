@@ -13,43 +13,43 @@ public class UtilsTest
 	{
 		assertTrue(JavaCodeGenUtil.isValidJavaPackage("org.overture.codegen.tests"));
 	}
-	
+
 	@Test
 	public void testStartWithCapLetter()
 	{
 		assertTrue(JavaCodeGenUtil.isValidJavaPackage("Hello.hello"));
 	}
-	
+
 	@Test
 	public void testEmptyPackage()
 	{
 		assertFalse(JavaCodeGenUtil.isValidJavaPackage(""));
 	}
-	
+
 	@Test
 	public void testTwoDotsInPackage()
 	{
 		assertFalse(JavaCodeGenUtil.isValidJavaPackage("org..overture"));
 	}
-	
+
 	@Test
 	public void testNoDotsPackage()
 	{
 		assertTrue(JavaCodeGenUtil.isValidJavaPackage("myPackage"));
 	}
-	
+
 	@Test
 	public void spaceAroundPackage()
 	{
 		assertTrue(JavaCodeGenUtil.isValidJavaPackage("   org.overture    "));
 	}
-	
+
 	@Test
 	public void spaceInPackage()
 	{
 		assertFalse(JavaCodeGenUtil.isValidJavaPackage("org. overture"));
 	}
-	
+
 	@Test
 	public void testNumberNamePackage()
 	{

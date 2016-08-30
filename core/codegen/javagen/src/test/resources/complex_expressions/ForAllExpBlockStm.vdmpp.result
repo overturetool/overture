@@ -1,42 +1,37 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSeq s = SeqUtil.seq(1L, 2L, 3L);
+  private static final VDMSeq s = SeqUtil.seq(1L, 2L, 3L);
 
-    public Entry() {
+  public static Object Run() {
+
+    return Test();
+  }
+
+  public static Boolean Test() {
+
+    Boolean forAllExpResult_1 = true;
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && forAllExpResult_1; ) {
+      Number x = ((Number) iterator_1.next());
+      for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext() && forAllExpResult_1; ) {
+        Number y = ((Number) iterator_2.next());
+        forAllExpResult_1 = x.longValue() + y.longValue() > 3L;
+      }
     }
+    Boolean a = forAllExpResult_1;
+    return a;
+  }
 
-    public static Object Run() {
-        return Test();
-    }
+  public Entry() {}
 
-    public static Boolean Test() {
-        Boolean forAllExpResult_1 = true;
-        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+  public String toString() {
 
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && forAllExpResult_1;) {
-            Number x = ((Number) iterator_1.next());
-
-            for (Iterator iterator_2 = set_1.iterator();
-                    iterator_2.hasNext() && forAllExpResult_1;) {
-                Number y = ((Number) iterator_2.next());
-                forAllExpResult_1 = (x.longValue() + y.longValue()) > 3L;
-            }
-        }
-
-        Boolean a = forAllExpResult_1;
-
-        return a;
-    }
-
-    public String toString() {
-        return "Entry{" + "s = " + Utils.toString(s) + "}";
-    }
+    return "Entry{" + "s = " + Utils.toString(s) + "}";
+  }
 }
 
 ##########

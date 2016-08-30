@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>ide</artifactId>
-    <version>2.3.8</version>
+    <version>2.4.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -16,7 +16,7 @@
   <name>org.overture.ide.help</name>
 
   <properties>
-    <example-packager.version>2.1.2</example-packager.version>
+    <example-packager.version>3.0.2</example-packager.version>
     <repo.root>${project.basedir}/../..</repo.root>
     <examples.root>${repo.root}/externals/docrepo/examples</examples.root>
     <documentation.root>${repo.root}/externals/docrepo/documentation</documentation.root>
@@ -67,6 +67,7 @@
           <rtExamples>
             <param>${examples.root}/VDMRT</param>
           </rtExamples>
+          <vdmLibs>${examples.root}/libs/</vdmLibs>
         </configuration>
         <executions>
           <execution>

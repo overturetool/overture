@@ -1,43 +1,49 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    private Entry() {
-    }
+  private Entry() {}
 
-    public static void Run() {
-        project.Entrytypes.E e = new project.Entrytypes.E(1L);
+  public static void Run() {
 
-        //@ assert Utils.is_(e,project.Entrytypes.E.class);
-        Number atomicTmp_3 = -20L;
+    project.Entrytypes.E e = new project.Entrytypes.E(1L);
+    //@ assert Utils.is_(e,project.Entrytypes.E.class);
 
-        //@ assert Utils.is_int(atomicTmp_3);
-        Number atomicTmp_4 = 20L;
-        //@ assert Utils.is_int(atomicTmp_4);
-        { /* Start of atomic statement */
-            //@ set project.Mod.invChecksOn = false;
+    Number atomicTmp_3 = -20L;
+    //@ assert Utils.is_int(atomicTmp_3);
 
-            //@ assert e != null;
-            e.set_x(atomicTmp_3);
+    Number atomicTmp_4 = 20L;
+    //@ assert Utils.is_int(atomicTmp_4);
 
-            //@ assert e != null;
-            e.set_x(atomicTmp_4);
+    {
+        /* Start of atomic statement */
+      //@ set project.Mod.invChecksOn = false;
 
-            //@ set project.Mod.invChecksOn = true;
+      //@ assert e != null;
 
-            //@ assert e.valid();
-        } /* End of atomic statement */
-        IO.println("Done! Expected to exit without any errors");
-    }
+      e.set_x(atomicTmp_3);
 
-    public String toString() {
-        return "Entry{}";
-    }
+      //@ assert e != null;
+
+      e.set_x(atomicTmp_4);
+
+      //@ set project.Mod.invChecksOn = true;
+
+      //@ assert e.valid();
+
+    } /* End of atomic statement */
+
+    IO.println("Done! Expected to exit without any errors");
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }

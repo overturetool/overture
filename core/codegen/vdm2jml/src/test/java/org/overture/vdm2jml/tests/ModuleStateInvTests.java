@@ -22,7 +22,7 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 
 	public static void checkAssertion(String methodName, Update update,
 			int noOfAsserts)
-					throws org.overture.codegen.ir.analysis.AnalysisException
+			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		AMethodDeclIR assignSt = getMethod(genModule.getMethods(), methodName);
 
@@ -82,7 +82,10 @@ public class ModuleStateInvTests extends AnnotationTestsBase
 				String assertStr = metaData.get(0).value;
 
 				Assert.assertTrue("Got unexpected assertion in method '"
-						+ methodName + "': " + assertStr, assertStr.contains(".valid()") || assertStr.contains("!= null") || assertStr.contains(".is_"));
+						+ methodName + "': "
+						+ assertStr, assertStr.contains(".valid()")
+								|| assertStr.contains("!= null")
+								|| assertStr.contains(".is_"));
 			}
 		} else
 		{

@@ -1,63 +1,66 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Rec r1 = new Rec(5L, true);
+    Number x0 = 10L;
+    Boolean b0 = true;
+    Rec recModifierExp_1 = Utils.copy(r1);
+
+    recModifierExp_1.x = x0;
+    recModifierExp_1.b = b0;
+    Rec r2 = Utils.copy(recModifierExp_1);
+    Number y = 2L;
+    return Tuple.mk_(r2.x, r2.b);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class Rec implements Record {
+    public Number x;
+    public Boolean b;
+
+    public Rec(final Number _x, final Boolean _b) {
+
+      x = _x;
+      b = _b;
     }
 
-    public static Object Run() {
-        Rec r1 = new Rec(5L, true);
-        Number x0 = 10L;
-        Boolean b0 = true;
-        Rec recModifierExp_1 = Utils.copy(r1);
+    public boolean equals(final Object obj) {
 
-        recModifierExp_1.x = x0;
-        recModifierExp_1.b = b0;
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
 
-        Rec r2 = Utils.copy(recModifierExp_1);
-        Number y = 2L;
+      Rec other = ((Rec) obj);
 
-        return Tuple.mk_(r2.x, r2.b);
+      return (Utils.equals(x, other.x)) && (Utils.equals(b, other.b));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x, b);
+    }
+
+    public Rec copy() {
+
+      return new Rec(x, b);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(x, b);
     }
-
-    public static class Rec implements Record {
-        public Number x;
-        public Boolean b;
-
-        public Rec(final Number _x, final Boolean _b) {
-            x = _x;
-            b = _b;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return (Utils.equals(x, other.x)) && (Utils.equals(b, other.b));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x, b);
-        }
-
-        public Rec copy() {
-            return new Rec(x, b);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(x, b);
-        }
-    }
+  }
 }
 
 ##########

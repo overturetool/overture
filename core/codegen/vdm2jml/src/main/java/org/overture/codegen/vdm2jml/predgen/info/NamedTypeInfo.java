@@ -1,6 +1,5 @@
 package org.overture.codegen.vdm2jml.predgen.info;
 
-
 import java.util.List;
 
 import org.overture.codegen.vdm2jml.JmlGenerator;
@@ -12,8 +11,9 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	private String defModule;
 	private boolean hasInv;
 	private AbstractTypeInfo domainType; // T = <domainType>
-	
-	public NamedTypeInfo(String typeName, String defModule, boolean hasInv, boolean optional, AbstractTypeInfo domainType)
+
+	public NamedTypeInfo(String typeName, String defModule, boolean hasInv,
+			boolean optional, AbstractTypeInfo domainType)
 	{
 		super(optional);
 		this.typeName = typeName;
@@ -36,12 +36,12 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	{
 		return hasInv;
 	}
-	
+
 	public AbstractTypeInfo getDomainType()
 	{
 		return domainType;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -78,14 +78,14 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	{
 		if (typeData.defModule == null && otherDefModule != null
 				|| typeData.defModule != null
-				&& !typeData.defModule.equals(otherDefModule))
+						&& !typeData.defModule.equals(otherDefModule))
 		{
 			return false;
 		}
 
 		if (typeData.typeName == null && otherTypeName != null
 				|| typeData.typeName != null
-				&& !typeData.typeName.equals(otherTypeName))
+						&& !typeData.typeName.equals(otherTypeName))
 		{
 			return false;
 		}
@@ -96,25 +96,26 @@ public class NamedTypeInfo extends AbstractTypeInfo
 	}
 
 	@Override
-	public String consCheckExp(String enclosingModule, String javaRootPackages, String arg, NameGen nameGen)
+	public String consCheckExp(String enclosingModule, String javaRootPackages,
+			String arg, NameGen nameGen)
 	{
 		StringBuilder sb = new StringBuilder();
-//		// If the type is not defined in the enclosing class we use the absolute name
-//		// to refer to the invariant method
-//		if(!defModule.equals(enclosingModule))
-//		{
-//			sb.append(javaRootPackage);
-//			sb.append('.');
-//			sb.append(defModule);
-//			sb.append(".");
-//		}
-		
+		// // If the type is not defined in the enclosing class we use the absolute name
+		// // to refer to the invariant method
+		// if(!defModule.equals(enclosingModule))
+		// {
+		// sb.append(javaRootPackage);
+		// sb.append('.');
+		// sb.append(defModule);
+		// sb.append(".");
+		// }
+
 		if (isOptional())
 		{
 			sb.append(consIsNullCheck(arg));
 			sb.append(JmlGenerator.JML_OR);
 		}
-		
+
 		if (domainType != null)
 		{
 			sb.append(domainType.consCheckExp(enclosingModule, javaRootPackages, arg, nameGen));
@@ -129,39 +130,39 @@ public class NamedTypeInfo extends AbstractTypeInfo
 		sb.append('(');
 		sb.append(arg);
 		sb.append(')');
-		
+
 		return "(" + sb.toString() + ")";
 	}
-	
+
 	@Override
 	public List<LeafTypeInfo> getLeafTypesRecursively()
 	{
 		return domainType.getLeafTypesRecursively();
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append('(');
-		
-		if(isOptional())
+
+		if (isOptional())
 		{
 			sb.append("[");
 		}
-		
+
 		sb.append(this.typeName);
 		sb.append(" = ");
 		sb.append(domainType);
-		
-		if(isOptional())
+
+		if (isOptional())
 		{
 			sb.append("]");
 		}
-		
+
 		sb.append(')');
-		
+
 		return sb.toString();
 	}
 }

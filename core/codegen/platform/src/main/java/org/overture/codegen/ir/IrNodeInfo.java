@@ -1,7 +1,5 @@
 package org.overture.codegen.ir;
 
-import org.overture.codegen.ir.INode;
-
 public class IrNodeInfo
 {
 	private INode node;
@@ -64,21 +62,21 @@ public class IrNodeInfo
 
 		IrNodeInfo other = (IrNodeInfo) obj;
 
-		if (this.node == null && other.node != null || this.node != null
-				&& !this.node.equals(other.node))
+		if (this.node == null && other.node != null
+				|| this.node != null && !this.node.equals(other.node))
 		{
 			return false;
 		}
 
-		if (this.reason == null && other.reason != null || this.reason != null
-				&& !this.reason.equals(other.reason))
+		if (this.reason == null && other.reason != null
+				|| this.reason != null && !this.reason.equals(other.reason))
 		{
 			return false;
 		}
 
 		return true;
 	}
-	
+
 	@Override
 	public String toString()
 	{

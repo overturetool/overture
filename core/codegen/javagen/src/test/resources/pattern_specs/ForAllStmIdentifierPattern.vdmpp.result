@@ -1,28 +1,25 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Number Run() {
+
+    Number result = 0L;
+    for (Iterator iterator_1 = SetUtil.set(5L, 10L, 15L).iterator(); iterator_1.hasNext(); ) {
+      Number x = (Number) iterator_1.next();
+      result = result.longValue() + x.longValue();
     }
+    return result;
+  }
 
-    public static Number Run() {
-        Number result = 0L;
+  public Entry() {}
 
-        for (Iterator iterator_1 = SetUtil.set(5L, 10L, 15L).iterator();
-                iterator_1.hasNext();) {
-            Number x = (Number) iterator_1.next();
-            result = result.longValue() + x.longValue();
-        }
+  public String toString() {
 
-        return result;
-    }
-
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

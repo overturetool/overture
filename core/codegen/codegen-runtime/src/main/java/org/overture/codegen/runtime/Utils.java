@@ -51,7 +51,9 @@ public class Utils
 	public static int hashCode(Object... fields)
 	{
 		if (fields == null)
+		{
 			throw new IllegalArgumentException("Fields cannot be null");
+		}
 
 		int hashcode = 0;
 
@@ -106,7 +108,9 @@ public class Utils
 		Number numberValue = (Number) value;
 
 		if (numberValue.longValue() < 1)
+		{
 			throw new IllegalArgumentException("VDM subscripts must be >= 1");
+		}
 
 		return toInt(numberValue) - 1;
 	}
@@ -114,7 +118,9 @@ public class Utils
 	public static String formatFields(Object... fields)
 	{
 		if (fields == null)
+		{
 			throw new IllegalArgumentException("Fields cannot be null in formatFields");
+		}
 
 		StringBuilder str = new StringBuilder();
 
@@ -136,8 +142,7 @@ public class Utils
 		if (t instanceof ValueType)
 		{
 			return (T) ((ValueType) t).copy();
-		}
-		else
+		} else
 		{
 			return t;
 		}
@@ -202,7 +207,8 @@ public class Utils
 		return left != null ? left.equals(right) : right == null;
 	}
 
-	public static <T> T postCheck(T returnValue, boolean postResult, String name)
+	public static <T> T postCheck(T returnValue, boolean postResult,
+			String name)
 	{
 		if (postResult)
 		{
@@ -298,7 +304,8 @@ public class Utils
 		double leftInt = ((Number) left).doubleValue();
 		double rightInt = ((Number) right).doubleValue();
 
-		return (long) (leftInt - rightInt * (long) Math.floor(leftInt / rightInt));
+		return (long) (leftInt
+				- rightInt * (long) Math.floor(leftInt / rightInt));
 	}
 
 	public static long rem(Object left, Object right)
@@ -385,16 +392,18 @@ public class Utils
 
 		if (valueLong < Integer.MIN_VALUE || valueLong > Integer.MAX_VALUE)
 		{
-			throw new IllegalArgumentException(valueLong + " Casting the long to an int will change its value");
+			throw new IllegalArgumentException(valueLong
+					+ " Casting the long to an int will change its value");
 		}
 		return (int) valueLong;
 	}
-	
+
 	private static void validateIntOperands(Object left, Object right)
 	{
 		if (!(is_int(left) && is_int(right)))
 		{
-			throw new ArithmeticException("Operands must be integers. Got left " + left + " and right" + right);
+			throw new ArithmeticException("Operands must be integers. Got left "
+					+ left + " and right" + right);
 		}
 
 		if (((Number) right).longValue() == 0L)
@@ -416,7 +425,8 @@ public class Utils
 
 	private static boolean is_int(Double doubleValue)
 	{
-		return doubleValue != null && (doubleValue == Math.floor(doubleValue)) && !Double.isInfinite(doubleValue);
+		return doubleValue != null && doubleValue == Math.floor(doubleValue)
+				&& !Double.isInfinite(doubleValue);
 	}
 
 	private static boolean isIntWithinRange(Object value, int lowerLimit)
@@ -447,7 +457,8 @@ public class Utils
 	{
 		if (!(left instanceof Number) || !(right instanceof Number))
 		{
-			throw new IllegalArgumentException(operator + " is only supported for numbers. Got " + left + " and "
+			throw new IllegalArgumentException(operator
+					+ " is only supported for numbers. Got " + left + " and "
 					+ right);
 		}
 	}
@@ -456,7 +467,8 @@ public class Utils
 	{
 		if (!(arg instanceof Number))
 		{
-			throw new IllegalArgumentException(operator + " is only supported for numbers. Got " + arg);
+			throw new IllegalArgumentException(operator
+					+ " is only supported for numbers. Got " + arg);
 		}
 	}
 }

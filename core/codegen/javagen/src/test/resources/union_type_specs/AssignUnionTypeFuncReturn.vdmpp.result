@@ -1,27 +1,27 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        Number i = 123.456;
-        i = ((Number) ratOrBool());
+    Number i = 123.456;
+    i = ((Number) ratOrBool());
+    return i;
+  }
 
-        return i;
-    }
+  public Entry() {}
 
-    private static Object ratOrBool() {
-        return 5L;
-    }
+  private static Object ratOrBool() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return 5L;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

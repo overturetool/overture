@@ -1,59 +1,63 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 final public class Entry {
-    private static St_X_ St_X_ = new St_X_(5L);
+  private static St_X_ St_X_ = new St_X_(5L);
 
-    private Entry() {
+  private Entry() {}
+
+  public static Object Run() {
+
+    final Number y_X_ = 9L;
+    return id_X_(3L).longValue() + y_X_.longValue() + St_X_.x_X_.longValue();
+  }
+
+  public static Number id_X_(final Number x_X_) {
+
+    return x_X_;
+  }
+
+  public String toString() {
+
+    return "Entry{" + "St_X_ := " + Utils.toString(St_X_) + "}";
+  }
+
+  public static class St_X_ implements Record {
+    public Number x_X_;
+
+    public St_X_(final Number _x_X_) {
+
+      x_X_ = _x_X_;
     }
 
-    public static Object Run() {
-        final Number y_X_ = 9L;
+    public boolean equals(final Object obj) {
 
-        return id_X_(3L).longValue() + y_X_.longValue() +
-        St_X_.x_X_.longValue();
+      if (!(obj instanceof St_X_)) {
+        return false;
+      }
+
+      St_X_ other = ((St_X_) obj);
+
+      return Utils.equals(x_X_, other.x_X_);
     }
 
-    public static Number id_X_(final Number x_X_) {
-        return x_X_;
+    public int hashCode() {
+
+      return Utils.hashCode(x_X_);
+    }
+
+    public St_X_ copy() {
+
+      return new St_X_(x_X_);
     }
 
     public String toString() {
-        return "Entry{" + "St_X_ := " + Utils.toString(St_X_) + "}";
+
+      return "mk_Entry`St_X_" + Utils.formatFields(x_X_);
     }
-
-    public static class St_X_ implements Record {
-        public Number x_X_;
-
-        public St_X_(final Number _x_X_) {
-            x_X_ = _x_X_;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof St_X_)) {
-                return false;
-            }
-
-            St_X_ other = ((St_X_) obj);
-
-            return Utils.equals(x_X_, other.x_X_);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x_X_);
-        }
-
-        public St_X_ copy() {
-            return new St_X_(x_X_);
-        }
-
-        public String toString() {
-            return "mk_Entry`St_X_" + Utils.formatFields(x_X_);
-        }
-    }
+  }
 }
 
 ##########

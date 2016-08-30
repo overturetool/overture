@@ -1,93 +1,92 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number op() {
 
-    public Number op() {
-        return 1L;
-    }
+    return 1L;
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public Number op() {
 
-    public Number op() {
-        return 2L;
-    }
+    return 2L;
+  }
 
-    public String toString() {
-        return "B{}";
-    }
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class C {
-    public C() {
-    }
+  public Number op() {
 
-    public Number op() {
-        return 3L;
-    }
+    return 3L;
+  }
 
-    public String toString() {
-        return "C{}";
-    }
+  public C() {}
+
+  public String toString() {
+
+    return "C{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final Object w = new B();
+  private static final Object w = new B();
 
-    public Entry() {
+  public static Number Run() {
+
+    final Entry e = new Entry();
+    Object callStmObj_1 = e.w;
+    if (callStmObj_1 instanceof A) {
+      return ((A) callStmObj_1).op();
+    } else if (callStmObj_1 instanceof B) {
+      return ((B) callStmObj_1).op();
+    } else if (callStmObj_1 instanceof C) {
+      return ((C) callStmObj_1).op();
+    } else {
+      throw new RuntimeException("Missing operation member: op");
     }
+  }
 
-    public static Number Run() {
-        final Entry e = new Entry();
-        Object callStmObj_1 = e.w;
+  public Entry() {}
 
-        if (callStmObj_1 instanceof A) {
-            return ((A) callStmObj_1).op();
-        } else if (callStmObj_1 instanceof B) {
-            return ((B) callStmObj_1).op();
-        } else if (callStmObj_1 instanceof C) {
-            return ((C) callStmObj_1).op();
-        } else {
-            throw new RuntimeException("Missing operation member: op");
-        }
-    }
+  public String toString() {
 
-    public String toString() {
-        return "Entry{" + "w = " + Utils.toString(w) + "}";
-    }
+    return "Entry{" + "w = " + Utils.toString(w) + "}";
+  }
 }
 
 ##########

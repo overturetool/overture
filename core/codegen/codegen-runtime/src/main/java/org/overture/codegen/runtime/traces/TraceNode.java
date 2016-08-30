@@ -32,19 +32,19 @@ public abstract class TraceNode
 {
 	private static final int ENCLOSING_MODULE_ID = -1;
 	private static final Object NOT_AVAILABLE = new Object();
-	
+
 	private CallSequence traceVars;
-	
+
 	public TraceNode()
 	{
 		this.traceVars = new CallSequence();
 	}
-	
+
 	public void addVarFirst(TraceVariable var)
 	{
 		this.traceVars.add(0, var);
 	}
-	
+
 	public CallSequence getVars()
 	{
 		CallSequence c = new CallSequence();
@@ -58,13 +58,15 @@ public abstract class TraceNode
 	abstract public TestSequence getTests();
 
 	// SL
-	public static void executeTests(TraceNode trace, TestAccumulator acc, Store store)
+	public static void executeTests(TraceNode trace, TestAccumulator acc,
+			Store store)
 	{
 		executeTests(trace, null, acc, store);
 	}
 
 	// PP
-	public static void executeTests(TraceNode trace, Class<?> instanceType, TestAccumulator acc, Store store)
+	public static void executeTests(TraceNode trace, Class<?> instanceType,
+			TestAccumulator acc, Store store)
 	{
 		try
 		{
@@ -101,12 +103,12 @@ public abstract class TraceNode
 					for (; callStmIdx < test.size(); callStmIdx++)
 					{
 						Statement stm = test.get(callStmIdx);
-						
-						if(!(stm instanceof CallStatement))
+
+						if (!(stm instanceof CallStatement))
 						{
 							continue;
 						}
-						
+
 						CallStatement callStm = (CallStatement) stm;
 						try
 						{
@@ -118,7 +120,8 @@ public abstract class TraceNode
 							}
 
 							// TODO: To be done. Consider where the right place is to check for this.
-							if (!callStm.isTypeCorrect() || !callStm.meetsPreCond())
+							if (!callStm.isTypeCorrect()
+									|| !callStm.meetsPreCond())
 							{
 								// Inconclusive
 								callStmResults.add(NOT_AVAILABLE);
@@ -149,7 +152,8 @@ public abstract class TraceNode
 							{
 								if (e.getMessage() != null)
 								{
-									callStmResults.add(e.getClass().getSimpleName() + ": " + e.getMessage());
+									callStmResults.add(e.getClass().getSimpleName()
+											+ ": " + e.getMessage());
 								} else
 								{
 									// Happens for null pointer exceptions
@@ -184,7 +188,8 @@ public abstract class TraceNode
 		}
 	}
 
-	private static String getResultStr(List<? extends Object> results, String sep)
+	private static String getResultStr(List<? extends Object> results,
+			String sep)
 	{
 		StringBuilder sb = new StringBuilder();
 

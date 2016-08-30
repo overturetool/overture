@@ -1,40 +1,44 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static VDMSeq casesString(final VDMSeq e) {
+
+    VDMSeq stringPattern_1 = Utils.copy(e);
+    Boolean success_1 = Utils.equals(stringPattern_1, SeqUtil.seq('a', 'a'));
+
+    if (!(success_1)) {
+      VDMSeq stringPattern_2 = Utils.copy(e);
+      success_1 = Utils.equals(stringPattern_2, SeqUtil.seq('b', 'b'));
+
+      if (success_1) {
+        return SeqUtil.seq('s', 'e', 'c', 'o', 'n', 'd');
+
+      } else {
+        return SeqUtil.seq('t', 'h', 'i', 'r', 'd');
+      }
+
+    } else {
+      return SeqUtil.seq('f', 'i', 'r', 's', 't');
     }
+  }
 
-    public static VDMSeq casesString(final VDMSeq e) {
-        VDMSeq stringPattern_1 = Utils.copy(e);
-        Boolean success_1 = Utils.equals(stringPattern_1, SeqUtil.seq('a', 'a'));
+  public static Object Run() {
 
-        if (!(success_1)) {
-            VDMSeq stringPattern_2 = Utils.copy(e);
-            success_1 = Utils.equals(stringPattern_2, SeqUtil.seq('b', 'b'));
+    return SeqUtil.seq(
+        casesString(SeqUtil.seq('a', 'a')),
+        casesString(SeqUtil.seq('b', 'b')),
+        casesString(SeqUtil.seq('c', 'c')));
+  }
 
-            if (success_1) {
-                return SeqUtil.seq('s', 'e', 'c', 'o', 'n', 'd');
-            } else {
-                return SeqUtil.seq('t', 'h', 'i', 'r', 'd');
-            }
-        } else {
-            return SeqUtil.seq('f', 'i', 'r', 's', 't');
-        }
-    }
+  public Entry() {}
 
-    public static Object Run() {
-        return SeqUtil.seq(casesString(SeqUtil.seq('a', 'a')),
-            casesString(SeqUtil.seq('b', 'b')),
-            casesString(SeqUtil.seq('c', 'c')));
-    }
+  public String toString() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

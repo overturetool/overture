@@ -48,8 +48,6 @@ public class IterationVarPrefixes
 		return "byVar_";
 	}
 
-	public final String[] GENERATED_TEMP_NAMES = {
-			forIndexByVar(), forIndexToVar(),
-			iterator(), set(),
-			success() };
+	public final String[] GENERATED_TEMP_NAMES = { forIndexByVar(),
+			forIndexToVar(), iterator(), set(), success() };
 }

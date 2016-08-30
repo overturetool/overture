@@ -24,10 +24,8 @@ public class PreCondNoStateTests extends AnnotationTestsBase
 	public void testFuncRequiresAnnotation()
 	{
 		AMethodDeclIR func = getMethod(genModule.getMethods(), "f");
-		
-		Assert.assertEquals("Got unexpected requires annotation for function 'f'",
-				"//@ requires pre_f(a,b);",
-				getAnnotation(func, 0));
+
+		Assert.assertEquals("Got unexpected requires annotation for function 'f'", "//@ requires pre_f(a,b);", getAnnotation(func, 0));
 	}
 
 	@Test
@@ -40,11 +38,9 @@ public class PreCondNoStateTests extends AnnotationTestsBase
 	public void testOpRequiresAnnotation()
 	{
 		AMethodDeclIR op = getMethod(genModule.getMethods(), "op");
-		
+
 		// Note here that no state is expected to be passed
 		// to the pre condition (the module has no state)
-		Assert.assertEquals("Got unexpected requires annotation for operation 'op'",
-				"//@ requires pre_op(a);",
-				getAnnotation(op, 0));
+		Assert.assertEquals("Got unexpected requires annotation for operation 'op'", "//@ requires pre_op(a);", getAnnotation(op, 0));
 	}
 }

@@ -9,11 +9,10 @@ public class VDMUtil
 
 	public static String classname(Object obj)
 	{
-		if(obj != null && obj.getClass().getEnclosingClass() == null)
+		if (obj != null && obj.getClass().getEnclosingClass() == null)
 		{
 			return obj.getClass().getSimpleName();
-		}
-		else
+		} else
 		{
 			return null;
 		}

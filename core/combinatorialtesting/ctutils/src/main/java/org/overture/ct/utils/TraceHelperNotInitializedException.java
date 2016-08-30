@@ -29,7 +29,8 @@ public class TraceHelperNotInitializedException extends Exception
 		this.projectName = projectName;
 	}
 
-	public TraceHelperNotInitializedException(String message, String projectName)
+	public TraceHelperNotInitializedException(String message,
+			String projectName)
 	{
 		super(message);
 		this.projectName = projectName;

@@ -14,12 +14,12 @@ public class Exists1CounterData
 		this.type = type;
 		this.exp = exp;
 	}
-	
+
 	public STypeIR getType()
 	{
 		return type;
 	}
-	
+
 	public SExpIR getExp()
 	{
 		return exp;

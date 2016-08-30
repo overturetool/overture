@@ -1,62 +1,61 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Storage {
-    public Storage() {
-    }
+  public VDMMap getXs() {
 
-    public VDMMap getXs() {
-        return MapUtil.map(new Maplet(1L, new X()));
-    }
+    return MapUtil.map(new Maplet(1L, new X()));
+  }
 
-    public String toString() {
-        return "Storage{}";
-    }
+  public Storage() {}
+
+  public String toString() {
+
+    return "Storage{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class X {
-    public X() {
-    }
+  public X() {}
 
-    public static Number fun() {
-        return 42L;
-    }
+  public static Number fun() {
 
-    public String toString() {
-        return "X{}";
-    }
+    return 42L;
+  }
+
+  public String toString() {
+
+    return "X{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final Storage s = new Storage();
+    final Storage s = new Storage();
+    return ((X) Utils.get(s.getXs(), 1L)).fun();
+  }
 
-        return ((X) Utils.get(s.getXs(), 1L)).fun();
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

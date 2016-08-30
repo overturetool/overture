@@ -1,79 +1,74 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public Number x = 1L;
+  public Number x = 1L;
 
-    public B() {
-    }
+  public B() {}
 
-    public String toString() {
-        return "B{" + "x := " + Utils.toString(x) + "}";
-    }
+  public String toString() {
+
+    return "B{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public Number x = 2L;
+  public Number x = 2L;
 
-    public A() {
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{" + "x := " + Utils.toString(x) + "}";
-    }
+  public String toString() {
+
+    return "A{" + "x := " + Utils.toString(x) + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static VDMSeq hr = SeqUtil.seq(new A(), new B(), null);
+  private static VDMSeq hr = SeqUtil.seq(new A(), new B(), null);
 
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        Number sum = 0L;
-        long toVar_1 = 3L;
+    Number sum = 0L;
+    long toVar_1 = 3L;
 
-        for (Long i = 1L; i <= toVar_1; i++) {
-            if (!(Utils.equals(i, 3L))) {
-                Object obj_1 = Utils.get(hr, i);
-
-                Number apply_1 = null;
-
-                if (obj_1 instanceof A) {
-                    apply_1 = ((A) obj_1).x;
-                } else if (obj_1 instanceof B) {
-                    apply_1 = ((B) obj_1).x;
-                } else {
-                    throw new RuntimeException("Missing member: x");
-                }
-
-                sum = sum.longValue() + apply_1.longValue();
-            }
+    for (Long i = 1L; i <= toVar_1; i++) {
+      if (!(Utils.equals(i, 3L))) {
+        Object obj_1 = Utils.get(hr, i);
+        Number apply_1 = null;
+        if (obj_1 instanceof A) {
+          apply_1 = ((A) obj_1).x;
+        } else if (obj_1 instanceof B) {
+          apply_1 = ((B) obj_1).x;
+        } else {
+          throw new RuntimeException("Missing member: x");
         }
 
-        return sum;
+        sum = sum.longValue() + apply_1.longValue();
+      }
     }
+    return sum;
+  }
 
-    public String toString() {
-        return "Entry{" + "hr := " + Utils.toString(hr) + "}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "hr := " + Utils.toString(hr) + "}";
+  }
 }
 
 ##########

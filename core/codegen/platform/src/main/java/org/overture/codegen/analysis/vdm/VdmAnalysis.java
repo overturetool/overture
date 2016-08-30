@@ -21,18 +21,18 @@ public abstract class VdmAnalysis extends DepthFirstAnalysisAdaptor
 		{
 			return true;
 		}
-	
+
 		INode parent = node.parent();
-		
+
 		Set<INode> visited = new HashSet<INode>();
-	
+
 		while (parent != null && !visited.contains(parent)
 				&& this.topNode != parent)
 		{
 			visited.add(parent);
 			parent = parent.parent();
 		}
-	
+
 		return this.topNode == parent;
 	}
 }

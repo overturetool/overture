@@ -9,6 +9,7 @@ import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SImportIR;
 import org.overture.codegen.ir.STypeIR;
@@ -20,7 +21,6 @@ import org.overture.codegen.ir.declarations.ATypeImportIR;
 import org.overture.codegen.ir.declarations.AValueValueImportIR;
 import org.overture.codegen.ir.declarations.SValueImportIR;
 import org.overture.codegen.ir.name.ATokenNameIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class ImportVisitorIR extends AbstractVisitorIR<IRInfo, SImportIR>
 {
@@ -39,7 +39,8 @@ public class ImportVisitorIR extends AbstractVisitorIR<IRInfo, SImportIR>
 
 		initImport(node, typeImportCg);
 
-		SDeclIR typeDeclCg = node.getDef() != null ? node.getDef().apply(question.getDeclVisitor(), question)
+		SDeclIR typeDeclCg = node.getDef() != null
+				? node.getDef().apply(question.getDeclVisitor(), question)
 				: null;
 
 		if (typeDeclCg instanceof ATypeDeclIR)
@@ -86,7 +87,8 @@ public class ImportVisitorIR extends AbstractVisitorIR<IRInfo, SImportIR>
 	{
 		initImport(vdmImport, irImport);
 
-		STypeIR importTypeCg = vdmImport.getImportType() != null ? vdmImport.getImportType().apply(question.getTypeVisitor(), question)
+		STypeIR importTypeCg = vdmImport.getImportType() != null
+				? vdmImport.getImportType().apply(question.getTypeVisitor(), question)
 				: null;
 
 		irImport.setImportType(importTypeCg);
@@ -96,12 +98,12 @@ public class ImportVisitorIR extends AbstractVisitorIR<IRInfo, SImportIR>
 
 	private SImportIR initImport(PImport vdmImport, SImportIR irImport)
 	{
-		String name = vdmImport.getName() != null ? vdmImport.getName().getName()
-				: null;
-		String renamed = vdmImport.getRenamed() != null ? vdmImport.getRenamed().getName()
-				: null;
-		String fromModuleName = vdmImport.getFrom() != null ? vdmImport.getFrom().getName().getName()
-				: null;
+		String name = vdmImport.getName() != null
+				? vdmImport.getName().getName() : null;
+		String renamed = vdmImport.getRenamed() != null
+				? vdmImport.getRenamed().getName() : null;
+		String fromModuleName = vdmImport.getFrom() != null
+				? vdmImport.getFrom().getName().getName() : null;
 
 		irImport.setName(name);
 		irImport.setRenamed(renamed);

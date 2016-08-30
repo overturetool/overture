@@ -48,7 +48,7 @@ public class AssistantManager
 	{
 		return nodeAssistant;
 	}
-	
+
 	public ExpAssistantIR getExpAssistant()
 	{
 		return expAssistant;

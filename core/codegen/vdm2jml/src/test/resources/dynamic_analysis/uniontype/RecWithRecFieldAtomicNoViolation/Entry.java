@@ -1,67 +1,73 @@
 package project;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class Entry {
-    /*@ public ghost static boolean invChecksOn = true; @*/
-    private Entry() {
-    }
+  /*@ public ghost static boolean invChecksOn = true; @*/
 
-    public static Object Run() {
-        Object r = new project.Entrytypes.A1(new project.Entrytypes.A2(1L));
+  private Entry() {}
 
-        //@ assert (Utils.is_(r,project.Entrytypes.A1.class) || Utils.is_(r,project.Entrytypes.B1.class));
-        Number atomicTmp_1 = 5L;
-        //@ assert Utils.is_int(atomicTmp_1);
-        { /* Start of atomic statement */
+  public static Object Run() {
 
-            //@ set invChecksOn = false;
-            Object apply_1 = null;
+    Object r = new project.Entrytypes.A1(new project.Entrytypes.A2(1L));
+    //@ assert (Utils.is_(r,project.Entrytypes.A1.class) || Utils.is_(r,project.Entrytypes.B1.class));
 
-            if (r instanceof project.Entrytypes.A1) {
-                apply_1 = ((project.Entrytypes.A1) r).get_f();
-            } else if (r instanceof project.Entrytypes.B1) {
-                apply_1 = ((project.Entrytypes.B1) r).get_f();
-            } else {
-                throw new RuntimeException("Missing member: f");
-            }
+    Number atomicTmp_1 = 5L;
+    //@ assert Utils.is_int(atomicTmp_1);
 
-            Object stateDes_1 = apply_1;
+    {
+        /* Start of atomic statement */
+      //@ set invChecksOn = false;
 
-            if (stateDes_1 instanceof project.Entrytypes.A2) {
-                //@ assert stateDes_1 != null;
-                ((project.Entrytypes.A2) stateDes_1).set_x(atomicTmp_1);
-            } else if (stateDes_1 instanceof project.Entrytypes.B2) {
-                //@ assert stateDes_1 != null;
-                ((project.Entrytypes.B2) stateDes_1).set_x(atomicTmp_1);
-            } else {
-                throw new RuntimeException("Missing member: x");
-            }
+      Object apply_1 = null;
+      if (r instanceof project.Entrytypes.A1) {
+        apply_1 = ((project.Entrytypes.A1) r).get_f();
+      } else if (r instanceof project.Entrytypes.B1) {
+        apply_1 = ((project.Entrytypes.B1) r).get_f();
+      } else {
+        throw new RuntimeException("Missing member: f");
+      }
 
-            //@ set invChecksOn = true;
+      Object stateDes_1 = apply_1;
+      if (stateDes_1 instanceof project.Entrytypes.A2) {
+        //@ assert stateDes_1 != null;
 
-            //@ assert stateDes_1 instanceof project.Entrytypes.A2 ==> ((project.Entrytypes.A2) stateDes_1).valid();
+        ((project.Entrytypes.A2) stateDes_1).set_x(atomicTmp_1);
 
-            //@ assert (Utils.is_(r,project.Entrytypes.A1.class) || Utils.is_(r,project.Entrytypes.B1.class));
+      } else if (stateDes_1 instanceof project.Entrytypes.B2) {
+        //@ assert stateDes_1 != null;
 
-            //@ assert r instanceof project.Entrytypes.B1 ==> ((project.Entrytypes.B1) r).valid();
+        ((project.Entrytypes.B2) stateDes_1).set_x(atomicTmp_1);
 
-            //@ assert r instanceof project.Entrytypes.A1 ==> ((project.Entrytypes.A1) r).valid();
+      } else {
+        throw new RuntimeException("Missing member: x");
+      }
 
-            //@ assert stateDes_1 instanceof project.Entrytypes.B2 ==> ((project.Entrytypes.B2) stateDes_1).valid();
-        } /* End of atomic statement */
-        IO.println("Done! Expected no violations");
+      //@ set invChecksOn = true;
 
-        return 0L;
-    }
+      //@ assert stateDes_1 instanceof project.Entrytypes.A2 ==> ((project.Entrytypes.A2) stateDes_1).valid();
 
-    public String toString() {
-        return "Entry{}";
-    }
+      //@ assert (Utils.is_(r,project.Entrytypes.A1.class) || Utils.is_(r,project.Entrytypes.B1.class));
+
+      //@ assert r instanceof project.Entrytypes.B1 ==> ((project.Entrytypes.B1) r).valid();
+
+      //@ assert r instanceof project.Entrytypes.A1 ==> ((project.Entrytypes.A1) r).valid();
+
+      //@ assert stateDes_1 instanceof project.Entrytypes.B2 ==> ((project.Entrytypes.B2) stateDes_1).valid();
+
+    } /* End of atomic statement */
+
+    IO.println("Done! Expected no violations");
+    return 0L;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }

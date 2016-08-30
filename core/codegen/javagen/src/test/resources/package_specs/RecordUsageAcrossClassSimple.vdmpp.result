@@ -1,70 +1,72 @@
 package my.model;
 
-import org.overture.codegen.runtime.*;
-
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
+
+  public static class Rec implements Record {
+    public Number n;
+
+    public Rec(final Number _n) {
+
+      n = _n;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
+
+      Rec other = ((Rec) obj);
+
+      return Utils.equals(n, other.n);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(n);
+    }
+
+    public Rec copy() {
+
+      return new Rec(n);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Rec" + Utils.formatFields(n);
     }
-
-    public static class Rec implements Record {
-        public Number n;
-
-        public Rec(final Number _n) {
-            n = _n;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return Utils.equals(n, other.n);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(n);
-        }
-
-        public Rec copy() {
-            return new Rec(n);
-        }
-
-        public String toString() {
-            return "mk_A`Rec" + Utils.formatFields(n);
-        }
-    }
+  }
 }
 
 ##########
 package my.model;
 
-import org.overture.codegen.runtime.*;
-
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return new A.Rec(15L).n;
-    }
+    return new A.Rec(15L).n;
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

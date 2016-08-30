@@ -84,30 +84,33 @@ public class VdmNodeInfo
 		}
 
 		VdmNodeInfo other = (VdmNodeInfo) obj;
-		
+
 		INode otherNode = other.node;
 		String otherReason = other.reason;
-		
+
 		return matches(this, otherNode, otherReason);
 	}
 
-	public static boolean matches(VdmNodeInfo vdmNodeInfo, INode otherNode, String otherReason)
+	public static boolean matches(VdmNodeInfo vdmNodeInfo, INode otherNode,
+			String otherReason)
 	{
-		if (vdmNodeInfo.node == null && otherNode != null || vdmNodeInfo.node != null
-				&& !vdmNodeInfo.node.equals(otherNode))
+		if (vdmNodeInfo.node == null && otherNode != null
+				|| vdmNodeInfo.node != null
+						&& !vdmNodeInfo.node.equals(otherNode))
 		{
 			return false;
 		}
-		
-		if (vdmNodeInfo.reason == null && otherReason != null || vdmNodeInfo.reason != null
-				&& !vdmNodeInfo.reason.equals(otherReason))
+
+		if (vdmNodeInfo.reason == null && otherReason != null
+				|| vdmNodeInfo.reason != null
+						&& !vdmNodeInfo.reason.equals(otherReason))
 		{
 			return false;
 		}
 
 		return true;
 	}
-	
+
 	@Override
 	public String toString()
 	{

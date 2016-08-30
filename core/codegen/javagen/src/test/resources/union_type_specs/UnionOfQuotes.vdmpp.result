@@ -1,84 +1,85 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public A() {}
 
-    public static Object f() {
-        return quotes.TQuote.getInstance();
-    }
+  public static Object f() {
 
-    public String toString() {
-        return "A{}";
-    }
+    return quotes.TQuote.getInstance();
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class B {
-    public B() {
-    }
+  public B() {}
 
-    public static Object f() {
-        return quotes.TQuote.getInstance();
-    }
+  public static Object f() {
 
-    public String toString() {
-        return "B{}";
-    }
+    return quotes.TQuote.getInstance();
+  }
+
+  public String toString() {
+
+    return "B{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final VDMSet xs = SetUtil.set(new A(), new B());
-
-        for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
-            Object x = (Object) iterator_1.next();
-            Object apply_1 = null;
-
-            if (x instanceof A) {
-                apply_1 = ((A) x).f();
-            } else if (x instanceof B) {
-                apply_1 = ((B) x).f();
-            } else {
-                throw new RuntimeException("Missing member: f");
-            }
-
-            if (Utils.equals(apply_1, quotes.AQuote.getInstance())) {
-                return 1L;
-            }
+    final VDMSet xs = SetUtil.set(new A(), new B());
+    {
+      for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext(); ) {
+        Object x = (Object) iterator_1.next();
+        Object apply_1 = null;
+        if (x instanceof A) {
+          apply_1 = ((A) x).f();
+        } else if (x instanceof B) {
+          apply_1 = ((B) x).f();
+        } else {
+          throw new RuntimeException("Missing member: f");
         }
 
-        return 2L;
+        if (Utils.equals(apply_1, quotes.AQuote.getInstance())) {
+          return 1L;
+        }
+      }
+      return 2L;
     }
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########
+
+
 public interface Func_1<T_1> {
-    public abstract T_1 eval();
+  public abstract T_1 eval();
 }
 
 ##########

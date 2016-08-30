@@ -1,0 +1,12 @@
+
+functions
+
+f :  token -> token
+f (x) == x;
+
+traces
+
+T1:
+let t = mk_token("somArg")
+in
+  f(t);

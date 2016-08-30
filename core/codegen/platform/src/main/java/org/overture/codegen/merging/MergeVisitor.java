@@ -31,13 +31,13 @@ import java.util.Stack;
 import org.apache.velocity.Template;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.QuestionAdaptor;
-import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.utils.GeneralUtils;
 
-public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
-		MergeCoordinator
+public class MergeVisitor extends QuestionAdaptor<StringWriter>
+		implements MergeCoordinator
 {
 	private static final String NODE_KEY = "node";
 
@@ -89,7 +89,8 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter> implements
 			}
 		}
 
-		return GeneralUtils.concat(userCallables, new TemplateCallable[] { strFunctionality });
+		return GeneralUtils.concat(userCallables, new TemplateCallable[] {
+				strFunctionality });
 	}
 
 	public List<Exception> getMergeErrors()

@@ -1,112 +1,131 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final VDMSeq x = SeqUtil.toSeq("x" +
-            SeqUtil.toStr(SeqUtil.seq()));
+  private static final VDMSeq x = SeqUtil.toSeq("x" + SeqUtil.toStr(SeqUtil.seq()));
 
-    public Entry() {
+  public static String op1() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.toStr(SeqUtil.seq()) + "ab";
+
+    } else {
+      return "b";
+    }
+  }
+
+  public static String op2() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.toStr(SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq()));
+
+    } else {
+      return "b";
+    }
+  }
+
+  public static String op3() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq())));
+
+    } else {
+      return "b";
+    }
+  }
+
+  public static String op4() {
+
+    final VDMSeq a = SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
+    return SeqUtil.toStr(Utils.copy(a));
+  }
+
+  public static String op5() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq(), "a")));
+
+    } else {
+      return "b";
+    }
+  }
+
+  public static VDMSeq op6() {
+
+    return SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
+  }
+
+  public static String op7() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.toStr(SeqUtil.seq())
+          + "xy"
+          + SeqUtil.toStr(SeqUtil.seq())
+          + SeqUtil.toStr(SeqUtil.seq())
+          + "mm"
+          + SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(), SeqUtil.seq())));
+
+    } else {
+      return "b";
+    }
+  }
+
+  public static String Run() {
+
+    return SeqUtil.toStr(Utils.copy(Entry.x))
+        + f()
+        + op1()
+        + op2()
+        + op3()
+        + op5()
+        + SeqUtil.toStr(op6())
+        + op7()
+        + op8(quotes.AQuote.getInstance());
+  }
+
+  public Entry() {}
+
+  public static String f() {
+
+    if (Utils.equals(1L, 1L)) {
+      return SeqUtil.toStr(SeqUtil.seq());
+
+    } else {
+      return "a";
+    }
+  }
+
+  private static String op8(final Object a) {
+
+    VDMSeq casesExpResult_1 = null;
+
+    Object quotePattern_1 = a;
+    Boolean success_1 = Utils.equals(quotePattern_1, quotes.AQuote.getInstance());
+
+    if (success_1) {
+      VDMSeq ternaryIfExp_1 = null;
+
+      if (true) {
+        ternaryIfExp_1 = SeqUtil.toSeq("");
+      } else {
+        ternaryIfExp_1 = null;
+      }
+
+      casesExpResult_1 = Utils.copy(ternaryIfExp_1);
+
+    } else {
+      throw new RuntimeException("Quote pattern match failed");
     }
 
-    public static String op1() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.toStr(SeqUtil.seq()) + "ab";
-        } else {
-            return "b";
-        }
-    }
+    return SeqUtil.toStr(Utils.copy(casesExpResult_1));
+  }
 
-    public static String op2() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.toStr(SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq()));
-        } else {
-            return "b";
-        }
-    }
+  public String toString() {
 
-    public static String op3() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(),
-                        SeqUtil.seq())));
-        } else {
-            return "b";
-        }
-    }
-
-    public static String op4() {
-        final VDMSeq a = SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
-
-        return SeqUtil.toStr(Utils.copy(a));
-    }
-
-    public static String op5() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(),
-                        SeqUtil.seq(), "a")));
-        } else {
-            return "b";
-        }
-    }
-
-    public static VDMSeq op6() {
-        return SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
-    }
-
-    public static String op7() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.toStr(SeqUtil.seq()) + "xy" +
-            SeqUtil.toStr(SeqUtil.seq()) + SeqUtil.toStr(SeqUtil.seq()) + "mm" +
-            SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(),
-                        SeqUtil.seq())));
-        } else {
-            return "b";
-        }
-    }
-
-    public static String Run() {
-        return SeqUtil.toStr(Utils.copy(Entry.x)) + f() + op1() + op2() +
-        op3() + op5() + SeqUtil.toStr(op6()) + op7() +
-        op8(quotes.AQuote.getInstance());
-    }
-
-    public static String f() {
-        if (Utils.equals(1L, 1L)) {
-            return SeqUtil.toStr(SeqUtil.seq());
-        } else {
-            return "a";
-        }
-    }
-
-    private static String op8(final Object a) {
-        VDMSeq casesExpResult_1 = null;
-
-        Object quotePattern_1 = a;
-        Boolean success_1 = Utils.equals(quotePattern_1,
-                quotes.AQuote.getInstance());
-
-        if (success_1) {
-            VDMSeq ternaryIfExp_1 = null;
-
-            if (true) {
-                ternaryIfExp_1 = SeqUtil.toSeq("");
-            } else {
-                ternaryIfExp_1 = null;
-            }
-
-            casesExpResult_1 = Utils.copy(ternaryIfExp_1);
-        } else {
-            throw new RuntimeException("Quote pattern match failed");
-        }
-
-        return SeqUtil.toStr(Utils.copy(casesExpResult_1));
-    }
-
-    public String toString() {
-        return "Entry{" + "x = " + Utils.toString(x) + "}";
-    }
+    return "Entry{" + "x = " + Utils.toString(x) + "}";
+  }
 }
 
 ##########

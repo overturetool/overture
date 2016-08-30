@@ -1,71 +1,67 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public String stringPatternOp(final String stringPattern_1) {
+
+    Boolean success_1 = Utils.equals(stringPattern_1, "hej");
+    if (!(success_1)) {
+      throw new RuntimeException("String pattern match failed");
     }
 
-    public String stringPatternOp(final String stringPattern_1) {
-        Boolean success_1 = Utils.equals(stringPattern_1, "hej");
-
-        if (!(success_1)) {
-            throw new RuntimeException("String pattern match failed");
-        }
-
-        final String stringPattern_2 = "hej";
-        Boolean success_2 = Utils.equals(stringPattern_2, "hej");
-
-        if (!(success_2)) {
-            throw new RuntimeException("String pattern match failed");
-        }
-
-        return "hej";
+    final String stringPattern_2 = "hej";
+    Boolean success_2 = Utils.equals(stringPattern_2, "hej");
+    if (!(success_2)) {
+      throw new RuntimeException("String pattern match failed");
     }
 
-    public static String stringPatternFun(final String stringPattern_3) {
-        Boolean success_3 = Utils.equals(stringPattern_3, "hej");
+    return "hej";
+  }
 
-        if (!(success_3)) {
-            throw new RuntimeException("String pattern match failed");
-        }
+  public A() {}
 
-        final String stringPattern_4 = "hej";
-        Boolean success_4 = Utils.equals(stringPattern_4, "hej");
+  public static String stringPatternFun(final String stringPattern_3) {
 
-        if (!(success_4)) {
-            throw new RuntimeException("String pattern match failed");
-        }
-
-        return "hej";
+    Boolean success_3 = Utils.equals(stringPattern_3, "hej");
+    if (!(success_3)) {
+      throw new RuntimeException("String pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
+    final String stringPattern_4 = "hej";
+    Boolean success_4 = Utils.equals(stringPattern_4, "hej");
+    if (!(success_4)) {
+      throw new RuntimeException("String pattern match failed");
     }
+
+    return "hej";
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return SeqUtil.seq(new A().stringPatternOp("hej"),
-            A.stringPatternFun("hej"));
-    }
+    return SeqUtil.seq(new A().stringPatternOp("hej"), A.stringPatternFun("hej"));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

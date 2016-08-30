@@ -1,47 +1,43 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    VDMSet ternaryIfExp_1 = null;
+
+    if (Utils.equals(1L, 1L)) {
+      ternaryIfExp_1 = SetUtil.set(SeqUtil.seq(Tuple.mk_(5L, true)));
+    } else {
+      ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
     }
 
-    public static Object Run() {
-        VDMSet ternaryIfExp_1 = null;
+    final VDMSet hr = Utils.copy(ternaryIfExp_1);
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_1 = Utils.copy(hr);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      VDMSeq ss = ((VDMSeq) iterator_1.next());
+      Object obj_1 = Utils.copy(Utils.get(ss, 1L));
+      Boolean apply_1 = null;
+      if (obj_1 instanceof Tuple) {
+        apply_1 = ((Boolean) ((Tuple) obj_1).get(1));
+      } else {
+        throw new RuntimeException("Missing member: field number 2");
+      }
 
-        if (Utils.equals(1L, 1L)) {
-            ternaryIfExp_1 = SetUtil.set(SeqUtil.seq(Tuple.mk_(5L, true)));
-        } else {
-            ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
-        }
-
-        final VDMSet hr = Utils.copy(ternaryIfExp_1);
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = Utils.copy(hr);
-
-        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            VDMSeq ss = ((VDMSeq) iterator_1.next());
-            Object obj_1 = Utils.copy(Utils.get(ss, 1L));
-
-            Boolean apply_1 = null;
-
-            if (obj_1 instanceof Tuple) {
-                apply_1 = ((Boolean) ((Tuple) obj_1).get(1));
-            } else {
-                throw new RuntimeException("Missing member: field number 2");
-            }
-
-            MapUtil.mapAdd(mapCompResult_1, new Maplet(1L, apply_1));
-        }
-
-        return Utils.copy(mapCompResult_1);
+      MapUtil.mapAdd(mapCompResult_1, new Maplet(1L, apply_1));
     }
+    return Utils.copy(mapCompResult_1);
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

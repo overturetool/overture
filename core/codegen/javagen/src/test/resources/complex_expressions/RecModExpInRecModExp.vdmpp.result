@@ -1,100 +1,108 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Rec1 r1 = new Rec1(5L, new Rec2(10L, null));
+    Rec2 r2 = new Rec2(55L, null);
+    Number x = 1L;
+    Rec1 recModifierExp_1 = Utils.copy(r1);
+
+    recModifierExp_1.a = 100L;
+    Rec2 recModifierExp_2 = Utils.copy(r2);
+
+    recModifierExp_2.c = 200L;
+    recModifierExp_2.d = null;
+    recModifierExp_1.b = Utils.copy(recModifierExp_2);
+
+    Rec1 r3 = Utils.copy(recModifierExp_1);
+    Number y = 2L;
+    return Tuple.mk_(r3.a, r3.b.c, Utils.copy(r3.b.d));
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  public static class Rec1 implements Record {
+    public Number a;
+    public Rec2 b;
+
+    public Rec1(final Number _a, final Rec2 _b) {
+
+      a = _a;
+      b = _b != null ? Utils.copy(_b) : null;
     }
 
-    public static Object Run() {
-        Rec1 r1 = new Rec1(5L, new Rec2(10L, null));
-        Rec2 r2 = new Rec2(55L, null);
-        Number x = 1L;
-        Rec1 recModifierExp_1 = Utils.copy(r1);
+    public boolean equals(final Object obj) {
 
-        recModifierExp_1.a = 100L;
+      if (!(obj instanceof Rec1)) {
+        return false;
+      }
 
-        Rec2 recModifierExp_2 = Utils.copy(r2);
+      Rec1 other = ((Rec1) obj);
 
-        recModifierExp_2.c = 200L;
-        recModifierExp_2.d = null;
-        recModifierExp_1.b = Utils.copy(recModifierExp_2);
+      return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
+    }
 
-        Rec1 r3 = Utils.copy(recModifierExp_1);
-        Number y = 2L;
+    public int hashCode() {
 
-        return Tuple.mk_(r3.a, r3.b.c, Utils.copy(r3.b.d));
+      return Utils.hashCode(a, b);
+    }
+
+    public Rec1 copy() {
+
+      return new Rec1(a, b);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec1" + Utils.formatFields(a, b);
+    }
+  }
+
+  public static class Rec2 implements Record {
+    public Number c;
+    public Rec1 d;
+
+    public Rec2(final Number _c, final Rec1 _d) {
+
+      c = _c;
+      d = _d != null ? Utils.copy(_d) : null;
     }
 
-    public static class Rec1 implements Record {
-        public Number a;
-        public Rec2 b;
+    public boolean equals(final Object obj) {
 
-        public Rec1(final Number _a, final Rec2 _b) {
-            a = _a;
-            b = (_b != null) ? Utils.copy(_b) : null;
-        }
+      if (!(obj instanceof Rec2)) {
+        return false;
+      }
 
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec1)) {
-                return false;
-            }
+      Rec2 other = ((Rec2) obj);
 
-            Rec1 other = ((Rec1) obj);
-
-            return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(a, b);
-        }
-
-        public Rec1 copy() {
-            return new Rec1(a, b);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec1" + Utils.formatFields(a, b);
-        }
+      return (Utils.equals(c, other.c)) && (Utils.equals(d, other.d));
     }
 
-    public static class Rec2 implements Record {
-        public Number c;
-        public Rec1 d;
+    public int hashCode() {
 
-        public Rec2(final Number _c, final Rec1 _d) {
-            c = _c;
-            d = (_d != null) ? Utils.copy(_d) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec2)) {
-                return false;
-            }
-
-            Rec2 other = ((Rec2) obj);
-
-            return (Utils.equals(c, other.c)) && (Utils.equals(d, other.d));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(c, d);
-        }
-
-        public Rec2 copy() {
-            return new Rec2(c, d);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec2" + Utils.formatFields(c, d);
-        }
+      return Utils.hashCode(c, d);
     }
+
+    public Rec2 copy() {
+
+      return new Rec2(c, d);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`Rec2" + Utils.formatFields(c, d);
+    }
+  }
 }
 
 ##########

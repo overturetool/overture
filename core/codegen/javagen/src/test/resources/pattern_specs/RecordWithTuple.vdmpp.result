@@ -1,99 +1,98 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public static Number recPatternFun() {
+
+    final Rec recordPattern_1 = new Rec(Tuple.mk_(1L, new Rec(Tuple.mk_(2L, null))));
+    Boolean success_1 = true;
+    Number a = null;
+    Number b = null;
+    Tuple tuplePattern_1 = Utils.copy(recordPattern_1.t);
+    success_1 = tuplePattern_1.compatible(Number.class, Rec.class);
+    if (success_1) {
+      a = ((Number) tuplePattern_1.get(0));
+      Rec recordPattern_2 = Utils.copy(((Rec) tuplePattern_1.get(1)));
+      success_1 = true;
+      Tuple tuplePattern_2 = Utils.copy(recordPattern_2.t);
+      success_1 = tuplePattern_2.compatible(Number.class, Rec.class);
+      if (success_1) {
+        b = ((Number) tuplePattern_2.get(0));
+        Rec nullPattern_1 = Utils.copy(((Rec) tuplePattern_2.get(1)));
+        success_1 = Utils.equals(nullPattern_1, null);
+      }
     }
 
-    public static Number recPatternFun() {
-        final Rec recordPattern_1 = new Rec(Tuple.mk_(1L,
-                    new Rec(Tuple.mk_(2L, null))));
-        Boolean success_1 = true;
-        Number a = null;
-        Number b = null;
-        Tuple tuplePattern_1 = Utils.copy(recordPattern_1.t);
-        success_1 = tuplePattern_1.compatible(Number.class, Rec.class);
+    if (!(success_1)) {
+      throw new RuntimeException("Record pattern match failed");
+    }
 
-        if (success_1) {
-            a = ((Number) tuplePattern_1.get(0));
+    return a.longValue() + b.longValue();
+  }
 
-            Rec recordPattern_2 = Utils.copy(((Rec) tuplePattern_1.get(1)));
-            success_1 = true;
+  public String toString() {
 
-            Tuple tuplePattern_2 = Utils.copy(recordPattern_2.t);
-            success_1 = tuplePattern_2.compatible(Number.class, Rec.class);
+    return "A{}";
+  }
 
-            if (success_1) {
-                b = ((Number) tuplePattern_2.get(0));
+  public static class Rec implements Record {
+    public Tuple t;
 
-                Rec nullPattern_1 = Utils.copy(((Rec) tuplePattern_2.get(1)));
-                success_1 = Utils.equals(nullPattern_1, null);
-            }
-        }
+    public Rec(final Tuple _t) {
 
-        if (!(success_1)) {
-            throw new RuntimeException("Record pattern match failed");
-        }
+      t = _t != null ? Utils.copy(_t) : null;
+    }
 
-        return a.longValue() + b.longValue();
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
+
+      Rec other = ((Rec) obj);
+
+      return Utils.equals(t, other.t);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(t);
+    }
+
+    public Rec copy() {
+
+      return new Rec(t);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`Rec" + Utils.formatFields(t);
     }
-
-    public static class Rec implements Record {
-        public Tuple t;
-
-        public Rec(final Tuple _t) {
-            t = (_t != null) ? Utils.copy(_t) : null;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return Utils.equals(t, other.t);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(t);
-        }
-
-        public Rec copy() {
-            return new Rec(t);
-        }
-
-        public String toString() {
-            return "mk_A`Rec" + Utils.formatFields(t);
-        }
-    }
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return A.recPatternFun();
-    }
+    return A.recPatternFun();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

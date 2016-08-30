@@ -2,6 +2,8 @@ package org.overture.codegen.trans.conc;
 
 import java.util.List;
 
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -19,15 +21,13 @@ import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRInfo;
 
 public class SentinelTrans extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 
 	private ConcPrefixes concPrefixes;
-	
+
 	public SentinelTrans(IRInfo info, ConcPrefixes concPrefixes)
 	{
 		this.info = info;
@@ -35,7 +35,8 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException
+	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node)
+			throws AnalysisException
 	{
 		if (!info.getSettings().generateConc())
 		{
@@ -196,7 +197,8 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 		{
 			if (!node.getSuperNames().get(0).equals(concPrefixes.vdmThreadClassName()))
 			{
-				superName.setName(node.getSuperNames().get(0) + concPrefixes.sentinelClassPostFix());
+				superName.setName(node.getSuperNames().get(0)
+						+ concPrefixes.sentinelClassPostFix());
 			} else
 			{
 				superName.setName(concPrefixes.sentinelClassName());

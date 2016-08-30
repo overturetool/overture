@@ -1,64 +1,61 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public static Tuple tuplePatternFun() {
+
+    final Tuple tuplePattern_1 = Tuple.mk_(5L, true, 'v', 1L);
+    Boolean success_1 =
+        tuplePattern_1.compatible(Number.class, Boolean.class, Character.class, Number.class);
+    Number n = null;
+    Character c = null;
+    if (success_1) {
+      n = ((Number) tuplePattern_1.get(0));
+      Boolean boolPattern_1 = ((Boolean) tuplePattern_1.get(1));
+      success_1 = Utils.equals(boolPattern_1, true);
+
+      if (success_1) {
+        c = ((Character) tuplePattern_1.get(2));
+        Number intPattern_1 = ((Number) tuplePattern_1.get(3));
+        success_1 = Utils.equals(intPattern_1, 1L);
+      }
     }
 
-    public static Tuple tuplePatternFun() {
-        final Tuple tuplePattern_1 = Tuple.mk_(5L, true, 'v', 1L);
-        Boolean success_1 = tuplePattern_1.compatible(Number.class,
-                Boolean.class, Character.class, Number.class);
-        Number n = null;
-        Character c = null;
-
-        if (success_1) {
-            n = ((Number) tuplePattern_1.get(0));
-
-            Boolean boolPattern_1 = ((Boolean) tuplePattern_1.get(1));
-            success_1 = Utils.equals(boolPattern_1, true);
-
-            if (success_1) {
-                c = ((Character) tuplePattern_1.get(2));
-
-                Number intPattern_1 = ((Number) tuplePattern_1.get(3));
-                success_1 = Utils.equals(intPattern_1, 1L);
-            }
-        }
-
-        if (!(success_1)) {
-            throw new RuntimeException("Tuple pattern match failed");
-        }
-
-        return Tuple.mk_(n, false, c, 2L);
+    if (!(success_1)) {
+      throw new RuntimeException("Tuple pattern match failed");
     }
 
-    public String toString() {
-        return "A{}";
-    }
+    return Tuple.mk_(n, false, c, 2L);
+  }
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return A.tuplePatternFun();
-    }
+    return A.tuplePatternFun();
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

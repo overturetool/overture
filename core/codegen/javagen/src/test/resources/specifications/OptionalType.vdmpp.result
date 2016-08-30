@@ -1,24 +1,32 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    private Number b0 = null;
-    private Number b1 = null;
-    private Character b2 = null;
-    private Boolean b3 = null;
-    private A a = null;
+  private Number b0 = null;
+  private Number b1 = null;
+  private Character b2 = null;
+  private Boolean b3 = null;
+  private A a = null;
 
-    public A() {
-    }
+  public A() {}
 
-    public String toString() {
-        return "A{" + "b0 := " + Utils.toString(b0) + ", b1 := " +
-        Utils.toString(b1) + ", b2 := " + Utils.toString(b2) + ", b3 := " +
-        Utils.toString(b3) + ", a := " + Utils.toString(a) + "}";
-    }
+  public String toString() {
+
+    return "A{"
+        + "b0 := "
+        + Utils.toString(b0)
+        + ", b1 := "
+        + Utils.toString(b1)
+        + ", b2 := "
+        + Utils.toString(b2)
+        + ", b3 := "
+        + Utils.toString(b3)
+        + ", a := "
+        + Utils.toString(a)
+        + "}";
+  }
 }
 
 ##########

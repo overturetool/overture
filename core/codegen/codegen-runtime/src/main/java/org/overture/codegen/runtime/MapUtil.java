@@ -69,7 +69,8 @@ public class MapUtil
 				return null;
 			} else
 			{
-				throw new IllegalArgumentException("No such key in map: " + key);
+				throw new IllegalArgumentException("No such key in map: "
+						+ key);
 			}
 		}
 	}
@@ -122,12 +123,14 @@ public class MapUtil
 	{
 		if (!(map instanceof VDMMap))
 		{
-			throw new IllegalArgumentException("Expected " + map + " to be a " + VDMMap.class.getSimpleName());
+			throw new IllegalArgumentException("Expected " + map + " to be a "
+					+ VDMMap.class.getSimpleName());
 		}
 
 		if (!(maplet instanceof Maplet))
 		{
-			throw new IllegalArgumentException("Expected " + maplet + " to be a " + Maplet.class.getSimpleName());
+			throw new IllegalArgumentException("Expected " + maplet
+					+ " to be a " + Maplet.class.getSimpleName());
 		}
 
 		VDMMap vdmMap = (VDMMap) map;
@@ -350,7 +353,9 @@ public class MapUtil
 				Object mapValue = map.get(mapletKey);
 
 				if (differentValues(mapletValue, mapValue))
+				{
 					throw new IllegalArgumentException("Duplicate keys that have different values are not allowed");
+				}
 			}
 
 			map.put(mapletKey, mapletValue);
@@ -373,7 +378,9 @@ public class MapUtil
 			{
 				Object toVal = to.get(fromKey);
 				if (differentValues(toVal, fromVal))
+				{
 					throw new IllegalAccessError("Duplicate keys that have different values are not allowed");
+				}
 			}
 
 			to.put(fromKey, fromVal);
@@ -384,8 +391,9 @@ public class MapUtil
 	{
 		if (!(arg instanceof VDMMap))
 		{
-			throw new IllegalArgumentException(operator + " is only supported for " + VDMMap.class.getName() + ". Got "
-					+ arg);
+			throw new IllegalArgumentException(operator
+					+ " is only supported for " + VDMMap.class.getName()
+					+ ". Got " + arg);
 		}
 	}
 
@@ -393,13 +401,15 @@ public class MapUtil
 	{
 		if (!(left instanceof VDMMap) || !(right instanceof VDMMap))
 		{
-			throw new IllegalArgumentException(operator + " is only supported for " + VDMMap.class.getName() + ". Got "
-					+ left + " and " + right);
+			throw new IllegalArgumentException(operator
+					+ " is only supported for " + VDMMap.class.getName()
+					+ ". Got " + left + " and " + right);
 		}
 	}
 
 	private static boolean differentValues(Object leftVal, Object rightVal)
 	{
-		return (leftVal == null && rightVal != null) || (leftVal != null && !leftVal.equals(rightVal));
+		return leftVal == null && rightVal != null
+				|| leftVal != null && !leftVal.equals(rightVal);
 	}
 }

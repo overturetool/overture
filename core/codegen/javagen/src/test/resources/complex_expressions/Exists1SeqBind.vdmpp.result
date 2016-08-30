@@ -1,0 +1,30 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    Long exists1Counter_1 = 0L;
+    VDMSeq set_1 = SeqUtil.seq(true, true);
+    for (Iterator iterator_1 = set_1.iterator();
+        iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);
+        ) {
+      Boolean x = ((Boolean) iterator_1.next());
+      if (x) {
+        exists1Counter_1++;
+      }
+    }
+    return Utils.equals(exists1Counter_1, 1L);
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

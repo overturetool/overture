@@ -12,10 +12,11 @@ import org.overture.vdm2jml.tests.util.TestUtil;
 @RunWith(Parameterized.class)
 public class JmlComposedPatternExecTests extends JmlExecTestBase
 {
-	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT + "composed_pattern";
+	public static final String TEST_DIR = JmlExecTestBase.TEST_RES_DYNAMIC_ANALYSIS_ROOT
+			+ "composed_pattern";
 
 	public static final String PROPERTY_ID = "composed_pattern";
-	
+
 	public JmlComposedPatternExecTests(File inputFile)
 	{
 		super(inputFile);
@@ -26,7 +27,7 @@ public class JmlComposedPatternExecTests extends JmlExecTestBase
 	{
 		return TestUtil.collectVdmslFiles(GeneralUtils.getFilesRecursively(new File(TEST_DIR)));
 	}
-	
+
 	protected String getPropertyId()
 	{
 		return PROPERTY_ID;

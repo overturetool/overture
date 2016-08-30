@@ -32,7 +32,7 @@ import org.overture.codegen.trans.assistants.TransAssistantIR;
 public class FuncTrans extends DepthFirstAnalysisAdaptor
 {
 	private TransAssistantIR transAssistant;
-	
+
 	public FuncTrans(TransAssistantIR transformationAssistant)
 	{
 		this.transAssistant = transformationAssistant;
@@ -44,32 +44,30 @@ public class FuncTrans extends DepthFirstAnalysisAdaptor
 		AMethodDeclIR method = transAssistant.getInfo().getDeclAssistant().funcToMethod(node);
 
 		INode parent = node.parent();
-		
-		if(parent instanceof ADefaultClassDeclIR)
+
+		if (parent instanceof ADefaultClassDeclIR)
 		{
 			ADefaultClassDeclIR enclosingClass = (ADefaultClassDeclIR) parent;
-			
-			if(enclosingClass.getInvariant() == node)
+
+			if (enclosingClass.getInvariant() == node)
 			{
 				transAssistant.replaceNodeWith(node, method);
-			}
-			else
+			} else
 			{
 				enclosingClass.getFunctions().remove(node);
 				enclosingClass.getMethods().add(method);
-				
-				if(method.getPreCond() != null)
+
+				if (method.getPreCond() != null)
 				{
 					method.getPreCond().apply(this);
 				}
-				
-				if(method.getPostCond() != null)
+
+				if (method.getPostCond() != null)
 				{
 					method.getPostCond().apply(this);
 				}
 			}
-		}
-		else
+		} else
 		{
 			// The node's parent is not a class so it must be a pre/post condition
 			transAssistant.replaceNodeWith(node, method);

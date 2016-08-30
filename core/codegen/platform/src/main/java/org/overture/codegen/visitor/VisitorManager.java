@@ -93,27 +93,27 @@ public class VisitorManager
 	{
 		return classVisitor;
 	}
-	
+
 	public IRVisitor<AModuleDeclIR> getModuleVisitor()
 	{
 		return moduleVisitor;
 	}
-	
+
 	public IRVisitor<SImportsIR> getImportsVisitor()
 	{
 		return importsVisitor;
 	}
-	
+
 	public IRVisitor<SImportIR> getImportVisitor()
 	{
 		return importVisitor;
 	}
-	
+
 	public IRVisitor<SExportsIR> getExportsVisitor()
 	{
 		return exportsVisitor;
 	}
-	
+
 	public IRVisitor<SExportIR> getExportVisitor()
 	{
 		return exportVisitor;
@@ -163,7 +163,7 @@ public class VisitorManager
 	{
 		return patternVisitor;
 	}
-	
+
 	public IRVisitor<SModifierIR> getModifierVisitor()
 	{
 		return modifierVisitor;

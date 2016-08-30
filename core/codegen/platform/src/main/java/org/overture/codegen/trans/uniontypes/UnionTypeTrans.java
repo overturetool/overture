@@ -32,6 +32,7 @@ import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
@@ -86,21 +87,21 @@ import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.types.SMapTypeIR;
 import org.overture.codegen.ir.types.SSeqTypeIR;
-import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 {
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
 	public static final String MISSING_MEMBER = "Missing member: ";
-	
+
 	private TransAssistantIR transAssistant;
 
 	private UnionTypeVarPrefixes unionTypePrefixes;
-	
+
 	private List<INode> cloneFreeNodes;
-	
-	public UnionTypeTrans(TransAssistantIR transAssistant, UnionTypeVarPrefixes unionTypePrefixes, List<INode> cloneFreeNodes)
+
+	public UnionTypeTrans(TransAssistantIR transAssistant,
+			UnionTypeVarPrefixes unionTypePrefixes, List<INode> cloneFreeNodes)
 	{
 		this.transAssistant = transAssistant;
 		this.unionTypePrefixes = unionTypePrefixes;
@@ -113,7 +114,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				throws org.overture.ast.analysis.AnalysisException;
 	}
 
-	public <T extends STypeIR> T searchType(SExpIR exp, TypeFinder<T> typeFinder)
+	public <T extends STypeIR> T searchType(SExpIR exp,
+			TypeFinder<T> typeFinder)
 	{
 		if (exp == null || exp.getType() == null)
 		{
@@ -148,7 +150,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	private SExpIR correctTypes(SExpIR exp, STypeIR castedType)
 			throws AnalysisException
 	{
-		if ((exp.getType() instanceof AUnknownTypeIR || exp.getType() instanceof AUnionTypeIR)
+		if ((exp.getType() instanceof AUnknownTypeIR
+				|| exp.getType() instanceof AUnionTypeIR)
 				&& !(exp instanceof ACastUnaryExpIR))
 		{
 			ACastUnaryExpIR casted = new ACastUnaryExpIR();
@@ -162,7 +165,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		return exp;
 	}
-	
+
 	private boolean correctArgTypes(List<SExpIR> args, List<STypeIR> paramTypes)
 			throws AnalysisException
 	{
@@ -171,8 +174,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			for (int k = 0; k < paramTypes.size(); k++)
 			{
 				SExpIR arg = args.get(k);
-				
-				if(!(arg instanceof ANullExpIR))
+
+				if (!(arg instanceof ANullExpIR))
 				{
 					correctTypes(arg, paramTypes.get(k));
 				}
@@ -206,7 +209,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		check.setType(new ABoolBasicTypeIR());
 		check.setCheckedType(type.clone());
 		check.setExp(copy.clone());
-		
+
 		return check;
 	}
 
@@ -215,7 +218,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		STypeIR expectedType;
-		
+
 		if (transAssistant.getInfo().getTypeAssistant().isNumericType(node.getType()))
 		{
 			expectedType = node.getType();
@@ -227,19 +230,20 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		correctTypes(node.getLeft(), expectedType);
 		correctTypes(node.getRight(), expectedType);
 	}
-	
+
 	public STypeIR getExpectedOperandType(SNumericBinaryExpIR node)
 	{
-		if(node instanceof AIntDivNumericBinaryExpIR || node instanceof AModNumericBinaryExpIR || node instanceof ARemNumericBinaryExpIR)
+		if (node instanceof AIntDivNumericBinaryExpIR
+				|| node instanceof AModNumericBinaryExpIR
+				|| node instanceof ARemNumericBinaryExpIR)
 		{
 			return new AIntNumericBasicTypeIR();
-		}
-		else
+		} else
 		{
 			return new ARealNumericBasicTypeIR();
 		}
 	}
-	
+
 	@Override
 	public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException
 	{
@@ -249,43 +253,42 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			{
 				correctTypes(node.getInitial(), node.getType());
 			}
-			
+
 			node.getInitial().apply(this);
 		}
 	}
-	
+
 	@Override
 	public void caseACardUnaryExpIR(ACardUnaryExpIR node)
 			throws AnalysisException
 	{
 		STypeIR type = node.getExp().getType();
-		
-		if(type instanceof AUnionTypeIR)
+
+		if (type instanceof AUnionTypeIR)
 		{
 			STypeIR expectedType = transAssistant.getInfo().getTypeAssistant().getSetType((AUnionTypeIR) type);
 			correctTypes(node.getExp(), expectedType);
 		}
-		
+
 		node.getExp().apply(this);
 		node.getType().apply(this);
 	}
-	
+
 	@Override
-	public void caseALenUnaryExpIR(ALenUnaryExpIR node)
-			throws AnalysisException
+	public void caseALenUnaryExpIR(ALenUnaryExpIR node) throws AnalysisException
 	{
 		STypeIR type = node.getExp().getType();
-		
-		if(type instanceof AUnionTypeIR)
+
+		if (type instanceof AUnionTypeIR)
 		{
 			STypeIR expectedType = transAssistant.getInfo().getTypeAssistant().getSeqType((AUnionTypeIR) type);
 			correctTypes(node.getExp(), expectedType);
 		}
-		
+
 		node.getExp().apply(this);
 		node.getType().apply(this);
 	}
-	
+
 	@Override
 	public void caseASeqConcatBinaryExpIR(ASeqConcatBinaryExpIR node)
 			throws AnalysisException
@@ -293,12 +296,12 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		node.getLeft().apply(this);
 		node.getRight().apply(this);
 		node.getType().apply(this);
-		
-		if(!transAssistant.getInfo().getTypeAssistant().usesUnionType(node))
+
+		if (!transAssistant.getInfo().getTypeAssistant().usesUnionType(node))
 		{
 			return;
 		}
-		
+
 		STypeIR leftType = node.getLeft().getType();
 
 		if (leftType instanceof AUnionTypeIR)
@@ -315,41 +318,43 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			correctTypes(node.getRight(), expectedType);
 		}
 	}
-	
+
 	@Override
 	public void caseAFieldNumberExpIR(AFieldNumberExpIR node)
 			throws AnalysisException
 	{
 		SExpIR tuple = node.getTuple();
 		STypeIR tupleType = tuple.getType();
-		
-		if(!(tupleType instanceof AUnionTypeIR))
+
+		if (!(tupleType instanceof AUnionTypeIR))
 		{
 			tuple.apply(this);
 			return;
 		}
-		
-		handleFieldExp(node, "field number " + node.getField(), tuple, tupleType, node.getType().clone());
+
+		handleFieldExp(node, "field number "
+				+ node.getField(), tuple, tupleType, node.getType().clone());
 	}
-	
+
 	@Override
 	public void caseAFieldExpIR(AFieldExpIR node) throws AnalysisException
 	{
 		SExpIR object = node.getObject();
 		STypeIR objectType = object.getType();
-		
-		if(!(objectType instanceof AUnionTypeIR))
+
+		if (!(objectType instanceof AUnionTypeIR))
 		{
 			object.apply(this);
 			return;
 		}
-		
+
 		STypeIR resultType = getResultType(node, node.parent(), objectType, transAssistant.getInfo().getTypeAssistant());
-		
+
 		handleFieldExp(node, node.getMemberName(), object, objectType, resultType);
 	}
 
-	private void handleFieldExp(SExpIR node, String memberName, SExpIR subject, STypeIR fieldObjType, STypeIR resultType) throws AnalysisException
+	private void handleFieldExp(SExpIR node, String memberName, SExpIR subject,
+			STypeIR fieldObjType, STypeIR resultType) throws AnalysisException
 	{
 		INode parent = node.parent();
 
@@ -362,9 +367,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		AIdentifierPatternIR id = new AIdentifierPatternIR();
 		id.setName(applyResultName);
 
-		AVarDeclIR resultDecl = transAssistant.getInfo().getDeclAssistant().
-				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
-		
+		AVarDeclIR resultDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
+
 		AIdentifierVarExpIR resultVar = new AIdentifierVarExpIR();
 		resultVar.setSourceNode(node.getSourceNode());
 		resultVar.setIsLambda(false);
@@ -374,7 +378,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		ABlockStmIR replacementBlock = new ABlockStmIR();
 		SExpIR obj = null;
-		
+
 		if (!(subject instanceof SVarExpBase))
 		{
 			String objName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.objExp());
@@ -382,9 +386,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			AIdentifierPatternIR objId = new AIdentifierPatternIR();
 			objId.setName(objName);
 
-			AVarDeclIR objectDecl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
-			
+			AVarDeclIR objectDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
+
 			replacementBlock.getLocalDefs().add(objectDecl);
 
 			AIdentifierVarExpIR objectVar = new AIdentifierVarExpIR();
@@ -408,14 +411,14 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		{
 			SExpIR fieldExp = (SExpIR) node.clone();
 			STypeIR currentType = possibleTypes.get(i);
-			
-			if(currentType instanceof AUnknownTypeIR)
+
+			if (currentType instanceof AUnknownTypeIR)
 			{
 				// If we are accessing an element of (say) the sequence [new A(), new B(), nil] of type A | B | [?]
 				// then the current IR type will be the unknown type at some point. This case is simply skipped.
 				continue;
 			}
-			
+
 			if (!(currentType instanceof AClassTypeIR)
 					&& !(currentType instanceof ATupleTypeIR)
 					&& !(currentType instanceof ARecordTypeIR))
@@ -423,7 +426,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				// If the field cannot possibly exist then continue
 				continue;
 			}
-			
+
 			boolean memberExists = false;
 
 			memberExists = memberExists(memberName, parent, typeAssistant, fieldExp, currentType);
@@ -433,7 +436,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				// If the member does not exist then the case should not be treated
 				continue;
 			}
-			
+
 			ACastUnaryExpIR castedFieldExp = new ACastUnaryExpIR();
 			castedFieldExp.setType(currentType.clone());
 			castedFieldExp.setExp(obj.clone());
@@ -457,51 +460,50 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 				ifChecks.getElseIf().add(elseIf);
 			}
-			
+
 			handledTypes++;
 		}
-		
-		if(handledTypes == 0)
+
+		if (handledTypes == 0)
 		{
 			return;
 		}
-		
+
 		ARaiseErrorStmIR raise = consRaiseStm(MISSING_MEMBER, memberName);
 		ifChecks.setElseStm(raise);
 
-		if(parent instanceof AApplyExpIR && ((AApplyExpIR) parent).getRoot() == node)
+		if (parent instanceof AApplyExpIR
+				&& ((AApplyExpIR) parent).getRoot() == node)
 		{
 			transAssistant.replaceNodeWith(parent, resultVar);
-		}
-		else
+		} else
 		{
 			transAssistant.replaceNodeWith(node, resultVar);
 		}
-		
+
 		replacementBlock.getLocalDefs().add(resultDecl);
 		replacementBlock.getStatements().add(ifChecks);
 
 		transAssistant.replaceNodeWith(enclosingStatement, replacementBlock);
 		replacementBlock.getStatements().add(enclosingStatement);
-		
+
 		ifChecks.apply(this);
 	}
 
 	private void setSubject(SExpIR fieldExp, ACastUnaryExpIR castedFieldExp)
 	{
-		if(fieldExp instanceof AFieldExpIR)
+		if (fieldExp instanceof AFieldExpIR)
 		{
 			((AFieldExpIR) fieldExp).setObject(castedFieldExp);
-		}
-		else if(fieldExp instanceof AFieldNumberExpIR)
+		} else if (fieldExp instanceof AFieldNumberExpIR)
 		{
 			((AFieldNumberExpIR) fieldExp).setTuple(castedFieldExp);
 		}
 	}
 
 	private boolean memberExists(String memberName, INode parent,
-			TypeAssistantIR typeAssistant, SExpIR fieldExp,
-			STypeIR currentType) throws AnalysisException
+			TypeAssistantIR typeAssistant, SExpIR fieldExp, STypeIR currentType)
+			throws AnalysisException
 	{
 		if (fieldExp instanceof AFieldExpIR)
 		{
@@ -516,29 +518,29 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 				return transAssistant.getInfo().getDeclAssistant().getFieldDecl(transAssistant.getInfo().getClasses(), recordType, memberName) != null;
 			}
-		}
-		else if(fieldExp instanceof AFieldNumberExpIR && currentType instanceof ATupleTypeIR)
+		} else if (fieldExp instanceof AFieldNumberExpIR
+				&& currentType instanceof ATupleTypeIR)
 		{
 			return true;
-			
+
 			// Could possibly be strengthened
 			// AFieldNumberExpIR fieldNumberExp = (AFieldNumberExpIR) fieldExp;
-			// return  fieldNumberExp.getField() <= ((ATupleTypeIR) currentType).getTypes().size();
+			// return fieldNumberExp.getField() <= ((ATupleTypeIR) currentType).getTypes().size();
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean memberExists(INode parent, TypeAssistantIR typeAssistant,
 			String className, String memberName) throws AnalysisException
 	{
-		if(typeAssistant.getFieldType(transAssistant.getInfo().getClasses(), className, memberName) != null)
+		if (typeAssistant.getFieldType(transAssistant.getInfo().getClasses(), className, memberName) != null)
 		{
 			return true;
 		}
-		
+
 		List<SExpIR> args = ((AApplyExpIR) parent).getArgs();
-		
+
 		return typeAssistant.getMethodType(transAssistant.getInfo(), className, memberName, args) != null;
 	}
 
@@ -549,39 +551,46 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		{
 			arg.apply(this);
 		}
-		
+
 		SExpIR root = node.getRoot();
 		root.apply(this);
 
-		if (root.getType() instanceof AUnionTypeIR) {
-			STypeIR colType = searchType(root, new TypeFinder<SMapTypeIR>() {
+		if (root.getType() instanceof AUnionTypeIR)
+		{
+			STypeIR colType = searchType(root, new TypeFinder<SMapTypeIR>()
+			{
 				@Override
 				public SMapTypeIR findType(PType type)
-						throws org.overture.ast.analysis.AnalysisException {
-					SMapType mapType = transAssistant.getInfo().getTcFactory()
-							.createPTypeAssistant().getMap(type);
+						throws org.overture.ast.analysis.AnalysisException
+				{
+					SMapType mapType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getMap(type);
 
-					return mapType != null ? (SMapTypeIR) mapType.apply(
-							transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo()) : null;
+					return mapType != null
+							? (SMapTypeIR) mapType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo())
+							: null;
 				}
 			});
 
-			if (colType == null) {
-				colType = searchType(root, new TypeFinder<SSeqTypeIR>() {
+			if (colType == null)
+			{
+				colType = searchType(root, new TypeFinder<SSeqTypeIR>()
+				{
 					@Override
 					public SSeqTypeIR findType(PType type)
-							throws org.overture.ast.analysis.AnalysisException {
+							throws org.overture.ast.analysis.AnalysisException
+					{
 
-						SSeqType seqType = transAssistant.getInfo().getTcFactory()
-								.createPTypeAssistant().getSeq(type);
+						SSeqType seqType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getSeq(type);
 
-						return seqType != null ? (SSeqTypeIR) seqType.apply(
-								transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo()) : null;
+						return seqType != null
+								? (SSeqTypeIR) seqType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo())
+								: null;
 					}
 				});
 			}
 
-			if (colType != null && node.getArgs().size() == 1) {
+			if (colType != null && node.getArgs().size() == 1)
+			{
 				correctTypes(root, colType);
 				return;
 			}
@@ -678,16 +687,18 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseAPlainCallStmIR(APlainCallStmIR node) throws AnalysisException
+	public void caseAPlainCallStmIR(APlainCallStmIR node)
+			throws AnalysisException
 	{
 		STypeIR classType = node.getClassType();
-		
-		String className = classType instanceof AClassTypeIR ? ((AClassTypeIR) classType).getName()
+
+		String className = classType instanceof AClassTypeIR
+				? ((AClassTypeIR) classType).getName()
 				: node.getAncestor(ADefaultClassDeclIR.class).getName();
-		
+
 		handleCallStm(node, className);
 	}
-	
+
 	@Override
 	public void caseASuperCallStmIR(ASuperCallStmIR node)
 			throws AnalysisException
@@ -695,7 +706,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		handleCallStm(node, transAssistant.getInfo().getStmAssistant().getSuperClassName(node));
 	}
 
-	private void handleCallStm(SCallStmIR node, String className) throws AnalysisException
+	private void handleCallStm(SCallStmIR node, String className)
+			throws AnalysisException
 	{
 		for (SExpIR arg : node.getArgs())
 		{
@@ -713,7 +725,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			correctArgTypes(args, methodType.getParams());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void inACallObjectExpStmIR(ACallObjectExpStmIR node)
@@ -734,7 +746,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		STypeIR type = node.getType();
 		LinkedList<SExpIR> args = node.getArgs();
-		//String className = node.getClassName();
+		// String className = node.getClassName();
 		String fieldName = node.getFieldName();
 		SourceNode sourceNode = node.getSourceNode();
 
@@ -742,7 +754,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		call.setObj(objExp);
 		call.setType(type.clone());
 		call.setArgs((List<? extends SExpIR>) args.clone());
-		//call.setClassName(className);
+		// call.setClassName(className);
 		call.setFieldName(fieldName);
 		call.setSourceNode(sourceNode);
 
@@ -751,12 +763,10 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		if (!(objExp instanceof SVarExpIR))
 		{
 			String callStmObjName = transAssistant.getInfo().getTempVarNameGen().nextVarName(unionTypePrefixes.callStmObj());
-			
+
 			AIdentifierPatternIR id = new AIdentifierPatternIR();
 			id.setName(callStmObjName);
-			AVarDeclIR objDecl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(node.getSourceNode().getVdmNode(),
-							objType.clone(), id, objExp.clone());
+			AVarDeclIR objDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getSourceNode().getVdmNode(), objType.clone(), id, objExp.clone());
 
 			AIdentifierVarExpIR objVar = new AIdentifierVarExpIR();
 			objVar.setSourceNode(node.getSourceNode());
@@ -787,13 +797,12 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			if (methodType != null)
 			{
 				correctArgTypes(callCopy.getArgs(), methodType.getParams());
-			}
-			else
+			} else
 			{
-				//It's possible (due to the way union types work) that the method type for the
-				//field in the object type does not exist. Let's say we are trying to invoke the
-				//operation 'op' for an object type that is either A or B but it might be the
-				//case that only 'A' has the operation 'op' defined.
+				// It's possible (due to the way union types work) that the method type for the
+				// field in the object type does not exist. Let's say we are trying to invoke the
+				// operation 'op' for an object type that is either A or B but it might be the
+				// case that only 'A' has the operation 'op' defined.
 				continue;
 			}
 
@@ -815,16 +824,16 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 				ifChecks.getElseIf().add(elseIf);
 			}
-			
+
 			handledTypes++;
 		}
-		
-		if(handledTypes == 0)
+
+		if (handledTypes == 0)
 		{
 			return;
 		}
-		
-		ARaiseErrorStmIR raiseStm = consRaiseStm(MISSING_OP_MEMBER,fieldName);
+
+		ARaiseErrorStmIR raiseStm = consRaiseStm(MISSING_OP_MEMBER, fieldName);
 		ifChecks.setElseStm(raiseStm);
 
 		replacementBlock.getStatements().add(ifChecks);
@@ -840,66 +849,66 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		ARaiseErrorStmIR raise = new ARaiseErrorStmIR();
 		raise.setError(missingMember);
-		
+
 		return raise;
 	}
 
 	@Override
-	public void inAVarDeclIR(AVarDeclIR node)
-			throws AnalysisException
+	public void inAVarDeclIR(AVarDeclIR node) throws AnalysisException
 	{
 		SExpIR exp = node.getExp();
-		
-		if(exp != null)
+
+		if (exp != null)
 		{
 			exp.apply(this);
 		}
-		
+
 		STypeIR type = node.getType();
-		
-		if(castNotNeeded(exp, type))
+
+		if (castNotNeeded(exp, type))
 		{
 			return;
 		}
-		
+
 		if (!(type instanceof AUnionTypeIR))
 		{
 			correctTypes(exp, type);
 		}
 	}
-	
+
 	@Override
-	public void caseAAssignToExpStmIR(AAssignToExpStmIR node) throws AnalysisException
+	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
+			throws AnalysisException
 	{
 		handAssignRighHandSide(node);
 		handleAssignTarget(node);
 	}
 
-	public void handleAssignTarget(AAssignToExpStmIR node) throws AnalysisException
+	public void handleAssignTarget(AAssignToExpStmIR node)
+			throws AnalysisException
 	{
-		if(node.getTarget() instanceof AFieldExpIR)
+		if (node.getTarget() instanceof AFieldExpIR)
 		{
 			AFieldExpIR field = (AFieldExpIR) node.getTarget();
-			
-			if(field.getObject().getType() instanceof AUnionTypeIR)
+
+			if (field.getObject().getType() instanceof AUnionTypeIR)
 			{
 				LinkedList<STypeIR> types = ((AUnionTypeIR) field.getObject().getType()).getTypes();
 
 				AIfStmIR ifChecks = new AIfStmIR();
-				
-				for(int i = 0; i < types.size(); i++)
+
+				for (int i = 0; i < types.size(); i++)
 				{
 					STypeIR currentType = types.get(i);
-					
+
 					AInstanceofExpIR cond = consInstanceCheck(field.getObject(), currentType);
 					AAssignToExpStmIR castFieldObj = castFieldObj(node, field, currentType);
-					
-					if(i == 0)
+
+					if (i == 0)
 					{
 						ifChecks.setIfExp(cond);
 						ifChecks.setThenStm(castFieldObj);
-					}
-					else
+					} else
 					{
 						AElseIfStmIR elseIf = new AElseIfStmIR();
 						elseIf.setElseIf(cond);
@@ -908,23 +917,24 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 						ifChecks.getElseIf().add(elseIf);
 					}
 				}
-				
+
 				ifChecks.setElseStm(consRaiseStm(MISSING_MEMBER, field.getMemberName()));
-				
+
 				transAssistant.replaceNodeWith(node, ifChecks);
 				ifChecks.apply(this);
 			}
 		}
 	}
 
-	public void handAssignRighHandSide(AAssignToExpStmIR node) throws AnalysisException
+	public void handAssignRighHandSide(AAssignToExpStmIR node)
+			throws AnalysisException
 	{
-		if(node.getExp() != null)
+		if (node.getExp() != null)
 		{
 			node.getExp().apply(this);
 		}
-		
-		if(!castNotNeeded(node.getExp(), node.getTarget().getType()))
+
+		if (!castNotNeeded(node.getExp(), node.getTarget().getType()))
 		{
 			if (!(node.getTarget().getType() instanceof AUnionTypeIR))
 			{
@@ -933,24 +943,26 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	public AAssignToExpStmIR castFieldObj(AAssignToExpStmIR assign, AFieldExpIR target, STypeIR possibleType)
+	public AAssignToExpStmIR castFieldObj(AAssignToExpStmIR assign,
+			AFieldExpIR target, STypeIR possibleType)
 	{
 		ACastUnaryExpIR cast = new ACastUnaryExpIR();
 		cast.setType(possibleType.clone());
 		cast.setExp(target.getObject().clone());
-		
+
 		AAssignToExpStmIR assignCopy = assign.clone();
 		AFieldExpIR fieldCopy = target.clone();
-		
+
 		transAssistant.replaceNodeWith(fieldCopy.getObject(), cast);
 		transAssistant.replaceNodeWith(assignCopy.getTarget(), fieldCopy);
-		
+
 		return assignCopy;
 	}
 
 	private boolean castNotNeeded(SExpIR exp, STypeIR type)
 	{
-		return type instanceof AUnknownTypeIR || exp instanceof ANullExpIR || exp instanceof AUndefinedExpIR;
+		return type instanceof AUnknownTypeIR || exp instanceof ANullExpIR
+				|| exp instanceof AUndefinedExpIR;
 	}
 
 	@Override
@@ -960,8 +972,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		{
 			return; // When the return type of the method is 'void'
 		}
-		
-		if(node.getExp() instanceof ANullExpIR)
+
+		if (node.getExp() instanceof ANullExpIR)
 		{
 			return;
 		}
@@ -971,8 +983,8 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		AMethodDeclIR methodDecl = node.getAncestor(AMethodDeclIR.class);
 
 		STypeIR expectedType = methodDecl.getMethodType().getResult();
-		
-		if(expectedType instanceof AUnknownTypeIR)
+
+		if (expectedType instanceof AUnknownTypeIR)
 		{
 			return;
 		}
@@ -1032,19 +1044,19 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			}
 		}
 	}
-	
+
 	private SExpIR getAssignmentExp(INode node, SExpIR fieldExp)
 	{
 		INode parent = node.parent();
-		
-		if(parent instanceof AApplyExpIR && ((AApplyExpIR) parent).getRoot() == node)
+
+		if (parent instanceof AApplyExpIR
+				&& ((AApplyExpIR) parent).getRoot() == node)
 		{
 			AApplyExpIR applyExp = (AApplyExpIR) parent.clone();
 			applyExp.setRoot(fieldExp);
-			
+
 			return applyExp;
-		}
-		else
+		} else
 		{
 			return fieldExp;
 		}
@@ -1053,9 +1065,10 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	private STypeIR getResultType(AFieldExpIR node, INode parent,
 			STypeIR fieldObjType, TypeAssistantIR typeAssistant)
 	{
-		if(parent instanceof SExpIR)
+		if (parent instanceof SExpIR)
 		{
-			if (parent instanceof AApplyExpIR && ((AApplyExpIR) parent).getRoot() == node)
+			if (parent instanceof AApplyExpIR
+					&& ((AApplyExpIR) parent).getRoot() == node)
 			{
 				return ((SExpIR) parent).getType().clone();
 			}
@@ -1068,58 +1081,56 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			TypeAssistantIR typeAssistant)
 	{
 		List<STypeIR> fieldTypes = new LinkedList<STypeIR>();
-		List<STypeIR> types = ((AUnionTypeIR)objectType).getTypes();
-		
-		for(STypeIR currentType : types)
+		List<STypeIR> types = ((AUnionTypeIR) objectType).getTypes();
+
+		for (STypeIR currentType : types)
 		{
 			String memberName = node.getMemberName();
 			STypeIR fieldType = null;
-			
-			if(currentType instanceof AClassTypeIR)
+
+			if (currentType instanceof AClassTypeIR)
 			{
 				AClassTypeIR classType = (AClassTypeIR) currentType;
 				fieldType = typeAssistant.getFieldType(transAssistant.getInfo().getClasses(), classType.getName(), memberName);
-			}
-			else if(currentType instanceof ARecordTypeIR)
+			} else if (currentType instanceof ARecordTypeIR)
 			{
 				ARecordTypeIR recordType = (ARecordTypeIR) currentType;
 				fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(transAssistant.getInfo().getClasses(), recordType, memberName);
-			}
-			else{
-				//Can be the unknown type
+			} else
+			{
+				// Can be the unknown type
 				continue;
 			}
 
-			if(fieldType == null)
+			if (fieldType == null)
 			{
 				// The field type may not be found if the member does not exist
 				// For example:
-				// 
+				//
 				// types
 				// R1 :: x : int;
 				// R2 :: y : int;
 				// ...
-				//let inlines : seq of Inline = [mk_R1(4), mk_R2(5)]
-				//in 
-				//		  return inlines(1).x + inlines(2).y;
+				// let inlines : seq of Inline = [mk_R1(4), mk_R2(5)]
+				// in
+				// return inlines(1).x + inlines(2).y;
 				continue;
 			}
-			
-			if(!typeAssistant.containsType(fieldTypes, fieldType))
+
+			if (!typeAssistant.containsType(fieldTypes, fieldType))
 			{
 				fieldTypes.add(fieldType);
 			}
 		}
-		
-		if(fieldTypes.size() == 1)
+
+		if (fieldTypes.size() == 1)
 		{
 			return fieldTypes.get(0);
-		}
-		else
+		} else
 		{
 			AUnionTypeIR unionTypes = new AUnionTypeIR();
 			unionTypes.setTypes(fieldTypes);
-			
+
 			return unionTypes;
 		}
 	}

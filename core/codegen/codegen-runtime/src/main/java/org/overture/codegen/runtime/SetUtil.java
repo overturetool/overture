@@ -32,12 +32,16 @@ public class SetUtil
 	public static VDMSet set(Object... elements)
 	{
 		if (elements == null)
+		{
 			throw new IllegalArgumentException("Cannot instantiate set from null");
+		}
 
 		VDMSet set = set();
 
 		for (Object element : elements)
+		{
 			set.add(element);
+		}
 
 		return set;
 	}
@@ -146,7 +150,8 @@ public class SetUtil
 		VDMSet setLeft = (VDMSet) left;
 		VDMSet setRight = (VDMSet) right;
 
-		return setLeft.size() < setRight.size() && setRight.containsAll(setLeft);
+		return setLeft.size() < setRight.size()
+				&& setRight.containsAll(setLeft);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -195,7 +200,10 @@ public class SetUtil
 		{
 			Object obj = powerSetsArray[i];
 			if (!(obj instanceof VDMSet))
-				throw new IllegalArgumentException("Powerset operation is only applicable to sets. Got: " + obj);
+			{
+				throw new IllegalArgumentException("Powerset operation is only applicable to sets. Got: "
+						+ obj);
+			}
 
 			VDMSet set = (VDMSet) obj;
 
@@ -234,8 +242,9 @@ public class SetUtil
 	{
 		if (!(arg instanceof VDMSet))
 		{
-			throw new IllegalArgumentException(operator + " is only supported for " + VDMSet.class.getName() + ". Got "
-					+ arg);
+			throw new IllegalArgumentException(operator
+					+ " is only supported for " + VDMSet.class.getName()
+					+ ". Got " + arg);
 		}
 	}
 
@@ -243,8 +252,9 @@ public class SetUtil
 	{
 		if (!(left instanceof VDMSet) || !(right instanceof VDMSet))
 		{
-			throw new IllegalArgumentException(operator + " is only supported for " + VDMSet.class.getName() + ". Got "
-					+ left + " and " + right);
+			throw new IllegalArgumentException(operator
+					+ " is only supported for " + VDMSet.class.getName()
+					+ ". Got " + left + " and " + right);
 		}
 	}
 }

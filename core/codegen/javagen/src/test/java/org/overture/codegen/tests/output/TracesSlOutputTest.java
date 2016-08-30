@@ -18,8 +18,8 @@ public class TracesSlOutputTest extends JavaOutputTestBase
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "traces_sl_specs";
 
-	public TracesSlOutputTest(String nameParameter,
-			String inputParameter, String resultParameter)
+	public TracesSlOutputTest(String nameParameter, String inputParameter,
+			String resultParameter)
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
@@ -33,7 +33,7 @@ public class TracesSlOutputTest extends JavaOutputTestBase
 		irSettings.setGeneratePreConds(true);
 		irSettings.setMakePreCondsPublic(true);
 		irSettings.setMakePostCondsPublic(true);
-		
+
 		return irSettings;
 	}
 

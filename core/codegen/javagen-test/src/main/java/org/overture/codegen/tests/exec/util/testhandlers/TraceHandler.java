@@ -10,9 +10,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.runtime.traces.InMemoryTestAccumulator;
 import org.overture.codegen.tests.exec.util.ExecutionResult;
 import org.overture.config.Release;
@@ -32,6 +32,8 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
 
+	private Logger log = Logger.getLogger(this.getClass().getName());
+
 	public TraceHandler(Release release, Dialect dialect)
 	{
 		super(release, dialect);
@@ -41,7 +43,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	{
 		return "T1";
 	}
-	
+
 	@Override
 	public String getVdmEntry()
 	{
@@ -53,30 +55,29 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	{
 		return "computeTests()";
 	}
-	
+
 	@Override
 	public String getFullyQualifiedEntry(String rootPackage)
 	{
 		// The entry point is local so we can ignore the package and the enclosing class
 		return getJavaEntry();
 	}
-	
+
 	public int getFreePort()
 	{
 		ServerSocket s = null;
 		try
 		{
 			s = new ServerSocket(0);
-			
+
 			// returns the port the system selected
 			return s.getLocalPort();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
-		}
-		finally
+		} finally
 		{
-			if(s != null)
+			if (s != null)
 			{
 				try
 				{
@@ -87,7 +88,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 				}
 			}
 		}
-		
+
 		return 8999;
 	}
 
@@ -95,24 +96,20 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	public List<String> getMainClassMethods(String rootPackage)
 	{
 		String runTraceCall;
-		
-		if(Settings.dialect == Dialect.VDM_SL)
+
+		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			runTraceCall = toFullName(rootPackage, "Entry.Entry_T1_Run(acc);");
-		}
-		else
+		} else
 		{
-			runTraceCall = " new " + toFullName(rootPackage, "Entry") + "().Entry_T1_Run(acc);";
+			runTraceCall = " new " + toFullName(rootPackage, "Entry")
+					+ "().Entry_T1_Run(acc);";
 		}
-		
-		
-		String computeTestsMethod = 
-				" public static TestAccumulator computeTests()\n"
+
+		String computeTestsMethod = " public static TestAccumulator computeTests()\n"
 				+ " {\n"
 				+ "    InMemoryTestAccumulator acc = new InMemoryTestAccumulator();\n"
-				+ runTraceCall + "\n"
-				+ "    return acc;\n"
-				+ " }\n";
+				+ runTraceCall + "\n" + "    return acc;\n" + " }\n";
 
 		List<String> methods = new LinkedList<String>();
 		methods.add(computeTestsMethod);
@@ -127,26 +124,26 @@ public class TraceHandler extends ExecutableSpecTestHandler
 
 		List<TraceResult> testResult = new TraceResultReader().read(vdmTraceResultFile);
 
-		if (testResult.size() != 1 || !testResult.get(0).traceName.equals(getTraceName()))
+		if (testResult.size() != 1
+				|| !testResult.get(0).traceName.equals(getTraceName()))
 		{
-			Logger.getLog().printErrorln("Expected a single trace named " + getTraceName() + "!. Got: "
-					+ testResult);
+			log.error("Expected a single trace named: " + getTraceName()
+					+ ". Got: " + testResult);
 			return null;
 		}
 
 		TraceResult t1 = testResult.get(0);
-		
+
 		StringBuilder sb = new StringBuilder();
-		
-		for(TraceTest t : t1.tests)
+
+		for (TraceTest t : t1.tests)
 		{
 			sb.append(t).append('\n');
 		}
-		
+
 		return new ExecutionResult(sb.toString(), t1.tests);
 	}
 
-	
 	@Override
 	public ExecutionResult runJava(File folder)
 	{
@@ -158,22 +155,20 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	public ExecutionResult processTraceResult(ExecutionResult javaResult)
 	{
 		Object executionResult = javaResult.getExecutionResult();
-		
-		if(executionResult instanceof InMemoryTestAccumulator)
+
+		if (executionResult instanceof InMemoryTestAccumulator)
 		{
 			InMemoryTestAccumulator acc = (InMemoryTestAccumulator) executionResult;
 
 			return new ExecutionResult(javaResult.getStrRepresentation(), acc.getAllTests());
-		}
-		else
+		} else
 		{
 			return new ExecutionResult(javaResult.getStrRepresentation(), javaResult.getExecutionResult().toString());
 		}
 	}
 
 	public File computeVdmTraceResult(File specFile) throws IOException,
-			XPathExpressionException, SAXException,
-			ParserConfigurationException
+			XPathExpressionException, SAXException, ParserConfigurationException
 	{
 		// The client thread will close the socket
 		int port = getFreePort();
@@ -200,26 +195,14 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
 		TraceReductionInfo info = new TraceReductionInfo();
 
-		String dialect = Settings.dialect == Dialect.VDM_SL ? "-vdmsl" : "-vdmpp";
-		
-		String[] buildArgs = new String[] {
-				"-h",
-				"localhost",
-				"-p",
-				port + "",
-				"-k",
-				"whatever",
-				"-e",
-				"Entry",
-				dialect,
-				"-r",
-				"vdm10",
-				"-t",
-				getVdmEntry(),
-				"-tracefolder",
+		String dialect = Settings.dialect == Dialect.VDM_SL ? "-vdmsl"
+				: "-vdmpp";
+
+		String[] buildArgs = new String[] { "-h", "localhost", "-p", port + "",
+				"-k", "whatever", "-e", "Entry", dialect, "-r", "vdm10", "-t",
+				getVdmEntry(), "-tracefolder",
 				traceFolder.toURI().toASCIIString(),
-				destFile.toURI().toASCIIString(),
-				"-traceReduction",
+				destFile.toURI().toASCIIString(), "-traceReduction",
 				"{" + info.getSubset() + ","
 						+ info.getReductionType().toString() + ","
 						+ info.getSeed() + "}" };

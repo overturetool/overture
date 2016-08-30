@@ -153,7 +153,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	@Override
 	public PType caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
-		return AstFactory.newASetType(pattern.getLocation(), af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation()));
+		return AstFactory.newASetSetType(pattern.getLocation(), af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation()));
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 
 		PType s = set.getType(pattern.getLocation());
 
-		return af.createPTypeAssistant().isUnknown(s) ? AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()))
+		return af.createPTypeAssistant().isUnknown(s) ? AstFactory.newASetSetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()))
 				: s;
 	}
 

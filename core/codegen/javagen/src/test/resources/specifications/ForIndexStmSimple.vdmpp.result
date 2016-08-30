@@ -1,24 +1,24 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public void op() {
 
-    public void op() {
-        long toVar_1 = 10L;
+    long toVar_1 = 10L;
 
-        for (Long i = 1L; i <= toVar_1; i++) {
-            /* skip */
-        }
+    for (Long i = 1L; i <= toVar_1; i++) {
+      /* skip */
     }
+  }
 
-    public String toString() {
-        return "A{}";
-    }
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

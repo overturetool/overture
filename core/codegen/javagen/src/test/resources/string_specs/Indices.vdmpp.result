@@ -1,27 +1,27 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    private static final String a = "hej";
+  private static final String a = "hej";
 
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        return SeqUtil.seq(SeqUtil.inds("a"), SeqUtil.inds(Entry.a),
-            SeqUtil.inds(f()));
-    }
+    return SeqUtil.seq(SeqUtil.inds("a"), SeqUtil.inds(Entry.a), SeqUtil.inds(f()));
+  }
 
-    public static String f() {
-        return "cat";
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{" + "a = " + Utils.toString(a) + "}";
-    }
+  public static String f() {
+
+    return "cat";
+  }
+
+  public String toString() {
+
+    return "Entry{" + "a = " + Utils.toString(a) + "}";
+  }
 }
 
 ##########

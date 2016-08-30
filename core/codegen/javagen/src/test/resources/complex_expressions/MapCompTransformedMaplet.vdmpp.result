@@ -1,38 +1,32 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    Boolean forAllExpResult_1 = true;
+    VDMSet set_1 = SetUtil.set(1L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && forAllExpResult_1; ) {
+      Number x = ((Number) iterator_1.next());
+      forAllExpResult_1 = !(Utils.equals(x, 10L));
     }
-
-    public static Object Run() {
-        Boolean forAllExpResult_1 = true;
-        VDMSet set_1 = SetUtil.set(1L);
-
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && forAllExpResult_1;) {
-            Number x = ((Number) iterator_1.next());
-            forAllExpResult_1 = !(Utils.equals(x, 10L));
-        }
-
-        Boolean forAllExpResult_2 = true;
-        VDMSet set_2 = SetUtil.set(2L);
-
-        for (Iterator iterator_2 = set_2.iterator();
-                iterator_2.hasNext() && forAllExpResult_2;) {
-            Number y = ((Number) iterator_2.next());
-            forAllExpResult_2 = Utils.equals(y, 2L);
-        }
-
-        return MapUtil.map(new Maplet(forAllExpResult_1, forAllExpResult_2));
+    Boolean forAllExpResult_2 = true;
+    VDMSet set_2 = SetUtil.set(2L);
+    for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext() && forAllExpResult_2; ) {
+      Number y = ((Number) iterator_2.next());
+      forAllExpResult_2 = Utils.equals(y, 2L);
     }
+    return MapUtil.map(new Maplet(forAllExpResult_1, forAllExpResult_2));
+  }
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

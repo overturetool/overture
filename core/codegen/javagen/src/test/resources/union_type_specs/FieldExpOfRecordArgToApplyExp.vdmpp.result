@@ -1,63 +1,68 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final Object r = new Rec(8L);
+    Number apply_1 = null;
+    if (r instanceof Rec) {
+      apply_1 = ((Rec) r).x;
+    } else {
+      throw new RuntimeException("Missing member: x");
     }
 
-    public static Object Run() {
-        final Object r = new Rec(8L);
-        Number apply_1 = null;
+    return id(apply_1);
+  }
 
-        if (r instanceof Rec) {
-            apply_1 = ((Rec) r).x;
-        } else {
-            throw new RuntimeException("Missing member: x");
-        }
+  public Entry() {}
 
-        return id(apply_1);
+  private static Number id(final Number x) {
+
+    return x;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class Rec implements Record {
+    public Number x;
+
+    public Rec(final Number _x) {
+
+      x = _x;
     }
 
-    private static Number id(final Number x) {
-        return x;
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof Rec)) {
+        return false;
+      }
+
+      Rec other = ((Rec) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public Rec copy() {
+
+      return new Rec(x);
     }
 
     public String toString() {
-        return "Entry{}";
+
+      return "mk_Entry`Rec" + Utils.formatFields(x);
     }
-
-    private static class Rec implements Record {
-        public Number x;
-
-        public Rec(final Number _x) {
-            x = _x;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof Rec)) {
-                return false;
-            }
-
-            Rec other = ((Rec) obj);
-
-            return Utils.equals(x, other.x);
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(x);
-        }
-
-        public Rec copy() {
-            return new Rec(x);
-        }
-
-        public String toString() {
-            return "mk_Entry`Rec" + Utils.formatFields(x);
-        }
-    }
+  }
 }
 
 ##########

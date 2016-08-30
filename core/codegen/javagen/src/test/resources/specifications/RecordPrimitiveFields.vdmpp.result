@@ -1,59 +1,71 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
+
+  public static class RecA implements Record {
+    public Number i;
+    public Character c;
+    public Number r;
+    public Number q;
+    public Number n;
+    public Number n1;
+
+    public RecA(
+        final Number _i,
+        final Character _c,
+        final Number _r,
+        final Number _q,
+        final Number _n,
+        final Number _n1) {
+
+      i = _i;
+      c = _c;
+      r = _r;
+      q = _q;
+      n = _n;
+      n1 = _n1;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecA)) {
+        return false;
+      }
+
+      RecA other = ((RecA) obj);
+
+      return (Utils.equals(i, other.i))
+          && (Utils.equals(c, other.c))
+          && (Utils.equals(r, other.r))
+          && (Utils.equals(q, other.q))
+          && (Utils.equals(n, other.n))
+          && (Utils.equals(n1, other.n1));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(i, c, r, q, n, n1);
+    }
+
+    public RecA copy() {
+
+      return new RecA(i, c, r, q, n, n1);
     }
 
     public String toString() {
-        return "A{}";
+
+      return "mk_A`RecA" + Utils.formatFields(i, c, r, q, n, n1);
     }
-
-    public static class RecA implements Record {
-        public Number i;
-        public Character c;
-        public Number r;
-        public Number q;
-        public Number n;
-        public Number n1;
-
-        public RecA(final Number _i, final Character _c, final Number _r,
-            final Number _q, final Number _n, final Number _n1) {
-            i = _i;
-            c = _c;
-            r = _r;
-            q = _q;
-            n = _n;
-            n1 = _n1;
-        }
-
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof RecA)) {
-                return false;
-            }
-
-            RecA other = ((RecA) obj);
-
-            return (Utils.equals(i, other.i)) && (Utils.equals(c, other.c)) &&
-            (Utils.equals(r, other.r)) && (Utils.equals(q, other.q)) &&
-            (Utils.equals(n, other.n)) && (Utils.equals(n1, other.n1));
-        }
-
-        public int hashCode() {
-            return Utils.hashCode(i, c, r, q, n, n1);
-        }
-
-        public RecA copy() {
-            return new RecA(i, c, r, q, n, n1);
-        }
-
-        public String toString() {
-            return "mk_A`RecA" + Utils.formatFields(i, c, r, q, n, n1);
-        }
-    }
+  }
 }
 
 ##########

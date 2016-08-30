@@ -1,94 +1,111 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class X {
-    public static final VDMMap xs = MapUtil.map(new Maplet(1L, new X()));
-    public static final VDMMap ys = MapUtil.map(new Maplet(1L,
-                MapUtil.map(new Maplet(1L, new X()))));
-    public static final VDMMap zs = MapUtil.map(new Maplet(1L,
-                MapUtil.map(
-                    new Maplet(1L, MapUtil.map(new Maplet(1L, new X()))))));
+  public static final VDMMap xs = MapUtil.map(new Maplet(1L, new X()));
+  public static final VDMMap ys = MapUtil.map(new Maplet(1L, MapUtil.map(new Maplet(1L, new X()))));
+  public static final VDMMap zs =
+      MapUtil.map(
+          new Maplet(1L, MapUtil.map(new Maplet(1L, MapUtil.map(new Maplet(1L, new X()))))));
 
-    public X() {
-    }
+  public Number m1() {
 
-    public Number m1() {
-        return ((X) Utils.get(X.xs, 1L)).f();
-    }
+    return ((X) Utils.get(X.xs, 1L)).f();
+  }
 
-    public Number m2() {
-        return ((X) Utils.get(((VDMMap) Utils.get(X.ys, 1L)), 1L)).f();
-    }
+  public Number m2() {
 
-    public Number m3() {
-        return ((X) Utils.get(((VDMMap) Utils.get(
-                ((VDMMap) Utils.get(X.zs, 1L)), 1L)), 1L)).f();
-    }
+    return ((X) Utils.get(((VDMMap) Utils.get(X.ys, 1L)), 1L)).f();
+  }
 
-    public Number m4() {
-        return new X().f();
-    }
+  public Number m3() {
 
-    public Number m5() {
-        return ((X) Utils.get(map_xs(1L, 2L), 1L)).f();
-    }
+    return ((X) Utils.get(((VDMMap) Utils.get(((VDMMap) Utils.get(X.zs, 1L)), 1L)), 1L)).f();
+  }
 
-    public Number m6() {
-        return ((X) Utils.get(((VDMMap) Utils.get(map_ys(1L, 2L), 1L)), 1L)).f();
-    }
+  public Number m4() {
 
-    public Number m7() {
-        return ((X) Utils.get(((VDMMap) Utils.get(
-                ((VDMMap) Utils.get(map_zs(1L, 2L), 1L)), 1L)), 1L)).f();
-    }
+    return new X().f();
+  }
 
-    public VDMMap map_xs(final Number pa, final Number pb) {
-        return Utils.copy(X.xs);
-    }
+  public Number m5() {
 
-    public VDMMap map_ys(final Number pa, final Number pb) {
-        return Utils.copy(X.ys);
-    }
+    return ((X) Utils.get(map_xs(1L, 2L), 1L)).f();
+  }
 
-    public VDMMap map_zs(final Number pa, final Number pb) {
-        return Utils.copy(X.zs);
-    }
+  public Number m6() {
 
-    public static Number f() {
-        return 1L;
-    }
+    return ((X) Utils.get(((VDMMap) Utils.get(map_ys(1L, 2L), 1L)), 1L)).f();
+  }
 
-    public String toString() {
-        return "X{" + "xs = " + Utils.toString(xs) + ", ys = " +
-        Utils.toString(ys) + ", zs = " + Utils.toString(zs) + "}";
-    }
+  public Number m7() {
+
+    return ((X) Utils.get(((VDMMap) Utils.get(((VDMMap) Utils.get(map_zs(1L, 2L), 1L)), 1L)), 1L))
+        .f();
+  }
+
+  public VDMMap map_xs(final Number pa, final Number pb) {
+
+    return Utils.copy(X.xs);
+  }
+
+  public VDMMap map_ys(final Number pa, final Number pb) {
+
+    return Utils.copy(X.ys);
+  }
+
+  public VDMMap map_zs(final Number pa, final Number pb) {
+
+    return Utils.copy(X.zs);
+  }
+
+  public X() {}
+
+  public static Number f() {
+
+    return 1L;
+  }
+
+  public String toString() {
+
+    return "X{"
+        + "xs = "
+        + Utils.toString(xs)
+        + ", ys = "
+        + Utils.toString(ys)
+        + ", zs = "
+        + Utils.toString(zs)
+        + "}";
+  }
 }
 
 ##########
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
-    }
+  public static Object Run() {
 
-    public static Object Run() {
-        final X x = new X();
+    final X x = new X();
+    return x.m1().longValue()
+        + x.m2().longValue()
+        + x.m3().longValue()
+        + x.m4().longValue()
+        + x.m5().longValue()
+        + x.m6().longValue()
+        + x.m7().longValue();
+  }
 
-        return x.m1().longValue() + x.m2().longValue() + x.m3().longValue() +
-        x.m4().longValue() + x.m5().longValue() + x.m6().longValue() +
-        x.m7().longValue();
-    }
+  public Entry() {}
 
-    public String toString() {
-        return "Entry{}";
-    }
+  public String toString() {
+
+    return "Entry{}";
+  }
 }
 
 ##########

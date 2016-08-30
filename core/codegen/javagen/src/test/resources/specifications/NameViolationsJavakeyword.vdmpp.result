@@ -1,24 +1,25 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class A {
-    public A() {
-    }
+  public Number double_(final Number Character) {
 
-    public Number double_(final Number Character) {
-        if (!(Utils.equals(1L, 2L))) {
-            return double_(3L);
-        } else {
-            return double_(3L);
-        }
-    }
+    if (!(Utils.equals(1L, 2L))) {
+      return double_(3L);
 
-    public String toString() {
-        return "A{}";
+    } else {
+      return double_(3L);
     }
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{}";
+  }
 }
 
 ##########

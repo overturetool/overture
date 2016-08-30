@@ -39,6 +39,7 @@ import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -47,11 +48,11 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.SSetType;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SBindIR;
 import org.overture.codegen.ir.SExpIR;
@@ -159,6 +160,7 @@ import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.expressions.AXorBoolBinaryExpIR;
 import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
+import org.overture.codegen.ir.patterns.ASeqBindIR;
 import org.overture.codegen.ir.patterns.ASetBindIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
@@ -168,98 +170,96 @@ import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
-import org.overture.codegen.logging.Logger;
 import org.overture.config.Settings;
 
 public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 {
 	@Override
-	public SExpIR caseANarrowExp(ANarrowExp node, IRInfo question) throws AnalysisException
+	public SExpIR caseANarrowExp(ANarrowExp node, IRInfo question)
+			throws AnalysisException
 	{
 		PExp exp = node.getTest();
 		PType type = null;
-		
-		if(node.getBasicType() != null)
+
+		if (node.getBasicType() != null)
 		{
 			type = node.getBasicType();
-		}
-		else if(node.getTypedef() != null)
+		} else if (node.getTypedef() != null)
 		{
 			type = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
 		}
-		
+
 		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
-		
+
 		STypeIR typeCg;
-		if(type != null)
+		if (type != null)
 		{
 			typeCg = type.apply(question.getTypeVisitor(), question);
-		}
-		else
+		} else
 		{
-			Logger.getLog().printErrorln("Could find type of narrow expression in '" + this.getClass().getSimpleName() + "'");
+			log.error("Could not find type of narrow expression");
 			typeCg = new AUnknownTypeIR();
 			typeCg.setSourceNode(new SourceNode(node));
 		}
-		
+
 		ACastUnaryExpIR cast = new ACastUnaryExpIR();
 		cast.setExp(expCg);
 		cast.setType(typeCg);
-		
+
 		return cast;
 	}
-	
+
 	@Override
 	public SExpIR caseAStateInitExp(AStateInitExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return node.getState().getInitExpression().apply(question.getExpVisitor(), question);
 	}
-	
+
 	@Override
 	public SExpIR caseAUndefinedExp(AUndefinedExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return new AUndefinedExpIR();
 	}
-	
+
 	@Override
 	public SExpIR caseAPreOpExp(APreOpExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExp exp = node.getExpression();
-		
+
 		return exp.apply(question.getExpVisitor(), question);
 	}
-	
+
 	@Override
 	public SExpIR caseAPostOpExp(APostOpExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExp exp = node.getPostexpression();
-		
+
 		return exp.apply(question.getExpVisitor(), question);
 	}
-	
+
 	@Override
 	public SExpIR caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			IRInfo question) throws AnalysisException
 	{
 		return new ANotImplementedExpIR();
 	}
-	
+
 	@Override
 	public SExpIR caseATimeExp(ATimeExp node, IRInfo question)
 			throws AnalysisException
 	{
 		STypeIR typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
+
 		ATimeExpIR timeExp = new ATimeExpIR();
 		timeExp.setType(typeCg);
-		
+
 		return timeExp;
 	}
-	
+
 	@Override
 	public SExpIR caseAThreadIdExp(AThreadIdExp node, IRInfo question)
 			throws AnalysisException
@@ -312,45 +312,46 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		return mkBasicExp;
 	}
-	
+
 	@Override
 	public SExpIR caseAIsExp(AIsExp node, IRInfo question)
 			throws AnalysisException
 	{
-		//TODO: Optional types and collection types are not yet supported.
+		// TODO: Optional types and collection types are not yet supported.
 		// Also tuple types are poorly supported
-		//Also check the IsExpTransformation
-		
+		// Also check the IsExpTransformation
+
 		PType checkedType = node.getBasicType();
-		
-		if(checkedType == null)
+
+		if (checkedType == null)
 		{
 			checkedType = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
 		}
-		
+
 		PExp exp = node.getTest();
 		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
-		
-		if(expCg == null)
+
+		if (expCg == null)
 		{
 			return null;
 		}
-		
+
 		STypeIR checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
-		
-		if(checkedTypeCg == null)
+
+		if (checkedTypeCg == null)
 		{
 			return null;
 		}
 
 		SExpIR isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
-		
+
 		if (isExp == null)
 		{
-			question.addUnsupportedNode(node, "The 'is' expression is not supported for type: " + checkedType.getClass().getName());
+			question.addUnsupportedNode(node, "The 'is' expression is not supported for type: "
+					+ checkedType.getClass().getName());
 			return null;
 		}
-		
+
 		return isExp;
 	}
 
@@ -367,12 +368,11 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		if (!(classTypeCg instanceof AClassTypeIR))
 		{
-			Logger.getLog().printErrorln("Unexpected class type encountered for "
-					+ AIsOfClassExp.class.getName()
-					+ ". Expected class type: "
-					+ AClassTypeIR.class.getName()
-					+ ". Got: "
-					+ typeCg.getClass().getName() + " at " +  node.getLocation());
+			log.error("Unexpected class type encountered for "
+					+ AIsOfClassExp.class.getName() + ". Expected class type: "
+					+ AClassTypeIR.class.getName() + ". Got: "
+					+ typeCg.getClass().getName() + " at "
+					+ node.getLocation());
 		}
 
 		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
@@ -468,10 +468,10 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	{
 		PType type = node.getType();
 
-		if (!(type instanceof ASetType))
+		if (!(type instanceof SSetType))
 		{
-			Logger.getLog().printErrorln("Unexpected set type for set enumeration expression: "
-					+ type.getClass().getName() + " at "  + node.getLocation());
+			log.error("Unexpected set type for set enumeration expression: "
+					+ type.getClass().getName() + " at " + node.getLocation());
 		}
 
 		LinkedList<PExp> members = node.getMembers();
@@ -524,7 +524,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		PExp predicate = node.getPredicate();
 
 		SMultipleBindIR multipleBind = question.getBindAssistant().convertToMultipleBind(bindCg);
-		
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR predicateCg = predicate.apply(question.getExpVisitor(), question);
 
@@ -546,12 +546,11 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		for (PMultipleBind multipleBind : bindings)
 		{
 			SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-			
-			if(multipleBindCg != null)
+
+			if (multipleBindCg != null)
 			{
 				bindingsCg.add(multipleBindCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -563,8 +562,8 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR firstCg = first.apply(question.getExpVisitor(), question);
-		SExpIR predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
-				: null;
+		SExpIR predicateCg = predicate != null
+				? predicate.apply(question.getExpVisitor(), question) : null;
 
 		ACompSetExpIR setComp = new ACompSetExpIR();
 		setComp.setBindings(bindingsCg);
@@ -607,8 +606,8 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
-		SExpIR othersCg = others != null ? others.apply(question.getExpVisitor(), question)
-				: null;
+		SExpIR othersCg = others != null
+				? others.apply(question.getExpVisitor(), question) : null;
 
 		ACasesExpIR casesExpCg = new ACasesExpIR();
 		casesExpCg.setType(typeCg);
@@ -699,12 +698,11 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		for (PExp exp : args)
 		{
 			SExpIR expCg = exp.apply(question.getExpVisitor(), question);
-			
+
 			if (expCg != null)
 			{
 				tupleExp.getArgs().add(expCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -748,7 +746,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		for (PType actualType : actualTypes)
 		{
 			STypeIR actualTypeCg = actualType.apply(question.getTypeVisitor(), question);
-			
+
 			if (actualTypeCg != null)
 			{
 				methodInst.getActualTypes().add(actualTypeCg);
@@ -776,8 +774,8 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		PExp value = node.getValue();
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpIR suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question)
-				: null;
+		SExpIR suchThatCg = suchThat != null
+				? suchThat.apply(question.getExpVisitor(), question) : null;
 		SExpIR valueCg = value.apply(question.getExpVisitor(), question);
 
 		ALetBeStExpIR letBeStExp = new ALetBeStExpIR();
@@ -810,7 +808,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		return letDefExp;
 	}
-	
+
 	@Override
 	public SExpIR caseAMuExp(AMuExp node, IRInfo question)
 			throws AnalysisException
@@ -819,41 +817,43 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		ARecordInvariantType recType = node.getRecordType();
 		PExp rec = node.getRecord();
 		List<ARecordModifier> modifiers = node.getModifiers();
-		
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		STypeIR recTypeCg = recType.apply(question.getTypeVisitor(), question);
-		
-		if(!(recTypeCg instanceof ARecordTypeIR))
+
+		if (!(recTypeCg instanceof ARecordTypeIR))
 		{
-			question.addUnsupportedNode(node, "Expected a record type. Got: " + recTypeCg);
+			question.addUnsupportedNode(node, "Expected a record type. Got: "
+					+ recTypeCg);
 			return null;
 		}
-		
+
 		SExpIR recCg = rec.apply(question.getExpVisitor(), question);
-		
+
 		List<ARecordModifierIR> modifiersCg = new LinkedList<ARecordModifierIR>();
-		
-		for(ARecordModifier m : modifiers)
+
+		for (ARecordModifier m : modifiers)
 		{
 			SModifierIR modifier = m.apply(question.getModifierVisitor(), question);
-			
-			if(modifier instanceof ARecordModifierIR)
+
+			if (modifier instanceof ARecordModifierIR)
 			{
 				modifiersCg.add((ARecordModifierIR) modifier);
 			} else
 			{
-				question.addUnsupportedNode(node, "Expected modifier to be a record modifier for the 'mu' expression. Got: " + modifier);
+				question.addUnsupportedNode(node, "Expected modifier to be a record modifier for the 'mu' expression. Got: "
+						+ modifier);
 				return null;
 			}
-			
+
 		}
-		
+
 		ARecordModExpIR recModExp = new ARecordModExpIR();
 		recModExp.setType(typeCg);
 		recModExp.setRecType((ARecordTypeIR) recTypeCg);
 		recModExp.setRec(recCg);
 		recModExp.setModifiers(modifiersCg);
-		
+
 		return recModExp;
 	}
 
@@ -891,7 +891,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		for (PExp arg : nodeArgs)
 		{
 			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
-			
+
 			if (argCg != null)
 			{
 				newExpArgs.add(argCg);
@@ -903,20 +903,18 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		return newExp;
 	}
-	
-	
 
 	@Override
 	public SExpIR caseASelfExp(ASelfExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
-		
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		
+
 		ASelfExpIR selfExpCg = new ASelfExpIR();
 		selfExpCg.setType(typeCg);
-		
+
 		return selfExpCg;
 	}
 
@@ -980,33 +978,59 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
-		ASetBind setBind = node.getSetBind();
-		PType type = node.getType();
-		PExp first = node.getFirst();
-		PExp set = node.getSetBind().getSet();
-		PExp predicate = node.getPredicate();
+		ACompSeqExpIR seqComp = new ACompSeqExpIR();
 
-		SBindIR bindTempCg = setBind.apply(question.getBindVisitor(), question);
-
-		if (!(bindTempCg instanceof ASetBindIR))
+		if (node.getSetBind() != null)
 		{
-			question.addUnsupportedNode(node, "Expected set bind for sequence comprehension. Got: "
-					+ bindTempCg);
-			return null;
+			ASetBind setBind = node.getSetBind();
+			SBindIR bindTempCg = setBind.apply(question.getBindVisitor(), question);
+
+			if (!(bindTempCg instanceof ASetBindIR))
+			{
+				question.addUnsupportedNode(node, "Expected set bind for sequence comprehension. Got: "
+						+ bindTempCg);
+				return null;
+			}
+			ASetBindIR setBindCg = (ASetBindIR) bindTempCg;
+			seqComp.setSetBind(setBindCg);
+
+			PExp set = node.getSetBind().getSet();
+			SExpIR setCg = set.apply(question.getExpVisitor(), question);
+			seqComp.setSetSeq(setCg);
+		} else
+		{
+			ASeqBind seqBind = node.getSeqBind();
+			SBindIR bindTempCg = seqBind.apply(question.getBindVisitor(), question);
+
+			if (!(bindTempCg instanceof ASeqBindIR))
+			{
+				question.addUnsupportedNode(node, "Expected seq bind for sequence comprehension. Got: "
+						+ bindTempCg);
+				return null;
+			}
+
+			ASeqBindIR seqBindCg = (ASeqBindIR) bindTempCg;
+			seqComp.setSeqBind(seqBindCg);
+
+			PExp seq = node.getSeqBind().getSeq();
+			SExpIR seqCg = seq.apply(question.getExpVisitor(), question);
+			seqComp.setSetSeq(seqCg);
 		}
 
-		ASetBindIR setBindCg = (ASetBindIR) bindTempCg;
+		PType type = node.getType();
+		PExp first = node.getFirst();
+
+		PExp predicate = node.getPredicate();
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR firstCg = first.apply(question.getExpVisitor(), question);
-		SExpIR setCg = set.apply(question.getExpVisitor(), question);
-		SExpIR predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
-				: null;
 
-		ACompSeqExpIR seqComp = new ACompSeqExpIR();
-		seqComp.setSetBind(setBindCg);
+		SExpIR predicateCg = predicate != null
+				? predicate.apply(question.getExpVisitor(), question) : null;
+
 		seqComp.setType(typeCg);
 		seqComp.setFirst(firstCg);
-		seqComp.setSet(setCg);
+
 		seqComp.setPredicate(predicateCg);
 
 		return seqComp;
@@ -1033,7 +1057,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		question.addUnsupportedNode(node, "Expected sequence or map type for '++' binary expression but got: "
 				+ node.getType());
-		
+
 		return null;
 	}
 
@@ -1055,11 +1079,10 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 			if (!(memberCg instanceof AMapletExpIR))
 			{
-				question.addUnsupportedNode(node,
-						"Got expected map enumeration member: " + memberCg);
+				question.addUnsupportedNode(node, "Got expected map enumeration member: "
+						+ memberCg);
 				return null;
-			}
-			else
+			} else
 			{
 				enumMap.getMembers().add((AMapletExpIR) memberCg);
 			}
@@ -1104,11 +1127,10 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		{
 			SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 
-			if(multipleBindCg != null)
+			if (multipleBindCg != null)
 			{
 				bindingsCg.add(multipleBindCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -1116,8 +1138,8 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR firstCg = first.apply(question.getExpVisitor(), question);
-		SExpIR predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question)
-				: null;
+		SExpIR predicateCg = predicate != null
+				? predicate.apply(question.getExpVisitor(), question) : null;
 
 		if (!(firstCg instanceof AMapletExpIR))
 		{
@@ -1206,18 +1228,18 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			throws AnalysisException
 	{
 		SExpIR eqBinExpCg = question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpIR(), question);
-		
+
 		// TODO: Update the type checker?
 		// PVJ: For some reason the type checker does not decorate the SL
 		// init expression (e.g. s = mk_StateName(1,2).) in state
 		// definitions with a type (the type is null)
 		// So this is really just to prevent null types
 		// in the IR
-		if(eqBinExpCg.getType() == null)
+		if (eqBinExpCg.getType() == null)
 		{
 			eqBinExpCg.setType(new ABoolBasicTypeIR());
 		}
-		
+
 		return eqBinExpCg;
 	}
 
@@ -1258,12 +1280,11 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		for (PExp member : members)
 		{
 			SExpIR memberCg = member.apply(question.getExpVisitor(), question);
-			
-			if(memberCg != null)
+
+			if (memberCg != null)
 			{
 				enumSeq.getMembers().add(memberCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -1326,8 +1347,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			if (argCg != null)
 			{
 				applyExp.getArgs().add(argCg);
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -1346,97 +1366,99 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		String name = node.getName().getName();
 
 		PDefinition unfolded = varDef;
-		
-		while(unfolded instanceof AInheritedDefinition)
+
+		while (unfolded instanceof AInheritedDefinition)
 		{
 			unfolded = ((AInheritedDefinition) unfolded).getSuperdef();
 		}
-		
+
 		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type)
 				&& !(unfolded instanceof SFunctionDefinition);
-		
+
 		boolean explicit = node.getName().getExplicit();
-		
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		
-		boolean isLocalDef = varDef instanceof AAssignmentDefinition || !(varDef.getNameScope() == NameScope.STATE
-				|| varDef.getNameScope() == NameScope.GLOBAL || varDef.getNameScope() == NameScope.VARSTATE || varDef.getNameScope() == NameScope.VARSANDSTATE);
-		
-		if(Settings.dialect == Dialect.VDM_PP || Settings.dialect == Dialect.VDM_RT)
+
+		boolean isLocalDef = varDef instanceof AAssignmentDefinition
+				|| !(varDef.getNameScope() == NameScope.STATE
+						|| varDef.getNameScope() == NameScope.GLOBAL
+						|| varDef.getNameScope() == NameScope.VARSTATE
+						|| varDef.getNameScope() == NameScope.VARSANDSTATE);
+
+		if (Settings.dialect == Dialect.VDM_PP
+				|| Settings.dialect == Dialect.VDM_RT)
 		{
 			SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
 			SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
-			
+
 			boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
 			boolean isExplOp = varDef instanceof SOperationDefinition;
 			boolean isExplFunc = varDef instanceof SFunctionDefinition;
-	
+
 			boolean isDefInOwningClass = owningClass == nodeParentClass
-					&& (isLocalDef || isInstanceVarDef || isExplOp || isExplFunc);
-			
-			if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+					&& (isLocalDef || isInstanceVarDef || isExplOp
+							|| isExplFunc);
+
+			if (isExplOp && !isDefInOwningClass
+					&& !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
 			{
 				ASuperVarExpIR superVarExp = new ASuperVarExpIR();
-	
+
 				superVarExp.setType(typeCg);
 				superVarExp.setIsLocal(isLocalDef);
 				superVarExp.setName(name);
 				superVarExp.setIsLambda(isLambda);
-	
+
 				return superVarExp;
-			}
-			else if (explicit && !isLocalDef && question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+			} else if (explicit && !isLocalDef
+					&& question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
 			{
 				return consExplicitVar(node.getName().getModule(), name, isLambda, typeCg, isLocalDef);
 			} else
 			{
 				return consIdVar(name, isLambda, typeCg, isLocalDef);
 			}
-		}
-		else if(Settings.dialect == Dialect.VDM_SL)
+		} else if (Settings.dialect == Dialect.VDM_SL)
 		{
 			String defModuleName = varDef.getLocation().getModule();
-			
+
 			String nodeModuleName = "DEFAULT";
-			
+
 			AModuleModules nodeModule = node.getAncestor(AModuleModules.class);
-			
-			if(nodeModule != null)
+
+			if (nodeModule != null)
 			{
 				nodeModuleName = nodeModule.getName().getName();
 			}
-			
+
 			boolean inOwningModule = defModuleName.equals(nodeModuleName);
-			
 
 			SVarExpIR res;
-			
-			if(inOwningModule)
+
+			if (inOwningModule)
 			{
 				res = consIdVar(name, isLambda, typeCg, isLocalDef);
-			}
-			else
+			} else
 			{
 				res = consExplicitVar(defModuleName, name, isLambda, typeCg, isLocalDef);
 			}
-			
-			if(question.getDeclAssistant().inFunc(node) || 
-					varDef.getAncestor(AStateDefinition.class) == null)
+
+			if (question.getDeclAssistant().inFunc(node)
+					|| varDef.getAncestor(AStateDefinition.class) == null)
 			{
 				question.registerSlStateRead(res);
 			}
-			
+
 			return res;
-		}
-		else
+		} else
 		{
-			Logger.getLog().printErrorln("Got unexpected dialect " + Settings.dialect + " in '" + this.getClass().getSimpleName() + "'");
+			log.error("Got unexpected dialect " + Settings.dialect);
 			return null;
 		}
 	}
 
-	private SVarExpIR consExplicitVar(String className, String name, boolean isLambda,
-			STypeIR typeCg, boolean isLocalDef)
+	private SVarExpIR consExplicitVar(String className, String name,
+			boolean isLambda, STypeIR typeCg, boolean isLocalDef)
 	{
 		AExplicitVarExpIR varExp = new AExplicitVarExpIR();
 
@@ -1487,7 +1509,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		for (PExp arg : nodeArgs)
 		{
 			SExpIR argCg = arg.apply(question.getExpVisitor(), question);
-			
+
 			if (argCg != null)
 			{
 				newExpArgs.add(argCg);
@@ -1788,17 +1810,16 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			PType type = node.getType();
 
 			STypeIR typeCg;
-			
+
 			/**
 			 * The operation argument passed to the 'setPriority' of the CPU class (VDM-RT) gets transformed into a
 			 * string literal where the type is missing: CPU1.setPriority(B`op, 4). The check below is really to
 			 * cirumvent this issue.
 			 */
-			if(type != null)
+			if (type != null)
 			{
 				typeCg = type.apply(question.getTypeVisitor(), question);
-			}
-			else
+			} else
 			{
 				typeCg = new AStringTypeIR();
 			}
@@ -1815,20 +1836,19 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		{
 			PType type = node.getType();
 			STypeIR strType;
-			
+
 			// Same issue with the 'setPriority' operation (see above)
-			if(type != null)
+			if (type != null)
 			{
 				strType = type.apply(question.getTypeVisitor(), question);
-			}
-			else
+			} else
 			{
 				ASeqSeqTypeIR seqTypeCg = new ASeqSeqTypeIR();
 				seqTypeCg.setEmpty(false);
 				seqTypeCg.setSeqOf(new ACharBasicTypeIR());
 				strType = seqTypeCg;
 			}
-			
+
 			return question.getExpAssistant().consCharSequence(strType, value);
 		}
 	}
@@ -1891,85 +1911,84 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		return lambdaExp;
 	}
-	
+
 	@Override
 	public SExpIR caseAHistoryExp(AHistoryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		ILexToken hop = node.getHop();
-		
-		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);	
-		
+
+		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);
+
 		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		
+
 		AHistoryExpIR history = new AHistoryExpIR();
-		
+
 		history.setHistype(hop.toString().substring(1));
 		history.setType(typeCg);
-		
+
 		AClassTypeIR innerclassType = null;
-		
-		if(enclosingClass != null)
+
+		if (enclosingClass != null)
 		{
 			innerclassType = new AClassTypeIR();
 			innerclassType.setName(enclosingClass.getName() + "_sentinel");
 			history.setSentinelType(innerclassType);
-		}
-		else
+		} else
 		{
 			String msg = "Enclosing class could not be found for history expression.";
-			Logger.getLog().printErrorln(msg);
+			log.error(msg);
 			question.addUnsupportedNode(node, msg);
-			
+
 			return null;
 		}
-		
+
 		history.setOpsname(node.getOpnames().getFirst().getName());
-		
-		if(node.getOpnames().size() == 1)
+
+		if (node.getOpnames().size() == 1)
 		{
 			return history;
-			
-		}
-		else
+
+		} else
 		{
 			APlusNumericBinaryExpIR historyCounterSum = new APlusNumericBinaryExpIR();
 			historyCounterSum.setType(typeCg.clone());
 			historyCounterSum.setLeft(history);
 
 			APlusNumericBinaryExpIR last = historyCounterSum;
-			
-			for(int i = 1; i < node.getOpnames().size() - 1; i++){
-				
+
+			for (int i = 1; i < node.getOpnames().size() - 1; i++)
+			{
+
 				String nextOpName = node.getOpnames().get(i).toString();
-				
+
 				AHistoryExpIR left = new AHistoryExpIR();
 				left.setType(typeCg.clone());
 				left.setSentinelType(innerclassType.clone());
 				left.setHistype(hop.toString().substring(1));
 				left.setOpsname(nextOpName);
-				
+
 				APlusNumericBinaryExpIR tmp = new APlusNumericBinaryExpIR();
 				tmp.setType(typeCg.clone());
 				tmp.setLeft(left);
-				
+
 				last.setRight(tmp);
-				
+
 				last = tmp;
 
 			}
-			
+
 			String lastOpName = node.getOpnames().getLast().toString();
-			
+
 			AHistoryExpIR lastHistoryExp = new AHistoryExpIR();
 			lastHistoryExp.setType(typeCg.clone());
 			lastHistoryExp.setSentinelType(innerclassType.clone());
 			lastHistoryExp.setHistype(hop.toString().substring(1));
 			lastHistoryExp.setOpsname(lastOpName);
-			
+
 			last.setRight(lastHistoryExp);
-			
+
 			return historyCounterSum;
 		}
 	}

@@ -57,7 +57,7 @@ import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
-import org.overture.codegen.logging.Logger;
+import org.overture.codegen.printer.MsgPrinter;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
@@ -82,89 +82,90 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 public class GeneralCodeGenUtils
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-	
+
 	public static boolean isVdmSourceFile(File f)
 	{
-		return isVdmPpSourceFile(f) || isVdmSlSourceFile(f) || isVdmRtSourceFile(f);
+		return isVdmPpSourceFile(f) || isVdmSlSourceFile(f)
+				|| isVdmRtSourceFile(f);
 	}
-	
+
 	public static boolean isVdmRtSourceFile(File f)
 	{
-		return hasExtension(f, new String[]{".vdmrt", ".vrt"});
+		return hasExtension(f, new String[] { ".vdmrt", ".vrt" });
 	}
-	
+
 	public static boolean isVdmSlSourceFile(File f)
 	{
-		return hasExtension(f, new String[]{".vsl", ".vdmsl"});
+		return hasExtension(f, new String[] { ".vsl", ".vdmsl" });
 	}
-	
+
 	public static boolean isVdmPpSourceFile(File f)
 	{
-		return hasExtension(f, new String[]{".vdmpp", ".vpp"});
+		return hasExtension(f, new String[] { ".vdmpp", ".vpp" });
 	}
 
 	private static boolean hasExtension(File f, String[] extensions)
 	{
-		for(String ext : extensions)
+		for (String ext : extensions)
 		{
-			if(f.getName().endsWith(ext))
+			if (f.getName().endsWith(ext))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public static String errorStr(TypeCheckResult<?> tcResult)
 	{
-		if(tcResult == null)
+		if (tcResult == null)
 		{
 			return "No type check result found!";
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
-		
-		if(!tcResult.parserResult.warnings.isEmpty())
+
+		if (!tcResult.parserResult.warnings.isEmpty())
 		{
 			sb.append("Parser warnings:").append('\n');
-			for(VDMWarning w : tcResult.parserResult.warnings)
+			for (VDMWarning w : tcResult.parserResult.warnings)
 			{
 				sb.append(w).append('\n');
 			}
 			sb.append('\n');
 		}
-		
-		if(!tcResult.parserResult.errors.isEmpty())
+
+		if (!tcResult.parserResult.errors.isEmpty())
 		{
 			sb.append("Parser errors:").append('\n');
-			for(VDMError e : tcResult.parserResult.errors)
+			for (VDMError e : tcResult.parserResult.errors)
 			{
 				sb.append(e).append('\n');
 			}
 			sb.append('\n');
 		}
-		
-		if(!tcResult.warnings.isEmpty())
+
+		if (!tcResult.warnings.isEmpty())
 		{
 			sb.append("Type check warnings:").append('\n');
-			for(VDMWarning w : tcResult.warnings)
+			for (VDMWarning w : tcResult.warnings)
 			{
 				sb.append(w).append('\n');
 			}
 			sb.append('\n');
 		}
-		
-		if(!tcResult.errors.isEmpty())
+
+		if (!tcResult.errors.isEmpty())
 		{
 			sb.append("Type check errors:").append('\n');
-			for(VDMError w : tcResult.errors)
+			for (VDMError w : tcResult.errors)
 			{
 				sb.append(w).append('\n');
 			}
 			sb.append('\n');
 		}
-		
+
 		return sb.toString();
 	}
 
@@ -203,15 +204,17 @@ public class GeneralCodeGenUtils
 
 		return typeCheckResult;
 	}
-	
+
 	public static boolean hasErrors(TypeCheckResult<?> tcResult)
 	{
-		return !tcResult.parserResult.errors.isEmpty() || !tcResult.errors.isEmpty();
+		return !tcResult.parserResult.errors.isEmpty()
+				|| !tcResult.errors.isEmpty();
 	}
 
 	public static SClassDefinition consMainClass(
 			List<SClassDefinition> mergedParseLists, String expression,
-			Dialect dialect, String mainClassName, ITempVarGen nameGen) throws VDMErrorsException, AnalysisException
+			Dialect dialect, String mainClassName, ITempVarGen nameGen)
+			throws VDMErrorsException, AnalysisException
 	{
 		ClassList classes = new ClassList();
 		classes.addAll(mergedParseLists);
@@ -242,28 +245,28 @@ public class GeneralCodeGenUtils
 		}
 
 		String entryClassTemplate = "class " + mainClassName + "\n"
-				+ "operations\n" + "public static Run : () ==> "
-				+ resultTypeStr + "\n" + "Run () == " + expression + ";\n"
-				+ "end " + mainClassName;
+				+ "operations\n" + "public static Run : () ==> " + resultTypeStr
+				+ "\n" + "Run () == " + expression + ";\n" + "end "
+				+ mainClassName;
 
 		SClassDefinition clazz = parseClass(entryClassTemplate, mainClassName, dialect);
 
 		return tcClass(classes, clazz);
 	}
-	
-	public static PExp typeCheckEntryPoint(ClassList classes, String expression, Dialect dialect)
-			throws VDMErrorsException, AnalysisException
+
+	public static PExp typeCheckEntryPoint(ClassList classes, String expression,
+			Dialect dialect) throws VDMErrorsException, AnalysisException
 	{
 		SClassDefinition defaultModule = null;
 
-		LexNameToken name =new LexNameToken("CLASS", "DEFAULT", new LexLocation());
+		LexNameToken name = new LexNameToken("CLASS", "DEFAULT", new LexLocation());
 		defaultModule = AstFactory.newAClassClassDefinition(name, null, null);
 		defaultModule.setUsed(true);
-		PExp exp = parseExpression(expression, defaultModule.getName().getName(),dialect);
+		PExp exp = parseExpression(expression, defaultModule.getName().getName(), dialect);
 
 		return tcExp(classes, exp);
 	}
-	
+
 	public static PExp tcExp(ClassList classes, PExp exp)
 			throws AnalysisException, VDMErrorsException
 	{
@@ -271,11 +274,11 @@ public class GeneralCodeGenUtils
 		ClassTypeChecker.clearErrors();
 		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
 
-		for(SClassDefinition c : classes)
+		for (SClassDefinition c : classes)
 		{
 			clearTypeData(c);
 		}
-		
+
 		classTc.typeCheck();
 
 		TypeCheckVisitor tc = new TypeCheckVisitor();
@@ -287,49 +290,48 @@ public class GeneralCodeGenUtils
 		if (TypeChecker.getErrorCount() > 0)
 		{
 			throw new VDMErrorsException(TypeChecker.getErrors());
-		}
-		else
+		} else
 		{
 			return exp;
 		}
 	}
 
 	public static SClassDefinition tcClass(ClassList classes,
-			SClassDefinition clazz) throws AnalysisException,
-			VDMErrorsException
+			SClassDefinition clazz) throws AnalysisException, VDMErrorsException
 
 	{
-		for(SClassDefinition c : classes)
+		for (SClassDefinition c : classes)
 		{
 			clearTypeData(c);
 		}
-		
+
 		TypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		ClassTypeChecker.clearErrors();
 		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
 
 		classes.add(clazz);
 		classTc.typeCheck();
-		
+
 		if (TypeChecker.getErrorCount() > 0)
 		{
 			throw new VDMErrorsException(TypeChecker.getErrors());
-		}
-		else
+		} else
 		{
 			return clazz;
 		}
 	}
 
-	private static void clearTypeData(SClassDefinition c) throws AnalysisException
+	private static void clearTypeData(SClassDefinition c)
+			throws AnalysisException
 	{
 		// Reset lex name data so the classes can be type checked again
 		c.apply(new DepthFirstAnalysisAdaptor()
 		{
 			@Override
-			public void inILexNameToken(ILexNameToken node) throws AnalysisException
+			public void inILexNameToken(ILexNameToken node)
+					throws AnalysisException
 			{
-				if(node instanceof LexNameToken && node.parent() != null)
+				if (node instanceof LexNameToken && node.parent() != null)
 				{
 					((LexNameToken) node).typeQualifier = null;
 					node.parent().replaceChild(node, node.copy());
@@ -337,37 +339,39 @@ public class GeneralCodeGenUtils
 			}
 		});
 	}
-	
+
 	public static PExp parseExpression(String expression,
-			String defaultModuleName, Dialect dialect) throws ParserException, LexException
+			String defaultModuleName, Dialect dialect)
+			throws ParserException, LexException
 	{
 		LexTokenReader ltr = new LexTokenReader(expression, dialect, Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
 		reader.setCurrentModule(defaultModuleName);
-		
+
 		return reader.readExpression();
 	}
-	
+
 	public static SClassDefinition parseClass(String classStr,
 			String defaultModuleName, Dialect dialect)
 	{
 		LexTokenReader ltr = new LexTokenReader(classStr, dialect, Console.charset);
 		ClassReader reader = new ClassReader(ltr);
 		reader.setCurrentModule(defaultModuleName);
-		
+
 		// There should be only one class
-		for(SClassDefinition clazz : reader.readClasses())
+		for (SClassDefinition clazz : reader.readClasses())
 		{
-			if(clazz.getName().getName().equals(defaultModuleName))
+			if (clazz.getName().getName().equals(defaultModuleName))
 			{
 				return clazz;
 			}
 		}
-		
+
 		return null;
 	}
 
-	public static void replaceInFile(File file, String regex, String replacement)
+	public static void replaceInFile(File file, String regex,
+			String replacement)
 	{
 		replaceInFile(file.getAbsolutePath(), regex, replacement);
 	}
@@ -392,7 +396,7 @@ public class GeneralCodeGenUtils
 			writer.close();
 		} catch (IOException ioe)
 		{
-			Logger.getLog().printErrorln("Error replacing characters in file: "
+			MsgPrinter.getPrinter().errorln("Error replacing characters in file: "
 					+ filePath);
 			ioe.printStackTrace();
 		}
@@ -434,31 +438,31 @@ public class GeneralCodeGenUtils
 
 	public static List<String> getClassesToSkip(String userInput)
 	{
-		if(userInput == null)
+		if (userInput == null)
 		{
 			return new LinkedList<String>();
 		}
-		
+
 		String[] split = userInput.split(";");
 
 		List<String> classesToSkip = new LinkedList<String>();
-		
-		for(String element : split)
+
+		for (String element : split)
 		{
 			element = element.trim();
-			
-			if(element != null && !element.isEmpty())
+
+			if (element != null && !element.isEmpty())
 			{
-				if(!classesToSkip.contains(element))
+				if (!classesToSkip.contains(element))
 				{
 					classesToSkip.add(element);
 				}
 			}
 		}
-		
+
 		return classesToSkip;
 	}
-	
+
 	public static String constructNameViolationsString(
 			InvalidNamesResult invalidNames)
 	{
@@ -489,28 +493,28 @@ public class GeneralCodeGenUtils
 			buffer.append("Temporary variable violation: " + violation + ". "
 					+ correctionMessage);
 		}
-		
+
 		for (Violation violation : objectMethodViolations)
 		{
-			buffer.append("java.lang.Object method violation: " + violation + ". "
-					+ correctionMessage);
+			buffer.append("java.lang.Object method violation: " + violation
+					+ ". " + correctionMessage);
 		}
 
 		return buffer.toString();
 	}
-	
+
 	public static String constructVarRenamingString(List<Renaming> renamings)
 	{
 		StringBuilder sb = new StringBuilder();
-		
-		for(Renaming r : renamings)
+
+		for (Renaming r : renamings)
 		{
 			sb.append(r).append('\n');
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 	public static List<Violation> asSortedList(Set<Violation> violations)
 	{
 		LinkedList<Violation> list = new LinkedList<Violation>(violations);
@@ -518,16 +522,17 @@ public class GeneralCodeGenUtils
 
 		return list;
 	}
-	
+
 	public static void printMergeErrors(List<Exception> mergeErrors)
 	{
 		for (Exception error : mergeErrors)
 		{
-			Logger.getLog().println(error.toString());
+			MsgPrinter.getPrinter().println(error.toString());
 		}
 	}
-	
-	public static void printUnsupportedIrNodes(Set<VdmNodeInfo> unsupportedNodes)
+
+	public static void printUnsupportedIrNodes(
+			Set<VdmNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
 		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
@@ -536,52 +541,57 @@ public class GeneralCodeGenUtils
 
 		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
 		{
-			Logger.getLog().print(vdmNodeInfo.getNode().toString() + 
-					" (" + vdmNodeInfo.getNode().getClass().getSimpleName() + ")");
+			MsgPrinter.getPrinter().print(vdmNodeInfo.getNode().toString()
+					+ " (" + vdmNodeInfo.getNode().getClass().getSimpleName()
+					+ ")");
 
 			ILexLocation location = locationAssistant.findLocation(vdmNodeInfo.getNode());
 
-			Logger.getLog().print(location != null ? " at [line, pos] = ["
-					+ location.getStartLine() + ", " + location.getStartPos()
-					+ "] in " + location.getFile().getName() : "");
+			MsgPrinter.getPrinter().print(location != null
+					? " at [line, pos] = [" + location.getStartLine() + ", "
+							+ location.getStartPos() + "] in "
+							+ location.getFile().getName()
+					: "");
 
 			String reason = vdmNodeInfo.getReason();
 
 			if (reason != null)
 			{
-				Logger.getLog().print(". Reason: " + reason);
+				MsgPrinter.getPrinter().print(". Reason: " + reason);
 			}
 
-			Logger.getLog().println("");
+			MsgPrinter.getPrinter().println("");
 		}
 	}
-	
+
 	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
 		LocationAssistantIR locationAssistant = assistantManager.getLocationAssistant();
-		
+
 		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
 
 		for (IrNodeInfo nodeInfo : nodesSorted)
 		{
 			INode vdmNode = locationAssistant.getVdmNode(nodeInfo);
-			Logger.getLog().print(vdmNode != null ? vdmNode.toString() : nodeInfo.getNode().getClass().getSimpleName());
+			MsgPrinter.getPrinter().print(vdmNode != null ? vdmNode.toString()
+					: nodeInfo.getNode().getClass().getSimpleName());
 
 			ILexLocation location = locationAssistant.findLocation(nodeInfo);
 
-			Logger.getLog().print(location != null ? " at [line, pos] = ["
-					+ location.getStartLine() + ", " + location.getStartPos()
-					+ "]" : "");
+			MsgPrinter.getPrinter().print(location != null
+					? " at [line, pos] = [" + location.getStartLine() + ", "
+							+ location.getStartPos() + "]"
+					: "");
 
 			String reason = nodeInfo.getReason();
 
 			if (reason != null)
 			{
-				Logger.getLog().print(". Reason: " + reason);
+				MsgPrinter.getPrinter().print(". Reason: " + reason);
 			}
 
-			Logger.getLog().println("");
+			MsgPrinter.getPrinter().println("");
 		}
 	}
 }

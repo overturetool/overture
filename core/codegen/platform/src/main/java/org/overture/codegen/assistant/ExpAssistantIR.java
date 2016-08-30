@@ -51,6 +51,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapTypeBase;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
 import org.overture.codegen.ir.STypeIR;
@@ -110,7 +111,6 @@ import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.types.SBasicTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
-import org.overture.codegen.ir.IRInfo;
 
 public class ExpAssistantIR extends AssistantBase
 {
@@ -118,7 +118,7 @@ public class ExpAssistantIR extends AssistantBase
 	{
 		super(assistantManager);
 	}
-	
+
 	public AIdentifierVarExpIR consIdVar(String name, STypeIR type)
 	{
 		AIdentifierVarExpIR var = new AIdentifierVarExpIR();
@@ -164,7 +164,8 @@ public class ExpAssistantIR extends AssistantBase
 	{
 		PType type = vdmExp.getType();
 
-		STypeIR typeCg = type != null ? type.apply(question.getTypeVisitor(), question) : null;
+		STypeIR typeCg = type != null
+				? type.apply(question.getTypeVisitor(), question) : null;
 		codeGenExp.setType(typeCg);
 
 		PExp vdmExpLeft = vdmExp.getLeft();
@@ -187,10 +188,11 @@ public class ExpAssistantIR extends AssistantBase
 		// of type NatOneNumericBasicType
 
 		return (type instanceof ANatOneNumericBasicType
-				|| type instanceof ANatNumericBasicType || type instanceof AIntNumericBasicType)
+				|| type instanceof ANatNumericBasicType
+				|| type instanceof AIntNumericBasicType)
 				&& !(exp instanceof ARealLiteralExp);
 	}
-	
+
 	public boolean isIntegerType(SExpIR exp)
 	{
 		STypeIR type = exp.getType();
@@ -199,7 +201,8 @@ public class ExpAssistantIR extends AssistantBase
 		// of type NatOneNumericBasicType
 
 		return (type instanceof ANat1NumericBasicTypeIR
-				|| type instanceof ANatNumericBasicTypeIR || type instanceof AIntNumericBasicTypeIR)
+				|| type instanceof ANatNumericBasicTypeIR
+				|| type instanceof AIntNumericBasicTypeIR)
 				&& !(exp instanceof ARealLiteralExpIR);
 	}
 
@@ -284,7 +287,7 @@ public class ExpAssistantIR extends AssistantBase
 	{
 		return consIntLiteral(0L);
 	}
-	
+
 	public AIntLiteralExpIR getDefaultNat1Value()
 	{
 		return consIntLiteral(1L);
@@ -294,7 +297,7 @@ public class ExpAssistantIR extends AssistantBase
 	{
 		return consIntLiteral(0L);
 	}
-	
+
 	public ARealLiteralExpIR getDefaultRealValue()
 	{
 		return consRealLiteral(0.0);
@@ -346,23 +349,21 @@ public class ExpAssistantIR extends AssistantBase
 
 			if (parent != null)
 			{
-				if(visitedNodes.contains(parent))
+				if (visitedNodes.contains(parent))
 				{
 					parent = null;
-				}
-				else
+				} else
 				{
 					visitedNodes.add(parent);
 				}
 			}
-			
+
 		} while (parent != null);
-		
+
 		return false;
 	}
 
-	public AHeaderLetBeStIR consHeader(SMultipleBindIR binding,
-			SExpIR suchThat)
+	public AHeaderLetBeStIR consHeader(SMultipleBindIR binding, SExpIR suchThat)
 	{
 		AHeaderLetBeStIR header = new AHeaderLetBeStIR();
 
@@ -371,7 +372,7 @@ public class ExpAssistantIR extends AssistantBase
 
 		return header;
 	}
-	
+
 	public boolean appearsInModuleStateInv(org.overture.ast.node.INode node)
 	{
 		AStateDefinition stateDef = node.getAncestor(AStateDefinition.class);
@@ -399,9 +400,9 @@ public class ExpAssistantIR extends AssistantBase
 	{
 		// The transformation of the 'and' and 'or' logical expressions also assumes that the
 		// expressions exist within a statement. However, in case it does not, the transformation
-		// is not performed. In this way, the  'and' and 'or' expressions can
+		// is not performed. In this way, the 'and' and 'or' expressions can
 		// still be used (say) in instance variable assignment.
-		
+
 		return node.getAncestor(SOperationDefinition.class) == null
 				&& node.getAncestor(SFunctionDefinition.class) == null
 				&& node.getAncestor(ANamedTraceDefinition.class) == null
@@ -417,8 +418,8 @@ public class ExpAssistantIR extends AssistantBase
 		for (PMultipleBind multipleBind : bindings)
 		{
 			SMultipleBindIR multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-			
-			if(multipleBindCg != null)
+
+			if (multipleBindCg != null)
 			{
 				bindingsCg.add(multipleBindCg);
 			}
@@ -447,7 +448,7 @@ public class ExpAssistantIR extends AssistantBase
 		}
 
 		PType expType = question.getTypeAssistant().resolve(exp.getType());
-		
+
 		if (expType instanceof AUnionType)
 		{
 			AUnionType unionType = ((AUnionType) expType).clone();
@@ -472,26 +473,26 @@ public class ExpAssistantIR extends AssistantBase
 			}
 		}
 	}
-	
+
 	public boolean isLoopCondition(SExpIR exp)
 	{
 		INode node = exp.parent();
-		
-		while(node instanceof SExpIR)
+
+		while (node instanceof SExpIR)
 		{
 			node = node.parent();
 		}
-		
-		return node instanceof AWhileStmIR || node instanceof AForLoopStmIR; 
-		//The ForLoopStmIR is only used in the transformation process. It corresponds 
-		//to the standard for loop in Java, e.g. for(int i = 0; i < 10; i++){...}
+
+		return node instanceof AWhileStmIR || node instanceof AForLoopStmIR;
+		// The ForLoopStmIR is only used in the transformation process. It corresponds
+		// to the standard for loop in Java, e.g. for(int i = 0; i < 10; i++){...}
 	}
-	
+
 	public SExpIR consIsExp(SExpIR exp, STypeIR checkedType)
 	{
 		exp = exp.clone();
 		checkedType = checkedType.clone();
-		
+
 		if (checkedType instanceof AUnionTypeIR)
 		{
 			return consGeneralIsExp(exp, checkedType);
@@ -509,28 +510,27 @@ public class ExpAssistantIR extends AssistantBase
 				|| checkedType instanceof AStringTypeIR)
 		{
 			return consGeneralIsExp(exp, checkedType);
-		}
-		else
+		} else
 		{
-			if(checkedType instanceof ASeqSeqTypeIR)
+			if (checkedType instanceof ASeqSeqTypeIR)
 			{
 				ASeqSeqTypeIR seqType = (ASeqSeqTypeIR) checkedType;
-				
-				if(seqType.getSeqOf() instanceof AUnknownTypeIR)
+
+				if (seqType.getSeqOf() instanceof AUnknownTypeIR)
 				{
 					return consGeneralIsExp(exp, checkedType);
 				}
-			}
-			else if(checkedType instanceof AMapMapTypeIR)
+			} else if (checkedType instanceof AMapMapTypeIR)
 			{
 				AMapMapTypeIR mapType = (AMapMapTypeIR) checkedType;
-				
-				if(mapType.getFrom() instanceof AUnknownTypeIR && mapType.getTo() instanceof AUnknownTypeIR)
+
+				if (mapType.getFrom() instanceof AUnknownTypeIR
+						&& mapType.getTo() instanceof AUnknownTypeIR)
 				{
 					return consGeneralIsExp(exp, checkedType);
 				}
 			}
-			
+
 			return null;
 		}
 	}
@@ -548,7 +548,7 @@ public class ExpAssistantIR extends AssistantBase
 
 		return equals;
 	}
-	
+
 	public SExpIR consGeneralIsExp(SExpIR expCg, STypeIR checkedTypeCg)
 	{
 		AGeneralIsExpIR generalIsExp = new AGeneralIsExpIR();
@@ -559,17 +559,17 @@ public class ExpAssistantIR extends AssistantBase
 
 		return generalIsExp;
 	}
-	
+
 	public ATupleIsExpIR consTupleIsExp(SExpIR exp, STypeIR checkedType)
 	{
 		ATupleIsExpIR tupleIsExp = new ATupleIsExpIR();
 		tupleIsExp.setType(new ABoolBasicTypeIR());
 		tupleIsExp.setExp(exp);
 		tupleIsExp.setCheckedType(checkedType);
-		
+
 		return tupleIsExp;
 	}
-	
+
 	public SExpIR consIsExpBasicType(SExpIR expCg, STypeIR checkedType)
 	{
 		SIsExpIR basicIsExp = null;
@@ -598,8 +598,7 @@ public class ExpAssistantIR extends AssistantBase
 		} else if (checkedType instanceof ATokenBasicTypeIR)
 		{
 			basicIsExp = new ATokenIsExpIR();
-		}
-		else
+		} else
 		{
 			return null;
 		}
@@ -609,14 +608,14 @@ public class ExpAssistantIR extends AssistantBase
 
 		return basicIsExp;
 	}
-	
+
 	public SVarExpIR idStateDesignatorToExp(AIdentifierStateDesignatorIR node)
 	{
-		if(node.getExplicit())
+		if (node.getExplicit())
 		{
 			AClassTypeIR classType = new AClassTypeIR();
 			classType.setName(node.getClassName());
-			
+
 			AExplicitVarExpIR explicitVar = new AExplicitVarExpIR();
 			explicitVar.setClassType(classType);
 			explicitVar.setIsLambda(false);
@@ -625,42 +624,40 @@ public class ExpAssistantIR extends AssistantBase
 			explicitVar.setSourceNode(node.getSourceNode());
 			explicitVar.setTag(node.getTag());
 			explicitVar.setType(node.getType().clone());
-			
+
 			return explicitVar;
-		}
-		else
+		} else
 		{
 			AIdentifierVarExpIR idVar = consIdVar(node.getName(), node.getType().clone());
 			idVar.setTag(node.getTag());
 			idVar.setSourceNode(node.getSourceNode());
 			idVar.setIsLocal(node.getIsLocal());
-			
+
 			return idVar;
 		}
 	}
-	
+
 	public boolean isOld(String name)
 	{
 		return name != null && name.startsWith("_");
 	}
-	
+
 	public String oldNameToCurrentName(String oldName)
 	{
-		if(oldName != null && oldName.startsWith("_"))
+		if (oldName != null && oldName.startsWith("_"))
 		{
 			return oldName.substring(1);
-		}
-		else
+		} else
 		{
 			return oldName;
 		}
 	}
-	
+
 	public boolean isResult(String name)
 	{
 		return name != null && name.equals("RESULT");
 	}
-	
+
 	public SExpIR findSubject(SExpIR next)
 	{
 		while (next instanceof AFieldExpIR || next instanceof AMapSeqGetExpIR
@@ -680,15 +677,15 @@ public class ExpAssistantIR extends AssistantBase
 
 		return next;
 	}
-	
+
 	public AUndefinedExpIR consUndefinedExp()
 	{
 		AUndefinedExpIR undefExp = new AUndefinedExpIR();
 		undefExp.setType(new AUnknownTypeIR());
-		
+
 		return undefExp;
 	}
-	
+
 	public ANullExpIR consNullExp()
 	{
 		ANullExpIR nullExp = new ANullExpIR();
@@ -696,8 +693,9 @@ public class ExpAssistantIR extends AssistantBase
 
 		return nullExp;
 	}
-	
-	public STypeIR handleMapType(SMapTypeBase node, IRInfo question, boolean isInjective) throws AnalysisException
+
+	public STypeIR handleMapType(SMapTypeBase node, IRInfo question,
+			boolean isInjective) throws AnalysisException
 	{
 		PType from = node.getFrom();
 		PType to = node.getTo();
@@ -710,23 +708,21 @@ public class ExpAssistantIR extends AssistantBase
 		mapType.setFrom(fromCg);
 		mapType.setTo(toCg);
 		mapType.setEmpty(empty);
-		
+
 		mapType.setInjective(isInjective);
 
 		return mapType;
 	}
-	
+
 	public boolean isUndefined(SExpIR exp)
 	{
-		if(exp instanceof ACastUnaryExpIR)
+		if (exp instanceof ACastUnaryExpIR)
 		{
 			return isUndefined(((ACastUnaryExpIR) exp).getExp());
-		}
-		else if(exp instanceof AUndefinedExpIR)
+		} else if (exp instanceof AUndefinedExpIR)
 		{
 			return true;
-		}
-		else
+		} else
 		{
 			return false;
 		}

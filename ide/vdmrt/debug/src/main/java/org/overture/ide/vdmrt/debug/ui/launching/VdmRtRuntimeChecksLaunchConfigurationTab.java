@@ -70,7 +70,7 @@ public class VdmRtRuntimeChecksLaunchConfigurationTab extends
 		super.initializeFrom(configuration);
 		try
 		{
-			checkBoxEnableRealTimeLog.setSelection(configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, true));
+			checkBoxEnableRealTimeLog.setSelection(configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING_DEFAULT));
 		} catch (CoreException e)
 		{
 			// TODO Auto-generated catch block
@@ -82,6 +82,6 @@ public class VdmRtRuntimeChecksLaunchConfigurationTab extends
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		super.setDefaults(configuration);
-		configuration.setAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, true);
+		configuration.setAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING_DEFAULT);
 	}
 }

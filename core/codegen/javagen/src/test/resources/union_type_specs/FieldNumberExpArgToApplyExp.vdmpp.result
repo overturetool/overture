@@ -1,38 +1,36 @@
-import org.overture.codegen.runtime.*;
 
 import java.util.*;
-
+import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Entry {
-    public Entry() {
+  public static Object Run() {
+
+    final VDMSeq xs = SeqUtil.seq(Tuple.mk_(5L, true), Tuple.mk_(true, 2L, 3L));
+    final Object x = Utils.copy(Utils.get(xs, 2L));
+    Object apply_1 = null;
+    if (x instanceof Tuple) {
+      apply_1 = ((Object) ((Tuple) x).get(0));
+    } else if (x instanceof Tuple) {
+      apply_1 = ((Object) ((Tuple) x).get(0));
+    } else {
+      throw new RuntimeException("Missing member: field number 1");
     }
 
-    public static Object Run() {
-        final VDMSeq xs = SeqUtil.seq(Tuple.mk_(5L, true),
-                Tuple.mk_(true, 2L, 3L));
-        final Object x = Utils.copy(Utils.get(xs, 2L));
+    return id(((Boolean) apply_1));
+  }
 
-        Object apply_1 = null;
+  public Entry() {}
 
-        if (x instanceof Tuple) {
-            apply_1 = ((Object) ((Tuple) x).get(0));
-        } else if (x instanceof Tuple) {
-            apply_1 = ((Object) ((Tuple) x).get(0));
-        } else {
-            throw new RuntimeException("Missing member: field number 1");
-        }
+  private static Boolean id(final Boolean x) {
 
-        return id(((Boolean) apply_1));
-    }
+    return x;
+  }
 
-    private static Boolean id(final Boolean x) {
-        return x;
-    }
+  public String toString() {
 
-    public String toString() {
-        return "Entry{}";
-    }
+    return "Entry{}";
+  }
 }
 
 ##########

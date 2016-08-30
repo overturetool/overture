@@ -165,8 +165,7 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 	@Override
 	public String toString()
 	{
-		return repeat.toString()
-				+ (from == 1 && to == 1 ? "" : from == to ? "{" + from + "}"
-						: "{" + from + ", " + to + "}");
+		return repeat.toString() + (from == 1 && to == 1 ? ""
+				: from == to ? "{" + from + "}" : "{" + from + ", " + to + "}");
 	}
 }

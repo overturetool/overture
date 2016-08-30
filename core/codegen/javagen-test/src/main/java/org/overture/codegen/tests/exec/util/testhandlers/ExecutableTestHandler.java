@@ -44,19 +44,14 @@ public abstract class ExecutableTestHandler extends TestHandler
 	private static final String MAIN_CLASS = "Exp";
 
 	public static final String SERIALIZE_METHOD = "  public static void serialize(File file){\n"
-			+ "     try{\n"
-			+ "       //File file = new File(\"myData.bin\");\n"
+			+ "     try{\n" + "       //File file = new File(\"myData.bin\");\n"
 			+ "	      FileOutputStream fout = new FileOutputStream( file );\n"
 			+ "	      ObjectOutputStream oos = new ObjectOutputStream(fout);\n"
-			+ "       Object exp = null;\n"
-			+ "       try{\n"
-			+ "         exp = exp();\n"
-			+ "       } catch(Exception e){\n"
-			+ "         exp = e.getMessage();\n"
-			+ "       }\n"
+			+ "       Object exp = null;\n" + "       try{\n"
+			+ "         exp = exp();\n" + "       } catch(Exception e){\n"
+			+ "         exp = e.getMessage();\n" + "       }\n"
 			+ "		  java.lang.System.out.println(exp);\n"
-			+ "	      oos.writeObject( exp );\n"
-			+ "	      oos.close();\n"
+			+ "	      oos.writeObject( exp );\n" + "	      oos.close();\n"
 			+ "     }catch(Exception ex){\n"
 			+ "	      ex.printStackTrace();\n " + "     }\n" + "  }\n";
 
@@ -69,33 +64,24 @@ public abstract class ExecutableTestHandler extends TestHandler
 			methodsMerged.append(method).append("\n\n");
 		}
 
-		return "  import java.io.File;\n"
-				+ "import java.io.FileOutputStream;\n"
+		return "  import java.io.File;\n" + "import java.io.FileOutputStream;\n"
 				+ "import java.io.ObjectOutputStream;\n"
 				+ "import org.overture.codegen.runtime.*;\n"
 				+ "import org.overture.codegen.runtime.traces.*;\n"
-				+ "import java.util.*;\n\n"
-				+ getMainClassAnnotation() + "\n"
-				+ "public class Exp {\n"
-				+ "  public static Object exp()\n"
-				+ "  {\n"
-				+ "    return %s;\n"
-				+ "  }\n\n"
-				+ "  public static void main(String[] args)"
-				+ "  {\n"
-				+ "  if(args.length < 1)\n"
-				+ "  {\n"
+				+ "import java.util.*;\n\n" + getMainClassAnnotation() + "\n"
+				+ "public class Exp {\n" + "  public static Object exp()\n"
+				+ "  {\n" + "    return %s;\n" + "  }\n\n"
+				+ "  public static void main(String[] args)" + "  {\n"
+				+ "  if(args.length < 1)\n" + "  {\n"
 				+ " \t java.lang.System.err.println(\"Error: Missing serilization file path\"); java.lang.System.exit( 1);"
 				+ "  }\n" + "      serialize(new File(args[0]));\n" + "  }\n\n"
 				+ SERIALIZE_METHOD + methodsMerged + "}\n";
 	}
 
-
 	public String getMainClassAnnotation()
 	{
 		return "";
 	}
-
 
 	public ExecutableTestHandler(Release release, Dialect dialect)
 	{
@@ -110,8 +96,8 @@ public abstract class ExecutableTestHandler extends TestHandler
 		return new LinkedList<String>();
 	}
 
-	public void injectArgIntoMainClassFile(File parent, String body, String rootPackage)
-			throws IOException
+	public void injectArgIntoMainClassFile(File parent, String body,
+			String rootPackage) throws IOException
 	{
 		File mainClassFile = getMainClassFile(parent);
 		writeToFile(String.format(getMainClass(rootPackage), body), mainClassFile);
@@ -125,10 +111,11 @@ public abstract class ExecutableTestHandler extends TestHandler
 	public ExecutionResult runJava(File folder)
 	{
 		File cgRuntime = new File(org.overture.codegen.runtime.EvaluatePP.class.getProtectionDomain().getCodeSource().getLocation().getFile());
-		return produceExecResult(folder, new String[]{/* no args */}, cgRuntime);
+		return produceExecResult(folder, new String[] { /* no args */ }, cgRuntime);
 	}
 
-	public static ExecutionResult produceExecResult(File folder, String[] preArgs, File... cpJars)
+	public static ExecutionResult produceExecResult(File folder,
+			String[] preArgs, File... cpJars)
 	{
 		FileInputStream fin = null;
 		ObjectInputStream ois = null;
@@ -137,7 +124,9 @@ public abstract class ExecutableTestHandler extends TestHandler
 		{
 			String resultFilename = String.format("serilizedExecutionResult-%d.bin", rand.nextLong());
 
-			String processOutput = JavaExecution.run(ExecutableTestHandler.MAIN_CLASS, preArgs, new String[] { resultFilename }, folder, GeneralUtils.concat(new File[]{folder}, cpJars));
+			String processOutput = JavaExecution.run(ExecutableTestHandler.MAIN_CLASS, preArgs, new String[] {
+					resultFilename }, folder, GeneralUtils.concat(new File[] {
+							folder }, cpJars));
 
 			File dataFile = new File(folder, resultFilename);
 			dataFile.deleteOnExit();

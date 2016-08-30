@@ -1,66 +1,75 @@
 package project.Entrytypes;
 
+import java.util.*;
 import org.overture.codegen.runtime.*;
 import org.overture.codegen.vdm2jml.runtime.*;
 
-import java.util.*;
-
-
-//@ nullable_by_default
 @SuppressWarnings("all")
+//@ nullable_by_default
+
 final public class B implements Record {
-    public Number x;
+  public Number x;
 
-    public B(final Number _x) {
-        //@ assert Utils.is_nat(_x);
-        x = _x;
+  public B(final Number _x) {
 
-        //@ assert Utils.is_nat(x);
+    //@ assert Utils.is_nat(_x);
+
+    x = _x;
+    //@ assert Utils.is_nat(x);
+
+  }
+  /*@ pure @*/
+
+  public boolean equals(final Object obj) {
+
+    if (!(obj instanceof project.Entrytypes.B)) {
+      return false;
     }
 
-    /*@ pure @*/
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof project.Entrytypes.B)) {
-            return false;
-        }
+    project.Entrytypes.B other = ((project.Entrytypes.B) obj);
 
-        project.Entrytypes.B other = ((project.Entrytypes.B) obj);
+    return Utils.equals(x, other.x);
+  }
+  /*@ pure @*/
 
-        return Utils.equals(x, other.x);
-    }
+  public int hashCode() {
 
-    /*@ pure @*/
-    public int hashCode() {
-        return Utils.hashCode(x);
-    }
+    return Utils.hashCode(x);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public project.Entrytypes.B copy() {
-        return new project.Entrytypes.B(x);
-    }
+  public project.Entrytypes.B copy() {
 
-    /*@ pure @*/
-    public String toString() {
-        return "mk_Entry`B" + Utils.formatFields(x);
-    }
+    return new project.Entrytypes.B(x);
+  }
+  /*@ pure @*/
 
-    /*@ pure @*/
-    public Number get_x() {
-        Number ret_4 = x;
+  public String toString() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_4));
-        return ret_4;
-    }
+    return "mk_Entry`B" + Utils.formatFields(x);
+  }
+  /*@ pure @*/
 
-    public void set_x(final Number _x) {
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(_x));
-        x = _x;
+  public Number get_x() {
 
-        //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(x));
-    }
+    Number ret_4 = x;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(ret_4));
 
-    /*@ pure @*/
-    public Boolean valid() {
-        return true;
-    }
+    return ret_4;
+  }
+
+  public void set_x(final Number _x) {
+
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(_x));
+
+    x = _x;
+    //@ assert project.Entry.invChecksOn ==> (Utils.is_nat(x));
+
+  }
+  /*@ pure @*/
+
+  public Boolean valid() {
+
+    return true;
+  }
 }
