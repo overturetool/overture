@@ -7,9 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.codegen.ir.CodeGenBase;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.printer.MsgPrinter;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
 
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -87,11 +91,11 @@ public class RefactoringMain {
 		
 		if (refacMode == RefactoringMode.SL_SPEC)
 		{
-			//handleSl(files, irSettings, javaSettings, printClasses, outputDir, separateTestCode);
+			handleSl(files, printClasses);
 			
 		} else if (refacMode == RefactoringMode.OO_SPEC)
 		{
-			//handleOo(files, irSettings, javaSettings, Settings.dialect, printClasses, outputDir, separateTestCode);
+			handleOo(files, Settings.dialect, printClasses);
 		} else
 		{
 			MsgPrinter.getPrinter().errorln("Unexpected dialect: "
@@ -100,11 +104,10 @@ public class RefactoringMain {
 		
 	}
 	
-	public static void handleSl(List<File> files, boolean printCode, File outputDir,
-			boolean separateTestCode)
+	public static void handleSl(List<File> files, boolean printCode)
 	{
-//		try
-//		{
+		try
+		{
 			
 			Settings.dialect = Dialect.VDM_SL;
 			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
@@ -116,18 +119,54 @@ public class RefactoringMain {
 				return;
 			}
 			
-			//JavaCodeGen vdmCodGen = new JavaCodeGen();
+			RefactoringBase refactoringBase = new RefactoringBase();
 			
-			//GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
+			GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result));
 
 			//processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
-//		} catch (AnalysisException e)
-//		{
-//			MsgPrinter.getPrinter().println("Could not code generate model: "
-//					+ e.getMessage());
-//		}
+		} catch (AnalysisException e)
+		{
+			MsgPrinter.getPrinter().println("Could not code generate model: "
+					+ e.getMessage());
+		}
 	}
+	
+	public static void handleOo(List<File> files, Dialect dialect, boolean printCode)
+	{
+		try
+		{
+			RefactoringBase refactoringBase = new RefactoringBase();
+
+			TypeCheckResult<List<SClassDefinition>> tcResult = null;
+
+			if (dialect == Dialect.VDM_PP)
+			{
+				tcResult = TypeCheckerUtil.typeCheckPp(files);
+			} else
+			{
+				tcResult = TypeCheckerUtil.typeCheckRt(files);
+			}
+
+			if (GeneralCodeGenUtils.hasErrors(tcResult))
+			{
+				MsgPrinter.getPrinter().error("Found errors in VDM model:");
+				MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
+				return;
+			}
+
+			GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result));
+
+			//processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
+
+		} catch (AnalysisException e)
+		{
+			MsgPrinter.getPrinter().println("Could not code generate model: "
+					+ e.getMessage());
+
+		}
+	}
+
 	
 	public static void usage(String msg)
 	{
