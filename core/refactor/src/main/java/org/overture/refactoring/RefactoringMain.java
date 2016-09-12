@@ -1,21 +1,27 @@
 package org.overture.refactoring;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
-
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -156,8 +162,8 @@ public class RefactoringMain {
 			}
 
 			GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result));
-
-			//processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
+			test(data);
+//			processData(printCode, files.get(0), data);
 
 		} catch (AnalysisException e)
 		{
@@ -178,4 +184,103 @@ public class RefactoringMain {
 
 		System.exit(1);
 	}
+	
+	public static void processData(boolean printCode, final File outputDir,
+			GeneratedData data)
+	{
+
+		MsgPrinter.getPrinter().println("");
+
+		if (outputDir != null)
+		{
+
+		}
+
+		if (printCode)
+		{
+			MsgPrinter.getPrinter().println("**********");
+			MsgPrinter.getPrinter().println("Content here:");
+			MsgPrinter.getPrinter().println("\n");
+		}
+
+		List<Renaming> allRenamings = data.getAllRenamings();
+
+		if (!allRenamings.isEmpty())
+		{
+			MsgPrinter.getPrinter().println("\nFollowing renamings of content have been made: ");
+
+			MsgPrinter.getPrinter().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));
+		}
+
+		if (data.getWarnings() != null && !data.getWarnings().isEmpty())
+		{
+			MsgPrinter.getPrinter().println("");
+			for (String w : data.getWarnings())
+			{
+				MsgPrinter.getPrinter().println("[WARNING] " + w);
+			}
+		}
+	}
+	
+	public static void test(GeneratedData data){
+		BufferedReader br = null;
+        int lineCount = 0;
+        String line = null, newLine = "";
+		List<Renaming> allRenamings = data.getAllRenamings();
+
+		if (!allRenamings.isEmpty())
+		{
+			
+//			Collections.reverse(allRenamings); 
+	        try {
+				br = new BufferedReader(new FileReader("D:\\test.txt"));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+	        Map<Integer,Renaming> renamingMap = new HashMap<Integer,Renaming>();
+
+	        for(Iterator<Renaming> i = allRenamings.iterator(); i.hasNext(); ) {
+	            Renaming item = i.next();
+	            renamingMap.put(item.getLoc().getEndLine(), item);
+	        }
+	       
+	        
+	            try {
+					while ((line = br.readLine()) != null)   
+					{
+	
+					    StringBuilder buf = new StringBuilder(line);
+					              // Print the content on the console
+					    if(renamingMap.containsKey(lineCount+1)){ 
+						   
+					    	List<Renaming> lineRenamings = new ArrayList<Renaming>();
+					    	
+					    	for (Map.Entry<Integer, Renaming> entry : renamingMap.entrySet()) {
+					    		  if (entry.getValue().getLoc().getEndLine() == lineCount+1) {
+					    			  lineRenamings.add(entry.getValue());
+					    		  }
+				    		}
+					       
+				    	  for(Iterator<Renaming> i = lineRenamings.iterator(); i.hasNext(); ) {
+					            Renaming item = i.next();
+					            String endPiece = buf.substring(item.getLoc().getEndPos()-1);
+					            String startPiece = buf.substring(0,item.getLoc().getStartPos());
+					            newLine = startPiece + item.getNewName() + endPiece;
+					            buf.replace(0,buf.length(), newLine);
+					        }
+				    	  System.out.println(newLine);
+					    }else{
+					    	
+					    	System.out.println(line);
+					    }
+					    lineCount++;
+					}
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+			}
+		}
 }

@@ -94,10 +94,10 @@ public class RefactoringBase {
 
 		List<Renaming> allRenamings = new LinkedList<Renaming>();
 
-//		RefactoringRenameCollector renamingsCollector = new RefactoringRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
-		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
-//		Renamer renamer = new Renamer();
-		VarRenamer renamer = new VarRenamer();
+		RefactoringRenameCollector renamingsCollector = new RefactoringRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
+//		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
+		Renamer renamer = new Renamer();
+//		VarRenamer renamer = new VarRenamer();
 		for (INode node : mergedParseLists)
 		{
 			Set<Renaming> currentRenamings = renamer.computeRenamings(node, renamingsCollector); //TODO det er nok her det går galt

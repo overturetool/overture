@@ -12,6 +12,8 @@ import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -22,7 +24,16 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.ALambdaExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapCompMapExp;
+import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -33,9 +44,22 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.statements.ACasesStm;
+import org.overture.ast.statements.AForAllStm;
+import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATixeStmtAlternative;
+import org.overture.ast.statements.ATrapStm;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.PType;
 import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.IdDesignatorOccurencesCollector;
 import org.overture.codegen.analysis.vdm.IdOccurencesCollector;
@@ -44,8 +68,9 @@ import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
-public class RefactoringRenameCollector  extends DepthFirstAnalysisAdaptor
+public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 {
 	private ITypeCheckerAssistantFactory af;
 
@@ -110,6 +135,170 @@ public class RefactoringRenameCollector  extends DepthFirstAnalysisAdaptor
 		visitModuleDefs(node.getDefinitions(), node);
 	}
 
+	// For operations and functions it works as a single pattern
+	// Thus f(1,mk_(2,2),5) will fail
+	// public f : nat * (nat * nat) * nat -> nat
+	// f (b,mk_(b,b), a) == b;
+
+	@Override
+	public void caseAExplicitOperationDefinition(
+			AExplicitOperationDefinition node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
+
+		openScope(defInfo, node);
+
+		node.getBody().apply(this);
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseAExplicitFunctionDefinition(
+			AExplicitFunctionDefinition node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
+
+		openScope(defInfo, node);
+
+		node.getBody().apply(this);
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseABlockSimpleBlockStm(ABlockSimpleBlockStm node)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getAssignmentDefs(), af);
+
+		visitDefs(defInfo.getNodeDefs());
+
+		openScope(defInfo, node);
+
+		visitStms(node.getStatements());
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseALetDefExp(ALetDefExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
+
+		visitDefs(defInfo.getNodeDefs());
+
+		openScope(defInfo, node);
+
+		node.getExpression().apply(this);
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseALetStm(ALetStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
+
+		visitDefs(defInfo.getNodeDefs());
+
+		openScope(defInfo, node);
+
+		node.getStatement().apply(this);
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseALetBeStExp(ALetBeStExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		node.getDef().apply(this);
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
+
+		openScope(defInfo, node);
+
+		if (node.getSuchThat() != null)
+		{
+			node.getSuchThat().apply(this);
+		}
+
+		node.getValue().apply(this);
+
+		endScope(defInfo);
+	}
+
+	/*
+	 * Exists1 needs no treatment it uses only a bind
+	 */
+
+	@Override
+	public void caseAForAllExp(AForAllExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
+	}
+
+	@Override
+	public void caseAExistsExp(AExistsExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
+	}
+
+	/*
+	 * Sequence comp needs no treatment it uses only a bind
+	 */
+
+	@Override
+	public void caseASetCompSetExp(ASetCompSetExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		handleMultipleBindConstruct(node, node.getBindings(), node.getFirst(), node.getPredicate());
+	}
+
 	@Override
 	public void caseAMapCompMapExp(AMapCompMapExp node) throws AnalysisException
 	{
@@ -122,11 +311,336 @@ public class RefactoringRenameCollector  extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
+	public void caseALetBeStStm(ALetBeStStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		node.getDef().apply(this);
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
+
+		openScope(defInfo, node);
+
+		if (node.getSuchThat() != null)
+		{
+			node.getSuchThat().apply(this);
+		}
+
+		node.getStatement().apply(this);
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseALetBeStBindingTraceDefinition(
+			ALetBeStBindingTraceDefinition node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		node.getDef().apply(this);
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
+
+		openScope(defInfo, node);
+
+		if (node.getStexp() != null)
+		{
+			node.getStexp().apply(this);
+		}
+
+		node.getBody().apply(this);
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseALambdaExp(ALambdaExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
+
+		openScope(defInfo, node);
+
+		node.getExpression().apply(this);
+
+		endScope(defInfo);
+	}
+
+	@Override
+	public void caseATixeStm(ATixeStm node) throws AnalysisException
+	{
+		if (node.getBody() != null)
+		{
+			node.getBody().apply(this);
+		}
+
+		// The trap alternatives will be responsible for opening/ending the scope
+		for (ATixeStmtAlternative trap : node.getTraps())
+		{
+			trap.apply(this);
+		}
+	}
+
+	@Override
+	public void caseATixeStmtAlternative(ATixeStmtAlternative node)
+			throws AnalysisException
+	{
+		openScope(node.getPatternBind(), node.getPatternBind().getDefs(), node.getStatement());
+
+		node.getStatement().apply(this);
+
+		// End scope
+		for (PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+
+	@Override
+	public void caseATrapStm(ATrapStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if (node.getBody() != null)
+		{
+			node.getBody().apply(this);
+		}
+
+		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getWith());
+
+		if (node.getWith() != null)
+		{
+			node.getWith().apply(this);
+		}
+
+		for (PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+
+	@Override
+	public void caseAForPatternBindStm(AForPatternBindStm node)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if (node.getExp() != null)
+		{
+			node.getExp().apply(this);
+		}
+
+		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getStatement());
+
+		node.getStatement().apply(this);
+
+		for (PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+
+	@Override
+	public void caseAForAllStm(AForAllStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if (node.getSet() != null)
+		{
+			node.getSet().apply(this);
+		}
+
+		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
+		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
+
+		for (PDefinition d : defs)
+		{
+			openLoop(d.getName(), node.getPattern(), node.getStatement());
+		}
+
+		node.getStatement().apply(this);
+
+		for (PDefinition def : defs)
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+
+	@Override
+	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if (node.getFrom() != null)
+		{
+			node.getFrom().apply(this);
+		}
+
+		if (node.getTo() != null)
+		{
+			node.getTo().apply(this);
+		}
+
+		if (node.getBy() != null)
+		{
+			node.getBy().apply(this);
+		}
+
+		ILexNameToken var = node.getVar();
+
+		openLoop(var, null, node.getStatement());
+
+		node.getStatement().apply(this);
+
+		localDefsInScope.remove(var);
+	}
+
+	@Override
+	public void caseACasesStm(ACasesStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		handleCaseNode(node.getExp(), node.getCases(), node.getOthers());
+	}
+
+	@Override
+	public void caseACasesExp(ACasesExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		handleCaseNode(node.getExpression(), node.getCases(), node.getOthers());
+	}
+
+	@Override
+	public void caseACaseAlternativeStm(ACaseAlternativeStm node)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		handleCase(node.getDefs(), node.getPattern(), node.getResult());
+	}
+
+	@Override
+	public void caseACaseAlternative(ACaseAlternative node)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		handleCase(node.getDefs(), node.getPattern(), node.getResult());
+	}
+
+	@Override
 	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
 	{
 		// No need to visit names
 	}
 
+	private void handleCaseNode(PExp cond, List<? extends INode> cases,
+			INode others) throws AnalysisException
+	{
+		if (cond != null)
+		{
+			cond.apply(this);
+		}
+
+		// The cases will be responsible for opening/ending the scope
+		for (INode c : cases)
+		{
+			c.apply(this);
+		}
+
+		if (others != null)
+		{
+			others.apply(this);
+		}
+	}
+
+	private void openLoop(ILexNameToken var, INode varParent, PStm body)
+			throws AnalysisException
+	{
+		if (!contains(var))
+		{
+			localDefsInScope.add(var);
+		} else
+		{
+			String newName = computeNewName(var.getName());
+
+			registerRenaming(var, newName);
+
+			if (varParent != null)
+			{
+				Set<AIdentifierPattern> idPatterns = collectIdOccurences(var, varParent);
+
+				for (AIdentifierPattern id : idPatterns)
+				{
+					registerRenaming(id.getName(), newName);
+				}
+			}
+
+			Set<AVariableExp> vars = collectVarOccurences(var.getLocation(), body);
+
+			for (AVariableExp varExp : vars)
+			{
+				registerRenaming(varExp.getName(), newName);
+			}
+
+			Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(var.getLocation(), body);
+
+			for (AIdentifierStateDesignator id : idStateDesignators)
+			{
+				registerRenaming(id.getName(), newName);
+			}
+		}
+	}
+
+	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern,
+			INode result) throws AnalysisException
+	{
+		// Do not visit the conditional exp (cexp)
+		openScope(pattern, localDefs, result);
+
+		result.apply(this);
+
+		// End scope
+		for (PDefinition def : localDefs)
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
 
 	private void handleMultipleBindConstruct(INode node,
 			LinkedList<PMultipleBind> bindings, PExp first, PExp pred)
@@ -325,6 +839,21 @@ public class RefactoringRenameCollector  extends DepthFirstAnalysisAdaptor
 		return renamings;
 	}
 
+	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
+	{
+		SFunctionDefinitionAssistantTC funcAssistant = this.af.createSFunctionDefinitionAssistant();
+		List<List<PDefinition>> paramDefs = funcAssistant.getParamDefinitions(node, node.getType(), node.getParamPatternList(), node.getLocation());
+
+		List<PDefinition> paramDefFlattened = new LinkedList<PDefinition>();
+
+		for (List<PDefinition> list : paramDefs)
+		{
+			paramDefFlattened.addAll(list);
+		}
+
+		return paramDefFlattened;
+	}
+
 	private boolean proceed(INode node)
 	{
 		if (node == enclosingDef)
@@ -407,14 +936,18 @@ public class RefactoringRenameCollector  extends DepthFirstAnalysisAdaptor
 
 			List<? extends PDefinition> localDefs = defInfo.getLocalDefs(parentDef);
 
-			for (PDefinition localDef : localDefs)
+			for (PDefinition localDef : localDefs) // check if it matches position
 			{
+				if(CompareNodeLocation(localDef.getLocation())){
+					findRenamings(localDef, parentDef, defScope);
+				}
 				if (contains(localDef))
 				{
-					findRenamings(localDef, parentDef, defScope);
+					//findRenamings(localDef, parentDef, defScope); 
+					//TODO Det er her
 				} else
 				{
-					localDefsInScope.add(localDef.getName());
+					//localDefsInScope.add(localDef.getName());
 				}
 			}
 		}
@@ -454,8 +987,8 @@ public class RefactoringRenameCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		//TODO pass name
-		String newName = computeNewName(localDefName.getName());
+
+		String newName = "HeyHo";//computeNewName(localDefName.getName()); //Replace with our new name
 
 		if (!contains(localDefName.getLocation()))
 		{
@@ -574,4 +1107,30 @@ public class RefactoringRenameCollector  extends DepthFirstAnalysisAdaptor
 		}
 	}
 
+	private void visitDefs(List<? extends PDefinition> defs)
+			throws AnalysisException
+	{
+		for (PDefinition def : defs)
+		{
+			def.apply(this);
+		}
+	}
+
+	private void visitStms(List<? extends PStm> stms) throws AnalysisException
+	{
+		for (PStm stm : stms)
+		{
+			stm.apply(this);
+		}
+	}
+	
+	private boolean CompareNodeLocation(ILexLocation newNode){
+		
+		if(newNode.getEndLine() == 16 &&
+				newNode.getEndOffset() == 155 &&
+						newNode.getEndPos() == 13){
+			return true;
+		}
+		return false;
+	}
 }
