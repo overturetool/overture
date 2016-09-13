@@ -149,7 +149,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
+		//Check this 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
 
 		openScope(defInfo, node);
@@ -705,6 +705,15 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			addLocalDefs(defInfo);
 			handleExecutables(defs);
+			//TODO Test if this is viable
+			
+			for (PDefinition localDef : defInfo.getAllLocalDefs()) // check if it matches position
+			{
+				if(CompareNodeLocation(localDef.getLocation())){
+					findRenamings(localDef, localDef.parent(), module);
+				}
+			}
+			
 			removeLocalDefs(defInfo);
 		} else
 		{
@@ -941,14 +950,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			{
 				if(CompareNodeLocation(localDef.getLocation())){
 					findRenamings(localDef, parentDef, defScope);
-				}
-				if (contains(localDef))
-				{
-					//findRenamings(localDef, parentDef, defScope); 
-					//TODO Det er her
-				} else
-				{
-					//localDefsInScope.add(localDef.getName());
 				}
 			}
 		}
