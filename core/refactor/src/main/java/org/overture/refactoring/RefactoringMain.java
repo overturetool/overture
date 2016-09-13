@@ -8,12 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
@@ -30,6 +27,7 @@ public class RefactoringMain {
 	public static final String OO_ARG = "-pp";
 	public static final String RT_ARG = "-rt";
 	public static final String SL_ARG = "-sl";
+	public static final String RENAME_ARG = "-rename;";
 	
 	public static void main(String[] args)
 	{
@@ -43,7 +41,7 @@ public class RefactoringMain {
 		List<String> listArgs = Arrays.asList(args);
 		List<File> files = new LinkedList<File>();
 		RefactoringMode refacMode = null;
-		
+		String[] parameters = null;
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
@@ -63,6 +61,11 @@ public class RefactoringMain {
 			} else if (arg.equals(PRINT_ARG))
 			{
 				printClasses = true;
+			} else if (arg.contains(RENAME_ARG)){
+				String parms = arg;
+				parms = parms.replace(RENAME_ARG,"");
+				parameters = parms.split(";");
+				
 			} else
 			{
 				// It's a file or a directory
@@ -97,11 +100,11 @@ public class RefactoringMain {
 		
 		if (refacMode == RefactoringMode.SL_SPEC)
 		{
-			handleSl(files, printClasses);
+			handleSl(files, printClasses, parameters);
 			
 		} else if (refacMode == RefactoringMode.OO_SPEC)
 		{
-			handleOo(files, Settings.dialect, printClasses);
+			handleOo(files, Settings.dialect, printClasses, parameters);
 		} else
 		{
 			MsgPrinter.getPrinter().errorln("Unexpected dialect: "
@@ -110,7 +113,7 @@ public class RefactoringMain {
 		
 	}
 	
-	public static void handleSl(List<File> files, boolean printCode)
+	public static void handleSl(List<File> files, boolean printCode, String[] parameters)
 	{
 		try
 		{
@@ -127,7 +130,12 @@ public class RefactoringMain {
 			
 			RefactoringBase refactoringBase = new RefactoringBase();
 			
-			GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result));
+			if(parameters != null && parameters.length >= 3){
+				GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
+				test(data);
+			} else {
+				MsgPrinter.getPrinter().println("No parameters");
+			}
 
 			//processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
@@ -138,7 +146,7 @@ public class RefactoringMain {
 		}
 	}
 	
-	public static void handleOo(List<File> files, Dialect dialect, boolean printCode)
+	public static void handleOo(List<File> files, Dialect dialect, boolean printCode, String[] parameters)
 	{
 		try
 		{
@@ -160,9 +168,12 @@ public class RefactoringMain {
 				MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
 				return;
 			}
-
-			GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result));
-			test(data);
+			if(parameters != null && parameters.length >= 3){
+				GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
+				test(data);
+			} else {
+				MsgPrinter.getPrinter().println("No parameters");
+			}
 //			processData(printCode, files.get(0), data);
 
 		} catch (AnalysisException e)
@@ -225,13 +236,13 @@ public class RefactoringMain {
 	public static void test(GeneratedData data){
 		BufferedReader br = null;
         int lineCount = 0;
-        String line = null, newLine = "";
+        String line = null;
 		List<Renaming> allRenamings = data.getAllRenamings();
 
 		if (!allRenamings.isEmpty())
 		{
 			
-//			Collections.reverse(allRenamings); 
+			Collections.reverse(allRenamings); 
 	        try {
 				br = new BufferedReader(new FileReader("D:\\test.txt"));
 			} catch (FileNotFoundException e) {
@@ -239,42 +250,32 @@ public class RefactoringMain {
 				e.printStackTrace();
 			}
 	        
-	        Map<Integer,Renaming> renamingMap = new HashMap<Integer,Renaming>();
-
-	        for(Iterator<Renaming> i = allRenamings.iterator(); i.hasNext(); ) {
-	            Renaming item = i.next();
-	            renamingMap.put(item.getLoc().getEndLine(), item);
-	        }
-	       
-	        
 	            try {
 					while ((line = br.readLine()) != null)   
 					{
 	
 					    StringBuilder buf = new StringBuilder(line);
 					              // Print the content on the console
-					    if(renamingMap.containsKey(lineCount+1)){ 
-						   
+					    				   
 					    	List<Renaming> lineRenamings = new ArrayList<Renaming>();
 					    	
-					    	for (Map.Entry<Integer, Renaming> entry : renamingMap.entrySet()) {
-					    		  if (entry.getValue().getLoc().getEndLine() == lineCount+1) {
-					    			  lineRenamings.add(entry.getValue());
+					    	for(Iterator<Renaming> i = allRenamings.iterator(); i.hasNext(); ) {
+					    			Renaming item = i.next();
+					    		  if (item.getLoc().getEndLine() == lineCount+1) {
+					    			  lineRenamings.add(item);
 					    		  }
 				    		}
-					       
+					    	Collections.reverse(lineRenamings); 
 				    	  for(Iterator<Renaming> i = lineRenamings.iterator(); i.hasNext(); ) {
 					            Renaming item = i.next();
 					            String endPiece = buf.substring(item.getLoc().getEndPos()-1);
-					            String startPiece = buf.substring(0,item.getLoc().getStartPos());
-					            newLine = startPiece + item.getNewName() + endPiece;
-					            buf.replace(0,buf.length(), newLine);
+					            String startPiece = buf.substring(0,item.getLoc().getStartPos()-1);
+					            line = startPiece + item.getNewName() + endPiece;
+					            buf = new StringBuilder(line);
 					        }
-				    	  System.out.println(newLine);
-					    }else{
-					    	
+
 					    	System.out.println(line);
-					    }
+					    
 					    lineCount++;
 					}
 				} catch (IOException e) {

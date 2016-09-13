@@ -1,12 +1,10 @@
 package org.overture.refactoring;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.Dialect;
@@ -15,13 +13,10 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
-import org.overture.codegen.analysis.vdm.VarRenamer;
-import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.config.Settings;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class RefactoringBase {
 	
@@ -40,7 +35,7 @@ public class RefactoringBase {
 		generator.getIRInfo().setSettings(irSettings);
 	}
 	
-	public GeneratedData generate(List<INode> ast) throws AnalysisException
+	public GeneratedData generate(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 
 		if (Settings.dialect == Dialect.VDM_SL)
@@ -53,8 +48,9 @@ public class RefactoringBase {
 		List<INode> userModules = getUserModules(ast);
 		
 		allRenamings = new LinkedList<Renaming>();
+		
 //		// To document any renaming of variables shadowing other variables
-		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
+		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
 
 
 		GeneratedData data = new GeneratedData();
@@ -88,7 +84,7 @@ public class RefactoringBase {
 	}
 	
 	private List<Renaming> performRenaming(List<INode> mergedParseLists,
-			Map<AIdentifierStateDesignator, PDefinition> idDefs)
+			Map<AIdentifierStateDesignator, PDefinition> idDefs, String[] parameters)
 			throws AnalysisException
 	{
 
@@ -97,10 +93,11 @@ public class RefactoringBase {
 		RefactoringRenameCollector renamingsCollector = new RefactoringRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 //		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		Renamer renamer = new Renamer();
+		renamingsCollector.SetRefactoringParameters(parameters);
 //		VarRenamer renamer = new VarRenamer();
 		for (INode node : mergedParseLists)
 		{
-			Set<Renaming> currentRenamings = renamer.computeRenamings(node, renamingsCollector); //TODO det er nok her det går galt
+			Set<Renaming> currentRenamings = renamer.computeRenamings(node, renamingsCollector);
 
 			if (!currentRenamings.isEmpty())
 			{
@@ -133,6 +130,4 @@ public class RefactoringBase {
 	{
 		return generator.getIRInfo();
 	}
-
-	
 }

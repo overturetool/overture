@@ -84,7 +84,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	private TempVarNameGen nameGen;
 
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
-
+	private String[] parameters;
+	
 	public RefactoringRenameCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
@@ -1125,12 +1126,17 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	private boolean CompareNodeLocation(ILexLocation newNode){
-		
-		if(newNode.getEndLine() == 16 &&
-				newNode.getEndOffset() == 155 &&
-						newNode.getEndPos() == 13){
-			return true;
+		if(parameters.length >= 3){
+			if(newNode.getEndLine() == Integer.parseInt(parameters[0]) &&
+//					newNode.getEndOffset() == Integer.parseInt(parameters[1]) && //TODO Check if it is needed
+							newNode.getEndPos() == Integer.parseInt(parameters[2])){
+				return true;
+			}
 		}
 		return false;
+	}
+	
+	public void SetRefactoringParameters(String[] parameters) {
+		this.parameters = parameters;
 	}
 }
