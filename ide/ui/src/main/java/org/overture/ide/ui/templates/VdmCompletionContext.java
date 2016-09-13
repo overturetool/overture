@@ -1,8 +1,10 @@
 package org.overture.ide.ui.templates;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VdmCompletionContext
@@ -28,12 +30,12 @@ public class VdmCompletionContext
 
 	private void init()
 	{
-		int index = rawScan.toString().lastIndexOf("<");
-
-		if (index != -1)
+		
+		List<CharacterOrder> specialCharMatches = specialCharacterOrderExtractor(rawScan.toString());
+		if (checkLastSpecialCharacter(specialCharMatches, "<"))
 		{
 			// Completion of quote, e.g. <Green>
-			consQuoteContext(index);
+			consQuoteContext(specialCharMatches.get(specialCharMatches.size()-1).start);
 			return;
 		}
 		
@@ -54,9 +56,8 @@ public class VdmCompletionContext
 
 		// Completion for foo.bar. This covers things such as instance variables,
 		// values, a record, a tuple, operations and functions
-
-		
-		if (checkLastInString(".",rawScan.toString()))
+	
+		if (checkLastSpecialCharacter(specialCharMatches, "."))
 		{ // only works for one . atm
 			String[] split = rawScan.toString().split("\\.");
 			consDotContext(split);
@@ -99,10 +100,15 @@ public class VdmCompletionContext
 	private void consDotContext(String[] split)
 	{
 		this.type = SearchType.Dot;
-		this.proposalPrefix = split[1];
-
+		if(split.length >= 2 ){
+			this.proposalPrefix = split[1];
+		}
+		else{
+			this.proposalPrefix = split[0];
+		}
 		this.root = new Vector<>();
 		root.add(split[0]);
+		
 	}
 
 	private boolean checkLastInString(String text,String word)
@@ -214,4 +220,40 @@ public class VdmCompletionContext
 		return type + " - Root: '" + getQualifiedSource() + "' Proposal: '"
 				+ proposalPrefix + "'" + " offset: ";
 	}
+	
+	public List<CharacterOrder> specialCharacterOrderExtractor(String inputString){
+		List<CharacterOrder> matches = new ArrayList<CharacterOrder>();
+	    //pattern to compare
+	    Pattern pattern = Pattern.compile("\\W+");
+
+	    Matcher matcher = pattern.matcher(inputString);
+	    //.find() checks for all occurrances
+	    //you get the index of matching element using .start() and .end() method
+	    while (matcher.find()) {
+	    	matches.add(new CharacterOrder(matcher.group(),matcher.start(),matcher.end()));
+	    }
+	    return matches;
+	}
+	
+	public Boolean checkLastSpecialCharacter(List<CharacterOrder> specialCharMatches, String inputString){
+
+		if (specialCharMatches != null && inputString.equals(specialCharMatches.get(specialCharMatches.size()-1).content) )
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	class CharacterOrder
+	{
+		public CharacterOrder(String c, int s, int e){
+			content = c;
+			end = e;
+			start = s;
+		}
+	    public String content; 
+	    public int start;
+	    public int  end;
+	};
+	
 }
