@@ -104,7 +104,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 			if (methodIR.getStatic() != null && !methodIR.getStatic()
 					&& !isIRGenerated(methodIR))
 			{
-				if (!methodIR.getIsConstructor())
+				if (!methodIR.getIsConstructor() && !methodIR.getAbstract())
 				{
 					ABlockStmIR bodyStm = new ABlockStmIR();
 
