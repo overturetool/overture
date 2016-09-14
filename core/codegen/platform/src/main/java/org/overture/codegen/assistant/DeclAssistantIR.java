@@ -55,6 +55,7 @@ import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AFuncDeclIR;
@@ -129,6 +130,12 @@ public class DeclAssistantIR extends AssistantBase
 		}
 
 		return false;
+	}
+	
+	public boolean isTest(ADefaultClassDeclIR node)
+	{
+		return node != null && !node.getSuperNames().isEmpty()
+				&& node.getSuperNames().get(0).getName().equals(IRConstants.TEST_CASE);
 	}
 
 	public <T extends SClassDeclIR> T buildClass(SClassDefinition node,

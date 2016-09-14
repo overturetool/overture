@@ -68,6 +68,11 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if(info.getDeclAssistant().isTest(node))
+		{
+			return;
+		}
 
 		if (node.getSuperNames().size() > 1)
 		{

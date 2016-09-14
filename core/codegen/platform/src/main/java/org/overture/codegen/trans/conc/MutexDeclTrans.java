@@ -35,6 +35,11 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if(info.getDeclAssistant().isTest(node))
+		{
+			return;
+		}
 
 		for (AMutexSyncDeclIR mutex : node.getMutexSyncs())
 		{
