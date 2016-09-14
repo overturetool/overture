@@ -30,8 +30,10 @@ public class VdmCompletionContext
 
 	private void init()
 	{
-		
+		String[] sepList = {"\n", "\r", "\t", "."};
+		proposalPrefix = regexStringCleaner(rawScan.toString(),sepList);
 		List<CharacterOrder> specialCharMatches = specialCharacterOrderExtractor(rawScan.toString());
+		
 		if (checkLastSpecialCharacter(specialCharMatches, "<"))
 		{
 			// Completion of quote, e.g. <Green>
@@ -39,8 +41,6 @@ public class VdmCompletionContext
 			return;
 		}
 		
-		String[] sepList = {"\n", "\r", "\t", "."};
-		proposalPrefix = regexStringCleaner(rawScan.toString(),sepList);
 		if (proposalPrefix.contains("new"))
 		{
 			// Completion of constructors
@@ -174,7 +174,7 @@ public class VdmCompletionContext
 	 */
 	private void consQuoteContext(int index)
 	{
-		processedScan = new StringBuffer(rawScan.subSequence(index, rawScan.length()));
+		processedScan = new StringBuffer(proposalPrefix.subSequence(index, proposalPrefix.length()));
 		proposalPrefix = processedScan.toString();
 		type = SearchType.Quote;
 	}
@@ -230,14 +230,19 @@ public class VdmCompletionContext
 	    //.find() checks for all occurrances
 	    //you get the index of matching element using .start() and .end() method
 	    while (matcher.find()) {
-	    	matches.add(new CharacterOrder(matcher.group(),matcher.start(),matcher.end()));
+	    	matches.add(new CharacterOrder(matcherCleanUp(matcher.group()),matcher.start(),matcher.end()));
 	    }
 	    return matches;
 	}
 	
+	public String matcherCleanUp(String match){
+		String[] typeSepList = {"\n", "\r", "\t"};
+		return regexStringCleaner(match,typeSepList);	
+	}
+	
 	public Boolean checkLastSpecialCharacter(List<CharacterOrder> specialCharMatches, String inputString){
 
-		if (specialCharMatches != null && inputString.equals(specialCharMatches.get(specialCharMatches.size()-1).content) )
+		if (specialCharMatches != null && !specialCharMatches.isEmpty() && inputString.equals(specialCharMatches.get(specialCharMatches.size()-1).content) )
 		{
 			return true;
 		}
