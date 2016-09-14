@@ -1,6 +1,7 @@
 package org.overture.refactoring;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -709,7 +710,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			
 			for (PDefinition localDef : defInfo.getAllLocalDefs()) // check if it matches position
 			{
-				if(CompareNodeLocation(localDef.getLocation())){
+				if(CompareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), module)){
 					findRenamings(localDef, localDef.parent(), module);
 				}
 			}
@@ -948,7 +949,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 
 			for (PDefinition localDef : localDefs) // check if it matches position
 			{
-				if(CompareNodeLocation(localDef.getLocation())){
+				if(CompareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
 					findRenamings(localDef, parentDef, defScope);
 				}
 			}
@@ -989,33 +990,34 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
-		String newName = "HeyHo";//computeNewName(localDefName.getName()); //Replace with our new name
-
-		if (!contains(localDefName.getLocation()))
-		{
-			registerRenaming(localDefName, newName);
-		}
-
-		Set<AVariableExp> vars = collectVarOccurences(localDefToRename.getLocation(), defScope);
-
-		for (AVariableExp varExp : vars)
-		{
-			registerRenaming(varExp.getName(), newName);
-		}
-
-		Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(localDefToRename.getLocation(), defScope);
-
-		for (AIdentifierStateDesignator id : idStateDesignators)
-		{
-			registerRenaming(id.getName(), newName);
-		}
-
-		Set<AIdentifierPattern> idPatterns = collectIdOccurences(localDefName, parentNode);
-
-		for (AIdentifierPattern id : idPatterns)
-		{
-			registerRenaming(id.getName(), newName);
+		if(parameters.length >= 4){
+			String newName = parameters[3];//computeNewName(localDefName.getName()); //Replace with our new name
+	
+			if (!contains(localDefName.getLocation()))
+			{
+				registerRenaming(localDefName, newName);
+			}
+	
+			Set<AVariableExp> vars = collectVarOccurences(localDefToRename.getLocation(), defScope);
+	
+			for (AVariableExp varExp : vars)
+			{
+				registerRenaming(varExp.getName(), newName);
+			}
+	
+			Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(localDefToRename.getLocation(), defScope);
+	
+			for (AIdentifierStateDesignator id : idStateDesignators)
+			{
+				registerRenaming(id.getName(), newName);
+			}
+	
+			Set<AIdentifierPattern> idPatterns = collectIdOccurences(localDefName, parentNode);
+	
+			for (AIdentifierPattern id : idPatterns)
+			{
+				registerRenaming(id.getName(), newName);
+			}
 		}
 	}
 
@@ -1050,6 +1052,24 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		return collector.getVars();
 	}
 
+	private boolean checkVarOccurences(ILexLocation defLoc,
+			INode defScope) throws AnalysisException
+	{
+		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc);
+		
+		defScope.apply(collector);
+		Set<AVariableExp> setOfVars = collector.getVars();
+		
+		for(Iterator<AVariableExp> i = setOfVars.iterator(); i.hasNext(); ) {
+			AVariableExp item = i.next();
+			if(CompareNodeLocation(item.getLocation())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	private Set<AIdentifierStateDesignator> collectIdDesignatorOccurrences(
 			ILexLocation defLoc, INode defScope) throws AnalysisException
 	{
@@ -1127,7 +1147,10 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	private boolean CompareNodeLocation(ILexLocation newNode){
-		if(parameters.length >= 3){
+
+		System.out.println("Pos " + newNode.getEndLine() + ": " + newNode.getEndPos());
+
+		if(parameters.length >= 4){
 			if(newNode.getEndLine() == Integer.parseInt(parameters[0]) &&
 //					newNode.getEndOffset() == Integer.parseInt(parameters[1]) && //TODO Check if it is needed
 							newNode.getEndPos() == Integer.parseInt(parameters[2])){
