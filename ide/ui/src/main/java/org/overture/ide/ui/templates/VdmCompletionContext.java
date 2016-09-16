@@ -48,7 +48,6 @@ public class VdmCompletionContext
 			return;
 		}
 		
-//		if(checkLastInString("mk_",rawScan.toString()))
 		if(proposalPrefix.contains("mk_") && checkLastSpecialCharacter(specialCharMatches, "_"))
 		{
 			consMkContext();
@@ -112,14 +111,6 @@ public class VdmCompletionContext
 		
 	}
 
-	private boolean checkLastInString(String text,String word)
-	{
-    	if(text == ""){
-    		return true;
-    	}
-    	return word.toLowerCase().endsWith(text.toLowerCase());
-	}
-    
 	/**
 	 * Constructs the completion context for a constructor call
 	 * 
@@ -127,12 +118,7 @@ public class VdmCompletionContext
 	 */
 	private void consConstructorCallContext()
 	{
-		// The processed scan contains what
-		final int NEW_LENGTH = "new".length();
-
 		// This gives us everything after new, e.g. ' MyClass' if you type 'new MyClass'
-		CharSequence subSeq = rawScan.subSequence(NEW_LENGTH, rawScan.length());
-		
 		proposalPrefix = rawScan.subSequence(rawScan.indexOf("new"),rawScan.length()).toString();
 
 		processedScan = rawScan; //new StringBuffer(subSeq);
@@ -225,12 +211,10 @@ public class VdmCompletionContext
 	public List<CharacterOrder> specialCharacterOrderExtractor(String inputString){
 		List<CharacterOrder> matches = new ArrayList<CharacterOrder>();
 	    //pattern to compare
-//	    Pattern pattern = Pattern.compile("[\\W+|_]");
 		Pattern pattern = Pattern.compile("[^a-zA-Z0-9\\( ]");
 	    String cleanInputString = inputString.replaceAll("[[a-zA-Z0-9]*$]", "");
 	    Matcher matcher = pattern.matcher(cleanInputString);
-	    //.find() checks for all occurrances
-	    //you get the index of matching element using .start() and .end() method
+
 	    while (matcher.find()) {
 	    	matches.add(new CharacterOrder(matcherCleanUp(matcher.group()),matcher.start(),matcher.end()));
 	    }
