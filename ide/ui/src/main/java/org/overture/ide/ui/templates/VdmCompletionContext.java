@@ -48,7 +48,8 @@ public class VdmCompletionContext
 			return;
 		}
 		
-		if(checkLastInString("mk_",rawScan.toString()))
+//		if(checkLastInString("mk_",rawScan.toString()))
+		if(proposalPrefix.contains("mk_") && checkLastSpecialCharacter(specialCharMatches, "_"))
 		{
 			consMkContext();
 			return;
@@ -70,7 +71,7 @@ public class VdmCompletionContext
 	
 	private String regexStringCleaner(String proposalPrefix,String[] sepList){
 		//Default
-		proposalPrefix = rawScan.toString();
+		
 		if( proposalPrefix == null || proposalPrefix.isEmpty()){
 			return "";
 		}
@@ -173,9 +174,9 @@ public class VdmCompletionContext
 	 * @param index The index of the '<' character
 	 */
 	private void consQuoteContext(int index)
-	{
+	{	
 		processedScan = new StringBuffer(proposalPrefix.subSequence(index, proposalPrefix.length()));
-		proposalPrefix = processedScan.toString();
+		proposalPrefix = processedScan.substring(processedScan.lastIndexOf("<"));
 		type = SearchType.Quote;
 	}
 
@@ -224,9 +225,10 @@ public class VdmCompletionContext
 	public List<CharacterOrder> specialCharacterOrderExtractor(String inputString){
 		List<CharacterOrder> matches = new ArrayList<CharacterOrder>();
 	    //pattern to compare
-	    Pattern pattern = Pattern.compile("\\W+");
-
-	    Matcher matcher = pattern.matcher(inputString);
+//	    Pattern pattern = Pattern.compile("[\\W+|_]");
+		Pattern pattern = Pattern.compile("[^a-zA-Z0-9\\( ]");
+	    String cleanInputString = inputString.replaceAll("[[a-zA-Z0-9]*$]", "");
+	    Matcher matcher = pattern.matcher(cleanInputString);
 	    //.find() checks for all occurrances
 	    //you get the index of matching element using .start() and .end() method
 	    while (matcher.find()) {
