@@ -52,20 +52,20 @@ public class CompletionContextTest
 	@Test
 	public void testScanNew_NoName()
 	{
-		commonTest("let x = new ", 12, "", SearchType.New);
+		commonTest("let x = new ", 12, "new ", SearchType.New);
 	}
 
 	@Test
 	public void testScanNew_NoSpace()
 	{
 		// It is expected we get types because we have no space after "new"
-		commonTest("let x = new", 11, "", SearchType.Types);
+		commonTest("let x = new", 11, "new", SearchType.New);
 	}
 
 	@Test
 	public void testScanNew_ClassPrefix()
 	{
-		commonTest("let x = new Foo", 15, "Foo", SearchType.New);
+		commonTest("let x = new Foo", 15, "new Foo", SearchType.New);
 	}
 
 	/**

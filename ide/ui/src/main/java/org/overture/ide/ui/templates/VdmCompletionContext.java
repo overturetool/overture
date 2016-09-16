@@ -30,8 +30,10 @@ public class VdmCompletionContext
 
 	private void init()
 	{
-		
+		String[] sepList = {"\n", "\r", "\t", "."};
+		proposalPrefix = regexStringCleaner(rawScan.toString(),sepList);
 		List<CharacterOrder> specialCharMatches = specialCharacterOrderExtractor(rawScan.toString());
+		
 		if (checkLastSpecialCharacter(specialCharMatches, "<"))
 		{
 			// Completion of quote, e.g. <Green>
@@ -39,8 +41,6 @@ public class VdmCompletionContext
 			return;
 		}
 		
-		String[] sepList = {"\n", "\r", "\t", "."};
-		proposalPrefix = regexStringCleaner(rawScan.toString(),sepList);
 		if (proposalPrefix.contains("new"))
 		{
 			// Completion of constructors
@@ -48,7 +48,7 @@ public class VdmCompletionContext
 			return;
 		}
 		
-		if(checkLastInString("mk_",rawScan.toString()))
+		if(proposalPrefix.contains("mk_") && checkLastSpecialCharacter(specialCharMatches, "_"))
 		{
 			consMkContext();
 			return;
@@ -70,7 +70,7 @@ public class VdmCompletionContext
 	
 	private String regexStringCleaner(String proposalPrefix,String[] sepList){
 		//Default
-		proposalPrefix = rawScan.toString();
+		
 		if( proposalPrefix == null || proposalPrefix.isEmpty()){
 			return "";
 		}
@@ -111,14 +111,6 @@ public class VdmCompletionContext
 		
 	}
 
-	private boolean checkLastInString(String text,String word)
-	{
-    	if(text == ""){
-    		return true;
-    	}
-    	return word.toLowerCase().endsWith(text.toLowerCase());
-	}
-    
 	/**
 	 * Constructs the completion context for a constructor call
 	 * 
@@ -126,12 +118,7 @@ public class VdmCompletionContext
 	 */
 	private void consConstructorCallContext()
 	{
-		// The processed scan contains what
-		final int NEW_LENGTH = "new".length();
-
 		// This gives us everything after new, e.g. ' MyClass' if you type 'new MyClass'
-		CharSequence subSeq = rawScan.subSequence(NEW_LENGTH, rawScan.length());
-		
 		proposalPrefix = rawScan.subSequence(rawScan.indexOf("new"),rawScan.length()).toString();
 
 		processedScan = rawScan; //new StringBuffer(subSeq);
@@ -173,9 +160,9 @@ public class VdmCompletionContext
 	 * @param index The index of the '<' character
 	 */
 	private void consQuoteContext(int index)
-	{
-		processedScan = new StringBuffer(rawScan.subSequence(index, rawScan.length()));
-		proposalPrefix = processedScan.toString();
+	{	
+		processedScan = new StringBuffer(proposalPrefix.subSequence(index, proposalPrefix.length()));
+		proposalPrefix = processedScan.substring(processedScan.lastIndexOf("<"));
 		type = SearchType.Quote;
 	}
 
@@ -224,20 +211,24 @@ public class VdmCompletionContext
 	public List<CharacterOrder> specialCharacterOrderExtractor(String inputString){
 		List<CharacterOrder> matches = new ArrayList<CharacterOrder>();
 	    //pattern to compare
-	    Pattern pattern = Pattern.compile("\\W+");
+		Pattern pattern = Pattern.compile("[^a-zA-Z0-9\\( ]");
+	    String cleanInputString = inputString.replaceAll("[[a-zA-Z0-9]*$]", "");
+	    Matcher matcher = pattern.matcher(cleanInputString);
 
-	    Matcher matcher = pattern.matcher(inputString);
-	    //.find() checks for all occurrances
-	    //you get the index of matching element using .start() and .end() method
 	    while (matcher.find()) {
-	    	matches.add(new CharacterOrder(matcher.group(),matcher.start(),matcher.end()));
+	    	matches.add(new CharacterOrder(matcherCleanUp(matcher.group()),matcher.start(),matcher.end()));
 	    }
 	    return matches;
 	}
 	
+	public String matcherCleanUp(String match){
+		String[] typeSepList = {"\n", "\r", "\t"};
+		return regexStringCleaner(match,typeSepList);	
+	}
+	
 	public Boolean checkLastSpecialCharacter(List<CharacterOrder> specialCharMatches, String inputString){
 
-		if (specialCharMatches != null && inputString.equals(specialCharMatches.get(specialCharMatches.size()-1).content) )
+		if (specialCharMatches != null && !specialCharMatches.isEmpty() && inputString.equals(specialCharMatches.get(specialCharMatches.size()-1).content) )
 		{
 			return true;
 		}
