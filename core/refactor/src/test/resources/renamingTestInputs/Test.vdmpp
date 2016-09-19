@@ -1,0 +1,21 @@
+class b
+
+types
+
+MyString = set of char
+
+instance variables
+
+descr : MyString;
+d : nat := 1;
+
+operations
+
+PlantInv: () ==> nat
+PlantInv() == 
+let a = d, c = a+1, a = c+1 in return a;
+
+b: () ==> b
+b() == skip;
+
+end b

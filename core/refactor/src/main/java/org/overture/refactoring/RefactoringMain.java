@@ -29,6 +29,8 @@ public class RefactoringMain {
 	public static final String SL_ARG = "-sl";
 	public static final String RENAME_ARG = "-rename;";
 	
+	private static GeneratedData genData;
+	
 	public static void main(String[] args)
 	{
 		boolean printClasses = false;
@@ -38,6 +40,7 @@ public class RefactoringMain {
 			usage("Too few arguments provided");
 		}	
 		
+		genData = null;
 		List<String> listArgs = Arrays.asList(args);
 		List<File> files = new LinkedList<File>();
 		RefactoringMode refacMode = null;
@@ -169,8 +172,8 @@ public class RefactoringMain {
 				return;
 			}
 			if(parameters != null && parameters.length >= 3){
-				GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
-				test(data);
+				genData = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
+				//test(genData);
 			} else {
 				MsgPrinter.getPrinter().println("No parameters");
 			}
@@ -182,6 +185,10 @@ public class RefactoringMain {
 					+ e.getMessage());
 
 		}
+	}
+	
+	public static GeneratedData getGeneratedData(){
+		return genData;
 	}
 
 	
