@@ -961,12 +961,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		for (PDefinition localDef : localDefs)
 		{
-			if (contains(localDef))
-			{
-				findRenamings(localDef, parentNode, defScope);
-			} else
-			{
-				localDefsInScope.add(localDef.getName());
+			if(CompareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
+				findRenamings(localDef, defScope.parent(), defScope);
 			}
 		}
 	}
