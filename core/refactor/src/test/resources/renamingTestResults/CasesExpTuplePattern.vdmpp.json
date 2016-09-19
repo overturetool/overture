@@ -1,0 +1,18 @@
+[
+	{
+		"config": "-rename;9;155;6;testName",
+	    "renamings": [
+	    	"'n' changed to 'testName' in 'b'  at line 9:5",
+	    	"'n' changed to 'testName' in 'b'  at line 11:11"
+	    ]
+	},
+	{
+		"config": "-rename;12;155;14;testName",
+	    "renamings": [
+	    	"'x' changed to 'testName' in 'b'  at line 12:13",
+	    	"'x' changed to 'testName' in 'b'  at line 12:19",
+	    	"'x' changed to 'testName' in 'b'  at line 12:21",
+	    	"'x' changed to 'testName' in 'b'  at line 12:28"
+	    ]
+	}
+]

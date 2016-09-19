@@ -26,7 +26,6 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 
 @RunWith(Parameterized.class)
 public class VarRenamingTest {
@@ -84,6 +83,7 @@ public class VarRenamingTest {
 
 			for(int i = 0; i < renamingStrings.size();i++ ) {
 				String item = renamingStrings.get(i);
+				System.out.println(item);
 				Assert.assertTrue(resultRenamings.contains(item));
 			}
 		}
