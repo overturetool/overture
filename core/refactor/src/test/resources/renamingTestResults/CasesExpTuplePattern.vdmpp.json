@@ -1,5 +1,6 @@
 [
 	{
+		"language": "-pp",
 		"config": "-rename;9;155;6;testName",
 	    "renamings": [
 	    	"'n' changed to 'testName' in 'b'  at line 9:5",
@@ -7,6 +8,7 @@
 	    ]
 	},
 	{
+		"language": "-pp",
 		"config": "-rename;12;155;14;testName",
 	    "renamings": [
 	    	"'x' changed to 'testName' in 'b'  at line 12:13",

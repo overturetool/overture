@@ -3,18 +3,18 @@ package org.overture.refactor.tests.base;
 import java.util.List;
 
 public class ResultObject {
+	public String language;
+	public String config;
 	public List<String> renamings;
 	
-	public List<String> getRenamings() {
-		return renamings;
+	public String getLanguage() {
+		return language;
 	}
-	
-	public void setRenamings(List<String> renamings) {
-			this.renamings = renamings;
-		}
-	
-	public String config;
-	
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}	
+		
 	public String getConfig() {
 		return config;
 	}
@@ -22,10 +22,16 @@ public class ResultObject {
 	public void setConfig(String config) {
 		this.config = config;
 	}	
-	
-	public ResultObject(){
 		
+	public List<String> getRenamings() {
+		return renamings;
 	}
 	
-	
+	public void setRenamings(List<String> renamings) {
+			this.renamings = renamings;
+		}
+		
+	public ResultObject(){
+		
+	}	
 }

@@ -93,7 +93,8 @@ public class RefactoringMain {
 		{
 			usage("No VDM dialect specified");
 		}
-
+		
+		MsgPrinter.getPrinter().println("\n************************");
 		MsgPrinter.getPrinter().println("Starting refactoring...\n");
 
 		if (files.isEmpty())
@@ -120,22 +121,20 @@ public class RefactoringMain {
 	{
 		try
 		{
-			
-			Settings.dialect = Dialect.VDM_SL;
 			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(files);
 
-			if (RefactoringUtils.hasErrors(tcResult))
+			if (GeneralCodeGenUtils.hasErrors(tcResult))
 			{
 				MsgPrinter.getPrinter().error("Found errors in VDM model:");
-				MsgPrinter.getPrinter().errorln(RefactoringUtils.errorStr(tcResult));
+				MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
 				return;
 			}
 			
 			RefactoringBase refactoringBase = new RefactoringBase();
 			
 			if(parameters != null && parameters.length >= 3){
-				GeneratedData data = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
-				test(data);
+				genData = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
+				//test(data);
 			} else {
 				MsgPrinter.getPrinter().println("No parameters");
 			}
@@ -153,24 +152,17 @@ public class RefactoringMain {
 	{
 		try
 		{
-			RefactoringBase refactoringBase = new RefactoringBase();
-
-			TypeCheckResult<List<SClassDefinition>> tcResult = null;
-
-			if (dialect == Dialect.VDM_PP)
-			{
-				tcResult = TypeCheckerUtil.typeCheckPp(files);
-			} else
-			{
-				tcResult = TypeCheckerUtil.typeCheckRt(files);
-			}
-
+			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
+			
 			if (GeneralCodeGenUtils.hasErrors(tcResult))
 			{
 				MsgPrinter.getPrinter().error("Found errors in VDM model:");
 				MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
 				return;
 			}
+			
+			RefactoringBase refactoringBase = new RefactoringBase();
+			
 			if(parameters != null && parameters.length >= 3){
 				genData = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
 				//test(genData);
