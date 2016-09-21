@@ -41,6 +41,7 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -70,6 +71,7 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class FunctionValue extends Value
@@ -731,23 +733,25 @@ public class FunctionValue extends Value
 				{
 					return this;
 				}
-				else if (ctxt.assistantFactory.getTypeComparator().isSubType(type, restrictedType))
+				else
 				{
-					// Create a new function with restricted dom/rng
+					TypeComparator tc = ctxt.assistantFactory.getTypeComparator();
+					List<PType> domain = tc.narrowest(type.getParameters(), restrictedType.getParameters());
+					PType range = tc.narrowest(type.getResult(), restrictedType.getResult());
+					AFunctionType newType = AstFactory.newAFunctionType(location, true, domain, range);
+					
+					// Create a new function with the narrowest domain/range.
 					FunctionValue restricted = new FunctionValue(location, name,
-						restrictedType, paramPatternList, body, precondition, postcondition,
+						newType, paramPatternList, body, precondition, postcondition,
 						freeVariables, checkInvariants, curriedArgs, measureName,
 						measureValues, result);
 
 					restricted.typeValues = typeValues;
 					return restricted;
 				}
-				else
-				{
-					return abort(4165, "Cannot convert " + this + " to " + restrictedType, ctxt);
-				}
 			}
-		} else
+		}
+		else
 		{
 			return super.convertValueTo(to, ctxt, done);
 		}
