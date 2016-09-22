@@ -1,13 +1,18 @@
 package org.overture.ide.ui.templates;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.PType;
 import org.overture.ide.ui.VdmUIPlugin;
@@ -46,16 +51,42 @@ public final class VdmNewCompletionExtractor {
 								if(!VdmHelper.checkForDuplicates(extractedName[1],dynamicTemplateProposals)){
 									VdmHelper.dynamicTemplateCreator(extractedName,"New",offset,context,proposals,info,viewer,node.getLocation().getEndOffset());
 									dynamicTemplateProposals.add(extractedName[1]);
-								}	
-						
-						    	//For the default constructor proposals
-						    	String extractedNamesDefaultCtor = (String) ("new " + operationName + "()");		    	
-						    	if(!VdmHelper.checkForDuplicates(extractedNamesDefaultCtor,dynamicTemplateProposals)){
-						    		VdmHelper.createProposal(null,extractedNamesDefaultCtor,extractedNamesDefaultCtor,"Default constructor",info,proposals,offset);
-									dynamicTemplateProposals.add(extractedNamesDefaultCtor);
 								}
 							}
 						}	
+					}
+					
+					Set<INode> visitedNodes = new HashSet<>();
+					
+					@Override
+					public void caseAClassClassDefinition(AClassClassDefinition node) throws AnalysisException {
+						if(visitedNodes.contains(node)){ return;	}						
+						visitedNodes.add(node);
+						
+						if (!noOperationsExist(node)) {
+							for (PDefinition def : node.getDefinitions()) {
+								def.apply(THIS);
+							}
+						}
+						
+						// Corner case for the default constructor proposals
+						PType classType = node.getClasstype();
+						String className = classType.toString();
+						String extractedNamesDefaultCtor = (String) ("new " + className + "()");
+						if (!VdmHelper.checkForDuplicates(extractedNamesDefaultCtor, dynamicTemplateProposals)) {
+							VdmHelper.createProposal(null, extractedNamesDefaultCtor, extractedNamesDefaultCtor,
+									"Default constructor", info, proposals, offset);
+							dynamicTemplateProposals.add(extractedNamesDefaultCtor);
+						}
+					}					
+
+					private boolean noOperationsExist(AClassClassDefinition node) {
+						for(PDefinition def : node.getDefinitions()){
+							if(def.getClass() == AExplicitOperationDefinition.class){
+								return false;
+							}
+						}
+						return true;
 					}
 				});
 			} catch (AnalysisException e)
