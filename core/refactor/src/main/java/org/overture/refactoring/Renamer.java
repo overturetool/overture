@@ -9,7 +9,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.analysis.vdm.Renaming;
-import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class Renamer
