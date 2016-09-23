@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
@@ -28,18 +29,16 @@ public class RefactoringMain {
 	public static final String RT_ARG = "-rt";
 	public static final String SL_ARG = "-sl";
 	public static final String RENAME_ARG = "-rename;";
-	
+	private static boolean printClasses = false;
 	private static GeneratedData genData;
 	
 	public static void main(String[] args)
-	{
-		boolean printClasses = false;
-		
+	{	
 		if (args == null || args.length <= 1)
 		{
 			usage("Too few arguments provided");
 		}	
-		
+		printClasses = false;
 		genData = null;
 		List<String> listArgs = Arrays.asList(args);
 		List<File> files = new LinkedList<File>();
@@ -87,8 +86,6 @@ public class RefactoringMain {
 			}
 		}
 		
-		//////////////////////////////////////////////////////////
-		
 		if (Settings.dialect == null)
 		{
 			usage("No VDM dialect specified");
@@ -133,13 +130,13 @@ public class RefactoringMain {
 			RefactoringBase refactoringBase = new RefactoringBase();
 			
 			if(parameters != null && parameters.length >= 3){
-				genData = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
-				//test(data);
+				genData = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
+				if(printClasses){
+					VDMPrinter(genData,files);
+				}
 			} else {
 				MsgPrinter.getPrinter().println("No parameters");
 			}
-
-			//processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
 
 		} catch (AnalysisException e)
 		{
@@ -164,12 +161,13 @@ public class RefactoringMain {
 			RefactoringBase refactoringBase = new RefactoringBase();
 			
 			if(parameters != null && parameters.length >= 3){
-				genData = refactoringBase.generate(refactoringBase.getNodes(tcResult.result), parameters);
-				//test(genData);
+				genData = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
+				if(printClasses){
+					VDMPrinter(genData,files);
+				}
 			} else {
 				MsgPrinter.getPrinter().println("No parameters");
 			}
-//			processData(printCode, files.get(0), data);
 
 		} catch (AnalysisException e)
 		{
@@ -183,7 +181,6 @@ public class RefactoringMain {
 		return genData;
 	}
 
-	
 	public static void usage(String msg)
 	{
 		MsgPrinter.getPrinter().errorln("VDM Refactoring Generator: " + msg
@@ -195,44 +192,7 @@ public class RefactoringMain {
 		System.exit(1);
 	}
 	
-	public static void processData(boolean printCode, final File outputDir,
-			GeneratedData data)
-	{
-
-		MsgPrinter.getPrinter().println("");
-
-		if (outputDir != null)
-		{
-
-		}
-
-		if (printCode)
-		{
-			MsgPrinter.getPrinter().println("**********");
-			MsgPrinter.getPrinter().println("Content here:");
-			MsgPrinter.getPrinter().println("\n");
-		}
-
-		List<Renaming> allRenamings = data.getAllRenamings();
-
-		if (!allRenamings.isEmpty())
-		{
-			MsgPrinter.getPrinter().println("\nFollowing renamings of content have been made: ");
-
-			MsgPrinter.getPrinter().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));
-		}
-
-		if (data.getWarnings() != null && !data.getWarnings().isEmpty())
-		{
-			MsgPrinter.getPrinter().println("");
-			for (String w : data.getWarnings())
-			{
-				MsgPrinter.getPrinter().println("[WARNING] " + w);
-			}
-		}
-	}
-	
-	public static void test(GeneratedData data){
+	public static void VDMPrinter(GeneratedData data, List<File> files){
 		BufferedReader br = null;
         int lineCount = 0;
         String line = null;
@@ -243,9 +203,11 @@ public class RefactoringMain {
 			
 			Collections.reverse(allRenamings); 
 	        try {
-				br = new BufferedReader(new FileReader("D:\\test.txt"));
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+	        	if(files.size() > 0){
+	        		br = new BufferedReader(new FileReader(files.get(0)));
+	        	}
+	        } catch (FileNotFoundException e) {
+	        	MsgPrinter.getPrinter().println("[WARNING] " + e.getMessage());
 				e.printStackTrace();
 			}
 	        
