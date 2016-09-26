@@ -1,0 +1,9 @@
+[
+	{
+		"config": "-rename;17;155;11;testName",
+	    "renamings": [
+	    	"'d' changed to 'testName' in 'b'  at line 16:9",
+	    	"'d' changed to 'testName' in 'b'  at line 10:1"
+	    ]
+	}
+]
