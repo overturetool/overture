@@ -39,6 +39,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -46,6 +47,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AForAllStm;
@@ -150,6 +152,11 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if(CompareNodeLocation(node.getLocation())){
+			findRenamings(node,node.parent(),node.parent());
+		}
+		
 		//Check this 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
 
@@ -992,6 +999,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			if (!contains(localDefName.getLocation()))
 			{
 				registerRenaming(localDefName, newName);
+				registerOperationSecondLineRenaming(localDefToRename, newName);
+				
 			}
 	
 			Set<AVariableExp> vars = collectVarOccurences(localDefToRename.getLocation(), defScope);
@@ -1014,7 +1023,56 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			{
 				registerRenaming(id.getName(), newName);
 			}
+			
+			Set<ACallStm> calls = collectCallOccurences(localDefToRename.getLocation(), defScope);
+			
+			for (ACallStm call : calls){
+				registerRenaming(call.getName(), newName);
+			}
 		}
+	}
+
+	private void registerOperationSecondLineRenaming(PDefinition localDefToRename, String newName) {
+		if(localDefToRename.getClass().getSimpleName().equals("AExplicitOperationDefinition")){
+			String def = localDefToRename.toString();
+			String[] splitByNewLine = def.split("\n");
+			String secondLine = splitByNewLine[1];
+			String[] splitByTab = secondLine.split("\t");
+			String tabs = new String();
+			int nrOfTabs = splitByTab.length-1;
+			if(nrOfTabs > 0){
+				for(int i = 0; i<nrOfTabs; i++){
+					tabs = tabs.concat("\t");
+				}
+			}
+			 
+			String strAfterTabs = splitByTab[nrOfTabs];
+			String[] splitByParantheses = strAfterTabs.split("\\(");
+			String strBeforeParantheses = splitByParantheses[0];
+			
+			//TODO: Don't know if we have to take care of tabs that the parser creates? Doesn't seem like it...
+			String newString = newName + "(" + splitByParantheses[1]; //tabs + newName + "(" + par[1];
+			
+			ILexLocation loc = localDefToRename.getLocation();
+			int newEndPos = loc.getEndPos() - strBeforeParantheses.length() + newName.length();
+			ILexLocation newLoc = new LexLocation(
+					loc.getFile(),
+					loc.getModule(),
+					loc.getStartLine()+1,
+					loc.getStartPos(), 
+					loc.getEndLine()+1,
+					newEndPos, 
+					loc.getStartOffset(),
+					loc.getEndOffset());
+			String module = loc.getModule();
+			renamings.add(new Renaming(newLoc, secondLine, newString, module, module));
+		}
+	}
+
+	private Set<ACallStm> collectCallOccurences(ILexLocation defLoc, INode defScope) throws AnalysisException {
+		CallOccurenceCollector collector = new CallOccurenceCollector(defLoc);
+		defScope.apply(collector);
+		return collector.getCalls();
 	}
 
 	private void registerRenaming(ILexNameToken name, String newName)
