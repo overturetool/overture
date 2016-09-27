@@ -6,3 +6,7 @@ let a = 5 in return a;
 
 b: () ==> nat
 b() == op();
+
+c: () ==> nat
+c() == 
+let a = op() in return a;
