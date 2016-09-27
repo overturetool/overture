@@ -2,15 +2,27 @@ package org.overture.prettyprinter.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
+import org.overture.ast.util.modules.ModuleList;
+import org.overture.codegen.printer.MsgPrinter;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.core.npp.NewPrettyPrinter;
 import org.overture.parser.util.ParserUtil;
+import org.overture.prettyprinter.RefactoringPrettyPrinter;
+import org.overture.refactoring.RefactoringBase;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class ASTPrettyPrinterTest {
 
@@ -32,14 +44,26 @@ public class ASTPrettyPrinterTest {
 		String actual = NewPrettyPrinter.prettyPrint(expInput);
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	public void auxFile()
+			throws AnalysisException {
+		RefactoringBase base = new RefactoringBase();
+		List<INode> nodes = base.getAST("D:/test.vdmsl");
+		String actual = RefactoringPrettyPrinter.prettyPrint(nodes);
+		//assertEquals(expected, actual);
+		System.out.println(actual);
+		assertEquals(0,0);
+	}
 
+	
 	@Before
 	public void setUp() throws Exception {
 		npp = NewPrettyPrinter.newInstance();
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 	}
-
+	
 	@Test
 	public void testCaseAPlusBinaryExp_01() throws AnalysisException{
 		aux("1+1","(1 + 1)");

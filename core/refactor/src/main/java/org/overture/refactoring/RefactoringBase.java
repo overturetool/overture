@@ -1,5 +1,6 @@
 package org.overture.refactoring;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +17,12 @@ import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.printer.MsgPrinter;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
+import org.overture.parser.util.ParserUtil;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class RefactoringBase {
 	
@@ -57,6 +63,34 @@ public class RefactoringBase {
 		data.setAllRenamings(allRenamings);
 
 		return data;
+	}
+	
+	public List<INode> getAST(String fileName) throws AnalysisException
+	{
+		File file = new File(fileName);
+		
+		List<AModuleModules> expInput = ParserUtil.parseSl(file).result;
+		
+		TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(file);
+
+		if (GeneralCodeGenUtils.hasErrors(tcResult))
+		{
+			MsgPrinter.getPrinter().error("Found errors in VDM model:");
+			MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
+			return null;
+		}
+
+		List<INode> ast = getNodes(tcResult.result);
+		
+		if (Settings.dialect == Dialect.VDM_SL)
+		{
+			ModuleList moduleList = new ModuleList(getModules(ast));
+			moduleList.combineDefaults();
+			ast = getNodes(moduleList);
+		}
+		
+		List<INode> userModules = getUserModules(ast);
+		return userModules;
 	}
 	
 	public static List<INode> getNodes(List<? extends INode> ast)
