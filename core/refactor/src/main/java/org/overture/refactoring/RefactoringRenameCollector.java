@@ -26,6 +26,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.AExistsExp;
@@ -999,8 +1000,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			if (!contains(localDefName.getLocation()))
 			{
 				registerRenaming(localDefName, newName);
-				registerOperationSecondLineRenaming(localDefToRename, newName);
-				
+				registerOperationSecondLineRenaming(localDefToRename, newName);				
 			}
 	
 			Set<AVariableExp> vars = collectVarOccurences(localDefToRename.getLocation(), defScope);
@@ -1029,7 +1029,21 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			for (ACallStm call : calls){
 				registerRenaming(call.getName(), newName);
 			}
+			
+			Set<AApplyExp> applications = collectApplyOccurences(localDefToRename.getLocation(), defScope);
+			
+			for (AApplyExp application : applications){
+				AVariableExp ancestor = application.getRoot().getAncestor(AVariableExp.class);
+				PDefinition operation = ancestor.getVardef();
+				registerRenaming(operation.getName(), newName);
+			}
 		}
+	}
+
+	private Set<AApplyExp> collectApplyOccurences(ILexLocation defLoc, INode defScope) throws AnalysisException {
+		ApplyOccurenceCollector collector = new ApplyOccurenceCollector(defLoc);
+		defScope.apply(collector);
+		return collector.getApplications();
 	}
 
 	private void registerOperationSecondLineRenaming(PDefinition localDefToRename, String newName) {
