@@ -21,34 +21,31 @@
  */
 package org.overture.ide.ui.templates;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.templates.TemplateContext;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
@@ -60,13 +57,16 @@ import org.overture.ide.ui.utility.ast.AstNameUtil;
 public class VdmCompleteProcessor
 {
 	private VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-
+	private VdmCompletionHelper VdmHelper = new VdmCompletionHelper();
+	private ArrayList<String> MkDynamicTemplateProposals = new ArrayList<String>();
 	public void computeCompletionProposals(VdmCompletionContext info,
 			VdmDocument document, List<ICompletionProposal> proposals,
-			int offset)
+			int offset, ITextViewer viewer,TemplateContext context)
 	{
 		List<ICompletionProposal> calculatedProposals = new Vector<ICompletionProposal>();
-
+		VdmCompletionExtractor vdmCompletionExtractor = new VdmCompletionExtractor();
+		VdmNewCompletionExtractor vdmNewCompletionExtractor = new VdmNewCompletionExtractor();
+		
 		switch (info.getType())
 		{
 			case CallParam:
@@ -74,16 +74,17 @@ public class VdmCompleteProcessor
 			case Dot:
 				break;
 			case Mk:
-				completeMK(info, document, calculatedProposals,offset);
+				completeMK(info, document, calculatedProposals, offset, context, viewer);
 				break;
 			case New:
-				completeNew(info, document, calculatedProposals, offset);
+				vdmNewCompletionExtractor.generateNewCompletionProposals(info, document, calculatedProposals, offset, getAst(document), context, viewer);
 				break;
 			case Quote:
 				completeQuotes(info, document, calculatedProposals, offset);
 				break;
 			case Types:
 				completeTypes(info, document, calculatedProposals, offset);
+				vdmCompletionExtractor.generateCompleteProposals(info, document, calculatedProposals, offset, getAst(document), context,viewer);
 				break;
 			default:
 				break;
@@ -109,14 +110,14 @@ public class VdmCompleteProcessor
 	}
 
 	private void completeMK(VdmCompletionContext info, VdmDocument document,
-			List<ICompletionProposal> calculatedProposals, int offset) {
+			List<ICompletionProposal> calculatedProposals, int offset, final TemplateContext context,final ITextViewer viewer) {
 
 		for(INode def : getAst(document))
 		{
-			completeRecords(offset, calculatedProposals, info, def);
+			completeRecords(offset, calculatedProposals, info, def, context, viewer);
 			completeMk_tokens(offset,calculatedProposals,info, def);
 			completetuples(offset, calculatedProposals, info,def);
-		}	
+		}
 	}
 
 	private void completeQuotes(final VdmCompletionContext info,
@@ -130,60 +131,9 @@ public class VdmCompleteProcessor
 
 	}
 
-	private void completeNew(final VdmCompletionContext info,
-			VdmDocument document, final List<ICompletionProposal> proposals,
-			final int offset)
-	{
-		for (INode container : getAst(document))
-		{
-			try
-			{
-				container.apply(new DepthFirstAnalysisAdaptor()
-				{
-					@Override
-					public void caseAExplicitOperationDefinition(
-							AExplicitOperationDefinition node)
-							throws AnalysisException
-					{
-
-						if (node.getIsConstructor()
-								&& new PAccessSpecifierAssistant(null).isPublic(node.getAccess()))
-						{
-							String name = node.getName().getName();
-							if (info.getProposalPrefix().isEmpty()
-									|| name.toLowerCase().startsWith(info.getProposalPrefix().toLowerCase()))
-							{
-								IContextInformation infoComplete = new ContextInformation(name, name);
-
-								String replacementString = name + "(";
-
-								for (Iterator<PPattern> iterator = node.getParameterPatterns().iterator(); iterator.hasNext();)
-								{
-									PPattern pattern = iterator.next();
-
-									replacementString += pattern.toString();
-									if (iterator.hasNext())
-										replacementString += ", ";
-
-								}
-								replacementString += ")";
-
-								proposals.add(new CompletionProposal(replacementString, offset
-										+ info.getReplacementOffset(), info.getProposalPrefix().length(), replacementString.length(), imgProvider.getImageLabel(node, 0), replacementString, infoComplete, node.toString()));
-							}
-						}
-					}
-				});
-			} catch (AnalysisException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	private void completeRecords(final int offset,
 			final List<ICompletionProposal> calculatedProposals,
-			VdmCompletionContext info, final INode def) {
+			VdmCompletionContext info, final INode def, final TemplateContext context,final ITextViewer viewer) {
 
 		try {
 			def.apply(new DepthFirstAnalysisAdaptor() {
@@ -192,30 +142,27 @@ public class VdmCompleteProcessor
 						throws AnalysisException {
 					
 					String name = arg0.getName().getName();
-					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-					
-					
-					
-					
-					String replacementString = name + "(";
-					String displayString = replacementString;
+
+					String[] functionName = {name, (name + "(")};
+					String displayString = functionName[1];
 					
 					String sep = "";
+			    	List<String> parameterNameList = new ArrayList<String>();
 
 					for (Iterator<AFieldField> iterator = arg0.getFields().iterator(); iterator.hasNext();)
 					{
 						AFieldField field = iterator.next();
-
-						replacementString += sep + field.getTagname().getName();
+						parameterNameList.add(field.getTagname().getName());
 						displayString += sep + field.toString();
 						sep = ", ";
-
 					}
-					
-					replacementString += ")";
-					displayString += ")";
-					
-					calculatedProposals.add(new CompletionProposal(replacementString , offset, 0, replacementString.length(), imgProvider.getImageLabel(def, 0), replacementString, info, displayString));
+
+			    	String extractedName[] = VdmHelper.templatePatternGenerator(parameterNameList,functionName);
+			    	extractedName[0] = displayString + ")";
+					if(VdmHelper.nullOrEmptyCheck(extractedName[1]) && !VdmHelper.checkForDuplicates(extractedName[1],MkDynamicTemplateProposals)){
+						VdmHelper.dynamicTemplateCreator(extractedName,"MK Record",offset,context,calculatedProposals,info,viewer,arg0.getLocation().getEndOffset());
+						MkDynamicTemplateProposals.add(extractedName[1]);
+					}				
 				}
 			});
 		} catch (AnalysisException e) {
@@ -287,21 +234,23 @@ public class VdmCompleteProcessor
 			if (info.getType() == SearchType.Types)
 			{
 				String name = AstNameUtil.getName(element);
-				if (name.startsWith(info.getProposalPrefix())
-						|| name.length() == 0)
+				String prefix = info.getProposalPrefix();
+				if (VdmHelper.findInString(prefix, name) || name.length() == 0)
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
-					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
+					int newOffset = offset - prefix.length();
+					int prefixLength = prefix.length();
+					
+					proposals.add(new CompletionProposal(name, newOffset, prefixLength, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
 				}
 			}
-			addContainerTypes(element, offset, proposals, info);
-
+			//addContainerTypes(element, offset, proposals, info);
 		}
 	}
 
 	private void addContainerTypes(INode def, final int offset,
 			final List<ICompletionProposal> proposals,
-			final VdmCompletionContext info2)
+			final VdmCompletionContext info)
 	{
 		if (def instanceof SClassDefinition)
 		{
@@ -311,12 +260,15 @@ public class VdmCompleteProcessor
 				if (element instanceof ATypeDefinition)
 				{
 					String name = cd.getName() + "`" + element.getName();
-					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, info, name));
+					IContextInformation contextInfo = new ContextInformation(name, name); //$NON-NLS-1$
+					if (VdmHelper.findInString(info.getProposalPrefix(), name) || name.length() == 0)
+					{
+						proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, contextInfo, name));
+					}
 				}
 
 			}
-			completeQuotes(offset, proposals, info2, def);
+			completeQuotes(offset, proposals, info, def);
 		} else if (def instanceof AModuleModules)
 		{
 			AModuleModules m = (AModuleModules) def;
@@ -331,17 +283,17 @@ public class VdmCompleteProcessor
 				if (element instanceof ATypeDefinition)
 				{
 					String name = prefix + element.getName();
-					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
+					IContextInformation contextInfo = new ContextInformation(name, name); //$NON-NLS-1$
 
-					if (name.toLowerCase().startsWith(info2.getProposalPrefix().toLowerCase()))
+					if (name.toLowerCase().startsWith(info.getProposalPrefix().toLowerCase()))
 					{
 						proposals.add(new CompletionProposal(name, offset
-								- info2.getProposalPrefix().length(), info2.getProposalPrefix().length(), name.length(), imgProvider.getImageLabel(element, 0), name, info, element.toString()));
+								- info.getProposalPrefix().length(), info.getProposalPrefix().length(), name.length(), imgProvider.getImageLabel(element, 0), name, contextInfo, element.toString()));
 					}
 				}
 			}
 
-			completeQuotes(offset, proposals, info2, m);
+			completeQuotes(offset, proposals, info, m);
 		}
 
 	}

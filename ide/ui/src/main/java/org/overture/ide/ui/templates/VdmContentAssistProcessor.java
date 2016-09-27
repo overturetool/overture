@@ -22,10 +22,14 @@
 package org.overture.ide.ui.templates;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalSorter;
 import org.overture.ide.ui.completion.CompletionUtil;
 import org.overture.ide.ui.editor.core.VdmDocument;
 
@@ -66,14 +70,32 @@ public abstract class VdmContentAssistProcessor extends
 
 		if (viewer.getDocument() instanceof VdmDocument)
 		{
-			processer.computeCompletionProposals(CompletionUtil.computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
+			VdmCompletionContext completionContext = CompletionUtil.computeVdmCompletionContext(viewer.getDocument(), offset);
+		    Region region = new Region(offset - completionContext.getProposalPrefix().length(), completionContext.getProposalPrefix().length());
+		
+		    processer.computeCompletionProposals(completionContext, 
+		    		(VdmDocument) viewer.getDocument(), modList, offset,
+		    		viewer, createContext(viewer, region));
 		}
 
 		if (modList.size() > 0)
 		{
-			return (ICompletionProposal[]) modList.toArray(new ICompletionProposal[modList.size()]);
+			completionProposals = (ICompletionProposal[]) modList.toArray(new ICompletionProposal[modList.size()]);
 		}
-
+		sortProposals(completionProposals);
 		return completionProposals;
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void sortProposals(final ICompletionProposal[] proposals) {
+		if(proposals != null && proposals.length > 0){
+			final ICompletionProposalSorter fSorter = new VdmCompletionProposalSorter();
+			Arrays.sort(proposals, new Comparator() {
+				public int compare(Object o1, Object o2) {
+					return fSorter.compare((ICompletionProposal) o1,(ICompletionProposal) o2);
+				}
+			});
+		}
+	}
+
 }
