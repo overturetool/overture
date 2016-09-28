@@ -255,14 +255,10 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		strBuilder.append(" \n");
 		insertIntoStringStack(strBuilder.toString());
 
-//		openScope(defInfo, node, question);
-
 		node.getBody().apply(this, question);
 
 		endScope(defInfo);
 
-		//strBuilder.append(node.getBody().toString());
-		
 		strBuilder = new StringBuilder();
 		strBuilder.append(";");
 		insertIntoStringStack(strBuilder.toString());
