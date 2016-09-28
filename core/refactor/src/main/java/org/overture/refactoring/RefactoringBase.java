@@ -21,6 +21,8 @@ import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
 import org.overture.parser.util.ParserUtil;
+import org.overture.rename.RefactoringRenameCollector;
+import org.overture.rename.Renamer;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -41,7 +43,7 @@ public class RefactoringBase {
 		generator.getIRInfo().setSettings(irSettings);
 	}
 	
-	public GeneratedData generate(List<INode> ast, String[] parameters) throws AnalysisException
+	public List<INode> generate(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 
 		if (Settings.dialect == Dialect.VDM_SL)
@@ -62,7 +64,7 @@ public class RefactoringBase {
 		GeneratedData data = new GeneratedData();
 		data.setAllRenamings(allRenamings);
 
-		return data;
+		return userModules;
 	}
 	
 	public List<INode> getAST(String fileName) throws AnalysisException

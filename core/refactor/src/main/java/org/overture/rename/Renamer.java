@@ -1,4 +1,4 @@
-package org.overture.refactoring;
+package org.overture.rename;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,8 @@
-package org.overture.refactoring;
+package org.overture.rename;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
@@ -16,14 +17,18 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.types.PType;
 
-public class ApplyOccurenceCollector extends DepthFirstAnalysisAdaptor {
+public class ApplyOccurenceRenamer extends DepthFirstAnalysisAdaptor {
 	private ILexLocation defLoc;
 	private Set<AApplyExp> applyOccurences;
+	private Consumer<RenameObject> function;
+	private String newName;
 	
-	public ApplyOccurenceCollector(ILexLocation defLoc)
+	public ApplyOccurenceRenamer(ILexLocation defLoc, Consumer<RenameObject> f, String newName)
 	{
 		this.defLoc = defLoc;
 		this.applyOccurences = new HashSet<AApplyExp>();
+		this.function = f;
+		this.newName = newName;
 	}
 
 	public Set<AApplyExp> getApplications()
@@ -44,6 +49,7 @@ public class ApplyOccurenceCollector extends DepthFirstAnalysisAdaptor {
 		
 		if (operation.getLocation().equals(defLoc))
 		{
+			function.accept(new RenameObject(operation.getName(), newName, operation::setName));
 			applyOccurences.add(node);
 		}
 	}

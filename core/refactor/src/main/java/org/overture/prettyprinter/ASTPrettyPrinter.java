@@ -113,7 +113,6 @@ import org.overture.core.npp.IPrettyPrinter;
 import org.overture.core.npp.ISymbolTable;
 import org.overture.core.npp.IndentTracker;
 import org.overture.core.npp.Utilities;
-import org.overture.refactoring.CallOccurenceCollector;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
