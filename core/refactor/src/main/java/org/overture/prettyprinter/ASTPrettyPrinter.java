@@ -136,7 +136,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		incrementOuterScopeCounter();
 		if(!node.getName().getName().equals("DEFAULT")){
-			insertIntoStringStack(node.getName().getName() + "\n");
+			insertIntoStringStack("module " + node.getName().getName() + "\n");
 		}
 		question.incrIndent();
 		visitModuleDefs(node.getDefs(), node, question);
