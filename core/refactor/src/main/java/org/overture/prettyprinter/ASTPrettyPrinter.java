@@ -974,7 +974,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		{
 			addLocalDefs(defInfo);
 			
-			if(!defInfo.getAllLocalDefs().isEmpty()){
+			if(!defInfo.getTypeDefs().isEmpty()){
 				insertIntoStringStack("\n");
 				insertIntoStringStack("types");
 				insertIntoStringStack("\n\n");

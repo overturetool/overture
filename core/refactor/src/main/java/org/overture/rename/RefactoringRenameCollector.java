@@ -111,7 +111,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		visitModuleDefs(node.getDefs(), node);
 	}
 
