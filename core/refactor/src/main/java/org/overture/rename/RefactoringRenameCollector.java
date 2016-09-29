@@ -41,7 +41,6 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
@@ -67,7 +66,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
 import org.overture.codegen.analysis.vdm.DefinitionInfo;
-import org.overture.codegen.analysis.vdm.IdOccurencesCollector;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
@@ -686,7 +684,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		return newNameSuggestion;
 	}
 
-	// Note that this methods is intended to work both for SL modules and PP/RT classes
 	private void visitModuleDefs(List<PDefinition> defs, INode module)
 			throws AnalysisException
 	{
@@ -696,7 +693,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			addLocalDefs(defInfo);
 			handleExecutables(defs);
-			//TODO Test if this is viable
 			
 			for (PDefinition localDef : defInfo.getAllLocalDefs()) // check if it matches position
 			{
@@ -976,61 +972,19 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		if(parameters.length >= 4){
-			String newName = parameters[3];
-	
-			if (!contains(localDefName.getLocation()))
-			{
-				registerRenaming(new RenameObject(localDefName, newName, localDefToRename::setName));
-				//TODO peter check Operation
-				registerOperationSecondLineRenaming(localDefToRename, newName);				
-			}
-	
+		if(parameters.length >= 3){
+			String newName = parameters[2];
+
 			renameVarOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
 			renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
 			renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
 			renameCallOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-			renameApplyOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-	
-		}
-	}
-
-
-
-	private void registerOperationSecondLineRenaming(PDefinition localDefToRename, String newName) {
-		if(localDefToRename.getClass().getSimpleName().equals("AExplicitOperationDefinition")){
-			String def = localDefToRename.toString();
-			String[] splitByNewLine = def.split("\n");
-			String secondLine = splitByNewLine[1];
-			String[] splitByTab = secondLine.split("\t");
-			String tabs = new String();
-			int nrOfTabs = splitByTab.length-1;
-			if(nrOfTabs > 0){
-				for(int i = 0; i<nrOfTabs; i++){
-					tabs = tabs.concat("\t");
-				}
+//			renameApplyOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+			
+			if (!contains(localDefName.getLocation()))
+			{
+				registerRenaming(new RenameObject(localDefName, newName, localDefToRename::setName));			
 			}
-			
-			String strAfterTabs = splitByTab[nrOfTabs];
-			String[] splitByParantheses = strAfterTabs.split("\\(");
-			String strBeforeParantheses = splitByParantheses[0];
-			
-			//TODO: Don't know if we have to take care of tabs that the parser creates? Doesn't seem like it...
-			String newString = newName + "(" + splitByParantheses[1]; //tabs + newName + "(" + par[1];
-			
-			ILexLocation loc = localDefToRename.getLocation();
-			int newEndPos = loc.getEndPos() - strBeforeParantheses.length() + newName.length();
-			ILexLocation newLoc = new LexLocation(
-					loc.getFile(),
-					loc.getModule(),
-					loc.getStartLine()+1,
-					loc.getStartPos(), 
-					loc.getEndLine()+1,
-					newEndPos, 
-					loc.getStartOffset(),
-					loc.getEndOffset());
-			String module = loc.getModule();
-			renamings.add(new Renaming(newLoc, secondLine, newString, module, module));
 		}
 	}
 	
@@ -1184,10 +1138,9 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 
 		System.out.println("Pos " + newNode.getEndLine() + ": " + newNode.getEndPos());
 
-		if(parameters.length >= 4){
+		if(parameters.length >= 3){
 			if(newNode.getStartLine() == Integer.parseInt(parameters[0]) &&
-//					newNode.getEndOffset() == Integer.parseInt(parameters[1]) && //TODO Check if it is needed
-							newNode.getStartPos() == Integer.parseInt(parameters[2])){
+							newNode.getStartPos() == Integer.parseInt(parameters[1])){
 				return true;
 			}
 		}

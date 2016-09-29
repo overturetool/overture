@@ -1,7 +1,7 @@
 [
 	{
 		"language": "-pp",
-		"config": "-rename;9;155;6;testName",
+		"config": "-rename;9;5;testName",
 	    "renamings": [
 	    	"'n' changed to 'testName' in 'b'  at line 9:5",
 	    	"'n' changed to 'testName' in 'b'  at line 11:11"
@@ -9,7 +9,7 @@
 	},
 	{
 		"language": "-pp",
-		"config": "-rename;12;155;14;testName",
+		"config": "-rename;12;13;testName",
 	    "renamings": [
 	    	"'x' changed to 'testName' in 'b'  at line 12:13",
 	    	"'x' changed to 'testName' in 'b'  at line 12:19",

@@ -1,7 +1,5 @@
 package org.overture.refactoring;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,12 +27,16 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class RefactoringMain {
 	public static final String PRINT_ARG = "-print";
+	public static final String TEST_ARG = "-test";
 	public static final String OO_ARG = "-pp";
 	public static final String RT_ARG = "-rt";
 	public static final String SL_ARG = "-sl";
 	public static final String RENAME_ARG = "-rename;";
+	
 	private static boolean printClasses = false;
-	private static List<INode> genAST;
+	private static boolean testClass = false;
+	private static List<INode> generatedAST;
+	private static GeneratedData generatedData;
 	
 	public static void main(String[] args)
 	{	
@@ -43,7 +45,9 @@ public class RefactoringMain {
 			usage("Too few arguments provided");
 		}	
 		printClasses = false;
-		genAST = null;
+		testClass = false;
+		generatedAST = null;
+		generatedData = null;
 		List<String> listArgs = Arrays.asList(args);
 		List<File> files = new LinkedList<File>();
 		RefactoringMode refacMode = null;
@@ -67,6 +71,9 @@ public class RefactoringMain {
 			} else if (arg.equals(PRINT_ARG))
 			{
 				printClasses = true;
+			} else if (arg.equals(TEST_ARG))
+			{
+				testClass = true;
 			} else if (arg.contains(RENAME_ARG)){
 				String parms = arg;
 				parms = parms.replace(RENAME_ARG,"");
@@ -134,10 +141,13 @@ public class RefactoringMain {
 			RefactoringBase refactoringBase = new RefactoringBase();
 			
 			if(parameters != null && parameters.length >= 3){
-				genAST = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
+				generatedAST = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
 				if(printClasses){
-					PrintOutputAST(genAST);
+					PrintOutputAST(generatedAST);
 					//VDMPrinter(genData,files);
+				}
+				if(testClass){
+					generatedData = refactoringBase.getGeneratedData();
 				}
 			} else {
 				MsgPrinter.getPrinter().println("No parameters");
@@ -166,9 +176,12 @@ public class RefactoringMain {
 			RefactoringBase refactoringBase = new RefactoringBase();
 			
 			if(parameters != null && parameters.length >= 3){
-				genAST = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
+				generatedAST = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
 				if(printClasses){
 					//VDMPrinter(genData,files);
+				}
+				if(testClass){
+					generatedData = refactoringBase.getGeneratedData();
 				}
 			} else {
 				MsgPrinter.getPrinter().println("No parameters");
@@ -181,8 +194,12 @@ public class RefactoringMain {
 		}
 	}
 	
-	public static List<INode> getGeneratedData(){
-		return genAST;
+	public static List<INode> getGeneratedAST(){
+		return generatedAST;
+	}
+
+	public static GeneratedData getGeneratedData(){
+		return generatedData;
 	}
 
 	public static void usage(String msg)

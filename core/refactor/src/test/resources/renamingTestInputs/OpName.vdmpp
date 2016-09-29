@@ -4,18 +4,18 @@ operations
 
 public static Run : () ==> ?
 Run () ==
-let a = new A'()
+let a = new A()
 in
-  return  a.op'();
+  return  a.op();
 
 end Entry
 
-class A'
+class A
 
 operations
 
-public op' : () ==> nat
-op'() ==
+public op : () ==> nat
+op() ==
   return 98;
   
-end A'
+end A

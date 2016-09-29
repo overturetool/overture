@@ -30,7 +30,7 @@ public class RefactoringBase {
 	
 	protected IRGenerator generator;
 	private List<Renaming> allRenamings;
-	
+	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
 		
@@ -56,13 +56,10 @@ public class RefactoringBase {
 		List<INode> userModules = getUserModules(ast);
 		
 		allRenamings = new LinkedList<Renaming>();
-		
-//		// To document any renaming of variables shadowing other variables
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
 
-
-		GeneratedData data = new GeneratedData();
-		data.setAllRenamings(allRenamings);
+		generatedData = new GeneratedData();
+		generatedData.setAllRenamings(allRenamings);
 
 		return userModules;
 	}
@@ -127,10 +124,8 @@ public class RefactoringBase {
 		List<Renaming> allRenamings = new LinkedList<Renaming>();
 
 		RefactoringRenameCollector renamingsCollector = new RefactoringRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
-//		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		Renamer renamer = new Renamer();
 		renamingsCollector.SetRefactoringParameters(parameters);
-//		VarRenamer renamer = new VarRenamer();
 		for (INode node : mergedParseLists)
 		{
 			Set<Renaming> currentRenamings = renamer.computeRenamings(node, renamingsCollector);
@@ -165,5 +160,9 @@ public class RefactoringBase {
 	public IRInfo getInfo()
 	{
 		return generator.getIRInfo();
+	}
+	
+	public GeneratedData getGeneratedData(){
+		return generatedData;
 	}
 }

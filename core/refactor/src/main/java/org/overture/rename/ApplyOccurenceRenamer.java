@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -43,13 +44,13 @@ public class ApplyOccurenceRenamer extends DepthFirstAnalysisAdaptor {
 		{
 			return;
 		}
-				
+		AValueDefinition nodeToRename = node.getAncestor(AValueDefinition.class);
 		AVariableExp ancestor = node.getRoot().getAncestor(AVariableExp.class);
 		PDefinition operation = ancestor.getVardef();
 		
 		if (operation.getLocation().equals(defLoc))
 		{
-			function.accept(new RenameObject(operation.getName(), newName, operation::setName));
+			//function.accept(new RenameObject(nodeToRename.getName(), newName, nodeToRename::setName));
 			applyOccurences.add(node);
 		}
 	}

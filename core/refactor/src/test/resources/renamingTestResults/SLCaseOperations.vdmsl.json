@@ -1,10 +1,11 @@
 [
 	{
 		"language": "-sl",
-		"config": "-rename;3;155;3;testName",
+		"config": "-rename;3;1;testName",
 	    "renamings": [
-	    	"'a' changed to 'testName' in 'DEFAULT'  at line 5:21",
-	    	"'a' changed to 'testName' in 'DEFAULT'  at line 5:5"
+	    	"'op' changed to 'testName' in 'DEFAULT'  at line 12:9",
+	    	"'op' changed to 'testName' in 'DEFAULT'  at line 8:8",
+	    	"'op' changed to 'testName' in 'DEFAULT'  at line 3:1"
 	    ]
 	}
 ]

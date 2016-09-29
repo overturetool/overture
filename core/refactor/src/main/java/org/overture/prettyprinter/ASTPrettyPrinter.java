@@ -40,73 +40,45 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
-import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.ACaseAlternative;
-import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.ALambdaExp;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
-import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.intf.lex.ILexBooleanToken;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
-import org.overture.ast.statements.ACaseAlternativeStm;
-import org.overture.ast.statements.ACasesStm;
-import org.overture.ast.statements.AForAllStm;
-import org.overture.ast.statements.AForIndexStm;
-import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
-import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
-import org.overture.ast.statements.ATixeStm;
-import org.overture.ast.statements.ATixeStmtAlternative;
-import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.PType;
-import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.IdDesignatorOccurencesCollector;
 import org.overture.codegen.analysis.vdm.IdOccurencesCollector;
 import org.overture.codegen.analysis.vdm.NameCollector;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.core.npp.IPrettyPrinter;
@@ -125,15 +97,14 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
-	private Stack<String> stringStack;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 	private boolean operationFlag;
 	private boolean functionFlag;
 	
 	private int outerScopeCounter = -1;
-	private List<Stack<String>> stringOuterStack;
-	
+	private List<ArrayList<String>> stringOuterStack;
+	private static String NODE_NOT_FOUND = "ERROR: Node not found";
 	
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
@@ -150,10 +121,9 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		this.idDefs = idDefs;
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
-		this.stringStack = new Stack<String>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
-		this.stringOuterStack = new ArrayList<Stack<String>>();
+		this.stringOuterStack = new ArrayList<ArrayList<String>>();
 	}
 
 	@Override
@@ -168,9 +138,9 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		if(!node.getName().getName().equals("DEFAULT")){
 			insertIntoStringStack(node.getName().getName() + "\n");
 		}
-
+		question.incrIndent();
 		visitModuleDefs(node.getDefs(), node, question);
-		
+		question.decrIndent();
 		if(!node.getName().getName().equals("DEFAULT")){
 			insertIntoStringStack("end " + node.getName().getName() + ";\n");
 		}
@@ -217,7 +187,10 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			return null;
 		}
 		if(!operationFlag){
-			insertIntoStringStack("\noperations\n\n");
+			insertIntoStringStack("\n");
+			insertIntoStringStack("operations");
+			insertIntoStringStack("\n\n");
+			operationFlag = true;
 		}
 		
 		StringBuilder strBuilder = new StringBuilder();
@@ -227,12 +200,15 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		VDMDefinitionInfo defInfo = new VDMDefinitionInfo(node.getParamDefinitions(), af);
 		
-		
+		if(defInfo.getNodeDefs() != null && defInfo.getNodeDefs().size() > 0){
 		for (PDefinition def : defInfo.getNodeDefs()){
 			if(def != defInfo.getNodeDefs().get(0)){
 				strBuilder.append(", ");
 			}	
 			strBuilder.append(def.getType().toString());
+		}
+		} else {
+			strBuilder.append("()");
 		}
 		strBuilder.append(" ==> ");
 		AOperationType defOp = node.getType().getAncestor(AOperationType.class);
@@ -259,7 +235,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		endScope(defInfo);
 
 		strBuilder = new StringBuilder();
-		strBuilder.append(";");
+		strBuilder.append(";\n\n");
 		insertIntoStringStack(strBuilder.toString());
 		return node.getName().getFullName();
 	}
@@ -336,8 +312,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 
 		visitDefs(defInfo.getNodeDefs(), question);
 
-//		openScope(defInfo, node, question);
-
 		List<? extends PDefinition> nodeDefs = defInfo.getNodeDefs();
 
 		for (PDefinition parentDef : nodeDefs)
@@ -349,7 +323,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 
 			for (PDefinition localDef : localDefs){
 				strBuilder.append(localDef.getName().getFullName() + " = ");
-			} // check if it matches position
+			}
 			insertIntoStringStack(strBuilder.toString());
 			AValueDefinition defVal = parentDef.getAncestor(AValueDefinition.class);
 			
@@ -373,6 +347,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		node.getExpression().apply(this, question);
 		return node.toString();
 	}
+
 //
 //	@Override
 //	public String caseALetBeStExp(ALetBeStExp node) throws AnalysisException
@@ -867,7 +842,18 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		return var;
 		
 	}
+	@Override
+	public String caseACallStm(ACallStm node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack(node.getName().getFullName() + "()");
+		return node.getName().getFullName();
+	}
 	
+	@Override
+	public String caseAApplyExp(AApplyExp node, IndentTracker question) throws AnalysisException {
+		AVariableExp printNode = node.getRoot().getAncestor(AVariableExp.class);
+		insertIntoStringStack(printNode.getName().getFullName() + "()");
+		return printNode.getName().getFullName();
+	}
 	private void handleCaseNode(PExp cond, List<? extends INode> cases,
 			INode others, IndentTracker question) throws AnalysisException
 	{
@@ -925,11 +911,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 //			}
 //		}
 //	}
-	@Override
-	public String caseATokenBasicType(ATokenBasicType node, IndentTracker question) throws AnalysisException {
-		// TODO Auto-generated method stub
-		return super.caseATokenBasicType(node, question);
-	}
+
 	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern,
 			INode result, IndentTracker question) throws AnalysisException
 	{
@@ -944,6 +926,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			removeLocalDefFromScope(def);
 		}
 	}
+
 
 	private void handleMultipleBindConstruct(INode node,
 			LinkedList<PMultipleBind> bindings, PExp first, PExp pred, IndentTracker question)
@@ -992,20 +975,27 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			addLocalDefs(defInfo);
 			
 			if(!defInfo.getAllLocalDefs().isEmpty()){
-				insertIntoStringStack("\ntypes\n\n");
+				insertIntoStringStack("\n");
+				insertIntoStringStack("types");
+				insertIntoStringStack("\n\n");
 			}
+			question.incrIndent();
 			for (ATypeDefinition typeDef : defInfo.getTypeDefs()) // check if it matches position
 			{		
 				insertIntoStringStack(typeDef.getName().getFullName() + " = " + getTypeDefAncestor(typeDef) + ";\n");
 			}
-			
+			question.decrIndent();
 			if(!defInfo.getAllLocalDefs().isEmpty()){
-				insertIntoStringStack("\nvalues\n\n");
+				insertIntoStringStack("\n");
+				insertIntoStringStack("values");
+				insertIntoStringStack("\n\n");
 			}
+			question.incrIndent();
 			for (PDefinition localDef : defInfo.getAllLocalDefs()) // check if it matches position
 			{
 				insertIntoStringStack(localDef.parent().toString() + ";\n");
 			}
+			question.decrIndent();
 			handleExecutables(defs,question);
 			removeLocalDefs(defInfo);
 			
@@ -1159,11 +1149,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 //		}
 	}
 
-//	public Set<Renaming> getRenamings()
-//	{
-//		return renamings;
-//	}
-
 	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
 	{
 		SFunctionDefinitionAssistantTC funcAssistant = this.af.createSFunctionDefinitionAssistant();
@@ -1289,16 +1274,11 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		localDefsInScope.remove(localDef.getName());
 	}
 
-	
-
-
 	private Set<ACallStm> collectCallOccurences(ILexLocation defLoc, INode defScope) throws AnalysisException {
 		CallOccurenceCollector collector = new CallOccurenceCollector(defLoc);
 		defScope.apply(collector);
 		return collector.getCalls();
 	}
-
-
 
 	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
 			INode defScope) throws AnalysisException
@@ -1308,24 +1288,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		defScope.apply(collector);
 
 		return collector.getVars();
-	}
-
-	private boolean checkVarOccurences(ILexLocation defLoc,
-			INode defScope) throws AnalysisException
-	{
-		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc);
-		
-		defScope.apply(collector);
-		Set<AVariableExp> setOfVars = collector.getVars();
-		
-		for(Iterator<AVariableExp> i = setOfVars.iterator(); i.hasNext(); ) {
-			AVariableExp item = i.next();
-			if(CompareNodeLocation(item.getLocation())){
-				return true;
-			}
-		}
-		
-		return false;
 	}
 	
 	private Set<AIdentifierStateDesignator> collectIdDesignatorOccurrences(
@@ -1403,30 +1365,14 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			stm.apply(this, question);
 		}
 	}
-	
-	private boolean CompareNodeLocation(ILexLocation newNode){
 
-		System.out.println("Pos " + newNode.getEndLine() + ": " + newNode.getEndPos());
-
-		if(parameters.length >= 4){
-			if(newNode.getEndLine() == Integer.parseInt(parameters[0]) &&
-//					newNode.getEndOffset() == Integer.parseInt(parameters[1]) && //TODO Check if it is needed
-							newNode.getEndPos() == Integer.parseInt(parameters[2])){
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public String getVDMText(){
 		StringBuilder strBuilder = new StringBuilder();
-		for(Stack<String> list : stringOuterStack){
+		for(ArrayList<String> list : stringOuterStack){
 			
 		    for(String item : list)
 			{
-				if(item != list.get(0)){
-					//strBuilder.append("\n");
-				}else if(!item.equals("DEFAULT") && item != list.get(0)){
+				if(item == list.get(0) && !item.equals("DEFAULT") && item != list.get(0)){
 					strBuilder.append("module ");
 				}
 				strBuilder.append(item);
@@ -1442,27 +1388,30 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	}
 	
 	public void incrementOuterScopeCounter(){
-		stringOuterStack.add(new Stack<String>());
+		stringOuterStack.add(new ArrayList<String>());
 		outerScopeCounter++;
 		operationFlag = false;
 		functionFlag = false;
 	}
 
 	@Override
-	public void setInsTable(ISymbolTable it) {
-		// TODO Auto-generated method stub
-		
+	public void setInsTable(ISymbolTable it)
+	{
+		mytable = it;
+	}
+	
+	@Override
+	public String createNewReturnValue(INode node, IndentTracker question)
+			throws AnalysisException
+	{
+		return NODE_NOT_FOUND;
 	}
 
 	@Override
-	public String createNewReturnValue(INode node, IndentTracker question) throws AnalysisException {
-		// TODO Auto-generated method stub
-		return null;
+	public String createNewReturnValue(Object node, IndentTracker question)
+			throws AnalysisException
+	{
+		return NODE_NOT_FOUND;
 	}
 
-	@Override
-	public String createNewReturnValue(Object node, IndentTracker question) throws AnalysisException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
