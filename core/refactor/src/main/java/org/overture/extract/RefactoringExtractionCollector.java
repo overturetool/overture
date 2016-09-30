@@ -1,4 +1,4 @@
-package org.overture.rename;
+package org.overture.extract;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +27,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.AExistsExp;
@@ -52,8 +51,6 @@ import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
-import org.overture.ast.statements.AForAllStm;
-import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ALetBeStStm;
@@ -64,16 +61,19 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.PType;
 import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.NameCollector;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
 import org.overture.codegen.ir.TempVarNameGen;
+import org.overture.rename.CallOccurenceRenamer;
+import org.overture.rename.IdDesignatorOccurencesRenamer;
+import org.overture.rename.IdOccurencesRenamer;
+import org.overture.rename.RenameObject;
+import org.overture.rename.VarOccurencesRenamer;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
-public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
+public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 {
 	private ITypeCheckerAssistantFactory af;
 
@@ -82,14 +82,14 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
 
-	private Set<Renaming> renamings;
+	private Set<Extraction> extractions;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
 	
-	public RefactoringRenameCollector(ITypeCheckerAssistantFactory af,
+	public RefactoringExtractionCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.af = af;
@@ -99,7 +99,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
 
-		this.renamings = new HashSet<Renaming>();
+		this.extractions = new HashSet<Extraction>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 	}
@@ -464,65 +464,65 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	@Override
-	public void caseAForAllStm(AForAllStm node) throws AnalysisException
-	{
-		if (!proceed(node))
-		{
-			return;
-		}
-
-		if (node.getSet() != null)
-		{
-			node.getSet().apply(this);
-		}
-
-		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
-		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
-
-		for (PDefinition d : defs)
-		{
-			openLoop(d.getName(), node.getPattern(), node.getStatement(), d::setName);
-		}
-
-		node.getStatement().apply(this);
-
-		for (PDefinition def : defs)
-		{
-			removeLocalDefFromScope(def);
-		}
-	}
-
-	@Override
-	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
-	{
-		if (!proceed(node))
-		{
-			return;
-		}
-
-		if (node.getFrom() != null)
-		{
-			node.getFrom().apply(this);
-		}
-
-		if (node.getTo() != null)
-		{
-			node.getTo().apply(this);
-		}
-
-		if (node.getBy() != null)
-		{
-			node.getBy().apply(this);
-		}
-
-		ILexNameToken var = node.getVar();
-		//TODO Check that it in fact is the setVar()
-		openLoop(var, null, node.getStatement(), node::setVar);
-		node.getStatement().apply(this);
-
-		localDefsInScope.remove(var);
-	}
+//	@Override
+//	public void caseAForAllStm(AForAllStm node) throws AnalysisException
+//	{
+//		if (!proceed(node))
+//		{
+//			return;
+//		}
+//
+//		if (node.getSet() != null)
+//		{
+//			node.getSet().apply(this);
+//		}
+//
+//		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
+//		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
+//
+//		for (PDefinition d : defs)
+//		{
+//			openLoop(d.getName(), node.getPattern(), node.getStatement(), d::setName);
+//		}
+//
+//		node.getStatement().apply(this);
+//
+//		for (PDefinition def : defs)
+//		{
+//			removeLocalDefFromScope(def);
+//		}
+//	}
+//
+//	@Override
+//	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
+//	{
+//		if (!proceed(node))
+//		{
+//			return;
+//		}
+//
+//		if (node.getFrom() != null)
+//		{
+//			node.getFrom().apply(this);
+//		}
+//
+//		if (node.getTo() != null)
+//		{
+//			node.getTo().apply(this);
+//		}
+//
+//		if (node.getBy() != null)
+//		{
+//			node.getBy().apply(this);
+//		}
+//
+//		ILexNameToken var = node.getVar();
+//		//TODO Check that it in fact is the setVar()
+//		openLoop(var, null, node.getStatement(), node::setVar);
+//		node.getStatement().apply(this);
+//
+//		localDefsInScope.remove(var);
+//	}
 
 	@Override
 	public void caseACasesStm(ACasesStm node) throws AnalysisException
@@ -596,25 +596,25 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private void openLoop(ILexNameToken var, INode varParent, PStm body, Consumer<ILexNameToken> c)
-			throws AnalysisException
-	{
-		if (!contains(var))
-		{
-			localDefsInScope.add(var);
-		} else
-		{
-			String newName = computeNewName(var.getName());
-			registerRenaming(new RenameObject(var, newName, c));
-			
-			if (varParent != null)
-			{
-				renameIdOccurences(var, varParent, this::registerRenaming, newName);
-			}
-			renameVarOccurences(var.getLocation(), body, this::registerRenaming, newName);
-			renameIdDesignatorOccurrences(var.getLocation(), body, this::registerRenaming, newName);
-		}
-	}
+//	private void openLoop(ILexNameToken var, INode varParent, PStm body, Consumer<ILexNameToken> c)
+//			throws AnalysisException
+//	{
+//		if (!contains(var))
+//		{
+//			localDefsInScope.add(var);
+//		} else
+//		{
+//			String newName = computeNewName(var.getName());
+//			registerExtraction(new RenameObject(var, newName, c));
+//			
+//			if (varParent != null)
+//			{
+//				renameIdOccurences(var, varParent, this::registerRenaming, newName);
+//			}
+//			renameVarOccurences(var.getLocation(), body, this::registerRenaming, newName);
+//			renameIdDesignatorOccurrences(var.getLocation(), body, this::registerRenaming, newName);
+//		}
+//	}
 
 	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern,
 			INode result) throws AnalysisException
@@ -824,15 +824,15 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		this.namesToAvoid.clear();
 		this.nameGen = new TempVarNameGen();
 
-		if (renamings != null && clearRenamings)
+		if (extractions != null && clearRenamings)
 		{
-			renamings.clear();
+			extractions.clear();
 		}
 	}
 
-	public Set<Renaming> getRenamings()
+	public Set<Extraction> getExtractions()
 	{
-		return renamings;
+		return extractions;
 	}
 
 	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
@@ -965,25 +965,27 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	private void findRenamings(PDefinition localDefToRename, INode parentNode,
 			INode defScope) throws AnalysisException
 	{
-		ILexNameToken localDefName = getName(localDefToRename);
-
-		if (localDefName == null)
-		{
-			return;
-		}
-		if(parameters.length >= 3){
-			String newName = parameters[2];
-
-			renameVarOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-			renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-			renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
-			renameCallOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-			
-			if (!contains(localDefName.getLocation()))
-			{
-				registerRenaming(new RenameObject(localDefName, newName, localDefToRename::setName));			
-			}
-		}
+		//TODO Fix this
+//		ILexNameToken localDefName = getName(localDefToRename);
+//
+//		if (localDefName == null)
+//		{
+//			return;
+//		}
+//		if(parameters.length >= 3){
+//			String newName = parameters[2];
+//
+//			renameVarOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+//			renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+//			renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
+//			renameCallOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+////			renameApplyOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+//			
+//			if (!contains(localDefName.getLocation()))
+//			{
+//				registerRenaming(new RenameObject(localDefName, newName, localDefToRename::setName));			
+//			}
+//		}
 	}
 	
 	private Set<ACallStm> renameCallOccurences(ILexLocation defLoc, INode defScope,
@@ -996,21 +998,22 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		return collector.getCalls();
 	}
 
-	private void registerRenaming(RenameObject reObj)
+	private void registerExtraction(RenameObject reObj)
 	{
 		if (!contains(reObj.name.getLocation()))
 		{
 			LexNameToken token = new LexNameToken(reObj.name.getModule(), reObj.newName, reObj.name.getLocation());
-			renamings.add(new Renaming(reObj.name.getLocation(), reObj.name.getName(), reObj.newName, reObj.name.getModule(), reObj.name.getModule()));
+			//TODO Fix add
+//			extractions.add(new Extraction(reObj.name.getLocation(), reObj.name.getName(), reObj.newName, reObj.name.getModule(), reObj.name.getModule()));
 			reObj.function.accept(token);
 		}
 	}
 
 	private boolean contains(ILexLocation loc)
 	{
-		for (Renaming r : renamings)
+		for (Extraction e : extractions)
 		{
-			if (r.getLoc().equals(loc))
+			if (e.getNewLoc().equals(loc))
 			{
 				return true;
 			}
@@ -1028,6 +1031,15 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 
 		return collector.getVars();
 	}
+	
+//	private Set<AApplyExp> renameApplyOccurences(ILexLocation defLoc, INode defScope, 
+//			Consumer<RenameObject> function, String newName)
+//			throws AnalysisException {
+//		
+//		ApplyOccurenceRenamer collector = new ApplyOccurenceRenamer(defLoc, this::registerRenaming, newName);
+//		defScope.apply(collector);
+//		return collector.getApplications();
+//	}
 	
 	private boolean checkVarOccurences(ILexLocation defLoc,
 			INode defScope) throws AnalysisException

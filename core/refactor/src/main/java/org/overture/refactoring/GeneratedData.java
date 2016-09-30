@@ -5,6 +5,7 @@ import java.util.List;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.extract.Extraction;
 
 public class GeneratedData
 {
@@ -13,6 +14,7 @@ public class GeneratedData
 	private InvalidNamesResult invalidNamesResult;
 	private List<String> skippedClasses;
 	private List<Renaming> allRenamings;
+	private List<Extraction> allExtractions;
 	private List<String> warnings;
 
 	public GeneratedData()
@@ -85,6 +87,16 @@ public class GeneratedData
 		this.allRenamings = allRenamings;
 	}
 
+	public List<Extraction> getAllExtractions()
+	{
+		return allExtractions;
+	}
+
+	public void setAllExtractions(List<Extraction> allExtractions)
+	{
+		this.allExtractions = allExtractions;
+	}
+	
 	public List<String> getWarnings()
 	{
 		return warnings;

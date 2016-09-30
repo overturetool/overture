@@ -32,9 +32,13 @@ public class RefactoringMain {
 	public static final String RT_ARG = "-rt";
 	public static final String SL_ARG = "-sl";
 	public static final String RENAME_ARG = "-rename;";
+	public static final String EXTRACT_ARG = "-extract;";
 	
 	private static boolean printClasses = false;
 	private static boolean testClass = false;
+	private static boolean rename = false;
+	private static boolean extract = false;
+	
 	private static List<INode> generatedAST;
 	private static GeneratedData generatedData;
 	
@@ -46,6 +50,8 @@ public class RefactoringMain {
 		}	
 		printClasses = false;
 		testClass = false;
+		rename = false;
+		extract = false;
 		generatedAST = null;
 		generatedData = null;
 		List<String> listArgs = Arrays.asList(args);
@@ -78,7 +84,12 @@ public class RefactoringMain {
 				String parms = arg;
 				parms = parms.replace(RENAME_ARG,"");
 				parameters = parms.split(";");
-				
+				rename = true;
+			}  else if (arg.contains(EXTRACT_ARG)){
+				String parms = arg;
+				parms = parms.replace(EXTRACT_ARG,"");
+				parameters = parms.split(";");
+				extract = true;
 			} else
 			{
 				// It's a file or a directory
@@ -139,18 +150,33 @@ public class RefactoringMain {
 			}
 			
 			RefactoringBase refactoringBase = new RefactoringBase();
-			
-			if(parameters != null && parameters.length >= 3){
-				generatedAST = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
-				if(printClasses){
-					PrintOutputAST(generatedAST);
-					//VDMPrinter(genData,files);
+			if(rename){
+				if(parameters != null && parameters.length >= 3){
+					generatedAST = refactoringBase.generateRenaming(RefactoringBase.getNodes(tcResult.result), parameters);
+					if(printClasses){
+						PrintOutputAST(generatedAST);
+						//VDMPrinter(genData,files);
+					}
+					if(testClass){
+						generatedData = refactoringBase.getGeneratedData();
+					}
+				} else {
+					MsgPrinter.getPrinter().println("No parameters");
 				}
-				if(testClass){
-					generatedData = refactoringBase.getGeneratedData();
+			}
+			if(extract){
+				if(parameters != null && parameters.length >= 3){
+					generatedAST = refactoringBase.generateExtraction(RefactoringBase.getNodes(tcResult.result), parameters);
+					if(printClasses){
+						PrintOutputAST(generatedAST);
+						//VDMPrinter(genData,files);
+					}
+					if(testClass){
+						generatedData = refactoringBase.getGeneratedData();
+					}
+				} else {
+					MsgPrinter.getPrinter().println("No parameters");
 				}
-			} else {
-				MsgPrinter.getPrinter().println("No parameters");
 			}
 
 		} catch (AnalysisException e)
@@ -174,17 +200,18 @@ public class RefactoringMain {
 			}
 			
 			RefactoringBase refactoringBase = new RefactoringBase();
-			
-			if(parameters != null && parameters.length >= 3){
-				generatedAST = refactoringBase.generate(RefactoringBase.getNodes(tcResult.result), parameters);
-				if(printClasses){
-					//VDMPrinter(genData,files);
+			if(rename){
+				if(parameters != null && parameters.length >= 3){
+					generatedAST = refactoringBase.generateRenaming(RefactoringBase.getNodes(tcResult.result), parameters);
+					if(printClasses){
+						//VDMPrinter(genData,files);
+					}
+					if(testClass){
+						generatedData = refactoringBase.getGeneratedData();
+					}
+				} else {
+					MsgPrinter.getPrinter().println("No parameters");
 				}
-				if(testClass){
-					generatedData = refactoringBase.getGeneratedData();
-				}
-			} else {
-				MsgPrinter.getPrinter().println("No parameters");
 			}
 
 		} catch (AnalysisException e)

@@ -13,11 +13,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class Renamer
 	{
-		public void rename(INode node, Set<Renaming> renamings)
-				throws AnalysisException
-		{
-			node.apply(new RenameAnalysis(renamings));
-		}
 
 		public Set<Renaming> computeRenamings(List<? extends INode> nodes,
 				ITypeCheckerAssistantFactory af,

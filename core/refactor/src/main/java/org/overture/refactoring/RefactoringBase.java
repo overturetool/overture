@@ -20,6 +20,9 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
+import org.overture.extract.Extraction;
+import org.overture.extract.Extractor;
+import org.overture.extract.RefactoringExtractionCollector;
 import org.overture.parser.util.ParserUtil;
 import org.overture.rename.RefactoringRenameCollector;
 import org.overture.rename.Renamer;
@@ -30,6 +33,7 @@ public class RefactoringBase {
 	
 	protected IRGenerator generator;
 	private List<Renaming> allRenamings;
+	private List<Extraction> allExtractions;
 	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
@@ -43,7 +47,7 @@ public class RefactoringBase {
 		generator.getIRInfo().setSettings(irSettings);
 	}
 	
-	public List<INode> generate(List<INode> ast, String[] parameters) throws AnalysisException
+	public List<INode> generateRenaming(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 
 		if (Settings.dialect == Dialect.VDM_SL)
@@ -60,6 +64,27 @@ public class RefactoringBase {
 
 		generatedData = new GeneratedData();
 		generatedData.setAllRenamings(allRenamings);
+
+		return userModules;
+	}
+	
+	public List<INode> generateExtraction(List<INode> ast, String[] parameters) throws AnalysisException
+	{
+
+		if (Settings.dialect == Dialect.VDM_SL)
+		{
+			ModuleList moduleList = new ModuleList(getModules(ast));
+			moduleList.combineDefaults();
+			ast = getNodes(moduleList);
+		}
+		
+		List<INode> userModules = getUserModules(ast);
+		
+		allExtractions = new LinkedList<Extraction>();
+		allExtractions.addAll(performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
+
+		generatedData = new GeneratedData();
+		generatedData.setAllExtractions(allExtractions);
 
 		return userModules;
 	}
@@ -132,7 +157,6 @@ public class RefactoringBase {
 
 			if (!currentRenamings.isEmpty())
 			{
-				renamer.rename(node, currentRenamings);
 				allRenamings.addAll(currentRenamings);
 			}
 		}
@@ -140,6 +164,31 @@ public class RefactoringBase {
 		Collections.sort(allRenamings);
 
 		return allRenamings;
+	}
+	
+	private List<Extraction> performExtraction(List<INode> mergedParseLists,
+			Map<AIdentifierStateDesignator, PDefinition> idDefs, String[] parameters)
+			throws AnalysisException
+	{
+
+		List<Extraction> allExtractions = new LinkedList<Extraction>();
+
+		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector(generator.getIRInfo().getTcFactory(), idDefs);
+		Extractor extractor = new Extractor();
+		extractionsCollector.SetRefactoringParameters(parameters);
+		for (INode node : mergedParseLists)
+		{
+			Set<Extraction> currentExtractions = extractor.computeExtractions(node, extractionsCollector);
+
+			if (!currentExtractions.isEmpty())
+			{
+				allExtractions.addAll(currentExtractions);
+			}
+		}
+
+		Collections.sort(allExtractions);
+
+		return allExtractions;
 	}
 	
 	protected List<INode> getUserModules(List<? extends INode> ast)
