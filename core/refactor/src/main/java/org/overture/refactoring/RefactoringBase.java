@@ -150,7 +150,7 @@ public class RefactoringBase {
 
 		RefactoringRenameCollector renamingsCollector = new RefactoringRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		Renamer renamer = new Renamer();
-		renamingsCollector.SetRefactoringParameters(parameters);
+		renamingsCollector.setRefactoringParameters(parameters);
 		for (INode node : mergedParseLists)
 		{
 			Set<Renaming> currentRenamings = renamer.computeRenamings(node, renamingsCollector);
@@ -175,7 +175,7 @@ public class RefactoringBase {
 
 		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		Extractor extractor = new Extractor();
-		extractionsCollector.SetRefactoringParameters(parameters);
+		extractionsCollector.setRefactoringParameters(parameters);
 		for (INode node : mergedParseLists)
 		{
 			Set<Extraction> currentExtractions = extractor.computeExtractions(node, extractionsCollector);

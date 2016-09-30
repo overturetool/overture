@@ -40,6 +40,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
@@ -85,7 +86,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private Set<Extraction> extractions;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
-
+	private AModuleModules currentModule;
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
 	
@@ -102,6 +103,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		this.extractions = new HashSet<Extraction>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
+		this.currentModule = null;
 	}
 
 	@Override
@@ -111,6 +113,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		currentModule = node;
 		visitModuleDefs(node.getDefs(), node);
 	}
 
@@ -151,19 +154,24 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
-		if(CompareNodeLocation(node.getLocation())){
-			findRenamings(node,node.parent(),node.parent());
+		//TODO operation
+		if(compareNodeLocation(node.getLocation())){
+//			findRenamings(node,node.parent(),node.parent());
+			AExplicitOperationDefinition newNode = node.clone();
+			LexNameToken token = new LexNameToken(newNode.getName().getModule(), "Test", newNode.getName().getLocation());
+			newNode.setName(token);
+			newNode.setLocation(new LexLocation());
+			addToNodeCurrentModule(newNode);
 		}
 		
 		//Check this 
-		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
+//		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
+//
+//		openScope(defInfo, node);
+//
+//		node.getBody().apply(this);
 
-		openScope(defInfo, node);
-
-		node.getBody().apply(this);
-
-		endScope(defInfo);
+//		endScope(defInfo);
 	}
 
 	@Override
@@ -686,25 +694,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private void visitModuleDefs(List<PDefinition> defs, INode module)
 			throws AnalysisException
 	{
-		DefinitionInfo defInfo = getStateDefs(defs, module);
-
-		if (defInfo != null)
-		{
-			addLocalDefs(defInfo);
-			handleExecutables(defs);
-			
-			for (PDefinition localDef : defInfo.getAllLocalDefs()) // check if it matches position
-			{
-				if(CompareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), module)){
-					findRenamings(localDef, localDef.parent(), module);
-				}
-			}
-			
-			removeLocalDefs(defInfo);
-		} else
-		{
-			handleExecutables(defs);
-		}
+		handleExecutables(defs);
 	}
 
 	private void handleExecutables(List<PDefinition> defs)
@@ -934,7 +924,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 
 			for (PDefinition localDef : localDefs) // check if it matches position
 			{
-				if(CompareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
+				if(compareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
 					findRenamings(localDef, parentDef, defScope);
 				}
 			}
@@ -946,7 +936,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	{
 		for (PDefinition localDef : localDefs)
 		{
-			if(CompareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
+			if(compareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
 				findRenamings(localDef, defScope.parent(), defScope);
 			}
 		}
@@ -1051,7 +1041,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		
 		for(Iterator<AVariableExp> i = setOfVars.iterator(); i.hasNext(); ) {
 			AVariableExp item = i.next();
-			if(CompareNodeLocation(item.getLocation())){
+			if(compareNodeLocation(item.getLocation())){
 				return true;
 			}
 		}
@@ -1135,20 +1125,28 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	private boolean CompareNodeLocation(ILexLocation newNode){
+	private boolean compareNodeLocation(ILexLocation newNode){
 
-		System.out.println("Pos " + newNode.getEndLine() + ": " + newNode.getEndPos());
+		System.out.println("Pos " + newNode.getStartLine() + ": " + newNode.getStartPos());
 
 		if(parameters.length >= 3){
-			if(newNode.getStartLine() == Integer.parseInt(parameters[0]) &&
-							newNode.getStartPos() == Integer.parseInt(parameters[1])){
+			if(newNode.getStartLine() >= Integer.parseInt(parameters[0]) &&
+							newNode.getStartLine() <= Integer.parseInt(parameters[1])){
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public void SetRefactoringParameters(String[] parameters) {
+	public void setRefactoringParameters(String[] parameters) {
 		this.parameters = parameters;
+	}
+	
+	public void addToNodeCurrentModule(PDefinition node){
+		LinkedList<PDefinition> defs = currentModule.getDefs();
+		defs.add(node);
+		currentModule.setDefs(defs);
+		LinkedList<PDefinition>  test = currentModule.getDefs();
+		test.size();
 	}
 }
