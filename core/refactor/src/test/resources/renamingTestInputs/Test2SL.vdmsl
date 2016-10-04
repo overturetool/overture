@@ -1,0 +1,5 @@
+operations 
+
+TestOp: nat ==> bool
+TestOp(n) == 
+	return n > 10;

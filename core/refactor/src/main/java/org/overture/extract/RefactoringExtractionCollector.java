@@ -62,6 +62,7 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
@@ -113,8 +114,19 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		currentModule = node;
-		visitModuleDefs(node.getDefs(), node);
+		
+		if(node instanceof CombinedDefaultModule)
+		{
+			for(AModuleModules m : ((CombinedDefaultModule) node).getModules())
+			{
+				m.apply(THIS);
+			}
+		}
+		else 
+		{
+			currentModule = node;
+			visitModuleDefs(node.getDefs(), node);
+		}
 	}
 
 	@Override
@@ -700,7 +712,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private void handleExecutables(List<PDefinition> defs)
 			throws AnalysisException
 	{
-		for (PDefinition def : defs)
+		for (PDefinition def : new LinkedList<>(defs))
 		{
 			if (def instanceof SOperationDefinition
 					|| def instanceof SFunctionDefinition
@@ -1143,10 +1155,10 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	}
 	
 	public void addToNodeCurrentModule(PDefinition node){
-		LinkedList<PDefinition> defs = currentModule.getDefs();
-		defs.add(node);
-		currentModule.setDefs(defs);
-		LinkedList<PDefinition>  test = currentModule.getDefs();
-		test.size();
+		System.out.println("Sized:" + currentModule.getDefs().size());
+
+		currentModule.getDefs().add(node);
+		
+		System.out.println("Sizea:" + currentModule.getDefs().size());
 	}
 }
