@@ -56,8 +56,8 @@
       </modules>
     </profile>
 
-	
-	 <profile>
+		
+		<profile>
       <id>codesigning</id>
       <build>
         <plugins>
@@ -65,8 +65,12 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jarsigner-plugin</artifactId>
             <configuration>
-
-              <storetype>${keystore.type}</storetype>
+							
+							<!-- This is an attempt to disable the test error: java.lang.SecurityException: class ...'s signer information does not match signer information of other classes in the same package
+							-->
+							<removeExistingSignatures>true</removeExistingSignatures>
+              
+							<storetype>${keystore.type}</storetype>
               <keystore>${keystore.path}</keystore>
               <alias>${keystore.alias}</alias>
               <storepass>${keystore.store.password}</storepass>
