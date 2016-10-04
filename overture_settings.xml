@@ -19,4 +19,20 @@
       <password>your-sonatype-password</password>
     </server>
   </servers>
+
+
+	<profiles>
+		<profile>
+			<id>codesigning</id>
+
+			<properties>
+				<keystore.path>file:///path/to/build.overture.au.dk.jks</keystore.path>
+				<keystore.alias>build.overture.au.dk</keystore.alias>
+				<keystore.type>JKS</keystore.type>
+				<keystore.store.password>secret-password</keystore.store.password>
+				<keystore.key.password>secret-password</keystore.key.password>
+			</properties>
+		</profile>
+	</profiles>
+
 </settings>
