@@ -331,7 +331,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <artifactId>maven-release-plugin</artifactId>
           <version>2.5.3</version>
           <configuration>
-						<releaseProfiles>release,With-IDE,all-platforms</releaseProfiles>
+						<releaseProfiles>release,With-IDE,all-platforms,codesigning</releaseProfiles>
             <tagNameFormat>Release/@{project.version}</tagNameFormat>
           </configuration>
         </plugin>
