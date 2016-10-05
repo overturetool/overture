@@ -92,6 +92,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private String[] parameters;
 	private int from;
 	private int to;
+	private String extractedName;
 	
 	public RefactoringExtractionCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -169,7 +170,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		//TODO operation
-		BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to);
+		BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName);
 		node.getBody().apply(bodyCollector);
 		
 //		if(compareNodeLocation(node.getLocation())){
@@ -1155,9 +1156,12 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	}
 	
 	public void setRefactoringParameters(String[] parameters) {
-		this.parameters = parameters;
-		this.from = Integer.parseInt(parameters[0]);
-		this.to = Integer.parseInt(parameters[1]);
+		if(parameters.length >= 3){
+			this.parameters = parameters;
+			this.from = Integer.parseInt(parameters[0]);
+			this.to = Integer.parseInt(parameters[1]);
+			this.extractedName = parameters[2];
+		}
 	}
 	
 	public void addToNodeCurrentModule(PDefinition node){

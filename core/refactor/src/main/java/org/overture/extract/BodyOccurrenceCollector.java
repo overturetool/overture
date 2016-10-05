@@ -22,7 +22,9 @@ public class BodyOccurrenceCollector  extends DepthFirstAnalysisAdaptor{
 	private int from;
 	private int to;
 	private boolean toOpAdded = false;
-	public BodyOccurrenceCollector(AExplicitOperationDefinition fromOp, AModuleModules currentModule, int from, int to)
+	private String extractedOperationName;
+	
+	public BodyOccurrenceCollector(AExplicitOperationDefinition fromOp, AModuleModules currentModule, int from, int to, String extractedOperationName)
 	{
 		this.fromOperation = fromOp;
 		this.toOperation = null;
@@ -30,6 +32,7 @@ public class BodyOccurrenceCollector  extends DepthFirstAnalysisAdaptor{
 		this.from = from;
 		this.to = to;
 		this.toOpAdded = false;
+		this.extractedOperationName = extractedOperationName;
 	}
 	
 	@Override
@@ -110,7 +113,7 @@ public class BodyOccurrenceCollector  extends DepthFirstAnalysisAdaptor{
 		System.out.println("Sized:" + currentModule.getDefs().size());
 		
 		toOperation = node.clone();
-		LexNameToken token = new LexNameToken(toOperation.getName().getModule(), "Test", toOperation.getName().getLocation());
+		LexNameToken token = new LexNameToken(toOperation.getName().getModule(), extractedOperationName, toOperation.getName().getLocation());
 		toOperation.setName(token);
 		toOperation.setLocation(new LexLocation());
 		currentModule.getDefs().add(toOperation);
