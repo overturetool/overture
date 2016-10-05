@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
@@ -110,15 +109,11 @@ public class BodyOccurrenceCollector  extends DepthFirstAnalysisAdaptor{
 	}
 	
 	public void addToNodeCurrentModule(AExplicitOperationDefinition node){
-		System.out.println("Sized:" + currentModule.getDefs().size());
-		
 		toOperation = node.clone();
 		LexNameToken token = new LexNameToken(toOperation.getName().getModule(), extractedOperationName, toOperation.getName().getLocation());
 		toOperation.setName(token);
 		toOperation.setLocation(new LexLocation());
-		currentModule.getDefs().add(toOperation);
-		
-		System.out.println("Sizea:" + currentModule.getDefs().size());
+		currentModule.getDefs().add(toOperation);	
 	}
 	
 }

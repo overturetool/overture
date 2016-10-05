@@ -27,7 +27,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.AExistsExp;
@@ -932,10 +931,10 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 
 			List<? extends PDefinition> localDefs = defInfo.getLocalDefs(parentDef);
 
-			for (PDefinition localDef : localDefs) // check if it matches position
+			for (int j = 0; j < localDefs.size(); j++) // check if it matches position
 			{
-				if(compareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
-					findRenamings(localDef, parentDef, defScope);
+				if(compareNodeLocation(localDefs.get(j).getLocation()) || checkVarOccurences(localDefs.get(j).getLocation(), defScope)){
+					findRenamings(localDefs.get(j), parentDef, defScope);
 				}
 			}
 		}
@@ -944,10 +943,10 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	public void openScope(INode parentNode, List<PDefinition> localDefs,
 			INode defScope) throws AnalysisException
 	{
-		for (PDefinition localDef : localDefs)
+		for (int j = 0; j < localDefs.size(); j++) // check if it matches position
 		{
-			if(compareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
-				findRenamings(localDef, defScope.parent(), defScope);
+			if(compareNodeLocation(localDefs.get(j).getLocation()) || checkVarOccurences(localDefs.get(j).getLocation(), defScope)){
+				findRenamings(localDefs.get(j), defScope.parent(), defScope);
 			}
 		}
 	}
@@ -965,24 +964,25 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	private void findRenamings(PDefinition localDefToRename, INode parentNode,
 			INode defScope) throws AnalysisException
 	{
-		ILexNameToken localDefName = getName(localDefToRename);
 
-		if (localDefName == null)
+		if (localDefToRename.getName() == null)
 		{
 			return;
 		}
+		
 		if(parameters.length >= 3){
 			String newName = parameters[2];
-
+			ILexNameToken localDefName = localDefToRename.getName();
 			renameVarOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-			renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-			renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
+			renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);	
 			renameCallOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
 			
-			if (!contains(localDefName.getLocation()))
+			if (!contains(localDefToRename.getName().getLocation()))
 			{
-				registerRenaming(new RenameObject(localDefName, newName, localDefToRename::setName));			
+				registerRenaming(new RenameObject(localDefToRename.getName(), newName, localDefToRename::setName));	
+				localDefToRename.toString();
 			}
+			renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
 		}
 	}
 	
@@ -1125,7 +1125,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	
 	private boolean compareNodeLocation(ILexLocation newNode){
 
-		System.out.println("Pos " + newNode.getStartLine() + ": " + newNode.getStartPos());
+		//System.out.println("Pos " + newNode.getStartLine() + ": " + newNode.getStartPos());
 
 		if(parameters.length >= 3){
 			if(newNode.getStartLine() == Integer.parseInt(parameters[0]) &&

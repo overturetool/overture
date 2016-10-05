@@ -1,5 +1,5 @@
-operations 
 
+operations
 TestOp: nat ==> bool
-TestOp(n) == 
+TestOp(n) ==
 	return n > 10;

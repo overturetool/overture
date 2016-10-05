@@ -23,7 +23,6 @@ package org.overture.prettyprinter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +57,7 @@ import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SBinaryExpBase;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
@@ -76,7 +76,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.ATokenBasicType;
 import org.overture.codegen.analysis.vdm.IdDesignatorOccurencesCollector;
 import org.overture.codegen.analysis.vdm.IdOccurencesCollector;
 import org.overture.codegen.analysis.vdm.NameCollector;
@@ -202,12 +201,12 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		VDMDefinitionInfo defInfo = new VDMDefinitionInfo(node.getParamDefinitions(), af);
 		
 		if(defInfo.getNodeDefs() != null && defInfo.getNodeDefs().size() > 0){
-		for (PDefinition def : defInfo.getNodeDefs()){
-			if(def != defInfo.getNodeDefs().get(0)){
-				strBuilder.append(", ");
-			}	
-			strBuilder.append(def.getType().toString());
-		}
+			for (PDefinition def : defInfo.getNodeDefs()){
+				if(def != defInfo.getNodeDefs().get(0)){
+					strBuilder.append(", ");
+				}	
+				strBuilder.append(def.getType().toString());
+			}
 		} else {
 			strBuilder.append("()");
 		}
@@ -325,7 +324,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			List<? extends PDefinition> localDefs = defInfo.getLocalDefs(parentDef);
 
 			for (PDefinition localDef : localDefs){
-				strBuilder.append(localDef.getName().getFullName() + " = ");
+				strBuilder.append(localDef.getName().getName() + " = ");
 			}
 			insertIntoStringStack(strBuilder.toString());
 			AValueDefinition defVal = parentDef.getAncestor(AValueDefinition.class);
@@ -333,7 +332,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			if (defVal != null){
 				defVal.getExpression().apply(this, question);
 			}
-			
+			//TODO
 			strBuilder = new StringBuilder();
 		}
 		insertIntoStringStack("\nin\n");
@@ -691,133 +690,71 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(THIS, question);
-		String r = node.getRight().apply(THIS, question);
-		String op = mytable.getPLUS();
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(l);
-		sb.append(space);
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		insertIntoStringStack(Utilities.wrap(sb.toString()));
-		return Utilities.wrap(sb.toString());
+		return expressionWriter(node, mytable.getPLUS(), question);
 	}
 	
 	@Override
 	public String caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(THIS, question);
-		String r = node.getRight().apply(THIS, question);
-		String op = mytable.getMINUS();
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(l);
-		sb.append(space);
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		insertIntoStringStack(Utilities.wrap(sb.toString()));
-		return Utilities.wrap(sb.toString());
+		return expressionWriter(node, mytable.getMINUS(), question);
 	}
 	
 	@Override
 	public String caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(THIS, question);
-		String r = node.getRight().apply(THIS,question);
-		String op = mytable.getTIMES();
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(l);
-		sb.append(space);
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		insertIntoStringStack(Utilities.wrap(sb.toString()));
-		return Utilities.wrap(sb.toString());
+		return expressionWriter(node, mytable.getTIMES(), question);
 	}
 	
 	@Override
 	public String caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(THIS, question);
-		String r = node.getRight().apply(THIS,question);
-		String op = mytable.getDIVIDE();
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(l);
-		sb.append(space);
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		insertIntoStringStack(Utilities.wrap(sb.toString()));
-		return Utilities.wrap(sb.toString());
+		return expressionWriter(node, mytable.getDIVIDE(), question);
 	}
 	
 	@Override
 	public String caseAModNumericBinaryExp(AModNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(THIS, question);
-		String r = node.getRight().apply(THIS,question);
-		String op = mytable.getMOD();
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(l);
-		sb.append(space);
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		insertIntoStringStack(Utilities.wrap(sb.toString()));
-		return Utilities.wrap(sb.toString());
+		return expressionWriter(node, mytable.getMOD(), question);
 	}
 	
 	@Override
 	public String caseADivNumericBinaryExp(ADivNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(THIS, question);
-		String r = node.getRight().apply(THIS,question);
-		String op = mytable.getDIV();
-		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(l);
-		sb.append(space);
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		insertIntoStringStack(Utilities.wrap(sb.toString()));
-		return Utilities.wrap(sb.toString());
+		return expressionWriter(node, mytable.getDIV(), question);
 	}
 	
 	@Override
 	public String caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(THIS, question);
-		String r = node.getRight().apply(THIS,question);
-		String op = mytable.getIMPLIES();
-		
+		return expressionWriter(node, mytable.getIMPLIES(), question);
+	}
+	
+	private String expressionWriter(SBinaryExpBase exp, String op, IndentTracker question){
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append(l);
+		insertIntoStringStack("(");		
+		try {
+			exp.getLeft().apply(THIS, question);
+		} catch (AnalysisException e) {
+			e.printStackTrace();
+		}
 		sb.append(space);
 		sb.append(op);
 		sb.append(space);
-		sb.append(r);
-		insertIntoStringStack(Utilities.wrap(sb.toString()));
-		return	Utilities.wrap(sb.toString());
+		insertIntoStringStack(sb.toString());
+		try {
+			exp.getRight().apply(THIS, question);
+		} catch (AnalysisException e) {
+			e.printStackTrace();
+		}
+		insertIntoStringStack(")");		
+		
+		return Utilities.wrap(sb.toString());
 	}
 	
 	@Override
@@ -843,11 +780,24 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		String var = node.getOriginal();
 		insertIntoStringStack(var);
 		return var;
-		
 	}
+	
 	@Override
 	public String caseACallStm(ACallStm node, IndentTracker question) throws AnalysisException {
-		insertIntoStringStack(node.getName().getFullName() + "();");
+		insertIntoStringStack(node.getName().getFullName() + "(");
+		for(PExp stm : node.getArgs()){
+			
+			if(stm != node.getArgs().getFirst()){
+				insertIntoStringStack(", ");
+			}
+			
+			if(stm instanceof AVariableExp){
+				AVariableExp exp = (AVariableExp) stm;
+				insertIntoStringStack(exp.getName().getName());
+			}
+		}
+		insertIntoStringStack(");");
+		insertIntoStringStack("\n");
 		return node.getName().getFullName();
 	}
 	

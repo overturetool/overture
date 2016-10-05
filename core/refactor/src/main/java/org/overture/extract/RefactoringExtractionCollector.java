@@ -40,7 +40,6 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
@@ -172,23 +171,6 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		//TODO operation
 		BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName);
 		node.getBody().apply(bodyCollector);
-		
-//		if(compareNodeLocation(node.getLocation())){
-//			AExplicitOperationDefinition newNode = node.clone();
-//			LexNameToken token = new LexNameToken(newNode.getName().getModule(), "Test", newNode.getName().getLocation());
-//			newNode.setName(token);
-//			newNode.setLocation(new LexLocation());
-//			addToNodeCurrentModule(newNode);
-//		}
-		
-		//Check this 
-//		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
-//
-//		openScope(defInfo, node);
-//
-		
-
-//		endScope(defInfo);
 	}
 		
 	@Override

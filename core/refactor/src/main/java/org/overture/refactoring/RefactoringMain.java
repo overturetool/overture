@@ -113,8 +113,7 @@ public class RefactoringMain {
 			usage("No VDM dialect specified");
 		}
 		
-		MsgPrinter.getPrinter().println("\n************************");
-		MsgPrinter.getPrinter().println("Starting refactoring...\n");
+		MsgPrinter.getPrinter().println("Starting refactoring...");
 
 		if (files.isEmpty())
 		{
@@ -242,8 +241,7 @@ public class RefactoringMain {
 	
 	public static void PrintOutputAST(List<INode> nodes)
 			throws AnalysisException {
-		System.out.println("###################################################################");
-		System.out.println("\nGenerated AST:");
+		System.out.println("####################### Generated AST ##########################");
 		String actual = RefactoringPrettyPrinter.prettyPrint(nodes);
 		System.out.println(actual);
 	}

@@ -1,13 +1,12 @@
 
-operations
-	
+operations	
 op: () ==> nat
-op() == 
+op() ==
 let a = 5 in return a;
 
 b: () ==> nat
 b() == op();
 
 c: () ==> nat
-c() == 
+c() ==
 let a = op() in return a;
