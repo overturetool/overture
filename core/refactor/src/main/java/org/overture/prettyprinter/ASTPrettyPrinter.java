@@ -217,7 +217,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		}
 		strBuilder.append(") ==");
 		if(node.getBody() instanceof ABlockSimpleBlockStm){
-			strBuilder.append("(\n");
+			strBuilder.append(" (\n");
 		}else{
 			strBuilder.append("\n");
 		}

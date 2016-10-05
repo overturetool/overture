@@ -1,5 +1,6 @@
 package org.overture.extract;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -93,6 +94,9 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private int to;
 	private String extractedName;
 	
+	private List<INode> visitedOperations;
+	private AExplicitOperationDefinition extractedOperation;
+	
 	public RefactoringExtractionCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
@@ -102,11 +106,12 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		this.idDefs = idDefs;
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
-
+		this.visitedOperations = new ArrayList<INode>();
 		this.extractions = new HashSet<Extraction>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 		this.currentModule = null;
+		this.extractedOperation = null;
 	}
 
 	@Override
@@ -160,6 +165,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	// public f : nat * (nat * nat) * nat -> nat
 	// f (b,mk_(b,b), a) == b;
 
+	
 	@Override
 	public void caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
@@ -168,9 +174,23 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		//TODO operation
-		BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName);
-		node.getBody().apply(bodyCollector);
+		if(extractedOperation == null){
+			BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName);
+			node.getBody().apply(bodyCollector);
+			if(bodyCollector.getToOperation() != null){
+				visitedOperations.add(node);
+				extractedOperation = bodyCollector.getToOperation();
+				currentModule.apply(THIS);
+			}
+		} 
+		
+		if(extractedOperation != null && !visitedOperations.contains(node)){
+			//TODO operation check for duplicates
+			DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName);
+			node.getBody().apply(dubCollector);
+			visitedOperations.add(node);
+		}
+		
 	}
 		
 	@Override
