@@ -34,7 +34,7 @@ public class IndentTracker
 	private int count;
 
 	// indent character.
-	private String indent = "\t";
+	private String indent = "  ";
 
 	/**
 	 * Instantiates a new indent tracker.
