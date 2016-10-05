@@ -160,17 +160,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		return node.getName().getFullName();
 	}
 
-//	@Override
-//	public String caseASystemClassDefinition(ASystemClassDefinition node)
-//			throws AnalysisException
-//	{
-//		if (enclosingDef != null)
-//		{
-//			return;
-//		}
-//
-//		visitModuleDefs(node.getDefinitions(), node);
-//	}
 
 	// For operations and functions it works as a single pattern
 	// Thus f(1,mk_(2,2),5) will fail
@@ -227,7 +216,9 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			strBuilder.append(def.getName());
 		}
 		strBuilder.append(") ==");
-		if(!(node.getBody() instanceof ABlockSimpleBlockStm)){
+		if(node.getBody() instanceof ABlockSimpleBlockStm){
+			strBuilder.append("(\n");
+		}else{
 			strBuilder.append("\n");
 		}
 		insertIntoStringStack(question.getIndentation() + strBuilder.toString());
@@ -236,6 +227,10 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		node.getBody().apply(this, question);
 		question.decrIndent();
 		endScope(defInfo);
+		
+		if(node.getBody() instanceof ABlockSimpleBlockStm){
+			insertIntoStringStack(question.getIndentation() + ");");
+		}
 		
 		finishElementInStack();
 		return node.getName().getFullName();
@@ -249,13 +244,8 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		{
 			return "";
 		}
-
-		insertIntoStringStack("(\n");
-		
 		visitStms(node.getStatements(), question);
-		insertIntoStringStack(question.getIndentation() + ");");
 		return node.toString();
-
 	}
 	@Override
 	public String caseALetStm(ALetStm node, IndentTracker question) throws AnalysisException
@@ -430,7 +420,18 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		insertIntoStringStack(printNode.getName().getFullName() + "()");
 		return printNode.getName().getFullName();
 	}
-	//
+//	@Override
+//	public String caseASystemClassDefinition(ASystemClassDefinition node)
+//			throws AnalysisException
+//	{
+//		if (enclosingDef != null)
+//		{
+//			return;
+//		}
+//
+//		visitModuleDefs(node.getDefinitions(), node);
+//	}
+//	
 //	@Override
 //	public String caseAExplicitFunctionDefinition(
 //			AExplicitFunctionDefinition node) throws AnalysisException
@@ -932,23 +933,23 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 				insertIntoStringStack("types");
 				insertIntoStringStack("\n\n");
 			}
-			question.incrIndent();
+			
 			for (ATypeDefinition typeDef : defInfo.getTypeDefs()) // check if it matches position
 			{		
 				insertIntoStringStack(question.getIndentation() + typeDef.getName().getFullName() + " = " + getTypeDefAncestor(typeDef) + ";\n");
 			}
-			question.decrIndent();
+			
 			if(!defInfo.getAllLocalDefs().isEmpty()){
 				insertIntoStringStack("\n");
 				insertIntoStringStack("values");
 				insertIntoStringStack("\n\n");
 			}
-			question.incrIndent();
+			
 			for (PDefinition localDef : defInfo.getAllLocalDefs()) // check if it matches position
 			{
 				insertIntoStringStack(question.getIndentation() + localDef.parent().toString() + ";\n");
 			}
-			question.decrIndent();
+			
 			handleExecutables(defs,question);
 			removeLocalDefs(defInfo);
 			
