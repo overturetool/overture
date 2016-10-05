@@ -90,6 +90,8 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private AModuleModules currentModule;
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
+	private int from;
+	private int to;
 	
 	public RefactoringExtractionCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -167,25 +169,27 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		//TODO operation
-		if(compareNodeLocation(node.getLocation())){
-//			findRenamings(node,node.parent(),node.parent());
-			AExplicitOperationDefinition newNode = node.clone();
-			LexNameToken token = new LexNameToken(newNode.getName().getModule(), "Test", newNode.getName().getLocation());
-			newNode.setName(token);
-			newNode.setLocation(new LexLocation());
-			addToNodeCurrentModule(newNode);
-		}
+		BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to);
+		node.getBody().apply(bodyCollector);
+		
+//		if(compareNodeLocation(node.getLocation())){
+//			AExplicitOperationDefinition newNode = node.clone();
+//			LexNameToken token = new LexNameToken(newNode.getName().getModule(), "Test", newNode.getName().getLocation());
+//			newNode.setName(token);
+//			newNode.setLocation(new LexLocation());
+//			addToNodeCurrentModule(newNode);
+//		}
 		
 		//Check this 
 //		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
 //
 //		openScope(defInfo, node);
 //
-//		node.getBody().apply(this);
+		
 
 //		endScope(defInfo);
 	}
-
+		
 	@Override
 	public void caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node) throws AnalysisException
@@ -1142,8 +1146,8 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		System.out.println("Pos " + newNode.getStartLine() + ": " + newNode.getStartPos());
 
 		if(parameters.length >= 3){
-			if(newNode.getStartLine() >= Integer.parseInt(parameters[0]) &&
-							newNode.getStartLine() <= Integer.parseInt(parameters[1])){
+			if(newNode.getStartLine() >= from &&
+							newNode.getStartLine() <= to){
 				return true;
 			}
 		}
@@ -1152,6 +1156,8 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	
 	public void setRefactoringParameters(String[] parameters) {
 		this.parameters = parameters;
+		this.from = Integer.parseInt(parameters[0]);
+		this.to = Integer.parseInt(parameters[1]);
 	}
 	
 	public void addToNodeCurrentModule(PDefinition node){

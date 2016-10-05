@@ -66,6 +66,7 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ALetStm;
@@ -258,25 +259,27 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 //		endScope(defInfo);
 //	}
 //
-//	@Override
-//	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node)
-//			throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
+	@Override
+	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, IndentTracker question)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return "";
+		}
+
 //		DefinitionInfo defInfo = new DefinitionInfo(node.getAssignmentDefs(), af);
-//
+
 //		visitDefs(defInfo.getNodeDefs());
 //
 //		openScope(defInfo, node);
-//
-//		visitStms(node.getStatements());
-//
+		insertIntoStringStack("(");
+		
+		visitStms(node.getStatements(), question);
+		insertIntoStringStack(")");
+		return node.toString();
 //		endScope(defInfo);
-//	}
+	}
 //
 //	@Override
 //	public String caseALetDefExp(ALetDefExp node) throws AnalysisException
@@ -844,7 +847,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	}
 	@Override
 	public String caseACallStm(ACallStm node, IndentTracker question) throws AnalysisException {
-		insertIntoStringStack(node.getName().getFullName() + "()");
+		insertIntoStringStack(node.getName().getFullName() + "();");
 		return node.getName().getFullName();
 	}
 	
