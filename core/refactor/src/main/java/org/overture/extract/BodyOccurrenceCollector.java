@@ -56,6 +56,9 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 				
 				if(ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation, counter)){
 					ExtractUtil.removeFromStatements(stm, node.getStatements());
+					ExtractionLog.addExtraction(new Extraction(stm.getLocation(), stm.toString(), null));					
+				}else{
+					ExtractionLog.addExtraction(new Extraction(stm.getLocation(), stm.toString(), toOperation.getName().getName()));					
 				}
 				
 			} else if(!ExtractUtil.isInRange(stm.getLocation(), from, to)){

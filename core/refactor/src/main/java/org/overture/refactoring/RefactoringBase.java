@@ -14,7 +14,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
@@ -26,6 +25,7 @@ import org.overture.extract.Extractor;
 import org.overture.extract.RefactoringExtractionCollector;
 import org.overture.rename.RefactoringRenameCollector;
 import org.overture.rename.Renamer;
+import org.overture.rename.Renaming;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 

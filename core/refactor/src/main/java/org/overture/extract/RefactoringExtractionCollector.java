@@ -33,7 +33,6 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private PDefinition enclosingDef;
 	private int enclosingCounter;
 
-	private Set<Extraction> extractions;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 	private AModuleModules currentModule;
@@ -50,11 +49,11 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		this.enclosingDef = null;
 		this.enclosingCounter = 0;
 		this.visitedOperations = new ArrayList<INode>();
-		this.extractions = new HashSet<Extraction>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 		this.currentModule = null;
 		this.extractedOperation = null;
+		ExtractionLog.clearExtractions();
 	}
 
 	@Override
@@ -201,22 +200,20 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		namesToAvoid = collector.namesToAvoid();
 	}
 
-	public void init(boolean clearRenamings)
+	public void init(boolean clearExtracions)
 	{
 		this.enclosingDef = null;
 		this.enclosingCounter = 0;
 		this.namesToAvoid.clear();
 		this.nameGen = new TempVarNameGen();
-
-		if (extractions != null && clearRenamings)
-		{
-			extractions.clear();
+		if(clearExtracions){
+			ExtractionLog.clearExtractions();
 		}
 	}
 
 	public Set<Extraction> getExtractions()
 	{
-		return extractions;
+		return ExtractionLog.getExtractions();
 	}
 
 	private boolean proceed(INode node)

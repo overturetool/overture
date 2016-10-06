@@ -17,11 +17,11 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
 import org.overture.prettyprinter.RefactoringPrettyPrinter;
+import org.overture.rename.Renaming;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -168,7 +168,6 @@ public class RefactoringMain {
 					generatedAST = refactoringBase.generateExtraction(RefactoringBase.getNodes(tcResult.result), parameters);
 					if(printClasses){
 						PrintOutputAST(generatedAST);
-						//VDMPrinter(genData,files);
 					}
 					if(testClass){
 						generatedData = refactoringBase.getGeneratedData();

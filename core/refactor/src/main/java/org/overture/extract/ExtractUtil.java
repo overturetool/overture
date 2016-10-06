@@ -12,7 +12,6 @@ import org.overture.ast.statements.PStm;
 public class ExtractUtil {
 
 	private static boolean toOpAdded = false;
-	
 	public static void init(){
 		toOpAdded = false;
 	}
@@ -35,7 +34,6 @@ public class ExtractUtil {
 			LinkedList<PStm> statements, AExplicitOperationDefinition extractedOp, int stmIndex){
 		
 		if(!toOpAdded && stm instanceof ACallStm){
-			System.out.println("index: " + stmIndex);
 			ACallStm newStm = (ACallStm) stm.clone();
 			newStm.setLocation(new LexLocation());
 			newStm.setType(extractedOp.getType());
@@ -47,5 +45,5 @@ public class ExtractUtil {
 			return false;
 		}
 		return true;
-	}
+	}		
 }

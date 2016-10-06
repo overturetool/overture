@@ -1,6 +1,7 @@
 package org.overture.refactor.tests;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,46 +19,22 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.refactor.tests.base.ResultObject;
 import org.overture.refactor.tests.base.TestUtils;
+import org.overture.refactoring.BasicRefactoringType;
 import org.overture.refactoring.GeneratedData;
 import org.overture.refactoring.RefactoringMain;
-import org.overture.rename.Renaming;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(Parameterized.class)
-public class VarRenamingTest {
-	ObjectMapper mapper = new ObjectMapper();
-	private File inputFile;
-	private static final String TEST_ARG = "-test";
-	public static final String ROOT_INPUT = "src" + File.separatorChar + "test"
-			+ File.separatorChar + "resources" + File.separatorChar + "renamingTestInputs";
-	public static final String ROOT_RESULT = "src" + File.separatorChar + "test"
-			+ File.separatorChar + "resources" + File.separatorChar + "renamingTestResults"
-			+ File.separatorChar;
-				
-	public VarRenamingTest(File inputFile){
-		this.inputFile = inputFile;
-	}
-	
-	@Before
-	public void init() throws Exception
-	{
-		Settings.dialect = Dialect.VDM_PP;
-		Settings.release = Release.VDM_10;
-	}
-	
-	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData()
-	{
-		return TestUtils.collectFiles(ROOT_INPUT);
-	}
-	
-	@Test
-	public void test() throws Exception
-	{
+public class GlobalFileTester {
+
+	protected static final String TEST_ARG = "-test";
+
+	protected void globalTest(File inputFile, String ROOT_RESULT, ObjectMapper mapper) throws JsonParseException, JsonMappingException, IOException{
 		TypeCheckResult<List<SClassDefinition>> originalSpecTcResult = TypeCheckerUtil.typeCheckPp(inputFile);
 		
 		Assert.assertTrue(inputFile.getName() + " has type errors", originalSpecTcResult.errors.isEmpty());
@@ -71,8 +48,7 @@ public class VarRenamingTest {
 			ResultObject resObj = iter.next();
 			String languageStr = resObj.getLanguage();
 			String configStr = resObj.getConfig();
-			List<String> resultRenamings = resObj.getRenamings();
-
+			
 			String[] strArr = {TEST_ARG, languageStr,configStr,inputFile.getAbsolutePath()};
 			RefactoringMain.main(strArr);
 
@@ -81,26 +57,43 @@ public class VarRenamingTest {
 				System.out.println("There was not generated any data!");
 				Assert.assertTrue(genData == null);
 			}
+			//RENAME CHECK
+			List<BasicRefactoringType> renamings =(List<BasicRefactoringType>)(List<?>) genData.getAllRenamings();
 			
-			List<Renaming> renamings = genData.getAllRenamings();
-			List<String> renamingStrings = removeFilePathFromRenaming(renamings);
-			Assert.assertTrue((resultRenamings == null && renamings == null) || resultRenamings.size() == renamings.size());
+			List<String> renamingStrings = removeFilePathFromText(renamings);
+			Assert.assertTrue((resObj.getRenamings() == null && renamingStrings == null) || 
+					resObj.getRenamings().size() == renamingStrings.size());
 
 			for(int i = 0; i < renamingStrings.size();i++ ) {
 				String item = renamingStrings.get(i);
 				System.out.println(item);
-				Assert.assertTrue(resultRenamings.contains(item));
+				Assert.assertTrue(resObj.getRenamings().contains(item));
+			}
+			
+			//EXTRACT CHECK
+			List<BasicRefactoringType> extractions =(List<BasicRefactoringType>)(List<?>) genData.getAllExtractions();
+			List<String> extractionStrings = removeFilePathFromText(extractions);
+			Assert.assertTrue((resObj.getExtractions() == null && extractionStrings == null) || resObj.getExtractions().size() == extractionStrings.size());
+
+			for(int i = 0; i < extractionStrings.size();i++ ) {
+				String item = extractionStrings.get(i);
+				System.out.println(item);
+				Assert.assertTrue(resObj.getExtractions().contains(item));
 			}
 		}
 	}
 	
-	private List<String> removeFilePathFromRenaming(List<Renaming> renamings){
-		List<String> renamedStrings = new ArrayList<>();
-		for(Iterator<Renaming> i = renamings.iterator(); i.hasNext(); ) {
-			   Renaming item = i.next();
-			   renamedStrings.add(item.toString().replaceAll("\\(.*\\)", ""));
+	private List<String> removeFilePathFromText(List<BasicRefactoringType> obj){
+		
+		List<String> finishedStrings = new ArrayList<>();
+		if(obj != null){
+			for(Iterator<BasicRefactoringType> i = obj.iterator(); i.hasNext(); ) {
+				BasicRefactoringType item = i.next();
+				finishedStrings.add(item.toString().replaceAll("\\(.*?\\) ?", ""));
 			}
-		return renamedStrings;
+		}
+		return finishedStrings;
 		
 	}
 }
+
