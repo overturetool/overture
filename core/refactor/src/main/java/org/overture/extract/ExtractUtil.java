@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.PStm;
@@ -35,10 +36,11 @@ public class ExtractUtil {
 		
 		if(!toOpAdded && stm instanceof ACallStm){
 			ACallStm newStm = (ACallStm) stm.clone();
-			newStm.setLocation(extractedOp.getLocation());
+			newStm.setLocation(new LexLocation());
 			newStm.setType(extractedOp.getType());
 			newStm.setRootdef(extractedOp);
-			newStm.setName(extractedOp.getName());
+			newStm.setName(extractedOp.getName().clone());
+			newStm.getArgs().clear();
 			node.getStatements().set(statements.indexOf(stm), newStm);
 			toOpAdded = true;	
 			return false;

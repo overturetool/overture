@@ -183,10 +183,11 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 				currentModule.apply(THIS);
 			}
 		} 
-		
+
 		if(extractedOperation != null && !visitedOperations.contains(node)){
 			//TODO operation check for duplicates
-			DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName);
+//			AExplicitOperationDefinition test = (AExplicitOperationDefinition) currentModule.getDefs().get(currentModule.getDefs().indexOf(extractedOperation));
+			DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule);
 			node.getBody().apply(dubCollector);
 			visitedOperations.add(node);
 		}

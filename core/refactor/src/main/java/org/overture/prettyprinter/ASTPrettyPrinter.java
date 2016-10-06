@@ -245,7 +245,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			return "";
 		}
 		visitStms(node.getStatements(), question);
-		return node.toString();
+		return "";
 	}
 	@Override
 	public String caseALetStm(ALetStm node, IndentTracker question) throws AnalysisException
@@ -397,6 +397,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	
 	@Override
 	public String caseACallStm(ACallStm node, IndentTracker question) throws AnalysisException {
+		if(node.getName() != null){
 		insertIntoStringStack(question.getIndentation() + node.getName().getFullName() + "(");
 		for(PExp stm : node.getArgs()){
 			
@@ -411,7 +412,8 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		}
 		insertIntoStringStack(");");
 		insertIntoStringStack("\n");
-		return node.getName().getFullName();
+		}
+		return "";
 	}
 	
 	@Override

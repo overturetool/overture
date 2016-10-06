@@ -1,6 +1,7 @@
 package org.overture.extract;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,13 +19,14 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 	private AExplicitOperationDefinition extractedOperation;
 	private int from;
 	private int to;
-	
-	public DuplicateOccurrenceCollector(AExplicitOperationDefinition callingOp, AExplicitOperationDefinition extractedOp, int from, int to, String extractedOperationName)
+	AModuleModules currentModule;
+	public DuplicateOccurrenceCollector(AExplicitOperationDefinition callingOp, AExplicitOperationDefinition extractedOp, int from, int to, String extractedOperationName, AModuleModules currentModule)
 	{
 		this.callingOperation = callingOp;
 		this.extractedOperation = extractedOp;
 		this.from = from;
 		this.to = to;
+		this.currentModule = currentModule;
 	}
 	
 	@Override
@@ -46,13 +48,12 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 			
 			int listOfStmCounter = 0;
 			
-			for(PStm stm : fromStatements){
+			for (Iterator<PStm> iterator = node.getStatements().iterator(); iterator.hasNext(); ) {
+				PStm stm = iterator.next();
 				int fromAndTo = listOfStm.get(listOfStmCounter).getLocation().getStartLine();
 				
 				if(ExtractUtil.isInRange(stm.getLocation(), fromAndTo, fromAndTo)){
-					
-					//TODO Problem core
-//					ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, extractedOperation);
+					ExtractUtil.addToOperationToFromOperation( stm, node, node.getStatements(), extractedOperation);
 					ExtractUtil.removeFromStatements(stm, node.getStatements());
 					listOfStmCounter++;
 					
@@ -61,6 +62,22 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 					}
 				} 
 			}
+			
+//			for(PStm stm : fromStatements){
+//				int fromAndTo = listOfStm.get(listOfStmCounter).getLocation().getStartLine();
+//				
+//				if(ExtractUtil.isInRange(stm.getLocation(), fromAndTo, fromAndTo)){
+//					
+//					//TODO Problem core
+//					ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, extractedOperation);
+//					ExtractUtil.removeFromStatements(stm, node.getStatements());
+//					listOfStmCounter++;
+//					
+//					if(listOfStmCounter > listOfStm.size()-1){
+//						return;
+//					}
+//				} 
+//			}
 		}
 	}
 	
