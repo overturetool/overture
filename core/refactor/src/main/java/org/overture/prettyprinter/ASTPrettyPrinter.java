@@ -1,8 +1,8 @@
 /*
  * #%~
- * New Pretty Printer
+ * AST Pretty Printer
  * %%
- * Copyright (C) 2008 - 2014 Overture
+ * Copyright (C) 2008 - 2016 Overture
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -28,13 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
@@ -58,35 +56,26 @@ import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExpBase;
-import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
-import org.overture.codegen.analysis.vdm.IdDesignatorOccurencesCollector;
-import org.overture.codegen.analysis.vdm.IdOccurencesCollector;
 import org.overture.codegen.analysis.vdm.NameCollector;
-import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.core.npp.IPrettyPrinter;
 import org.overture.core.npp.ISymbolTable;
 import org.overture.core.npp.IndentTracker;
 import org.overture.core.npp.Utilities;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
 class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
     implements IPrettyPrinter {
@@ -107,7 +96,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	private static String NODE_NOT_FOUND = "ERROR: Node not found";
 	
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
-	private String[] parameters;
 	protected ISymbolTable mytable;
 	protected IPrettyPrinter rootNpp;
 	
@@ -211,7 +199,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		for (PDefinition def : defInfo.getNodeDefs()){
 			if(def != defInfo.getNodeDefs().get(0)){
-				strBuilder.append(", ");
+				strBuilder.append("* ");
 			}	
 			strBuilder.append(def.getName());
 		}
@@ -280,7 +268,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			if (defVal != null){
 				defVal.getExpression().apply(this, question);
 			}
-			//TODO
 			strBuilder = new StringBuilder();
 		}
 		insertIntoStringStack("\n" + question.getIndentation() + "in\n");
@@ -808,120 +795,27 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 //	{
 //		// No need to visit names
 //	}
-
-	
-	private void handleCaseNode(PExp cond, List<? extends INode> cases,
-			INode others, IndentTracker question) throws AnalysisException
-	{
-		if (cond != null)
-		{
-			cond.apply(this, question);
-		}
-
-		// The cases will be responsible for opening/ending the scope
-		for (INode c : cases)
-		{
-			c.apply(this, question);
-		}
-
-		if (others != null)
-		{
-			others.apply(this, question);
-		}
-	}
-
-//	private void openLoop(ILexNameToken var, INode varParent, PStm body)
-//			throws AnalysisException
+//	private void handleCaseNode(PExp cond, List<? extends INode> cases,
+//			INode others, IndentTracker question) throws AnalysisException
 //	{
-//		if (!contains(var))
+//		if (cond != null)
 //		{
-//			localDefsInScope.add(var);
-//		} else
+//			cond.apply(this, question);
+//		}
+//
+//		// The cases will be responsible for opening/ending the scope
+//		for (INode c : cases)
 //		{
-//			String newName = computeNewName(var.getName());
+//			c.apply(this, question);
+//		}
 //
-//			registerRenaming(var, newName);
-//
-//			if (varParent != null)
-//			{
-//				Set<AIdentifierPattern> idPatterns = collectIdOccurences(var, varParent);
-//
-//				for (AIdentifierPattern id : idPatterns)
-//				{
-//					registerRenaming(id.getName(), newName);
-//				}
-//			}
-//
-//			Set<AVariableExp> vars = collectVarOccurences(var.getLocation(), body);
-//
-//			for (AVariableExp varExp : vars)
-//			{
-//				registerRenaming(varExp.getName(), newName);
-//			}
-//
-//			Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(var.getLocation(), body);
-//
-//			for (AIdentifierStateDesignator id : idStateDesignators)
-//			{
-//				registerRenaming(id.getName(), newName);
-//			}
+//		if (others != null)
+//		{
+//			others.apply(this, question);
 //		}
 //	}
 
-	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern,
-			INode result, IndentTracker question) throws AnalysisException
-	{
-		// Do not visit the conditional exp (cexp)
-		openScope(pattern, localDefs, result);
-
-		result.apply(this, question);
-
-		// End scope
-		for (PDefinition def : localDefs)
-		{
-			removeLocalDefFromScope(def);
-		}
-	}
-
-
-	private void handleMultipleBindConstruct(INode node,
-			LinkedList<PMultipleBind> bindings, PExp first, PExp pred, IndentTracker question)
-			throws AnalysisException
-	{
-
-		VDMDefinitionInfo defInfo = new VDMDefinitionInfo(getMultipleBindDefs(bindings), af);
-
-		openScope(defInfo, node, question);
-
-		if (first != null)
-		{
-			first.apply(this, question);
-		}
-
-		if (pred != null)
-		{
-			pred.apply(this, question);
-		}
-
-		endScope(defInfo);
-	}
-
-	private List<PDefinition> getMultipleBindDefs(List<PMultipleBind> bindings)
-	{
-		List<PDefinition> defs = new Vector<PDefinition>();
-
-		for (PMultipleBind mb : bindings)
-		{
-			for (PPattern pattern : mb.getPlist())
-			{
-				defs.addAll(af.createPPatternAssistant().getDefinitions(pattern, af.createPMultipleBindAssistant().getPossibleType(mb), NameScope.LOCAL));
-			}
-		}
-
-		return defs;
-	}
-
-	private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker question)
+private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker question)
 			throws AnalysisException
 	{
 		VDMDefinitionInfo defInfo = getStateDefs(defs, module);
@@ -1105,20 +999,20 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 //		}
 	}
 
-	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
-	{
-		SFunctionDefinitionAssistantTC funcAssistant = this.af.createSFunctionDefinitionAssistant();
-		List<List<PDefinition>> paramDefs = funcAssistant.getParamDefinitions(node, node.getType(), node.getParamPatternList(), node.getLocation());
-
-		List<PDefinition> paramDefFlattened = new LinkedList<PDefinition>();
-
-		for (List<PDefinition> list : paramDefs)
-		{
-			paramDefFlattened.addAll(list);
-		}
-
-		return paramDefFlattened;
-	}
+//	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
+//	{
+//		SFunctionDefinitionAssistantTC funcAssistant = this.af.createSFunctionDefinitionAssistant();
+//		List<List<PDefinition>> paramDefs = funcAssistant.getParamDefinitions(node, node.getType(), node.getParamPatternList(), node.getLocation());
+//
+//		List<PDefinition> paramDefFlattened = new LinkedList<PDefinition>();
+//
+//		for (List<PDefinition> list : paramDefs)
+//		{
+//			paramDefFlattened.addAll(list);
+//		}
+//
+//		return paramDefFlattened;
+//	}
 
 	private boolean proceed(INode node)
 	{
@@ -1212,12 +1106,9 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public void openScope(INode parentNode, List<PDefinition> localDefs,
 			INode defScope) throws AnalysisException
 	{
-		for (PDefinition localDef : localDefs)
-		{
-//			if(CompareNodeLocation(localDef.getLocation()) || checkVarOccurences(localDef.getLocation(), defScope)){
-//				findRenamings(localDef, defScope.parent(), defScope);
-//			}
-		}
+//		for (PDefinition localDef : localDefs)
+//		{
+//		}
 	}
 
 	public void endScope(VDMDefinitionInfo defInfo)
@@ -1228,42 +1119,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public void removeLocalDefFromScope(PDefinition localDef)
 	{
 		localDefsInScope.remove(localDef.getName());
-	}
-
-	private Set<ACallStm> collectCallOccurences(ILexLocation defLoc, INode defScope) throws AnalysisException {
-		CallOccurenceCollector collector = new CallOccurenceCollector(defLoc);
-		defScope.apply(collector);
-		return collector.getCalls();
-	}
-
-	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
-			INode defScope) throws AnalysisException
-	{
-		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc);
-
-		defScope.apply(collector);
-
-		return collector.getVars();
-	}
-	
-	private Set<AIdentifierStateDesignator> collectIdDesignatorOccurrences(
-			ILexLocation defLoc, INode defScope) throws AnalysisException
-	{
-		IdDesignatorOccurencesCollector collector = new IdDesignatorOccurencesCollector(defLoc, idDefs);
-
-		defScope.apply(collector);
-
-		return collector.getIds();
-	}
-
-	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name,
-			INode parent) throws AnalysisException
-	{
-		IdOccurencesCollector collector = new IdOccurencesCollector(name, parent);
-
-		parent.apply(collector);
-
-		return collector.getIdOccurences();
 	}
 
 	private boolean contains(PDefinition defToCheck)

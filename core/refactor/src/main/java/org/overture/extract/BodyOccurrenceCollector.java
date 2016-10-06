@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
@@ -20,7 +19,6 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 	private AModuleModules currentModule;
 	private int from;
 	private int to;
-	private boolean toOpAdded = false;
 	private String extractedOperationName;
 	
 	public BodyOccurrenceCollector(AExplicitOperationDefinition fromOp, AModuleModules currentModule, int from, int to, String extractedOperationName)
@@ -30,7 +28,6 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 		this.currentModule = currentModule;
 		this.from = from;
 		this.to = to;
-		this.toOpAdded = false;
 		this.extractedOperationName = extractedOperationName;
 	}
 	

@@ -1,7 +1,6 @@
 package org.overture.extract;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,6 +39,10 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 	
 	@Override
 	public void caseABlockSimpleBlockStm(ABlockSimpleBlockStm node) throws AnalysisException {
+		dublicateRemover(node);
+	}
+	
+	public void dublicateRemover(ABlockSimpleBlockStm node){
 		ExtractUtil.init();
 		LinkedList<PStm> fromStatements = new LinkedList<PStm>(node.getStatements());
 		List<PStm> listOfStm = checkForPattern(node);
@@ -58,11 +61,14 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 					listOfStmCounter++;
 					
 					if(listOfStmCounter > listOfStm.size()-1){
+						listOfStm.clear();
+						dublicateRemover(node);
 						return;
 					}
 				} 
 			}
 		}
+		return;
 	}
 	
 	public List<PStm> checkForPattern(ABlockSimpleBlockStm currentBlock){

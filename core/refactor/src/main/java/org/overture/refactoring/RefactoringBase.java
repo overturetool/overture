@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.Dialect;
@@ -23,7 +24,6 @@ import org.overture.config.Settings;
 import org.overture.extract.Extraction;
 import org.overture.extract.Extractor;
 import org.overture.extract.RefactoringExtractionCollector;
-import org.overture.parser.util.ParserUtil;
 import org.overture.rename.RefactoringRenameCollector;
 import org.overture.rename.Renamer;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -92,8 +92,6 @@ public class RefactoringBase {
 	public List<INode> getAST(String fileName) throws AnalysisException
 	{
 		File file = new File(fileName);
-		
-		List<AModuleModules> expInput = ParserUtil.parseSl(file).result;
 		
 		TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(file);
 
@@ -173,7 +171,7 @@ public class RefactoringBase {
 
 		List<Extraction> allExtractions = new LinkedList<Extraction>();
 
-		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector(generator.getIRInfo().getTcFactory(), idDefs);
+		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector();
 		Extractor extractor = new Extractor();
 		extractionsCollector.setRefactoringParameters(parameters);
 		for (INode node : mergedParseLists)
