@@ -33,11 +33,13 @@ public class RefactoringMain {
 	public static final String SL_ARG = "-sl";
 	public static final String RENAME_ARG = "-rename;";
 	public static final String EXTRACT_ARG = "-extract;";
+	public static final String SIGNATURE_ARG = "-signature;";
 	
 	private static boolean printClasses = false;
 	private static boolean testClass = false;
 	private static boolean rename = false;
 	private static boolean extract = false;
+	private static boolean signature = false;
 	
 	private static List<INode> generatedAST;
 	private static GeneratedData generatedData;
@@ -52,6 +54,7 @@ public class RefactoringMain {
 		testClass = false;
 		rename = false;
 		extract = false;
+		signature = false;
 		generatedAST = null;
 		generatedData = null;
 		List<String> listArgs = Arrays.asList(args);
@@ -90,6 +93,11 @@ public class RefactoringMain {
 				parms = parms.replace(EXTRACT_ARG,"");
 				parameters = parms.split(";");
 				extract = true;
+			} else if (arg.contains(SIGNATURE_ARG)){
+				String parms = arg;
+				parms = parms.replace(SIGNATURE_ARG,"");
+				parameters = parms.split(";");
+				signature = true;
 			} else
 			{
 				// It's a file or a directory
@@ -166,6 +174,20 @@ public class RefactoringMain {
 			if(extract){
 				if(parameters != null && parameters.length >= 3){
 					generatedAST = refactoringBase.generateExtraction(RefactoringBase.getNodes(tcResult.result), parameters);
+					if(printClasses){
+						PrintOutputAST(generatedAST);
+						//VDMPrinter(genData,files);
+					}
+					if(testClass){
+						generatedData = refactoringBase.getGeneratedData();
+					}
+				} else {
+					MsgPrinter.getPrinter().println("No parameters");
+				}
+			}
+			if(signature){
+				if(parameters != null && parameters.length >= 3){
+					generatedAST = refactoringBase.generateSignatureChanges(RefactoringBase.getNodes(tcResult.result), parameters);
 					if(printClasses){
 						PrintOutputAST(generatedAST);
 						//VDMPrinter(genData,files);
