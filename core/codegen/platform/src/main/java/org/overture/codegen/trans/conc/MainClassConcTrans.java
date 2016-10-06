@@ -68,6 +68,11 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		if(info.getDeclAssistant().isTest(node))
+		{
+			return;
+		}
 
 		if (node.getSuperNames().size() > 1)
 		{
@@ -104,7 +109,7 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 			if (methodIR.getStatic() != null && !methodIR.getStatic()
 					&& !isIRGenerated(methodIR))
 			{
-				if (!methodIR.getIsConstructor())
+				if (!methodIR.getIsConstructor() && !methodIR.getAbstract())
 				{
 					ABlockStmIR bodyStm = new ABlockStmIR();
 

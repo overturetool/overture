@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.4.0</version>
+    <version>2.4.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -24,7 +24,7 @@
     <module>prettyprinting</module>
     <module>commandline</module>
     <module>codegen</module>
-     <module>isapog</module>
+    <module>isapog</module>
   </modules>
 
   <build>
@@ -32,8 +32,26 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        </plugin>
+      </plugin>
     </plugins>
   </build>
 
+
+  <profiles>
+    <profile>
+      <id>codesigning</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jarsigner-plugin</artifactId>
+            <configuration>
+              <!-- we skip signing since it gives problems with testing because we have packages split over multiple jars -->
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

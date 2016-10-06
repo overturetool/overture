@@ -19,7 +19,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.4.0</version>
+  <version>2.4.2</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -55,6 +55,41 @@
         <module>ide</module>
       </modules>
     </profile>
+
+		
+		<profile>
+      <id>codesigning</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jarsigner-plugin</artifactId>
+            <configuration>
+							
+							<!-- This is an attempt to disable the test error: java.lang.SecurityException: class ...'s signer information does not match signer information of other classes in the same package
+							-->
+							<removeExistingSignatures>true</removeExistingSignatures>
+              
+							<storetype>${keystore.type}</storetype>
+              <keystore>${keystore.path}</keystore>
+              <alias>${keystore.alias}</alias>
+              <storepass>${keystore.store.password}</storepass>
+              <keypass>${keystore.key.password}</keypass>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+
   </profiles>
 
   <build>
@@ -263,6 +298,11 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <version>2.8.1</version>
         </plugin>
 
+			  <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jarsigner-plugin</artifactId>
+          <version>1.2</version>
+        </plugin>
 				
 
         <plugin>
@@ -291,7 +331,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <artifactId>maven-release-plugin</artifactId>
           <version>2.5.3</version>
           <configuration>
-						<releaseProfiles>release,With-IDE,all-platforms</releaseProfiles>
+						<releaseProfiles>release,With-IDE,all-platforms,codesigning</releaseProfiles>
             <tagNameFormat>Release/@{project.version}</tagNameFormat>
           </configuration>
         </plugin>
@@ -366,7 +406,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
     <url>git@github.com:overturetool/overture.git</url>
     <connection>scm:git:git://github.com/overturetool/overture.git</connection>
     <developerConnection>scm:git:git@github.com:overturetool/overture.git</developerConnection>
-    <tag>Release/2.4.0</tag>
+    <tag>Release/2.4.2</tag>
   </scm>
 
   <developers>

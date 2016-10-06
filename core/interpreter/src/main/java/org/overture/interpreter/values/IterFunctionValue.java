@@ -23,8 +23,11 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 
 public class IterFunctionValue extends FunctionValue
@@ -76,6 +79,13 @@ public class IterFunctionValue extends FunctionValue
 		}
 
 		return false;
+	}
+
+	@Override
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done) throws AnalysisException
+	{
+		FunctionValue converted = (FunctionValue)function.convertValueTo(to, ctxt, done);
+		return new IterFunctionValue(converted, iterations);
 	}
 
 	@Override

@@ -103,6 +103,13 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter
 	 */
 	protected boolean separateTestCode = false;
+	
+	/**
+	 * VDMPP and VDMRT exclusive feature: Code generate the concurrency constructs
+	 * 
+	 * @parameter
+	 */
+	protected boolean genConcurrency = false;
 
 	protected File getProjectOutputDirectory()
 	{

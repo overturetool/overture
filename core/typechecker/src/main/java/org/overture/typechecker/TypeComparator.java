@@ -1120,4 +1120,17 @@ public class TypeComparator
 			return AstFactory.newAUnionType(a.getLocation(), list);
 		}
 	}
+	
+	/**
+	 * Return the narrowest of two types/type lists.
+	 */
+	public synchronized List<PType> narrowest(List<PType> t1, List<PType> t2)
+	{
+		return allSubTypes(t1, t2, false) == Result.Yes ? t1 : t2;
+	}
+	
+	public synchronized PType narrowest(PType t1, PType t2)
+	{
+		return isSubType(t1, t2) ? t1 : t2;
+	}
 }

@@ -152,7 +152,7 @@
         commandId="org.overture.ide.plugins.javagen.vdm2java_launchconfig"
         contextId="org.eclipse.ui.contexts.window"
         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-        sequence="Ctrl+Alt+B">
+        sequence="Ctrl+Alt+L">
     </key>
   </extension>
 

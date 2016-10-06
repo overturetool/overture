@@ -38,7 +38,7 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		if (!isTest(node))
+		if (!assist.getInfo().getDeclAssistant().isTest(node))
 		{
 			return;
 		}
@@ -60,12 +60,6 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 		 * with 'test'
 		 */
 		addTestAnnotations(node);
-	}
-
-	public boolean isTest(ADefaultClassDeclIR node)
-	{
-		return !node.getSuperNames().isEmpty()
-				&& node.getSuperNames().get(0).getName().equals(IRConstants.TEST_CASE);
 	}
 
 	public void addTestAnnotations(ADefaultClassDeclIR node)

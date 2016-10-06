@@ -70,6 +70,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		irSettings.setGeneratePreCondChecks(false);
 		irSettings.setGeneratePostConds(false);
 		irSettings.setGeneratePostCondChecks(false);
+		irSettings.setGenerateConc(genConcurrency);
 
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);

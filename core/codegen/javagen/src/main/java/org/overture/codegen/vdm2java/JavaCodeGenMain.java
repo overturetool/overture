@@ -68,6 +68,7 @@ public class JavaCodeGenMain
 	public static final String SEP_TEST_CODE = "-separate";
 	public static final String VDM_LOC = "-vdmloc";
 	public static final String NO_CLONING = "-nocloning";
+	public static final String NO_STRINGS = "-nostrings";
 
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
@@ -209,7 +210,11 @@ public class JavaCodeGenMain
 			} else if (arg.equals(NO_CLONING))
 			{
 				javaSettings.setDisableCloning(true);
-			} else
+			} else if(arg.equals(NO_STRINGS))
+			{
+				irSettings.setCharSeqAsString(false);
+			}	
+			else
 			{
 				// It's a file or a directory
 				File file = new File(arg);
