@@ -32,16 +32,17 @@ public class ExtractUtil {
 	}
 	
 	public static boolean addToOperationToFromOperation(PStm stm, ABlockSimpleBlockStm node, 
-			LinkedList<PStm> statements, AExplicitOperationDefinition extractedOp){
+			LinkedList<PStm> statements, AExplicitOperationDefinition extractedOp, int stmIndex){
 		
 		if(!toOpAdded && stm instanceof ACallStm){
+			System.out.println("index: " + stmIndex);
 			ACallStm newStm = (ACallStm) stm.clone();
 			newStm.setLocation(new LexLocation());
 			newStm.setType(extractedOp.getType());
 			newStm.setRootdef(extractedOp);
 			newStm.setName(extractedOp.getName().clone());
 			newStm.getArgs().clear();
-			node.getStatements().set(statements.indexOf(stm), newStm);
+			node.getStatements().set(stmIndex, newStm);
 			toOpAdded = true;	
 			return false;
 		}

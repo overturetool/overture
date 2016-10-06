@@ -48,6 +48,7 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 		ExtractUtil.init();
 		LinkedList<PStm> fromStatements = new LinkedList<PStm>(node.getStatements());
 		ABlockSimpleBlockStm toNodeOperation = null;
+		int counter = 0;
 		for(PStm stm : fromStatements){
 			
 			if(ExtractUtil.isInRange(stm.getLocation(), from, to)){
@@ -56,7 +57,7 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 					addToNodeCurrentModule(fromOperation);
 				}
 				
-				if(ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation)){
+				if(ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation, counter)){
 					ExtractUtil.removeFromStatements(stm, node.getStatements());
 				}
 				
@@ -65,7 +66,8 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 				if(toOperation == null){
 					addToNodeCurrentModule(fromOperation);
 				}
-				ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation);
+				//TODO check if this is correct
+				//ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation, counter);
 				
 				if(toNodeOperation == null){
 					if(toOperation.getBody() instanceof ABlockSimpleBlockStm){
@@ -76,6 +78,7 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 					ExtractUtil.removeFromStatements(stm, toNodeOperation.getStatements());					
 				}
 			}
+			counter++;
 		}
 	}
 		

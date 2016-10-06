@@ -48,13 +48,13 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 			
 			int listOfStmCounter = 0;
 			
-			for (Iterator<PStm> iterator = node.getStatements().iterator(); iterator.hasNext(); ) {
-				PStm stm = iterator.next();
+			for (int i = 0; i < fromStatements.size(); i ++) {
+
 				int fromAndTo = listOfStm.get(listOfStmCounter).getLocation().getStartLine();
 				
-				if(ExtractUtil.isInRange(stm.getLocation(), fromAndTo, fromAndTo)){
-					ExtractUtil.addToOperationToFromOperation( stm, node, node.getStatements(), extractedOperation);
-					ExtractUtil.removeFromStatements(stm, node.getStatements());
+				if(ExtractUtil.isInRange(fromStatements.get(i).getLocation(), fromAndTo, fromAndTo)){
+					ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i);
+					ExtractUtil.removeFromStatements(fromStatements.get(i), node.getStatements());
 					listOfStmCounter++;
 					
 					if(listOfStmCounter > listOfStm.size()-1){
@@ -62,22 +62,6 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 					}
 				} 
 			}
-			
-//			for(PStm stm : fromStatements){
-//				int fromAndTo = listOfStm.get(listOfStmCounter).getLocation().getStartLine();
-//				
-//				if(ExtractUtil.isInRange(stm.getLocation(), fromAndTo, fromAndTo)){
-//					
-//					//TODO Problem core
-//					ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, extractedOperation);
-//					ExtractUtil.removeFromStatements(stm, node.getStatements());
-//					listOfStmCounter++;
-//					
-//					if(listOfStmCounter > listOfStm.size()-1){
-//						return;
-//					}
-//				} 
-//			}
 		}
 	}
 	
@@ -86,38 +70,46 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 
 		if(extractedOperation.getBody() instanceof ABlockSimpleBlockStm){
 			ABlockSimpleBlockStm extractedBlock = (ABlockSimpleBlockStm) extractedOperation.getBody();
-			
-			for(int i = 0; i < currentBlock.getStatements().size(); i++){
-				PStm currentStm = currentBlock.getStatements().get(i);
+				int i = 0;
+
+				PStm extractedStm = extractedBlock.getStatements().get(i);
 				
-				for(int j = 0; j < extractedBlock.getStatements().size(); j++){
-					PStm extractedStm = extractedBlock.getStatements().get(j);
+				for(int j = 0; j < currentBlock.getStatements().size(); j++){
+					PStm callingStm = currentBlock.getStatements().get(j);
 					
-					if(extractedStm.equals(currentStm)){
-						if(!extractedStm.equals(extractedBlock.getStatements().getFirst()) &&
-								extractedBlock.getStatements().get(j - 1).equals(listOfStm.get(listOfStm.size() - 1))){
-							listOfStm.add(currentStm);
+					if(callingStm.equals(extractedStm)){
+						if(!callingStm.equals(extractedBlock.getStatements().getFirst()) &&
+								currentBlock.getStatements().get(j - 1).equals(listOfStm.get(listOfStm.size() - 1))){
+							listOfStm.add(callingStm);
 							
-							if(extractedBlock.getStatements().getLast().equals(currentStm)){
+							if(extractedBlock.getStatements().getLast().equals(extractedStm)){
 								return listOfStm;
 							}
 							
 						} else {
-							listOfStm.add(currentStm);
+							listOfStm.add(callingStm);
 						}
 						
 						i++;
-						if(i < currentBlock.getStatements().size()){
-							currentStm = currentBlock.getStatements().get(i);
+						if(i < extractedBlock.getStatements().size()){
+							extractedStm = extractedBlock.getStatements().get(i);
 						}else{
 //							RETURN fail
 							listOfStm.clear();
 							return listOfStm;
 						}
 							
+					}else{
+						listOfStm.clear();
+						if(i > 0){
+							i--;
+							j--;
+						}
+						if(i < extractedBlock.getStatements().size()){
+							extractedStm = extractedBlock.getStatements().get(i);
+						}
+						
 					}
-					
-				}
 				
 			}
 		
