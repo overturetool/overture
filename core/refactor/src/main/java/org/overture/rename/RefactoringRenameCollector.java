@@ -1123,9 +1123,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	private boolean compareNodeLocation(ILexLocation newNode){
-
-		//System.out.println("Pos " + newNode.getStartLine() + ": " + newNode.getStartPos());
-
+		
 		if(parameters.length >= 3){
 			if(newNode.getStartLine() == Integer.parseInt(parameters[0]) &&
 							newNode.getStartPos() == Integer.parseInt(parameters[1])){

@@ -13,5 +13,4 @@ public class RenameObject{
 		this.newName = newName;
 		this.name = name;			
 	}
-	
 }

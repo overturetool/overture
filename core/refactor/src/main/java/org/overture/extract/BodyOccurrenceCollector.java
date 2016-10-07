@@ -66,9 +66,7 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 				if(toOperation == null){
 					addToNodeCurrentModule(fromOperation);
 				}
-				//TODO check if this is correct
-				//ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation, counter);
-				
+
 				if(toNodeOperation == null){
 					if(toOperation.getBody() instanceof ABlockSimpleBlockStm){
 						toNodeOperation = (ABlockSimpleBlockStm) toOperation.getBody(); 

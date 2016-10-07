@@ -56,7 +56,6 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 				int fromAndTo = listOfStm.get(listOfStmCounter).getLocation().getStartLine();
 				
 				if(ExtractUtil.isInRange(fromStatements.get(i).getLocation(), fromAndTo, fromAndTo)){
-//					ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i);
 					
 					if(ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i)){
 						ExtractionLog.addExtraction(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), null));					

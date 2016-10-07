@@ -50,14 +50,7 @@ public class RefactoringBase {
 	public List<INode> generateRenaming(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 
-		if (Settings.dialect == Dialect.VDM_SL)
-		{
-			ModuleList moduleList = new ModuleList(getModules(ast));
-			moduleList.combineDefaults();
-			ast = getNodes(moduleList);
-		}
-		
-		List<INode> userModules = getUserModules(ast);
+		List<INode> userModules = extractUserModules(ast);
 		
 		allRenamings = new LinkedList<Renaming>();
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
@@ -71,6 +64,18 @@ public class RefactoringBase {
 	public List<INode> generateExtraction(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 
+		List<INode> userModules = extractUserModules(ast);
+		
+		allExtractions = new LinkedList<Extraction>();
+		allExtractions.addAll(performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
+
+		generatedData = new GeneratedData();
+		generatedData.setAllExtractions(allExtractions);
+
+		return userModules;
+	}
+
+	private List<INode> extractUserModules(List<INode> ast) {
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			ModuleList moduleList = new ModuleList(getModules(ast));
@@ -79,13 +84,6 @@ public class RefactoringBase {
 		}
 		
 		List<INode> userModules = getUserModules(ast);
-		
-		allExtractions = new LinkedList<Extraction>();
-		allExtractions.addAll(performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
-
-		generatedData = new GeneratedData();
-		generatedData.setAllExtractions(allExtractions);
-
 		return userModules;
 	}
 	
@@ -104,14 +102,7 @@ public class RefactoringBase {
 
 		List<INode> ast = getNodes(tcResult.result);
 		
-		if (Settings.dialect == Dialect.VDM_SL)
-		{
-			ModuleList moduleList = new ModuleList(getModules(ast));
-			moduleList.combineDefaults();
-			ast = getNodes(moduleList);
-		}
-		
-		List<INode> userModules = getUserModules(ast);
+		List<INode> userModules = extractUserModules(ast);
 		return userModules;
 	}
 	
