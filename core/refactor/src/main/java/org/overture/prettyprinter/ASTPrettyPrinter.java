@@ -197,7 +197,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		for (PDefinition def : defInfo.getNodeDefs()){
 			if(def != defInfo.getNodeDefs().get(0)){
-				strBuilder.append(" , ");
+				strBuilder.append(", ");
 			}	
 			strBuilder.append(def.getName());
 		}

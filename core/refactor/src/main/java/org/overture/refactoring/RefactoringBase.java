@@ -37,7 +37,7 @@ public class RefactoringBase {
 	protected IRGenerator generator;
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
-	private List<SignatureChange> allSignatures;
+	private List<SignatureChange> allSignatureChanges;
 	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
@@ -102,11 +102,11 @@ public class RefactoringBase {
 		
 		List<INode> userModules = getUserModules(ast);
 		
-		allSignatures = new LinkedList<SignatureChange>();
-		allSignatures.addAll(performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
+		allSignatureChanges = new LinkedList<SignatureChange>();
+		allSignatureChanges.addAll(performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
 
 		generatedData = new GeneratedData();
-		generatedData.setAllSignatureChanges(allSignatures);
+		generatedData.setAllSignatureChanges(allSignatureChanges);
 
 		return userModules;
 	}
