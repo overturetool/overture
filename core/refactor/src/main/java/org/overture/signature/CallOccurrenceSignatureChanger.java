@@ -8,7 +8,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.statements.ACallStm;
-import org.overture.rename.RenameObject;
 
 public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 	private ILexLocation defLoc;
@@ -37,7 +36,7 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 
 		if (node.getRootdef().getLocation().equals(defLoc))
 		{
-			function.accept(new SignatureChangeObject(node.getName(), node::setName));
+			function.accept(new SignatureChangeObject(node.getName(), node.getArgs()));
 			callOccurences.add(node);
 		}
 	}

@@ -1,15 +1,16 @@
 package org.overture.signature;
 
-import java.util.function.Consumer;
+import java.util.LinkedList;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 
 public class SignatureChangeObject {
 
-	public Consumer<ILexNameToken> function;
+	public LinkedList<PExp> paramList;
 	public ILexNameToken name;
 	
-	public SignatureChangeObject(ILexNameToken name, Consumer<ILexNameToken> f){
-		this.function = f;
+	public SignatureChangeObject(ILexNameToken name, LinkedList<PExp> paramList){
+		this.paramList = paramList;
 		this.name = name;	
 	}
 }

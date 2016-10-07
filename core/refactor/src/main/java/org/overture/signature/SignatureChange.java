@@ -4,35 +4,30 @@ import org.overture.ast.intf.lex.ILexLocation;
 
 public class SignatureChange implements Comparable<SignatureChange> {
 
-	private ILexLocation oldLoc;
-	private ILexLocation newLoc;
-	private String name;
+	private ILexLocation loc;
+
+	private String oldName;
 
 	private String oldModule;
 	private String newModule;
 
-	public SignatureChange(ILexLocation oldLoc, ILexLocation newLoc, String oldModule, String newModule, String name)
+	public SignatureChange(ILexLocation loc, String oldName,
+			String oldModule, String newModule)
 	{
-		this.oldLoc = oldLoc;
-		this.newLoc = newLoc;
+		this.loc = loc;
+		this.oldName = oldName;
 		this.oldModule = oldModule;
 		this.newModule = newModule;
-		this.name = name;
 	}
 
-	public ILexLocation getOldLoc()
+	public ILexLocation getLoc()
 	{
-		return oldLoc;
+		return loc;
 	}
 
-	public ILexLocation getNewLoc()
+	public String getOldName()
 	{
-		return newLoc;
-	}
-	
-	public String getName()
-	{
-		return name;
+		return oldName;
 	}
 
 	public String getOldModule()
@@ -48,13 +43,13 @@ public class SignatureChange implements Comparable<SignatureChange> {
 	@Override
 	public String toString()
 	{
-		return String.format("'%s' changed to '%s' %s",name ,oldLoc.getStartLine(), newLoc.getStartLine());
+		return String.format("'%s' changed to '%s' %s", oldName, loc);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return newLoc.hashCode();
+		return loc.hashCode();
 	}
 
 	@Override
@@ -72,24 +67,23 @@ public class SignatureChange implements Comparable<SignatureChange> {
 
 		SignatureChange other = (SignatureChange) obj;
 
-		return oldLoc.equals(other.oldLoc) && newLoc.equals(other.newLoc);
+		return loc.equals(other.loc);
 	}
 
 	@Override
 	public int compareTo(SignatureChange other)
 	{
-		if (newLoc.getModule() != null && other.newLoc.getModule() != null)
+		if (loc.getModule() != null && other.loc.getModule() != null)
 		{
-			if (!newLoc.getModule().equals(other.newLoc.getModule()))
+			if (!loc.getModule().equals(other.loc.getModule()))
 			{
-				return other.newLoc.getModule().compareTo(newLoc.getModule());
+				return other.loc.getModule().compareTo(loc.getModule());
 			}
 		}
 
-		ILexLocation otherLoc = other.getNewLoc();
+		ILexLocation otherLoc = other.getLoc();
 
-		return otherLoc.getStartOffset() - newLoc.getStartOffset();
+		return otherLoc.getStartOffset() - loc.getStartOffset();
 	}
-
 }
 	

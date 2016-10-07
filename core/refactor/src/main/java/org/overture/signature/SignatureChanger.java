@@ -8,8 +8,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
-import org.overture.extract.Extraction;
-import org.overture.extract.RefactoringExtractionCollector;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class SignatureChanger {

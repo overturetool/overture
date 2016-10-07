@@ -17,7 +17,6 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
@@ -27,6 +26,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.AExistsExp;
@@ -38,8 +38,11 @@ import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.PExpBase;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexBooleanToken;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -60,17 +63,15 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.NameCollector;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
 import org.overture.codegen.ir.TempVarNameGen;
-import org.overture.extract.BodyOccurrenceCollector;
-import org.overture.rename.CallOccurenceRenamer;
-import org.overture.rename.RenameObject;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
@@ -93,6 +94,8 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private int to;
 	private String paramType;
 	private String paramName;
+	private String paramPlaceholder;
+	private Set<LexLocation> paramsToChange;
 	
 	public RefactoringSignatureChangeCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -108,6 +111,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 		this.currentModule = null;
+		this.paramsToChange = new HashSet<LexLocation>();
 	}
 
 	@Override
@@ -226,14 +230,45 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		return collector.getCalls();
 	}
 
-	private void registerSignatureChange(RenameObject reObj)
+	private void registerSignatureChange(SignatureChangeObject reObj)
 	{
 		if (!contains(reObj.name.getLocation()))
 		{
-			LexNameToken token = new LexNameToken(reObj.name.getModule(), reObj.newName, reObj.name.getLocation());
-			signatureChanges.add(new SignatureChange(reObj.name.getLocation(), reObj.name.getName(), reObj.newName, reObj.name.getModule(), reObj.name.getModule()));
-			reObj.function.accept(token);
+			//LexNameToken token = new LexNameToken(reObj.name.getModule(), reObj.newName, reObj.name.getLocation());
+			signatureChanges.add(new SignatureChange(reObj.name.getLocation(), reObj.name.getName(), reObj.name.getModule(), reObj.name.getModule()));
+			
+			ILexLocation oldLoc = reObj.paramList.getLast().getLocation();
+			
+			LexLocation loc = new LexLocation(oldLoc.getFile(),oldLoc.getModule(),oldLoc.getStartLine(),oldLoc.getEndPos()+2,oldLoc.getEndLine(),oldLoc.getEndPos()+2+String.valueOf(paramPlaceholder).length(),oldLoc.getStartOffset(), oldLoc.getEndOffset());
+			paramsToChange.add(loc);			
+		
+			reObj.paramList.add(getParamExp(this.paramType,this.paramPlaceholder, loc));			
 		}
+	}
+	
+	private PExp getParamExp(String aParamType, String aParamPlaceholder, ILexLocation loc) {
+		
+		switch(ParamType.valueOf(aParamType.toUpperCase())){
+		case BOOL:
+			ABooleanBasicType type = new ABooleanBasicType();
+			ABooleanConstExp exp = new ABooleanConstExp();
+			LexBooleanToken token = new LexBooleanToken(Boolean.parseBoolean(aParamPlaceholder), loc);
+			exp.setType(type);
+			exp.setValue(token);
+			exp.setLocation(loc);
+			return exp;
+		case NAT:
+//			this.paramType = new ANatNumericBasicType();
+//			this.paramPlaceholder = Integer.parseInt(aParamPlaceholder);
+			return null;
+		case NAT1:
+//			this.paramType = new ANatOneNumericBasicType();
+//			this.paramPlaceholder = Integer.parseInt(aParamPlaceholder);
+			return null;
+		default:
+			this.paramPlaceholder = String.valueOf(aParamPlaceholder);
+			return null;
+		}		
 	}
 	
 	private boolean contains(ILexLocation loc)
@@ -931,12 +966,15 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 			}
 			if(this.changeType.equals("add")){
 				this.from = Integer.parseInt(parameters[1]);
-				this.paramType = parameters[2];
-				this.paramName = parameters[3];
+				this.paramName = parameters[2];
+				this.paramType = parameters[3];
+				this.paramPlaceholder = parameters[4];	
 			}
 		}
 	}
 	
+	
+
 	public void addToNodeCurrentModule(PDefinition node){
 		System.out.println("Sized:" + currentModule.getDefs().size());
 
