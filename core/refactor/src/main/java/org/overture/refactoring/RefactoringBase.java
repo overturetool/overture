@@ -25,6 +25,9 @@ import org.overture.extract.Extractor;
 import org.overture.extract.RefactoringExtractionCollector;
 import org.overture.rename.RefactoringRenameCollector;
 import org.overture.rename.Renamer;
+import org.overture.signature.RefactoringSignatureChangeCollector;
+import org.overture.signature.SignatureChanger;
+import org.overture.signature.SignatureChange;
 import org.overture.rename.Renaming;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -34,6 +37,7 @@ public class RefactoringBase {
 	protected IRGenerator generator;
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
+	private List<SignatureChange> allSignatures;
 	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
@@ -84,6 +88,26 @@ public class RefactoringBase {
 		}
 		
 		List<INode> userModules = getUserModules(ast);
+		return userModules;
+	}
+	
+	public List<INode> generateSignatureChanges(List<INode> ast, String[] parameters) throws AnalysisException
+	{
+		if (Settings.dialect == Dialect.VDM_SL)
+		{
+			ModuleList moduleList = new ModuleList(getModules(ast));
+			moduleList.combineDefaults();
+			ast = getNodes(moduleList);
+		}
+		
+		List<INode> userModules = getUserModules(ast);
+		
+		allSignatures = new LinkedList<SignatureChange>();
+		allSignatures.addAll(performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
+
+		generatedData = new GeneratedData();
+		generatedData.setAllSignatureChanges(allSignatures);
+
 		return userModules;
 	}
 	
@@ -178,6 +202,31 @@ public class RefactoringBase {
 		Collections.sort(allExtractions);
 
 		return allExtractions;
+	}
+	
+	private List<SignatureChange> performSignatureChanges(List<INode> mergedParseLists,
+			Map<AIdentifierStateDesignator, PDefinition> idDefs, String[] parameters)
+			throws AnalysisException
+	{
+
+		List<SignatureChange> allSignatureChanges = new LinkedList<SignatureChange>();
+
+		RefactoringSignatureChangeCollector signatureChangeCollector = new RefactoringSignatureChangeCollector(generator.getIRInfo().getTcFactory(), idDefs);
+		SignatureChanger changer = new SignatureChanger();
+		signatureChangeCollector.setRefactoringParameters(parameters);
+		for (INode node : mergedParseLists)
+		{
+			Set<SignatureChange> currentSignatureChanges = changer.computeSignatureChanges(node, signatureChangeCollector);
+
+			if (!currentSignatureChanges.isEmpty())
+			{
+				allSignatureChanges.addAll(currentSignatureChanges);
+			}
+		}
+
+		Collections.sort(allSignatureChanges);
+
+		return allSignatureChanges;
 	}
 	
 	protected List<INode> getUserModules(List<? extends INode> ast)

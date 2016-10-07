@@ -1,5 +1,5 @@
 
-operations	
+operations    
 op: () ==> nat
 op() ==
 let a = 5 in return a;
