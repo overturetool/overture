@@ -16,7 +16,7 @@ public class GeneratedData
 	private List<String> skippedClasses;
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
-	private List<SignatureChange> allSignatures;
+	private List<SignatureChange> allSignatureChanges;
 	private List<String> warnings;
 
 	public GeneratedData()
@@ -99,14 +99,14 @@ public class GeneratedData
 		this.allExtractions = allExtractions;
 	}
 	
-	public List<SignatureChange> getAllSignatures()
+	public List<SignatureChange> getAllSignatureChanges()
 	{
-		return allSignatures;
+		return allSignatureChanges;
 	}
 
-	public void setAllSignatureChanges(List<SignatureChange> allSignatures)
+	public void setAllSignatureChanges(List<SignatureChange> allSignatureChanges)
 	{
-		this.allSignatures = allSignatures;
+		this.allSignatureChanges = allSignatureChanges;
 	}
 	
 	public List<String> getWarnings()

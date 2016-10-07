@@ -7,6 +7,7 @@ public class ResultObject {
 	public String config;
 	public List<String> renamings;
 	public List<String> extractions;
+	private List<String> signatureChanges;
 	public String getLanguage() {
 		return language;
 	}
@@ -41,5 +42,13 @@ public class ResultObject {
 		
 	public ResultObject(){
 		
+	}
+
+	public List<String> getSignatureChanges() {
+		return signatureChanges;
+	}
+
+	public void setSignatureChanges(List<String> signatureChanges) {
+		this.signatureChanges = signatureChanges;
 	}	
 }

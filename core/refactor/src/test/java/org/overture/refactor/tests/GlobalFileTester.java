@@ -51,7 +51,7 @@ public class GlobalFileTester {
 			List<BasicRefactoringType> renamings =(List<BasicRefactoringType>)(List<?>) genData.getAllRenamings();
 			
 			List<String> renamingStrings = removeFilePathFromText(renamings);
-			Assert.assertTrue((resObj.getRenamings() == null && renamingStrings == null) || 
+			Assert.assertTrue((resObj.getRenamings() == null && (renamingStrings == null || renamingStrings.isEmpty())) || 
 					resObj.getRenamings().size() == renamingStrings.size());
 
 			for(int i = 0; i < renamingStrings.size();i++ ) {
@@ -62,12 +62,22 @@ public class GlobalFileTester {
 			//EXTRACT CHECK
 			List<BasicRefactoringType> extractions =(List<BasicRefactoringType>)(List<?>) genData.getAllExtractions();
 			List<String> extractionStrings = removeFilePathFromText(extractions);
-			Assert.assertTrue((resObj.getExtractions() == null && extractionStrings == null) || resObj.getExtractions().size() == extractionStrings.size());
+			Assert.assertTrue((resObj.getExtractions() == null && (extractionStrings == null || extractionStrings.isEmpty())) || resObj.getExtractions().size() == extractionStrings.size());
 
 			for(int i = 0; i < extractionStrings.size();i++ ) {
 				String item = extractionStrings.get(i);
-				System.out.println(item);
 				Assert.assertTrue(resObj.getExtractions().contains(item));
+			}
+			
+			//SIGNATURE CHANGE CHECK
+			List<BasicRefactoringType> signatureChanges =(List<BasicRefactoringType>)(List<?>) genData.getAllSignatureChanges();
+			List<String> signatureChangeStrings = removeFilePathFromText(signatureChanges);
+			Assert.assertTrue((resObj.getSignatureChanges() == null && (signatureChangeStrings == null || signatureChangeStrings.isEmpty())) || 
+					resObj.getSignatureChanges().size() == signatureChangeStrings.size());
+
+			for(int i = 0; i < signatureChangeStrings.size();i++ ) {
+				String item = signatureChangeStrings.get(i);
+				Assert.assertTrue(resObj.getSignatureChanges().contains(item));
 			}
 		}
 	}
