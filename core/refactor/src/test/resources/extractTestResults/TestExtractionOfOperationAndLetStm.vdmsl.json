@@ -1,7 +1,7 @@
 [
 	{
 		"language": "-sl",
-		"config": "-extract;18;19;testName",
+		"config": "-extract;18;19;testName;true",
 		"renamings": [],
 	    "extractions": [  
 	    	"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 35:5",

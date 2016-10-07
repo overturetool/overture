@@ -43,6 +43,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	
 	private List<INode> visitedOperations;
 	private AExplicitOperationDefinition extractedOperation;
+	private boolean replaceDuplicates;
 	
 	public RefactoringExtractionCollector()
 	{
@@ -120,18 +121,17 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName);
 			node.getBody().apply(bodyCollector);
 			if(bodyCollector.getToOperation() != null){
-				visitedOperations.add(node);
 				extractedOperation = bodyCollector.getToOperation();
 				currentModule.apply(THIS);
 			}
 		} 
-
-		if(extractedOperation != null && !visitedOperations.contains(node)){
-			DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule);
-			node.getBody().apply(dubCollector);
-			visitedOperations.add(node);
+		if(replaceDuplicates){
+			if(extractedOperation != null && !visitedOperations.contains(node)){
+				DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule);
+				node.getBody().apply(dubCollector);
+				visitedOperations.add(node);
+			}
 		}
-		
 	}
 		
 	@Override
@@ -274,6 +274,10 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			this.from = Integer.parseInt(parameters[0]);
 			this.to = Integer.parseInt(parameters[1]);
 			this.extractedName = parameters[2];
+			this.replaceDuplicates = false;
+		}
+		if(parameters.length >= 4){
+			this.replaceDuplicates = true;
 		}
 	}
 	
