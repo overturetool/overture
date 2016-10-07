@@ -416,7 +416,15 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	@Override
 	public String caseAApplyExp(AApplyExp node, IndentTracker question) throws AnalysisException {
 		AVariableExp printNode = node.getRoot().getAncestor(AVariableExp.class);
-		insertIntoStringStack(printNode.getName().getFullName() + "()");
+		insertIntoStringStack(printNode.getName().getFullName() + "(");
+		for(PExp stm : node.getArgs()){
+			
+			if(stm != node.getArgs().getFirst()){
+				insertIntoStringStack(", ");
+			}
+			stm.apply(THIS,question);
+		}
+		insertIntoStringStack(")");
 		return printNode.getName().getFullName();
 	}
 	
