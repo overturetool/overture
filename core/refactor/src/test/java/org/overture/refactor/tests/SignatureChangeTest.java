@@ -16,16 +16,17 @@ import org.overture.refactor.tests.base.TestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(Parameterized.class)
-public class ExtractionTest extends GlobalFileTester{
+public class SignatureChangeTest extends GlobalFileTester{
 	ObjectMapper mapper = new ObjectMapper();
 	private File inputFile;
+
 	public static final String ROOT_INPUT = "src" + File.separatorChar + "test"
-			+ File.separatorChar + "resources" + File.separatorChar + "extractTestInputs";
+			+ File.separatorChar + "resources" + File.separatorChar + "signatureChangeTestInputs";
 	public static final String ROOT_RESULT = "src" + File.separatorChar + "test"
-			+ File.separatorChar + "resources" + File.separatorChar + "extractTestResults"
+			+ File.separatorChar + "resources" + File.separatorChar + "signatureChangeTestResults"
 			+ File.separatorChar;
 				
-	public ExtractionTest(File inputFile){
+	public SignatureChangeTest(File inputFile){
 		super();
 		this.inputFile = inputFile;
 	}

@@ -89,7 +89,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private AModuleModules currentModule;
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
-	private String changeType;
+	private boolean isAddParamChange;
 	private int from;
 	private int to;
 	private String paramType;
@@ -173,10 +173,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		}
 		
 		if(compareNodeLocation(node.getLocation())){
-			if(changeType.equals("rmv")){
-				findParametersToRemove(node,node.parent(),node.parent());
-			}
-			if(changeType.equals("add")){
+			if(isAddParamChange){
 				PDefinition newParam = node.getParamDefinitions().getFirst().clone();
 				LexNameToken parName = new LexNameToken(node.getName().getModule(),paramName,null);
 				newParam.setName(parName);
@@ -205,19 +202,10 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 				
 				
 				System.out.println("test");
+			} else{
+				findParametersToRemove(node,node.parent(),node.parent());
 			}
-		}
-		
-		
-		
-		
-		//TODO operation
-		//BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, signatureName);
-		//node.getBody().apply(bodyCollector);
-		
-		//RemoveOccurrenceCollector removeCollector = new RemoveOccurrenceCollector(node, currentModule, loc);
-		
-		
+		}		
 	}
 	
 	private Set<ACallStm> signatureChangeCallOccurences(ILexLocation defLoc, INode defScope,
@@ -233,7 +221,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		if (!contains(reObj.name.getLocation()))
 		{
 			//LexNameToken token = new LexNameToken(reObj.name.getModule(), reObj.newName, reObj.name.getLocation());
-			signatureChanges.add(new SignatureChange(reObj.name.getLocation(), reObj.name.getName(), reObj.name.getModule(), reObj.name.getModule()));
+			signatureChanges.add(new SignatureChange(reObj.name.getLocation(), reObj.name.getName(),reObj.parentName,isAddParamChange));
 			
 			ILexLocation oldLoc = reObj.paramList.getLast().getLocation();
 			
@@ -955,16 +943,20 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	public void setRefactoringParameters(String[] parameters) {
 		if(parameters.length >= 3){
 			this.parameters = parameters;
-			this.changeType = parameters[0];
-			if(this.changeType.equals("rmv")){
-				this.from = Integer.parseInt(parameters[1]);
-				this.to = Integer.parseInt(parameters[2]);
+			if(parameters[0].equals("add")){
+				this.isAddParamChange = true;
+			} else{
+				this.isAddParamChange = false;
 			}
-			if(this.changeType.equals("add")){
+			
+			if(isAddParamChange){
 				this.from = Integer.parseInt(parameters[1]);
 				this.paramName = parameters[2];
 				this.paramType = parameters[3];
-				this.paramPlaceholder = parameters[4];	
+				this.paramPlaceholder = parameters[4];
+			} else{
+				this.from = Integer.parseInt(parameters[1]);
+				this.to = Integer.parseInt(parameters[2]);
 			}
 		}
 	}

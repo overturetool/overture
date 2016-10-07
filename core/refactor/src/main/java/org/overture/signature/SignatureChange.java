@@ -1,23 +1,21 @@
 package org.overture.signature;
 
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.refactoring.BasicRefactoringType;
 
-public class SignatureChange implements Comparable<SignatureChange> {
+public class SignatureChange extends BasicRefactoringType implements Comparable<SignatureChange> {
 
 	private ILexLocation loc;
+	private String paramName;
+	private boolean isAddParam;
+	private String operationName;
 
-	private String oldName;
-
-	private String oldModule;
-	private String newModule;
-
-	public SignatureChange(ILexLocation loc, String oldName,
-			String oldModule, String newModule)
+	public SignatureChange(ILexLocation loc, String paramName, String operationName, boolean isAddParam)
 	{
 		this.loc = loc;
-		this.oldName = oldName;
-		this.oldModule = oldModule;
-		this.newModule = newModule;
+		this.operationName = operationName;
+		this.paramName = paramName;
+		this.isAddParam = isAddParam;
 	}
 
 	public ILexLocation getLoc()
@@ -25,25 +23,32 @@ public class SignatureChange implements Comparable<SignatureChange> {
 		return loc;
 	}
 
-	public String getOldName()
-	{
-		return oldName;
+	public String getParamName() {
+		return paramName;
 	}
 
-	public String getOldModule()
-	{
-		return oldModule;
+	public String getOperationName() {
+		return operationName;
 	}
-
-	public String getNewModule()
-	{
-		return newModule;
+	
+	public boolean isAddParam() {
+		return isAddParam;
 	}
 
 	@Override
 	public String toString()
 	{
-		return String.format("'%s' changed to '%s' %s", oldName, loc);
+		StringBuilder stb = new StringBuilder();
+		
+		if(isAddParam){
+			stb.append("'" + paramName + "'");
+			stb.append(" added to ");
+			stb.append(operationName);
+			stb.append(" in ");
+			stb.append(loc);
+		}
+		
+		return stb.toString();
 	}
 
 	@Override
@@ -84,6 +89,6 @@ public class SignatureChange implements Comparable<SignatureChange> {
 		ILexLocation otherLoc = other.getLoc();
 
 		return otherLoc.getStartOffset() - loc.getStartOffset();
-	}
+	}	
 }
 	

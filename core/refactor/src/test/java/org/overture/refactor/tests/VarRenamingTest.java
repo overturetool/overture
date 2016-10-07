@@ -46,7 +46,7 @@ public class VarRenamingTest extends GlobalFileTester {
 	@Before
 	public void init() throws Exception
 	{
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 	}
 	

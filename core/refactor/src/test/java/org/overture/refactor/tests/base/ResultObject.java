@@ -7,7 +7,7 @@ public class ResultObject {
 	public String config;
 	public List<String> renamings;
 	public List<String> extractions;
-	private List<String> signatureChanges;
+	public List<String> signatureChanges;
 	public String getLanguage() {
 		return language;
 	}

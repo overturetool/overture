@@ -1,0 +1,11 @@
+[
+	{
+		"language": "-sl",
+		"config": "-signature;add;3;newParam;bool;true;",
+	    "signatureChanges": [
+	    	"'op' changed to 'testName' in 'DEFAULT' at line 12:9",
+	    	"'op' changed to 'testName' in 'DEFAULT' at line 8:8",
+	    	"'op' changed to 'testName' in 'DEFAULT' at line 3:1"
+	    ]
+	}
+]

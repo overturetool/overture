@@ -8,9 +8,11 @@ public class SignatureChangeObject {
 
 	public LinkedList<PExp> paramList;
 	public ILexNameToken name;
+	public String parentName;
 	
-	public SignatureChangeObject(ILexNameToken name, LinkedList<PExp> paramList){
+	public SignatureChangeObject(ILexNameToken name, LinkedList<PExp> paramList, String parentName){
 		this.paramList = paramList;
-		this.name = name;	
+		this.name = name;
+		this.parentName = parentName;	
 	}
 }

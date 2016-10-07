@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.statements.ACallStm;
 
@@ -36,7 +37,11 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 
 		if (node.getRootdef().getLocation().equals(defLoc))
 		{
-			function.accept(new SignatureChangeObject(node.getName(), node.getArgs()));
+			if(node.parent() instanceof AExplicitOperationDefinition){
+				AExplicitOperationDefinition parent = (AExplicitOperationDefinition)node.parent();
+				//FIX THIS... Er det den rigtige parent?
+				function.accept(new SignatureChangeObject(node.getName(), node.getArgs(),parent.getName().getName()));
+			}
 			callOccurences.add(node);
 		}
 	}
