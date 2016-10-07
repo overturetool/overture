@@ -95,7 +95,6 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private String paramType;
 	private String paramName;
 	private String paramPlaceholder;
-	private Set<LexLocation> paramsToChange;
 	
 	public RefactoringSignatureChangeCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -111,7 +110,6 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 		this.currentModule = null;
-		this.paramsToChange = new HashSet<LexLocation>();
 	}
 
 	@Override
@@ -240,8 +238,6 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 			ILexLocation oldLoc = reObj.paramList.getLast().getLocation();
 			
 			LexLocation loc = new LexLocation(oldLoc.getFile(),oldLoc.getModule(),oldLoc.getStartLine(),oldLoc.getEndPos()+2,oldLoc.getEndLine(),oldLoc.getEndPos()+2+String.valueOf(paramPlaceholder).length(),oldLoc.getStartOffset(), oldLoc.getEndOffset());
-			paramsToChange.add(loc);			
-		
 			reObj.paramList.add(getParamExp(this.paramType,this.paramPlaceholder, loc));			
 		}
 	}
