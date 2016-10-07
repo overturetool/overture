@@ -46,6 +46,7 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
@@ -386,6 +387,13 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		String var = String.valueOf(node.getValue().getValue());
 		insertIntoStringStack(var);
 		return var;
+	}
+	
+	@Override
+	public String caseACharLiteralExp(ACharLiteralExp node, IndentTracker question) throws AnalysisException {
+		String var = String.valueOf(node.getValue().getValue());
+		insertIntoStringStack(var);
+		return super.caseACharLiteralExp(node, question);
 	}
 	
 	@Override
