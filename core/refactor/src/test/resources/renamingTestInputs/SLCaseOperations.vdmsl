@@ -1,12 +1,12 @@
 
-operations	
-op: nat * bool ==> nat
-op(n, boolean) ==
-let a = n in return a;
+operations    
+op: () ==> nat
+op() ==
+let a = 5 in return a;
 
 b: () ==> nat
-b() == op(666, false);
+b() == op();
 
 c: () ==> nat
 c() ==
-let a = op(111, false) in return a;
+let a = op() in return a;
