@@ -43,7 +43,9 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
@@ -65,6 +67,7 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
@@ -352,6 +355,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		return Utilities.wrap(sb.toString());
 	}
 	
+	
 	@Override
 	public String caseAIntLiteralExp(AIntLiteralExp node, IndentTracker question)
 			throws AnalysisException
@@ -378,6 +382,13 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	}
 	
 	@Override
+	public String caseABooleanConstExp(ABooleanConstExp node, IndentTracker question) throws AnalysisException {
+		String var = String.valueOf(node.getValue().getValue());
+		insertIntoStringStack(var);
+		return var;
+	}
+	
+	@Override
 	public String caseACallStm(ACallStm node, IndentTracker question) throws AnalysisException {
 		if(node.getName() != null){
 		insertIntoStringStack(question.getIndentation() + node.getName().getFullName() + "(");
@@ -386,11 +397,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			if(stm != node.getArgs().getFirst()){
 				insertIntoStringStack(", ");
 			}
-			
-			if(stm instanceof AVariableExp){
-				AVariableExp exp = (AVariableExp) stm;
-				insertIntoStringStack(exp.getName().getName());
-			}
+			stm.apply(THIS,question);
 		}
 		insertIntoStringStack(");");
 		insertIntoStringStack("\n");
