@@ -113,9 +113,9 @@ public class RefactoringMain {
 		{
 			usage("No VDM dialect specified");
 		}
-		
-		MsgPrinter.getPrinter().println("Starting refactoring...");
-
+		if(printClasses){
+			MsgPrinter.getPrinter().println("Starting refactoring...");
+		}
 		if (files.isEmpty())
 		{
 			usage("Input files are missing");
