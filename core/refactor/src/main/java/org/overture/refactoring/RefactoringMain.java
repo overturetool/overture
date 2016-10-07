@@ -1,13 +1,7 @@
 package org.overture.refactoring;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +11,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
@@ -140,7 +133,6 @@ public class RefactoringMain {
 			MsgPrinter.getPrinter().errorln("Unexpected dialect: "
 					+ refacMode);
 		}
-		
 	}
 	
 	public static void handleSl(List<File> files, boolean printCode, String[] parameters)
@@ -162,7 +154,6 @@ public class RefactoringMain {
 					generatedAST = refactoringBase.generateRenaming(RefactoringBase.getNodes(tcResult.result), parameters);
 					if(printClasses){
 						PrintOutputAST(generatedAST);
-						//VDMPrinter(genData,files);
 					}
 					if(testClass){
 						generatedData = refactoringBase.getGeneratedData();
@@ -176,7 +167,6 @@ public class RefactoringMain {
 					generatedAST = refactoringBase.generateExtraction(RefactoringBase.getNodes(tcResult.result), parameters);
 					if(printClasses){
 						PrintOutputAST(generatedAST);
-						//VDMPrinter(genData,files);
 					}
 					if(testClass){
 						generatedData = refactoringBase.getGeneratedData();
@@ -225,7 +215,6 @@ public class RefactoringMain {
 				if(parameters != null && parameters.length >= 3){
 					generatedAST = refactoringBase.generateRenaming(RefactoringBase.getNodes(tcResult.result), parameters);
 					if(printClasses){
-						//VDMPrinter(genData,files);
 					}
 					if(testClass){
 						generatedData = refactoringBase.getGeneratedData();
@@ -254,10 +243,6 @@ public class RefactoringMain {
 	{
 		MsgPrinter.getPrinter().errorln("VDM Refactoring Generator: " + msg
 				+ "\n");
-		
-		MsgPrinter.getPrinter().errorln(PRINT_ARG
-				+ ": print the refactored code to the console");
-
 		System.exit(1);
 	}
 	
@@ -267,58 +252,4 @@ public class RefactoringMain {
 		String actual = RefactoringPrettyPrinter.prettyPrint(nodes);
 		System.out.println(actual);
 	}
-	
-	public static void VDMPrinter(GeneratedData data, List<File> files){
-		BufferedReader br = null;
-        int lineCount = 0;
-        String line = null;
-		List<Renaming> allRenamings = data.getAllRenamings();
-
-		if (!allRenamings.isEmpty())
-		{
-			
-			Collections.reverse(allRenamings); 
-	        try {
-	        	if(files.size() > 0){
-	        		br = new BufferedReader(new FileReader(files.get(0)));
-	        	}
-	        } catch (FileNotFoundException e) {
-	        	MsgPrinter.getPrinter().println("[WARNING] " + e.getMessage());
-				e.printStackTrace();
-			}
-	        
-	            try {
-					while ((line = br.readLine()) != null)   
-					{
-	
-					    StringBuilder buf = new StringBuilder(line);
-					              // Print the content on the console
-					    				   
-					    	List<Renaming> lineRenamings = new ArrayList<Renaming>();
-					    	
-					    	for(Iterator<Renaming> i = allRenamings.iterator(); i.hasNext(); ) {
-					    			Renaming item = i.next();
-					    		  if (item.getLoc().getEndLine() == lineCount+1) {
-					    			  lineRenamings.add(item);
-					    		  }
-				    		}
-					    	Collections.reverse(lineRenamings); 
-				    	  for(Iterator<Renaming> i = lineRenamings.iterator(); i.hasNext(); ) {
-					            Renaming item = i.next();
-					            String endPiece = buf.substring(item.getLoc().getEndPos()-1);
-					            String startPiece = buf.substring(0,item.getLoc().getStartPos()-1);
-					            line = startPiece + item.getNewName() + endPiece;
-					            buf = new StringBuilder(line);
-					        }
-
-					    	System.out.println(line);
-					    
-					    lineCount++;
-					}
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				}
-			}
-		}
 }

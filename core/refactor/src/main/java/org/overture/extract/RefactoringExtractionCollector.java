@@ -33,7 +33,6 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private PDefinition enclosingDef;
 	private int enclosingCounter;
 
-	private Set<Extraction> extractions;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 	private AModuleModules currentModule;
@@ -44,17 +43,18 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	
 	private List<INode> visitedOperations;
 	private AExplicitOperationDefinition extractedOperation;
+	private boolean replaceDuplicates;
 	
 	public RefactoringExtractionCollector()
 	{
 		this.enclosingDef = null;
 		this.enclosingCounter = 0;
 		this.visitedOperations = new ArrayList<INode>();
-		this.extractions = new HashSet<Extraction>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 		this.currentModule = null;
 		this.extractedOperation = null;
+		ExtractionLog.clearExtractions();
 	}
 
 	@Override
@@ -121,18 +121,17 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName);
 			node.getBody().apply(bodyCollector);
 			if(bodyCollector.getToOperation() != null){
-				visitedOperations.add(node);
 				extractedOperation = bodyCollector.getToOperation();
 				currentModule.apply(THIS);
 			}
 		} 
-
-		if(extractedOperation != null && !visitedOperations.contains(node)){
-			DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule);
-			node.getBody().apply(dubCollector);
-			visitedOperations.add(node);
+		if(replaceDuplicates){
+			if(extractedOperation != null && !visitedOperations.contains(node)){
+				DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule);
+				node.getBody().apply(dubCollector);
+				visitedOperations.add(node);
+			}
 		}
-		
 	}
 		
 	@Override
@@ -201,22 +200,20 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		namesToAvoid = collector.namesToAvoid();
 	}
 
-	public void init(boolean clearRenamings)
+	public void init(boolean clearExtracions)
 	{
 		this.enclosingDef = null;
 		this.enclosingCounter = 0;
 		this.namesToAvoid.clear();
 		this.nameGen = new TempVarNameGen();
-
-		if (extractions != null && clearRenamings)
-		{
-			extractions.clear();
+		if(clearExtracions){
+			ExtractionLog.clearExtractions();
 		}
 	}
 
 	public Set<Extraction> getExtractions()
 	{
-		return extractions;
+		return ExtractionLog.getExtractions();
 	}
 
 	private boolean proceed(INode node)
@@ -277,6 +274,10 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			this.from = Integer.parseInt(parameters[0]);
 			this.to = Integer.parseInt(parameters[1]);
 			this.extractedName = parameters[2];
+			this.replaceDuplicates = false;
+		}
+		if(parameters.length >= 4){
+			this.replaceDuplicates = true;
 		}
 	}
 	

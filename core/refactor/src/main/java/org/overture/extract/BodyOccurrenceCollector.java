@@ -56,6 +56,9 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 				
 				if(ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation, counter)){
 					ExtractUtil.removeFromStatements(stm, node.getStatements());
+					ExtractionLog.addExtraction(new Extraction(stm.getLocation(), stm.toString(), null));					
+				}else{
+					ExtractionLog.addExtraction(new Extraction(stm.getLocation(), stm.toString(), toOperation.getName().getName()));					
 				}
 				
 			} else if(!ExtractUtil.isInRange(stm.getLocation(), from, to)){
@@ -63,9 +66,7 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 				if(toOperation == null){
 					addToNodeCurrentModule(fromOperation);
 				}
-				//TODO check if this is correct
-				//ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation, counter);
-				
+
 				if(toNodeOperation == null){
 					if(toOperation.getBody() instanceof ABlockSimpleBlockStm){
 						toNodeOperation = (ABlockSimpleBlockStm) toOperation.getBody(); 

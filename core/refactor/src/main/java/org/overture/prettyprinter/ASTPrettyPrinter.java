@@ -57,7 +57,6 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExpBase;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -83,14 +82,11 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	private ITypeCheckerAssistantFactory af;
 	private static String space = " ";
 	private PDefinition enclosingDef;
-	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
 	private Set<String> namesToAvoid;
-	private TempVarNameGen nameGen;
 	private boolean operationFlag;
-	private boolean functionFlag;
-	
+
 	private int outerScopeCounter = -1;
 	private List<ArrayList<String>> stringOuterStack;
 	private static String NODE_NOT_FOUND = "ERROR: Node not found";
@@ -106,11 +102,10 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		this.mytable = nst;
 		this.af = af;
 		this.enclosingDef = null;
-		this.idDefs = idDefs;
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
 		this.namesToAvoid = new HashSet<String>();
-		this.nameGen = new TempVarNameGen();
+		new TempVarNameGen();
 		this.stringOuterStack = new ArrayList<ArrayList<String>>();
 	}
 
@@ -199,7 +194,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		for (PDefinition def : defInfo.getNodeDefs()){
 			if(def != defInfo.getNodeDefs().get(0)){
-				strBuilder.append("* ");
+				strBuilder.append(" * ");
 			}	
 			strBuilder.append(def.getName());
 		}
@@ -409,420 +404,14 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		insertIntoStringStack(printNode.getName().getFullName() + "()");
 		return printNode.getName().getFullName();
 	}
-//	@Override
-//	public String caseASystemClassDefinition(ASystemClassDefinition node)
-//			throws AnalysisException
-//	{
-//		if (enclosingDef != null)
-//		{
-//			return;
-//		}
-//
-//		visitModuleDefs(node.getDefinitions(), node);
-//	}
-//	
-//	@Override
-//	public String caseAExplicitFunctionDefinition(
-//			AExplicitFunctionDefinition node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
-//
-//		openScope(defInfo, node);
-//
-//		node.getBody().apply(this);
-//
-//		endScope(defInfo);
-//	}
-//
-//
-//	@Override
-//	public String caseALetDefExp(ALetDefExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
-//
-//		visitDefs(defInfo.getNodeDefs());
-//
-//		openScope(defInfo, node);
-//
-//		node.getExpression().apply(this);
-//
-//		endScope(defInfo);
-//	}
-//
-
-//
-//	@Override
-//	public String caseALetBeStExp(ALetBeStExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		node.getDef().apply(this);
-//
-//		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-//
-//		openScope(defInfo, node);
-//
-//		if (node.getSuchThat() != null)
-//		{
-//			node.getSuchThat().apply(this);
-//		}
-//
-//		node.getValue().apply(this);
-//
-//		endScope(defInfo);
-//	}
-//
-//	/*
-//	 * Exists1 needs no treatment it uses only a bind
-//	 */
-//
-//	@Override
-//	public String caseAForAllExp(AForAllExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
-//	}
-//
-//	@Override
-//	public String caseAExistsExp(AExistsExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
-//	}
-//
-//	/*
-//	 * Sequence comp needs no treatment it uses only a bind
-//	 */
-//
-//	@Override
-//	public String caseASetCompSetExp(ASetCompSetExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleMultipleBindConstruct(node, node.getBindings(), node.getFirst(), node.getPredicate());
-//	}
-//
-//	@Override
-//	public void caseAMapCompMapExp(AMapCompMapExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleMultipleBindConstruct(node, node.getBindings(), node.getFirst(), node.getPredicate());
-//	}
-//
-//	@Override
-//	public void caseALetBeStStm(ALetBeStStm node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		node.getDef().apply(this);
-//
-//		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-//
-//		openScope(defInfo, node);
-//
-//		if (node.getSuchThat() != null)
-//		{
-//			node.getSuchThat().apply(this);
-//		}
-//
-//		node.getStatement().apply(this);
-//
-//		endScope(defInfo);
-//	}
-//
-//	@Override
-//	public void caseALetBeStBindingTraceDefinition(
-//			ALetBeStBindingTraceDefinition node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		node.getDef().apply(this);
-//
-//		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-//
-//		openScope(defInfo, node);
-//
-//		if (node.getStexp() != null)
-//		{
-//			node.getStexp().apply(this);
-//		}
-//
-//		node.getBody().apply(this);
-//
-//		endScope(defInfo);
-//	}
-//
-//	@Override
-//	public void caseALambdaExp(ALambdaExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
-//
-//		openScope(defInfo, node);
-//
-//		node.getExpression().apply(this);
-//
-//		endScope(defInfo);
-//	}
-//
-//	@Override
-//	public void caseATixeStm(ATixeStm node) throws AnalysisException
-//	{
-//		if (node.getBody() != null)
-//		{
-//			node.getBody().apply(this);
-//		}
-//
-//		// The trap alternatives will be responsible for opening/ending the scope
-//		for (ATixeStmtAlternative trap : node.getTraps())
-//		{
-//			trap.apply(this);
-//		}
-//	}
-//
-//	@Override
-//	public void caseATixeStmtAlternative(ATixeStmtAlternative node)
-//			throws AnalysisException
-//	{
-//		openScope(node.getPatternBind(), node.getPatternBind().getDefs(), node.getStatement());
-//
-//		node.getStatement().apply(this);
-//
-//		// End scope
-//		for (PDefinition def : node.getPatternBind().getDefs())
-//		{
-//			removeLocalDefFromScope(def);
-//		}
-//	}
-//
-//	@Override
-//	public void caseATrapStm(ATrapStm node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		if (node.getBody() != null)
-//		{
-//			node.getBody().apply(this);
-//		}
-//
-//		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getWith());
-//
-//		if (node.getWith() != null)
-//		{
-//			node.getWith().apply(this);
-//		}
-//
-//		for (PDefinition def : node.getPatternBind().getDefs())
-//		{
-//			removeLocalDefFromScope(def);
-//		}
-//	}
-//
-//	@Override
-//	public void caseAForPatternBindStm(AForPatternBindStm node)
-//			throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		if (node.getExp() != null)
-//		{
-//			node.getExp().apply(this);
-//		}
-//
-//		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getStatement());
-//
-//		node.getStatement().apply(this);
-//
-//		for (PDefinition def : node.getPatternBind().getDefs())
-//		{
-//			removeLocalDefFromScope(def);
-//		}
-//	}
-//
-//	@Override
-//	public void caseAForAllStm(AForAllStm node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		if (node.getSet() != null)
-//		{
-//			node.getSet().apply(this);
-//		}
-//
-//		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
-//		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
-//
-//		for (PDefinition d : defs)
-//		{
-//			openLoop(d.getName(), node.getPattern(), node.getStatement());
-//		}
-//
-//		node.getStatement().apply(this);
-//
-//		for (PDefinition def : defs)
-//		{
-//			removeLocalDefFromScope(def);
-//		}
-//	}
-//
-//	@Override
-//	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		if (node.getFrom() != null)
-//		{
-//			node.getFrom().apply(this);
-//		}
-//
-//		if (node.getTo() != null)
-//		{
-//			node.getTo().apply(this);
-//		}
-//
-//		if (node.getBy() != null)
-//		{
-//			node.getBy().apply(this);
-//		}
-//
-//		ILexNameToken var = node.getVar();
-//
-//		openLoop(var, null, node.getStatement());
-//
-//		node.getStatement().apply(this);
-//
-//		localDefsInScope.remove(var);
-//	}
-//
-//	@Override
-//	public void caseACasesStm(ACasesStm node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleCaseNode(node.getExp(), node.getCases(), node.getOthers());
-//	}
-//
-//	@Override
-//	public void caseACasesExp(ACasesExp node) throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleCaseNode(node.getExpression(), node.getCases(), node.getOthers());
-//	}
-//
-//	@Override
-//	public void caseACaseAlternativeStm(ACaseAlternativeStm node)
-//			throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleCase(node.getDefs(), node.getPattern(), node.getResult());
-//	}
-//
-//	@Override
-//	public void caseACaseAlternative(ACaseAlternative node)
-//			throws AnalysisException
-//	{
-//		if (!proceed(node))
-//		{
-//			return;
-//		}
-//
-//		handleCase(node.getDefs(), node.getPattern(), node.getResult());
-//	}
-//
-//	@Override
-//	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
-//	{
-//		// No need to visit names
-//	}
-//	private void handleCaseNode(PExp cond, List<? extends INode> cases,
-//			INode others, IndentTracker question) throws AnalysisException
-//	{
-//		if (cond != null)
-//		{
-//			cond.apply(this, question);
-//		}
-//
-//		// The cases will be responsible for opening/ending the scope
-//		for (INode c : cases)
-//		{
-//			c.apply(this, question);
-//		}
-//
-//		if (others != null)
-//		{
-//			others.apply(this, question);
-//		}
-//	}
-
-private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker question)
+	
+	private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker question)
 			throws AnalysisException
 	{
 		VDMDefinitionInfo defInfo = getStateDefs(defs, module);
 
 		if (defInfo != null)
 		{
-			addLocalDefs(defInfo);
 			
 			if(!defInfo.getTypeDefs().isEmpty()){
 				insertIntoStringStack("\n");
@@ -847,8 +436,6 @@ private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker
 			}
 			
 			handleExecutables(defs,question);
-			removeLocalDefs(defInfo);
-			
 		} else
 		{
 			handleExecutables(defs,question);
@@ -879,7 +466,7 @@ private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker
 				enclosingDef = def;
 				enclosingCounter = 0;
 				setNamesToAvoid(def);
-				this.nameGen = new TempVarNameGen();
+				new TempVarNameGen();
 
 				def.apply(this,question);
 			}
@@ -959,7 +546,6 @@ private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker
 		return null;
 	}
 	
-	
 	private List<PDefinition> findFieldDefs(List<PDefinition> stateDefs,
 			List<AFieldField> fields)
 	{
@@ -991,28 +577,8 @@ private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker
 		this.enclosingDef = null;
 		this.enclosingCounter = 0;
 		this.namesToAvoid.clear();
-		this.nameGen = new TempVarNameGen();
-
-//		if (renamings != null && clearRenamings)
-//		{
-//			renamings.clear();
-//		}
+		new TempVarNameGen();
 	}
-
-//	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
-//	{
-//		SFunctionDefinitionAssistantTC funcAssistant = this.af.createSFunctionDefinitionAssistant();
-//		List<List<PDefinition>> paramDefs = funcAssistant.getParamDefinitions(node, node.getType(), node.getParamPatternList(), node.getLocation());
-//
-//		List<PDefinition> paramDefFlattened = new LinkedList<PDefinition>();
-//
-//		for (List<PDefinition> list : paramDefs)
-//		{
-//			paramDefFlattened.addAll(list);
-//		}
-//
-//		return paramDefFlattened;
-//	}
 
 	private boolean proceed(INode node)
 	{
@@ -1067,50 +633,6 @@ private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker
 		return enclosingDef == def;
 	}
 
-	private void addLocalDefs(VDMDefinitionInfo defInfo)
-	{
-
-		List<PDefinition> allLocalDefs = defInfo.getAllLocalDefs();
-		for (PDefinition localDef : allLocalDefs)
-		{
-			if (!contains(localDef))
-			{
-				localDefsInScope.add(localDef.getName());
-			}
-		}
-	}
-
-	private void removeLocalDefs(VDMDefinitionInfo defInfo)
-	{
-		localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
-	}
-
-	public void openScope(VDMDefinitionInfo defInfo, INode defScope, IndentTracker question)
-			throws AnalysisException
-	{
-		List<? extends PDefinition> nodeDefs = defInfo.getNodeDefs();
-
-		for (int i = 0; i < nodeDefs.size(); i++)
-		{
-			PDefinition parentDef = nodeDefs.get(i);
-
-			List<? extends PDefinition> localDefs = defInfo.getLocalDefs(parentDef);
-
-			for (PDefinition localDef : localDefs) // check if it matches position
-			{
-				insertIntoStringStack(localDef.toString());
-			}
-		}
-	}
-
-	public void openScope(INode parentNode, List<PDefinition> localDefs,
-			INode defScope) throws AnalysisException
-	{
-//		for (PDefinition localDef : localDefs)
-//		{
-//		}
-	}
-
 	public void endScope(VDMDefinitionInfo defInfo)
 	{
 		this.localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
@@ -1119,45 +641,6 @@ private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker
 	public void removeLocalDefFromScope(PDefinition localDef)
 	{
 		localDefsInScope.remove(localDef.getName());
-	}
-
-	private boolean contains(PDefinition defToCheck)
-	{
-		ILexNameToken nameToCheck = getName(defToCheck);
-
-		return contains(nameToCheck);
-	}
-
-	private boolean contains(ILexNameToken nameToCheck)
-	{
-		// Can be null if we try to find the name for the ignore pattern
-		if (nameToCheck != null)
-		{
-			for (ILexNameToken name : localDefsInScope)
-			{
-				if (name != null
-						&& nameToCheck.getName().equals(name.getName()))
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	private ILexNameToken getName(PDefinition def)
-	{
-		LexNameList varNames = af.createPDefinitionAssistant().getVariableNames(def);
-
-		if (varNames.isEmpty())
-		{
-			// Can be empty if we try to find the name for the ignore pattern
-			return null;
-		} else
-		{
-			return varNames.firstElement();
-		}
 	}
 
 	private void visitDefs(List<? extends PDefinition> defs, IndentTracker question)
@@ -1211,7 +694,6 @@ private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker
 		stringOuterStack.add(new ArrayList<String>());
 		outerScopeCounter++;
 		operationFlag = false;
-		functionFlag = false;
 	}
 
 	@Override

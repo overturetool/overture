@@ -56,8 +56,15 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 				int fromAndTo = listOfStm.get(listOfStmCounter).getLocation().getStartLine();
 				
 				if(ExtractUtil.isInRange(fromStatements.get(i).getLocation(), fromAndTo, fromAndTo)){
-					ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i);
+					
+					if(ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i)){
+						ExtractionLog.addExtraction(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), null));					
+					}else{
+						ExtractionLog.addExtraction(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), extractedOperation.getName().getName()));					
+					}
+					
 					ExtractUtil.removeFromStatements(fromStatements.get(i), node.getStatements());
+					
 					listOfStmCounter++;
 					
 					if(listOfStmCounter > listOfStm.size()-1){
@@ -78,48 +85,46 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 			ABlockSimpleBlockStm extractedBlock = (ABlockSimpleBlockStm) extractedOperation.getBody();
 				int i = 0;
 
-				PStm extractedStm = extractedBlock.getStatements().get(i);
+			PStm extractedStm = extractedBlock.getStatements().get(i);
+			
+			for(int j = 0; j < currentBlock.getStatements().size(); j++){
+				PStm callingStm = currentBlock.getStatements().get(j);
 				
-				for(int j = 0; j < currentBlock.getStatements().size(); j++){
-					PStm callingStm = currentBlock.getStatements().get(j);
-					
-					if(callingStm.equals(extractedStm)){
-						if(!callingStm.equals(extractedBlock.getStatements().getFirst()) &&
-								currentBlock.getStatements().get(j - 1).equals(listOfStm.get(listOfStm.size() - 1))){
-							listOfStm.add(callingStm);
-							
-							if(extractedBlock.getStatements().getLast().equals(extractedStm)){
-								return listOfStm;
-							}
-							
-						} else {
-							listOfStm.add(callingStm);
-						}
+				if(callingStm.equals(extractedStm)){
+					if(!callingStm.equals(extractedBlock.getStatements().getFirst()) &&
+							currentBlock.getStatements().get(j - 1).equals(listOfStm.get(listOfStm.size() - 1))){
+						listOfStm.add(callingStm);
 						
-						i++;
-						if(i < extractedBlock.getStatements().size()){
-							extractedStm = extractedBlock.getStatements().get(i);
-						}else{
-//							RETURN fail
-							listOfStm.clear();
+						if(extractedBlock.getStatements().getLast().equals(extractedStm)){
 							return listOfStm;
 						}
-							
-					}else{
-						listOfStm.clear();
-						if(i > 0){
-							i--;
-							j--;
-						}
-						if(i < extractedBlock.getStatements().size()){
-							extractedStm = extractedBlock.getStatements().get(i);
-						}
 						
+					} else {
+						listOfStm.add(callingStm);
 					}
-				
+					
+					i++;
+					if(i < extractedBlock.getStatements().size()){
+						extractedStm = extractedBlock.getStatements().get(i);
+					}else{
+//							RETURN fail
+						listOfStm.clear();
+						return listOfStm;
+					}
+						
+				}else{
+					listOfStm.clear();
+					if(i > 0){
+						i--;
+						j--;
+					}
+					if(i < extractedBlock.getStatements().size()){
+						extractedStm = extractedBlock.getStatements().get(i);
+					}
+				}
 			}
-		
 		}
+		listOfStm.clear();
 		return listOfStm;
 	}
 	

@@ -19,22 +19,10 @@ QuestionAnswerAdaptor < IndentTracker, String > implements IPrettyPrinter {
 
     private static final String NODE_NOT_FOUND_ERROR = "ERROR: Node Not Found.";
     protected IRGenerator generator;
-    /**
-     * The attribute table for handling non abstract syntax such as separators.
-     */
+
     ISymbolTable mytable;
     static ASTPrettyPrinter expPrinter;
 
-    // PatternNpp
-    // BindNpp...
-
-    /**
-     * Creates a VDM-syntax pretty printer. <br>
-     * <b>Warning:</b> this method pre-loads {@link VdmSymbolTable} attributes. Extensions should use
-     * {@link #NewPrettyPrinter(ISymbolTable)} and configure it instead.
-     * 
-     * @return a new instance of {@link RefactoringPrettyPrinter}
-     */
     public static RefactoringPrettyPrinter newInstance() {
         return new RefactoringPrettyPrinter(VdmSymbolTable.getInstance());
     }
@@ -44,17 +32,10 @@ QuestionAnswerAdaptor < IndentTracker, String > implements IPrettyPrinter {
         return s.replace("\t", "  ");
     }
 
-    /**
-     * Instantiates a new pretty printer for base ASTs.
-     * 
-     * @param nsTable
-     *            the attributes table for the printer
-     */
     public RefactoringPrettyPrinter(ISymbolTable nsTable) {
         mytable = nsTable;
         this.generator = new IRGenerator();
         IRGenerator irGenerator = new IRGenerator();
-        
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(true);
 		irSettings.setGeneratePreConds(false);
@@ -64,38 +45,31 @@ QuestionAnswerAdaptor < IndentTracker, String > implements IPrettyPrinter {
 		generator.getIRInfo().setSettings(irSettings);
 		
         expPrinter = new ASTPrettyPrinter(this, nsTable,irGenerator.getIRInfo().getTcFactory(),getInfo().getIdStateDesignatorDefs());
-        
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.overture.core.npp.IPrettyPrinter#setInsTable(org.overture.core.npp .InsTable)
-     */
-    @
-    Override
+    @Override
     public void setInsTable(ISymbolTable it) {
         mytable = it;
     }
 
 
-    @
-    Override
+    @Override
     public String defaultPExp(PExp node, IndentTracker question) throws AnalysisException {
         return node.apply(expPrinter, question);
     }
+    
     @Override
     public String defaultINode(INode node, IndentTracker question) throws AnalysisException {
     	return node.apply(expPrinter, question);
     }
-    @
-    Override
+    
+    @Override
     public String createNewReturnValue(INode node, IndentTracker question)
     throws AnalysisException {
         return NODE_NOT_FOUND_ERROR;
     }
 
-    @
-    Override
+    @Override
     public String createNewReturnValue(Object node, IndentTracker question)
     throws AnalysisException {
         return NODE_NOT_FOUND_ERROR;
@@ -105,18 +79,13 @@ QuestionAnswerAdaptor < IndentTracker, String > implements IPrettyPrinter {
 
         for (INode modules : userModules)
 		{
-        	String s = "";
 			try {
-				s = modules.apply(newInstance(), new IndentTracker());
+				modules.apply(newInstance(), new IndentTracker());
 			} catch (AnalysisException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         	return expPrinter.getVDMText();
 		}
-        
-        //
-        
 		return null;
 	}
 	

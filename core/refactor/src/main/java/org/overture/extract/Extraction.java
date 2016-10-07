@@ -1,61 +1,56 @@
 package org.overture.extract;
 
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.refactoring.BasicRefactoringType;
 
-public class Extraction  implements Comparable<Extraction>
+public class Extraction  extends BasicRefactoringType implements Comparable<Extraction>
 {
-	private ILexLocation oldLoc;
-	private ILexLocation newLoc;
-	private String name;
 
-	private String oldModule;
-	private String newModule;
+	private ILexLocation removedLoc;
+	private String removedName;
+	private String extractedName;
 
-	public Extraction(ILexLocation oldLoc, ILexLocation newLoc,
-			String oldModule, String newModule, String name)
+	public Extraction(ILexLocation removedLoc, String removedName, String extractedName)
 	{
-		this.oldLoc = oldLoc;
-		this.newLoc = newLoc;
-		this.oldModule = oldModule;
-		this.newModule = newModule;
-		this.name = name;
+		this.removedLoc = removedLoc;
+		this.removedName = removedName;
+		this.extractedName = extractedName;
 	}
 
-	public ILexLocation getOldLoc()
+	public ILexLocation getRemovedLoc()
 	{
-		return oldLoc;
-	}
-
-	public ILexLocation getNewLoc()
-	{
-		return newLoc;
+		return removedLoc;
 	}
 	
 	public String getName()
 	{
-		return name;
+		return removedName;
 	}
 
-	public String getOldModule()
-	{
-		return oldModule;
+	public String getExtractedName(){
+		return extractedName;
 	}
-
-	public String getNewModule()
-	{
-		return newModule;
-	}
+	
 
 	@Override
 	public String toString()
 	{
-		return String.format("'%s' changed to '%s' %s",name ,oldLoc.getStartLine(), newLoc.getStartLine());
+		StringBuilder stb = new StringBuilder();
+		
+		stb.append("'" + removedName + "'");
+		stb.append(" removed from ");
+		stb.append(removedLoc);		
+		if(extractedName != null && !extractedName.isEmpty()){
+			stb.append(" replaced with ");
+			stb.append("'" + extractedName + "'");
+		}
+		return stb.toString();
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return newLoc.hashCode();
+		return removedLoc.hashCode();
 	}
 
 	@Override
@@ -73,22 +68,22 @@ public class Extraction  implements Comparable<Extraction>
 
 		Extraction other = (Extraction) obj;
 
-		return oldLoc.equals(other.oldLoc) && newLoc.equals(other.newLoc);
+		return removedLoc.equals(other.removedLoc);
 	}
 
 	@Override
 	public int compareTo(Extraction other)
 	{
-		if (newLoc.getModule() != null && other.newLoc.getModule() != null)
+		if (removedLoc.getModule() != null && other.removedLoc.getModule() != null)
 		{
-			if (!newLoc.getModule().equals(other.newLoc.getModule()))
+			if (!removedLoc.getModule().equals(other.removedLoc.getModule()))
 			{
-				return other.newLoc.getModule().compareTo(newLoc.getModule());
+				return other.removedLoc.getModule().compareTo(removedLoc.getModule());
 			}
 		}
 
-		ILexLocation otherLoc = other.getNewLoc();
+		ILexLocation otherLoc = other.getRemovedLoc();
 
-		return otherLoc.getStartOffset() - newLoc.getStartOffset();
+		return otherLoc.getStartOffset() - removedLoc.getStartOffset();
 	}
 }

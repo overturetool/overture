@@ -14,7 +14,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
@@ -29,6 +28,7 @@ import org.overture.rename.Renamer;
 import org.overture.signature.RefactoringSignatureChangeCollector;
 import org.overture.signature.SignatureChanger;
 import org.overture.signature.SignatureChange;
+import org.overture.rename.Renaming;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -54,14 +54,7 @@ public class RefactoringBase {
 	public List<INode> generateRenaming(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 
-		if (Settings.dialect == Dialect.VDM_SL)
-		{
-			ModuleList moduleList = new ModuleList(getModules(ast));
-			moduleList.combineDefaults();
-			ast = getNodes(moduleList);
-		}
-		
-		List<INode> userModules = getUserModules(ast);
+		List<INode> userModules = extractUserModules(ast);
 		
 		allRenamings = new LinkedList<Renaming>();
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
@@ -75,6 +68,18 @@ public class RefactoringBase {
 	public List<INode> generateExtraction(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 
+		List<INode> userModules = extractUserModules(ast);
+		
+		allExtractions = new LinkedList<Extraction>();
+		allExtractions.addAll(performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
+
+		generatedData = new GeneratedData();
+		generatedData.setAllExtractions(allExtractions);
+
+		return userModules;
+	}
+
+	private List<INode> extractUserModules(List<INode> ast) {
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			ModuleList moduleList = new ModuleList(getModules(ast));
@@ -83,13 +88,6 @@ public class RefactoringBase {
 		}
 		
 		List<INode> userModules = getUserModules(ast);
-		
-		allExtractions = new LinkedList<Extraction>();
-		allExtractions.addAll(performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
-
-		generatedData = new GeneratedData();
-		generatedData.setAllExtractions(allExtractions);
-
 		return userModules;
 	}
 	
@@ -128,14 +126,7 @@ public class RefactoringBase {
 
 		List<INode> ast = getNodes(tcResult.result);
 		
-		if (Settings.dialect == Dialect.VDM_SL)
-		{
-			ModuleList moduleList = new ModuleList(getModules(ast));
-			moduleList.combineDefaults();
-			ast = getNodes(moduleList);
-		}
-		
-		List<INode> userModules = getUserModules(ast);
+		List<INode> userModules = extractUserModules(ast);
 		return userModules;
 	}
 	

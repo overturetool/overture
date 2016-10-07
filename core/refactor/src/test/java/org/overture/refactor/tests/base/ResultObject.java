@@ -6,7 +6,7 @@ public class ResultObject {
 	public String language;
 	public String config;
 	public List<String> renamings;
-	
+	public List<String> extractions;
 	public String getLanguage() {
 		return language;
 	}
@@ -29,7 +29,15 @@ public class ResultObject {
 	
 	public void setRenamings(List<String> renamings) {
 			this.renamings = renamings;
-		}
+	}
+
+	public List<String> getExtractions() {
+		return extractions;
+	}
+	
+	public void setgetExtractions(List<String> extractions) {
+			this.extractions = extractions;
+	}
 		
 	public ResultObject(){
 		

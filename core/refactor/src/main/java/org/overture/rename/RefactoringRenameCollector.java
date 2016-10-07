@@ -66,7 +66,6 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
 import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.NameCollector;
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -1124,9 +1123,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	private boolean compareNodeLocation(ILexLocation newNode){
-
-		//System.out.println("Pos " + newNode.getStartLine() + ": " + newNode.getStartPos());
-
+		
 		if(parameters.length >= 3){
 			if(newNode.getStartLine() == Integer.parseInt(parameters[0]) &&
 							newNode.getStartPos() == Integer.parseInt(parameters[1])){

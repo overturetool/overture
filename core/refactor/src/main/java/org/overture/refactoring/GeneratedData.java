@@ -2,11 +2,11 @@ package org.overture.refactoring;
 
 import java.util.List;
 
-import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.extract.Extraction;
 import org.overture.signature.SignatureChange;
+import org.overture.rename.Renaming;
 
 public class GeneratedData
 {
