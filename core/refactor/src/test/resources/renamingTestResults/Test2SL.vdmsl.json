@@ -3,7 +3,8 @@
 		"language": "-sl",
 		"config": "-rename;3;1;testName",
 	    "renamings": [
-	    	"'TestOp' changed to 'testName' in 'DEFAULT'  at line 3:1"
-	    ]
+	    	"'TestOp' changed to 'testName' in 'DEFAULT' at line 3:1"
+	    ],
+	    "extractions": []
 	}
 ]

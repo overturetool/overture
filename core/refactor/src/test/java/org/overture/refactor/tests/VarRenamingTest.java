@@ -28,10 +28,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(Parameterized.class)
-public class VarRenamingTest {
+public class VarRenamingTest extends GlobalFileTester {
 	ObjectMapper mapper = new ObjectMapper();
 	private File inputFile;
-	private static final String TEST_ARG = "-test";
+
 	public static final String ROOT_INPUT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar + "renamingTestInputs";
 	public static final String ROOT_RESULT = "src" + File.separatorChar + "test"
@@ -39,6 +39,7 @@ public class VarRenamingTest {
 			+ File.separatorChar;
 				
 	public VarRenamingTest(File inputFile){
+		super();
 		this.inputFile = inputFile;
 	}
 	
@@ -58,49 +59,6 @@ public class VarRenamingTest {
 	@Test
 	public void test() throws Exception
 	{
-		TypeCheckResult<List<SClassDefinition>> originalSpecTcResult = TypeCheckerUtil.typeCheckPp(inputFile);
-		
-		Assert.assertTrue(inputFile.getName() + " has type errors", originalSpecTcResult.errors.isEmpty());
-		
-		String resultFilePath = ROOT_RESULT + inputFile.getName() + ".json";
-		
-		//JSON from file to Object
-		List<ResultObject> objs = mapper.readValue(new File(resultFilePath), new TypeReference<List<ResultObject>>(){});
-		
-		for(Iterator<ResultObject> iter = objs.iterator(); iter.hasNext();){
-			ResultObject resObj = iter.next();
-			String languageStr = resObj.getLanguage();
-			String configStr = resObj.getConfig();
-			List<String> resultRenamings = resObj.getRenamings();
-
-			String[] strArr = {TEST_ARG, languageStr,configStr,inputFile.getAbsolutePath()};
-			RefactoringMain.main(strArr);
-
-			GeneratedData genData = RefactoringMain.getGeneratedData();
-			if(genData == null){
-				System.out.println("There was not generated any data!");
-				Assert.assertTrue(genData == null);
-			}
-			
-			List<Renaming> renamings = genData.getAllRenamings();
-			List<String> renamingStrings = removeFilePathFromRenaming(renamings);
-			Assert.assertTrue((resultRenamings == null && renamings == null) || resultRenamings.size() == renamings.size());
-
-			for(int i = 0; i < renamingStrings.size();i++ ) {
-				String item = renamingStrings.get(i);
-				System.out.println(item);
-				Assert.assertTrue(resultRenamings.contains(item));
-			}
-		}
-	}
-	
-	private List<String> removeFilePathFromRenaming(List<Renaming> renamings){
-		List<String> renamedStrings = new ArrayList<>();
-		for(Iterator<Renaming> i = renamings.iterator(); i.hasNext(); ) {
-			   Renaming item = i.next();
-			   renamedStrings.add(item.toString().replaceAll("\\(.*\\)", ""));
-			}
-		return renamedStrings;
-		
+		globalTest(inputFile, ROOT_RESULT, mapper);
 	}
 }

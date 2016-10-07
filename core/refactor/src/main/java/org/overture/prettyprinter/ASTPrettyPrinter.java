@@ -409,6 +409,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		insertIntoStringStack(printNode.getName().getFullName() + "()");
 		return printNode.getName().getFullName();
 	}
+	
 //	@Override
 //	public String caseASystemClassDefinition(ASystemClassDefinition node)
 //			throws AnalysisException
