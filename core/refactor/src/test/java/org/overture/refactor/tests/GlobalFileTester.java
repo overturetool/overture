@@ -56,7 +56,6 @@ public class GlobalFileTester {
 
 			for(int i = 0; i < renamingStrings.size();i++ ) {
 				String item = renamingStrings.get(i);
-				System.out.println(item);
 				Assert.assertTrue(resObj.getRenamings().contains(item));
 			}
 			
