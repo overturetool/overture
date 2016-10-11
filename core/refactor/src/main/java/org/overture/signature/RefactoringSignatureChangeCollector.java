@@ -206,9 +206,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 				signatureChangeCallOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
 				
 				//Update applications
-				signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
-				
-				System.out.println(signatureChanges);
+				signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);				
 			} else{
 				findParametersToRemove(node,node.parent(),node.parent());
 			}
