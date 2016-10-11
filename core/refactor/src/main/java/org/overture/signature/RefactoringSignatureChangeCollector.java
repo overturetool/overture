@@ -26,6 +26,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
@@ -38,7 +39,6 @@ import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.PExpBase;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexBooleanToken;
@@ -63,8 +63,6 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
@@ -89,12 +87,12 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private AModuleModules currentModule;
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
-	private boolean isAddParamChange;
 	private int from;
 	private int to;
 	private String paramType;
 	private String paramName;
 	private String paramPlaceholder;
+	private boolean isAddParamChange;
 	
 	public RefactoringSignatureChangeCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -174,7 +172,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		
 		if(compareNodeLocation(node.getLocation())){
 			if(isAddParamChange){
-				PDefinition newParam = node.getParamDefinitions().getFirst().clone();
+				PDefinition newParam = node.getParamDefinitions().getLast().clone();
 				LexNameToken parName = new LexNameToken(node.getName().getModule(),paramName,null);
 				newParam.setName(parName);
 				
@@ -187,9 +185,14 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 				node.getParamDefinitions().add(newParam);
 				
 				//Add parameter to node patterns
+				LinkedList<PPattern> patterns = node.getParameterPatterns();
+				PPattern lastPattern = patterns.getLast();
+				ILexLocation lastLoc = lastPattern.getLocation();
+				LexLocation newLastLoc = new LexLocation(lastLoc.getFile(),lastLoc.getModule(),lastLoc.getStartLine(),lastLoc.getEndPos()+2,lastLoc.getEndLine(),lastLoc.getEndPos()+2+String.valueOf(parName).length(),lastLoc.getStartOffset(), lastLoc.getEndOffset()); lastPattern.getLocation();
 				AIdentifierPattern pat = new AIdentifierPattern();
 				pat.setName(parName);
-				node.getParameterPatterns().add(pat);
+				pat.setLocation(newLastLoc);
+				patterns.add(pat);
 				
 				//Add parameter to node type
 				PType nodeType = node.getType();
@@ -197,19 +200,32 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 					((AOperationType) nodeType).getParameters().add(paramType);
 				}
 				
+				signatureChanges.add(new SignatureChange(newLastLoc, parName.toString(), node.getName().getName(), true));
+				
 				//Update calls
 				signatureChangeCallOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
 				
+				//Update applications
+				signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
 				
-				System.out.println("test");
+				System.out.println(signatureChanges);
 			} else{
 				findParametersToRemove(node,node.parent(),node.parent());
 			}
 		}		
 	}
 	
+	private Set<AApplyExp> signatureChangeApplicationOccurences(ILexLocation defLoc, INode defScope, 
+			Consumer<SignatureChangeObject> function) throws AnalysisException 
+	{
+		ApplyOccurrenceSignatureChanger collector = new ApplyOccurrenceSignatureChanger(defLoc, function, paramName);
+		defScope.apply(collector);
+		return collector.getApplications();
+		
+	}
+
 	private Set<ACallStm> signatureChangeCallOccurences(ILexLocation defLoc, INode defScope,
-			Consumer<SignatureChangeObject> function) throws AnalysisException
+			Consumer<SignatureChangeObject> function) throws AnalysisException 
 	{
 		CallOccurrenceSignatureChanger collector = new CallOccurrenceSignatureChanger(defLoc, function);
 		defScope.apply(collector);
@@ -218,10 +234,10 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 
 	private void registerSignatureChange(SignatureChangeObject reObj)
 	{
-		if (!contains(reObj.name.getLocation()))
+		if (!contains(reObj.location))
 		{
 			//LexNameToken token = new LexNameToken(reObj.name.getModule(), reObj.newName, reObj.name.getLocation());
-			signatureChanges.add(new SignatureChange(reObj.name.getLocation(), reObj.name.getName(),reObj.parentName,isAddParamChange));
+			signatureChanges.add(new SignatureChange(reObj.location, reObj.newParamName.getName(),reObj.parentName,isAddParamChange));
 			
 			ILexLocation oldLoc = reObj.paramList.getLast().getLocation();
 			

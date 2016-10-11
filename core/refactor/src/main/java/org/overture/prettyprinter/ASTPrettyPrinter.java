@@ -22,6 +22,7 @@
 package org.overture.prettyprinter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,6 +63,7 @@ import org.overture.ast.expressions.SBinaryExpBase;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
@@ -72,6 +74,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.PType;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.core.npp.IPrettyPrinter;
@@ -176,16 +179,24 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		VDMDefinitionInfo defInfo = new VDMDefinitionInfo(node.getParamDefinitions(), af);
 		
-		if(defInfo.getNodeDefs() != null && defInfo.getNodeDefs().size() > 0){
-			for (PDefinition def : defInfo.getNodeDefs()){
-				if(def != defInfo.getNodeDefs().get(0)){
+		PType typeDef = node.getType();
+		LinkedList<? extends PType> typeDefs = new LinkedList<AOperationType>();
+		
+		if(typeDef instanceof AOperationType){
+			typeDefs = ((AOperationType) typeDef).getParameters();
+		}
+		
+		if(typeDefs != null && typeDefs.size() > 0){	
+			for (PType def : typeDefs){
+				if(def != typeDefs.get(0)){
 					strBuilder.append("*");
 				}	
-				strBuilder.append(def.getType().toString());
+				strBuilder.append(def.toString());
 			}
 		} else {
 			strBuilder.append("()");
 		}
+		
 		strBuilder.append(" ==> ");
 		AOperationType defOp = node.getType().getAncestor(AOperationType.class);
 		if (defOp != null){
@@ -196,20 +207,22 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		strBuilder.append("\n");
 		strBuilder.append(question.getIndentation() + opName + "(");
 		
-		for (PDefinition def : defInfo.getNodeDefs()){
-			if(def != defInfo.getNodeDefs().get(0)){
+		LinkedList<PPattern> patterns = node.getParameterPatterns();
+		
+		for (PPattern def : patterns){
+			if(def != patterns.get(0)){
 				strBuilder.append(", ");
 			}	
-			strBuilder.append(def.getName());
+			strBuilder.append(def.toString());
 		}
 		strBuilder.append(") ==");
 		if(node.getBody() instanceof ABlockSimpleBlockStm){
 			strBuilder.append(" (\n");
 		}else{
 			strBuilder.append("\n");
-		}
-		insertIntoStringStack(question.getIndentation() + strBuilder.toString());
+		}		
 		
+		insertIntoStringStack(question.getIndentation() + strBuilder.toString());
 		question.incrIndent();
 		node.getBody().apply(this, question);
 		question.decrIndent();

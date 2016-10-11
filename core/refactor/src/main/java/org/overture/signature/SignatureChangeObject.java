@@ -2,17 +2,20 @@ package org.overture.signature;
 
 import java.util.LinkedList;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 
 public class SignatureChangeObject {
 
 	public LinkedList<PExp> paramList;
-	public ILexNameToken name;
+	public ILexLocation location;
+	public ILexNameToken newParamName;
 	public String parentName;
 	
-	public SignatureChangeObject(ILexNameToken name, LinkedList<PExp> paramList, String parentName){
+	public SignatureChangeObject(ILexLocation loc, ILexNameToken newParamName, LinkedList<PExp> paramList, String parentName){
+		this.location = loc;
 		this.paramList = paramList;
-		this.name = name;
+		this.newParamName = newParamName;
 		this.parentName = parentName;	
 	}
 }

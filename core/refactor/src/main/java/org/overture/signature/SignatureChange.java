@@ -8,12 +8,12 @@ public class SignatureChange extends BasicRefactoringType implements Comparable<
 	private ILexLocation loc;
 	private String paramName;
 	private boolean isAddParam;
-	private String operationName;
+	private String parentName;
 
-	public SignatureChange(ILexLocation loc, String paramName, String operationName, boolean isAddParam)
+	public SignatureChange(ILexLocation loc, String paramName, String parentName, boolean isAddParam)
 	{
 		this.loc = loc;
-		this.operationName = operationName;
+		this.parentName = parentName;
 		this.paramName = paramName;
 		this.isAddParam = isAddParam;
 	}
@@ -28,7 +28,7 @@ public class SignatureChange extends BasicRefactoringType implements Comparable<
 	}
 
 	public String getOperationName() {
-		return operationName;
+		return parentName;
 	}
 	
 	public boolean isAddParam() {
@@ -41,13 +41,13 @@ public class SignatureChange extends BasicRefactoringType implements Comparable<
 		StringBuilder stb = new StringBuilder();
 		
 		if(isAddParam){
+			stb.append("Added ");
 			stb.append("'" + paramName + "'");
-			stb.append(" added to ");
-			stb.append(operationName);
-			stb.append(" in ");
+			stb.append(" in parent node ");
+			stb.append("'" + parentName + "'");
+			stb.append(" ");
 			stb.append(loc);
 		}
-		
 		return stb.toString();
 	}
 
