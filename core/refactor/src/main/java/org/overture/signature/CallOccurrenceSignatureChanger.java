@@ -23,10 +23,15 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 	private ILexLocation defLoc;
 	private Set<ACallStm> callOccurences;
 	private Consumer<SignatureChangeObject> function;
+	private String newParamName;
+	private String newParamPlaceholder;
 	
-	public CallOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> f)
+	public CallOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> f, 
+			String newParamName, String newParamPlaceholder)
 	{
 		this.defLoc = defLoc;
+		this.newParamName = newParamName;
+		this.newParamPlaceholder = newParamPlaceholder;
 		this.callOccurences = new HashSet<ACallStm>();
 		this.function = f;
 	}
@@ -47,14 +52,12 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 
 		if (root.getLocation().equals(defLoc))
 		{
-			LinkedList<PPattern> patterns = ((AExplicitOperationDefinition) root).getParameterPatterns();
-			String newParamNameStr = patterns.getLast().toString();
-			
+			String newParamNameStr = newParamName;
 			AExplicitOperationDefinition parent = (AExplicitOperationDefinition)node.parent();
 			LinkedList<PExp> paramListOfParent = node.getArgs();
 			ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
-			LexLocation newLastLoc = new LexLocation(lastLoc.getFile(),lastLoc.getModule(),lastLoc.getStartLine(),lastLoc.getEndPos()+2,lastLoc.getEndLine(),lastLoc.getEndPos()+2+String.valueOf(newParamNameStr).length(),lastLoc.getStartOffset(), lastLoc.getEndOffset());
-			
+			LexLocation newLastLoc = SignatureChangeUtil.CalculateNewLastParamLocation(lastLoc, newParamPlaceholder);
+						
 			ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);				
 			
 			function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, paramListOfParent ,parent.getName().getName()));

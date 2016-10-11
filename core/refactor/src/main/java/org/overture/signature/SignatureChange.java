@@ -47,6 +47,8 @@ public class SignatureChange extends BasicRefactoringType implements Comparable<
 			stb.append("'" + parentName + "'");
 			stb.append(" ");
 			stb.append(loc);
+		} else{
+			//Remove parameter
 		}
 		return stb.toString();
 	}

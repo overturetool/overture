@@ -23,11 +23,14 @@ public class ApplyOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor{
 	private Set<AApplyExp> applyOccurrences;
 	private Consumer<SignatureChangeObject> function;
 	private String newParamName;
+	private String newParamPlaceholder;
 	
-	public ApplyOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> function, String newParamName){
+	public ApplyOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> function, 
+			String newParamName, String newParamPlaceholder){
 		this.defLoc = defLoc;
 		this.function = function;
 		this.newParamName = newParamName;
+		this.newParamPlaceholder = newParamPlaceholder;
 		this.applyOccurrences = new HashSet<AApplyExp>();		
 	}
 	
@@ -56,7 +59,7 @@ public class ApplyOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor{
 			String newParamNameStr = newParamName;
 			LinkedList<PExp> paramListOfParent = node.getArgs();
 			ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
-			LexLocation newLastLoc = new LexLocation(lastLoc.getFile(),lastLoc.getModule(),lastLoc.getStartLine(),lastLoc.getEndPos()+2,lastLoc.getEndLine(),lastLoc.getEndPos()+2+String.valueOf(newParamNameStr).length(),lastLoc.getStartOffset(), lastLoc.getEndOffset());
+			LexLocation newLastLoc = SignatureChangeUtil.CalculateNewLastParamLocation(lastLoc, newParamPlaceholder);
 			
 			ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);
 			

@@ -63,6 +63,8 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
@@ -172,32 +174,33 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		
 		if(compareNodeLocation(node.getLocation())){
 			if(isAddParamChange){
-				PDefinition newParam = node.getParamDefinitions().getLast().clone();
-				LexNameToken parName = new LexNameToken(node.getName().getModule(),paramName,null);
-				newParam.setName(parName);
-				
-				//Set type of parameter
-				ABooleanBasicType paramType = new ABooleanBasicType();
-				if(paramType instanceof PType){
-					newParam.setType((PType)paramType);
-				}
-				//Add parameter to node definitions
-				node.getParamDefinitions().add(newParam);
+				LexNameToken parName = new LexNameToken(node.getName().getModule(), paramName, null);
 				
 				//Add parameter to node patterns
 				LinkedList<PPattern> patterns = node.getParameterPatterns();
 				PPattern lastPattern = patterns.getLast();
 				ILexLocation lastLoc = lastPattern.getLocation();
-				LexLocation newLastLoc = new LexLocation(lastLoc.getFile(),lastLoc.getModule(),lastLoc.getStartLine(),lastLoc.getEndPos()+2,lastLoc.getEndLine(),lastLoc.getEndPos()+2+String.valueOf(parName).length(),lastLoc.getStartOffset(), lastLoc.getEndOffset()); lastPattern.getLocation();
+				LexLocation newLastLoc = SignatureChangeUtil.CalculateNewLastParamLocation(lastLoc, parName.toString());
 				AIdentifierPattern pat = new AIdentifierPattern();
 				pat.setName(parName);
 				pat.setLocation(newLastLoc);
 				patterns.add(pat);
 				
-				//Add parameter to node type
-				PType nodeType = node.getType();
-				if(nodeType instanceof AOperationType){
-					((AOperationType) nodeType).getParameters().add(paramType);
+				PDefinition newParam = node.getParamDefinitions().getLast().clone();
+				newParam.setName(parName);
+				
+				SignatureChangeExpObject expObj = getParamExpObj(paramType, paramPlaceholder, newLastLoc);
+				newParam.setType(expObj.getType());
+				
+				//Add parameter to node definitions
+				node.getParamDefinitions().add(newParam);
+				
+				//Add parameter to node operation type
+				PType operationType = node.getType();
+				if(operationType instanceof AOperationType){
+					((AOperationType) operationType).getParameters().add(expObj.getType());
+				} else if(operationType instanceof AFunctionType){
+					//Add param to function...
 				}
 				
 				signatureChanges.add(new SignatureChange(newLastLoc, parName.toString(), node.getName().getName(), true));
@@ -206,8 +209,10 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 				signatureChangeCallOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
 				
 				//Update applications
-				signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);				
+				signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);	
+				
 			} else{
+				//Remove parameter...
 				findParametersToRemove(node,node.parent(),node.parent());
 			}
 		}		
@@ -216,7 +221,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private Set<AApplyExp> signatureChangeApplicationOccurences(ILexLocation defLoc, INode defScope, 
 			Consumer<SignatureChangeObject> function) throws AnalysisException 
 	{
-		ApplyOccurrenceSignatureChanger collector = new ApplyOccurrenceSignatureChanger(defLoc, function, paramName);
+		ApplyOccurrenceSignatureChanger collector = new ApplyOccurrenceSignatureChanger(defLoc, function, paramName, paramPlaceholder);
 		defScope.apply(collector);
 		return collector.getApplications();
 		
@@ -225,7 +230,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private Set<ACallStm> signatureChangeCallOccurences(ILexLocation defLoc, INode defScope,
 			Consumer<SignatureChangeObject> function) throws AnalysisException 
 	{
-		CallOccurrenceSignatureChanger collector = new CallOccurrenceSignatureChanger(defLoc, function);
+		CallOccurrenceSignatureChanger collector = new CallOccurrenceSignatureChanger(defLoc, function, paramName, paramPlaceholder);
 		defScope.apply(collector);
 		return collector.getCalls();
 	}
@@ -238,24 +243,32 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 			signatureChanges.add(new SignatureChange(reObj.location, reObj.newParamName.getName(),reObj.parentName,isAddParamChange));
 			
 			ILexLocation oldLoc = reObj.paramList.getLast().getLocation();
+			LexLocation loc = SignatureChangeUtil.CalculateNewLastParamLocation(oldLoc, paramPlaceholder);
 			
-			LexLocation loc = new LexLocation(oldLoc.getFile(),oldLoc.getModule(),oldLoc.getStartLine(),oldLoc.getEndPos()+2,oldLoc.getEndLine(),oldLoc.getEndPos()+2+String.valueOf(paramPlaceholder).length(),oldLoc.getStartOffset(), oldLoc.getEndOffset());
-			reObj.paramList.add(getParamExp(this.paramType,this.paramPlaceholder, loc));			
+			reObj.paramList.add(getParamExpObj(paramType, paramPlaceholder, loc).getExpression());
 		}
 	}
 	
-	private PExp getParamExp(String aParamType, String aParamPlaceholder, ILexLocation loc) {
+	private SignatureChangeExpObject getParamExpObj(String aParamType, String aParamPlaceholder, ILexLocation loc) {
+		SignatureChangeExpObject expObj = new SignatureChangeExpObject();
 		
 		switch(ParamType.valueOf(aParamType.toUpperCase())){
 		case BOOL:
-			ABooleanBasicType type = new ABooleanBasicType();
+			ABooleanBasicType boolType = new ABooleanBasicType();
+			expObj.setType(boolType);
 			ABooleanConstExp exp = new ABooleanConstExp();
 			LexBooleanToken token = new LexBooleanToken(Boolean.parseBoolean(aParamPlaceholder), loc);
-			exp.setType(type);
+			exp.setType(boolType);
 			exp.setValue(token);
 			exp.setLocation(loc);
-			return exp;
+			expObj.setExpression(exp);
+			return expObj;
 		case NAT:
+			ANatNumericBasicType natType = new ANatNumericBasicType();
+			
+			
+			expObj.setType(natType);
+			
 //			this.paramType = new ANatNumericBasicType();
 //			this.paramPlaceholder = Integer.parseInt(aParamPlaceholder);
 			return null;
@@ -264,7 +277,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 //			this.paramPlaceholder = Integer.parseInt(aParamPlaceholder);
 			return null;
 		default:
-			this.paramPlaceholder = String.valueOf(aParamPlaceholder);
+			paramPlaceholder = String.valueOf(aParamPlaceholder);
 			return null;
 		}		
 	}
