@@ -31,7 +31,11 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -45,6 +49,7 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGenerator;
@@ -130,6 +135,69 @@ public class DeclAssistantIR extends AssistantBase
 		}
 
 		return false;
+	}
+	
+	public boolean isFullyAbstract(SClassDefinition clazz, IRInfo info)
+	{
+		if(info.getInstantiatedClasses().contains(clazz.getName().getName()))
+		{
+			return false;
+		}
+		
+		LinkedList<PDefinition> allDefs = new LinkedList<PDefinition>(clazz.getAllInheritedDefinitions());
+		allDefs.addAll(clazz.getDefinitions());
+
+		for (PDefinition def : allDefs)
+		{
+			while (def instanceof AInheritedDefinition)
+			{
+				def = ((AInheritedDefinition) def).getSuperdef();
+			}
+			
+			if(def instanceof ATypeDefinition)
+			{
+				ATypeDefinition typeDef = (ATypeDefinition) def;
+				
+				if(typeDef.getType() instanceof ARecordInvariantType)
+				{
+					return false;
+				}
+			}
+			
+			if(!IRConstants.PUBLIC.equals(def.getAccess().getAccess().toString()))
+			{
+				return false;
+			}
+			
+			if (def instanceof AInstanceVariableDefinition)
+			{
+				return false;
+			}
+			else if(def instanceof AExplicitOperationDefinition)
+			{
+				AExplicitOperationDefinition op = (AExplicitOperationDefinition) def;
+				
+				boolean isAbstract = op.getBody() == null;
+				
+				if(!isAbstract)
+				{
+					return false;
+				}
+			}
+			else if(def instanceof AExplicitFunctionDefinition)
+			{
+				AExplicitFunctionDefinition fun = (AExplicitFunctionDefinition) def;
+				
+				boolean isAbstract = fun.getBody() == null;
+				
+				if(!isAbstract)
+				{
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	public boolean isTest(ADefaultClassDeclIR node)
