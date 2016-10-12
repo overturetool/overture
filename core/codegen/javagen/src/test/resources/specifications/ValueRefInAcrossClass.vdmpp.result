@@ -19,19 +19,13 @@ public class C {
 
 ##########
 
+
 import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class Q {
+public interface Q {
   public static final Number pi = 3.14;
-
-  public Q() {}
-
-  public String toString() {
-
-    return "Q{" + "pi = " + Utils.toString(pi) + "}";
-  }
 }
 
 ##########

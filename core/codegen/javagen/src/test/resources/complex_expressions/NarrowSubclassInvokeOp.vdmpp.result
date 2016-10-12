@@ -3,22 +3,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class A {
-  public A() {}
-
-  public String toString() {
-
-    return "A{}";
-  }
-}
-
-##########
-
-import java.util.*;
-import org.overture.codegen.runtime.*;
-
-@SuppressWarnings("all")
-public class B extends A {
+public class B implements A {
   public Number op() {
 
     return 1L;
@@ -52,5 +37,14 @@ public class Entry {
     return "Entry{}";
   }
 }
+
+##########
+
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface A {}
 
 ##########

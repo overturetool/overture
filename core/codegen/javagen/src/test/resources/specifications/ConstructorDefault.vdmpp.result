@@ -3,21 +3,6 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class A {
-  public A() {}
-
-  public String toString() {
-
-    return "A{}";
-  }
-}
-
-##########
-
-import java.util.*;
-import org.overture.codegen.runtime.*;
-
-@SuppressWarnings("all")
 public class B {
   public void cg_init_B_1() {
 
@@ -35,5 +20,14 @@ public class B {
     return "B{}";
   }
 }
+
+##########
+
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface A {}
 
 ##########

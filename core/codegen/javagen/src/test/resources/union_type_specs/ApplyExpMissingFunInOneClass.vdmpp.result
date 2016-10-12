@@ -23,21 +23,6 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class B {
-  public B() {}
-
-  public String toString() {
-
-    return "B{}";
-  }
-}
-
-##########
-
-import java.util.*;
-import org.overture.codegen.runtime.*;
-
-@SuppressWarnings("all")
 public class Entry {
   public static Number Run() {
 
@@ -70,8 +55,21 @@ public class Entry {
 ##########
 
 
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
 public interface Func_1<T_1> {
   public abstract T_1 eval();
 }
+
+##########
+
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface B {}
 
 ##########

@@ -1,17 +1,11 @@
 
+
 import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class A {
+public interface A {
   private static final VDMSeq x = SeqUtil.seq('h', 'e', 'j');
-
-  public A() {}
-
-  public String toString() {
-
-    return "A{" + "x = " + Utils.toString(x) + "}";
-  }
 }
 
 ##########
