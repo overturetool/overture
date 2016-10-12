@@ -1,7 +1,19 @@
 class A
+
+operations
+
+public op1 : () ==> ()
+op1 () == skip;
+
 end A
 
 class B
+
+operations
+
+public op2 : () ==> ()
+op2 () == skip;
+
 end B
 
 class C is subclass of A,B
