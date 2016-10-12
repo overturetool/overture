@@ -180,7 +180,6 @@ public class RefactoringMain {
 					generatedAST = refactoringBase.generateSignatureChanges(RefactoringBase.getNodes(tcResult.result), parameters);
 					if(printClasses){
 						PrintOutputAST(generatedAST);
-						//VDMPrinter(genData,files);
 					}
 					if(testClass){
 						generatedData = refactoringBase.getGeneratedData();
