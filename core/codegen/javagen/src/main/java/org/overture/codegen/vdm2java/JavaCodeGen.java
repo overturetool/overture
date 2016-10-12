@@ -220,6 +220,24 @@ public class JavaCodeGen extends CodeGenBase
 				e.printStackTrace();
 			}
 		}
+		
+		ClassToInterfaceTrans class2interfaceTr = new ClassToInterfaceTrans(transAssistant);
+		
+		for (IRStatus<PIR> status : statuses)
+		{
+			try
+			{
+				generator.applyTotalTransformation(status, class2interfaceTr);
+
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
+			{
+				log.error("Error when generating code for module "
+						+ status.getIrNodeName() + ": " + e.getMessage());
+				log.error("Skipping module..");
+				e.printStackTrace();
+			}
+		}
+		List<IRStatus<AInterfaceDeclIR>> interfaceStatuses = IRStatus.extract(statuses, AInterfaceDeclIR.class);
 
 		/**
 		 * Note that this will include the system class, whereas the CPU and BUS classes have been filtered out when the
@@ -322,9 +340,14 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		List<AInterfaceDeclIR> funcValueInterfaces = transSeries.getFuncValAssist().getFuncValInterfaces();
+		List<AInterfaceDeclIR> interfaces = transSeries.getFuncValAssist().getFuncValInterfaces();
+		
+		for(IRStatus<AInterfaceDeclIR> a : interfaceStatuses)
+		{
+			interfaces.add(a.getIrNode());
+		}
 
-		for (AInterfaceDeclIR funcValueInterface : funcValueInterfaces)
+		for (AInterfaceDeclIR funcValueInterface : interfaces)
 		{
 			funcValueInterface.setPackage(getJavaSettings().getJavaRootPackage());
 
@@ -456,6 +479,8 @@ public class JavaCodeGen extends CodeGenBase
 	@Override
 	public void preProcessVdmUserClass(INode node)
 	{
+		super.preProcessVdmUserClass(node);
+		
 		if (!getJavaSettings().genJUnit4tests())
 		{
 			return;
