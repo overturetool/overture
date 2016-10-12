@@ -724,24 +724,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-abstract public class Event {
-  public abstract Object execute(final System system);
-
-  public Event() {}
-
-  public String toString() {
-
-    return "Event{}";
-  }
-}
-
-##########
-
-import java.util.*;
-import org.overture.codegen.runtime.*;
-
-@SuppressWarnings("all")
-public class GetBalance extends Event {
+public class GetBalance implements Event {
   private Number tillid;
 
   public GetBalance Init(final Number tid) {
@@ -774,7 +757,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class IllegalCard extends Event {
+public class IllegalCard implements Event {
   private Number mycard;
 
   public IllegalCard Init(final Number c) {
@@ -803,7 +786,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class InsertCard extends Event {
+public class InsertCard implements Event {
   private Number tillid;
   private Card mycard;
 
@@ -839,7 +822,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class ReturnCard extends Event {
+public class ReturnCard implements Event {
   private Number tillid;
 
   public ReturnCard Init(final Number tid) {
@@ -876,7 +859,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class SendStatement extends Event {
+public class SendStatement implements Event {
   private Number tillid;
 
   public SendStatement Init(final Number tid) {
@@ -1041,7 +1024,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class Validate extends Event {
+public class Validate implements Event {
   private Number tillid;
   private Number code;
 
@@ -1076,7 +1059,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class Withdrawal extends Event {
+public class Withdrawal implements Event {
   private Number tillid;
   private Number amount;
 
@@ -1108,6 +1091,17 @@ public class Withdrawal extends Event {
         + Utils.toString(amount)
         + "}";
   }
+}
+
+##########
+
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface Event {
+  public abstract Object execute(final System system);
 }
 
 ##########
