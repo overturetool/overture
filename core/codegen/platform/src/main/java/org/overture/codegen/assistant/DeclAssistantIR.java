@@ -41,6 +41,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
@@ -177,7 +178,7 @@ public class DeclAssistantIR extends AssistantBase
 			{
 				AExplicitOperationDefinition op = (AExplicitOperationDefinition) def;
 				
-				boolean isAbstract = op.getBody() == null;
+				boolean isAbstract = op.getBody() == null || op.getBody() instanceof ASubclassResponsibilityStm;
 				
 				if(!isAbstract)
 				{
@@ -188,7 +189,7 @@ public class DeclAssistantIR extends AssistantBase
 			{
 				AExplicitFunctionDefinition fun = (AExplicitFunctionDefinition) def;
 				
-				boolean isAbstract = fun.getBody() == null;
+				boolean isAbstract = fun.getBody() == null || fun.getBody() instanceof ASubclassResponsibilityExp;
 				
 				if(!isAbstract)
 				{
