@@ -182,6 +182,7 @@ IR {-> package='org.overture.codegen.ir'
     	[initDecl]:IR.#decl.func
     |	{interface}
     	[templateTypes]:IR.#type.template*
+    	[extension]:IR.#name.token*
     	[package]:java_String
     	[name]:java_String
     	[fields]:field*

@@ -11,7 +11,11 @@
 ##
 $package
 
-public interface $node.getName() $templateTypes
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface $node.getName() $templateTypes $JavaFormat.formatInterfaces($node)
 {
 #foreach( $field in $node.getFields() )
 $JavaFormat.format($field)
