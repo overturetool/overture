@@ -83,7 +83,7 @@ public class ClassToInterfaceTrans extends DepthFirstAnalysisAdaptor implements 
 			
 			for (ATokenNameIR m : toMove) {
 				node.getSuperNames().remove(m);
-				node.getInterfaces().add(interfaces.get(m.getName()));
+				node.getInterfaces().add(interfaces.get(m.getName()).clone());
 			}
 		}
 	}
