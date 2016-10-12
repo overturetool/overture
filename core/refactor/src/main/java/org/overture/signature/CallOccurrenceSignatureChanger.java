@@ -25,42 +25,49 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 	private Consumer<SignatureChangeObject> function;
 	private String newParamName;
 	private String newParamPlaceholder;
+	private String newParamType;
+	private boolean isParamListEmpty;
 	
 	public CallOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> f, 
-			String newParamName, String newParamPlaceholder)
-	{
+			String newParamName, String newParamPlaceholder, String newParamType, boolean isParamListEmpty){
 		this.defLoc = defLoc;
 		this.newParamName = newParamName;
 		this.newParamPlaceholder = newParamPlaceholder;
+		this.newParamType = newParamType;
+		this.isParamListEmpty = isParamListEmpty;
 		this.callOccurences = new HashSet<ACallStm>();
 		this.function = f;
 	}
 
-	public Set<ACallStm> getCalls()
-	{
+	public Set<ACallStm> getCalls(){
 		return callOccurences;
 	}
 	
 	@Override
-	public void caseACallStm(ACallStm node) throws AnalysisException {
+	public void caseACallStm(ACallStm node) throws AnalysisException{
 		AExplicitOperationDefinition root = (AExplicitOperationDefinition) node.getRootdef();
 		
-		if (root == null)
-		{
+		if (root == null){
 			return;
 		}
 
-		if (root.getLocation().equals(defLoc))
-		{
+		if (root.getLocation().equals(defLoc)){
 			String newParamNameStr = newParamName;
 			AExplicitOperationDefinition parent = (AExplicitOperationDefinition)node.parent();
 			LinkedList<PExp> paramListOfParent = node.getArgs();
-			ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
-			LexLocation newLastLoc = SignatureChangeUtil.CalculateNewLastParamLocation(lastLoc, newParamPlaceholder);
-						
+			LexLocation newLastLoc = new LexLocation();
+			
+			if(!isParamListEmpty){
+				ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
+				newLastLoc = SignatureChangeUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
+			} else{
+				newLastLoc = SignatureChangeUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
+			}		
+			
 			ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);				
 			
-			function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, paramListOfParent ,parent.getName().getName()));
+			function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, 
+					paramListOfParent, parent.getName().getName(), newParamType));
 		
 			callOccurences.add(node);
 		}

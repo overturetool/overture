@@ -24,13 +24,17 @@ public class ApplyOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor{
 	private Consumer<SignatureChangeObject> function;
 	private String newParamName;
 	private String newParamPlaceholder;
+	private String newParamType;
+	private boolean isParamListEmpty;
 	
 	public ApplyOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> function, 
-			String newParamName, String newParamPlaceholder){
+			String newParamName, String newParamPlaceholder, String newParamType, boolean isParamListEmpty){
 		this.defLoc = defLoc;
 		this.function = function;
 		this.newParamName = newParamName;
 		this.newParamPlaceholder = newParamPlaceholder;
+		this.newParamType = newParamType;
+		this.isParamListEmpty = isParamListEmpty;
 		this.applyOccurrences = new HashSet<AApplyExp>();		
 	}
 	
@@ -58,12 +62,18 @@ public class ApplyOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor{
 			
 			String newParamNameStr = newParamName;
 			LinkedList<PExp> paramListOfParent = node.getArgs();
-			ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
-			LexLocation newLastLoc = SignatureChangeUtil.CalculateNewLastParamLocation(lastLoc, newParamPlaceholder);
+			LexLocation newLastLoc = new LexLocation();
 			
+			if(!isParamListEmpty){
+				ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
+				newLastLoc = SignatureChangeUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
+			} else{
+				newLastLoc = SignatureChangeUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
+			}
 			ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);
 			
-			function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, paramListOfParent ,operationName));
+			function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, 
+					paramListOfParent ,operationName, newParamType));
 			
 			applyOccurrences.add(node);
 		}

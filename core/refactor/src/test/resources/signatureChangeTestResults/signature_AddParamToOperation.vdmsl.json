@@ -1,0 +1,20 @@
+[
+	{
+		"language": "-sl",
+		"config": "-signature;add;3;newParam;bool;true;",
+	    "signatureChanges": [
+	    	"Added 'newParam' of type 'bool' in parent node 'op' in 'DEFAULT' at line 4:16",
+	    	"Added 'newParam' of type 'bool' in parent node 'b' in 'DEFAULT' at line 8:23",
+	    	"Added 'newParam' of type 'bool' in parent node 'c' in 'DEFAULT' at line 12:24"
+	    ]
+	},
+	{
+		"language": "-sl",
+		"config": "-signature;add;3;newParam;nat;777;",
+	    "signatureChanges": [
+	    	"Added 'newParam' of type 'nat' in parent node 'op' in 'DEFAULT' at line 4:16",
+	    	"Added 'newParam' of type 'nat' in parent node 'b' in 'DEFAULT' at line 8:23",
+	    	"Added 'newParam' of type 'nat' in parent node 'c' in 'DEFAULT' at line 12:24"
+	    ]
+	}
+]

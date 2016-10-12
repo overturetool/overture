@@ -11,11 +11,14 @@ public class SignatureChangeObject {
 	public ILexLocation location;
 	public ILexNameToken newParamName;
 	public String parentName;
+	public String paramType;
 	
-	public SignatureChangeObject(ILexLocation loc, ILexNameToken newParamName, LinkedList<PExp> paramList, String parentName){
+	public SignatureChangeObject(ILexLocation loc, ILexNameToken newParamName, LinkedList<PExp> paramList, 
+			String parentName, String paramType){
 		this.location = loc;
 		this.paramList = paramList;
 		this.newParamName = newParamName;
-		this.parentName = parentName;	
+		this.parentName = parentName;
+		this.paramType = paramType;	
 	}
 }
