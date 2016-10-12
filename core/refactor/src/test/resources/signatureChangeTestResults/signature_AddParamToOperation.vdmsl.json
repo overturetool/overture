@@ -16,5 +16,14 @@
 	    	"Added 'newParam' of type 'nat' in parent node 'b' in 'DEFAULT' at line 8:23",
 	    	"Added 'newParam' of type 'nat' in parent node 'c' in 'DEFAULT' at line 12:24"
 	    ]
+	},
+	{
+		"language": "-sl",
+		"config": "-signature;add;7;x;nat;555;",
+	    "signatureChanges": [
+	    	"Added 'x' of type 'nat' in parent node 'b' in 'DEFAULT' at line 7:4",
+	    	"Added 'x' of type 'nat' in parent node 'd' in 'DEFAULT' at line 16:11",
+	    	"Added 'x' of type 'nat' in parent node 'e' in 'DEFAULT' at line 19:10"
+	    ]
 	}
 ]

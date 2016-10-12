@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
