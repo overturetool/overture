@@ -79,6 +79,19 @@ public class RefactoringBase {
 		return userModules;
 	}
 
+	public List<INode> generateSignatureChanges(List<INode> ast, String[] parameters) throws AnalysisException
+	{
+		List<INode> userModules = extractUserModules(ast);
+		
+		allSignatureChanges = new LinkedList<SignatureChange>();
+		allSignatureChanges.addAll(performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
+
+		generatedData = new GeneratedData();
+		generatedData.setAllSignatureChanges(allSignatureChanges);
+
+		return userModules;
+	}
+	
 	private List<INode> extractUserModules(List<INode> ast) {
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
@@ -88,26 +101,6 @@ public class RefactoringBase {
 		}
 		
 		List<INode> userModules = getUserModules(ast);
-		return userModules;
-	}
-	
-	public List<INode> generateSignatureChanges(List<INode> ast, String[] parameters) throws AnalysisException
-	{
-		if (Settings.dialect == Dialect.VDM_SL)
-		{
-			ModuleList moduleList = new ModuleList(getModules(ast));
-			moduleList.combineDefaults();
-			ast = getNodes(moduleList);
-		}
-		
-		List<INode> userModules = getUserModules(ast);
-		
-		allSignatureChanges = new LinkedList<SignatureChange>();
-		allSignatureChanges.addAll(performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
-
-		generatedData = new GeneratedData();
-		generatedData.setAllSignatureChanges(allSignatureChanges);
-
 		return userModules;
 	}
 	
