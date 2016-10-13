@@ -5,10 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.AssistantBase;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -44,6 +46,10 @@ public class ClassToInterfaceTrans extends DepthFirstAnalysisAdaptor implements 
 				isFullyAbstract.put(c.getName(), assist.getInfo().getDeclAssistant().isFullyAbstract(vdmClazz, assist.getInfo()));
 				interfaces.put(c.getName(), convertToInterface(c));
 			}
+			else
+			{
+				isFullyAbstract.put(c.getName(), false);
+			}
 			// This transformation is only helpful for IR classes that originate
 			// from VDM classes. So we simply ignore classes that originate from
 			// modules since SL does not support inheritance anyway.
@@ -65,7 +71,7 @@ public class ClassToInterfaceTrans extends DepthFirstAnalysisAdaptor implements 
 	@Override
 	public void caseADefaultClassDeclIR(ADefaultClassDeclIR node) throws AnalysisException {
 
-		if (isFullyAbstract.get(node.getName())) {
+		if (isFullyAbstract(node.getName())) {
 
 			result = interfaces.get(node.getName());
 
@@ -76,7 +82,7 @@ public class ClassToInterfaceTrans extends DepthFirstAnalysisAdaptor implements 
 			List<ATokenNameIR> toMove = new LinkedList<>();
 			for (ATokenNameIR s : node.getSuperNames()) {
 
-				if (isFullyAbstract.get(s.getName())) {
+				if (isFullyAbstract(s.getName())) {
 					toMove.add(s);
 				}
 			}
@@ -98,7 +104,7 @@ public class ClassToInterfaceTrans extends DepthFirstAnalysisAdaptor implements 
 		List<AMethodDeclIR> clonedMethods = new LinkedList<>();
 
 		for (AMethodDeclIR m : c.getMethods()) {
-			if (!m.getIsConstructor()) {
+			if (!m.getIsConstructor() && !(m.getTag() instanceof IRGeneratedTag)) {
 				clonedMethods.add(m.clone());
 			}
 		}
@@ -117,6 +123,11 @@ public class ClassToInterfaceTrans extends DepthFirstAnalysisAdaptor implements 
 		}
 
 		return inter;
+	}
+	
+	private boolean isFullyAbstract(String name)
+	{
+		return BooleanUtils.isTrue(isFullyAbstract.get(name));
 	}
 
 	@Override

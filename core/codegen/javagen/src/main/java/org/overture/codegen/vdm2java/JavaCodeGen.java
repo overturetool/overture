@@ -221,24 +221,6 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
-		ClassToInterfaceTrans class2interfaceTr = new ClassToInterfaceTrans(transAssistant);
-		
-		for (IRStatus<PIR> status : statuses)
-		{
-			try
-			{
-				generator.applyTotalTransformation(status, class2interfaceTr);
-
-			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
-			{
-				log.error("Error when generating code for module "
-						+ status.getIrNodeName() + ": " + e.getMessage());
-				log.error("Skipping module..");
-				e.printStackTrace();
-			}
-		}
-		List<IRStatus<AInterfaceDeclIR>> interfaceStatuses = IRStatus.extract(statuses, AInterfaceDeclIR.class);
-
 		/**
 		 * Note that this will include the system class, whereas the CPU and BUS classes have been filtered out when the
 		 * IR status was generated
@@ -287,6 +269,26 @@ public class JavaCodeGen extends CodeGenBase
 				}
 			}
 		}
+		
+		ClassToInterfaceTrans class2interfaceTr = new ClassToInterfaceTrans(transAssistant);
+		
+		List<IRStatus<PIR>> tmp = IRStatus.extract(canBeGenerated);
+		for (IRStatus<PIR> status : tmp)
+		{
+			try
+			{
+				generator.applyTotalTransformation(status, class2interfaceTr);
+
+			} catch (org.overture.codegen.ir.analysis.AnalysisException e)
+			{
+				log.error("Error when generating code for module "
+						+ status.getIrNodeName() + ": " + e.getMessage());
+				log.error("Skipping module..");
+				e.printStackTrace();
+			}
+		}
+		canBeGenerated = IRStatus.extract(tmp, SClassDeclIR.class);
+		List<IRStatus<AInterfaceDeclIR>> interfaceStatuses = IRStatus.extract(tmp, AInterfaceDeclIR.class);
 
 		cleanup(IRStatus.extract(canBeGenerated));
 
