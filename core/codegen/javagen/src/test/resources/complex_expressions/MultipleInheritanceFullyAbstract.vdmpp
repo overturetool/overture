@@ -18,7 +18,9 @@ end B
 
 class C is subclass of A,B
 
-operations
+values
+
+x = <A>
 
 operations
 

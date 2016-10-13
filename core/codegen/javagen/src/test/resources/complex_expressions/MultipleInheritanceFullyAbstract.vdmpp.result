@@ -24,6 +24,8 @@ import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class C extends B implements A {
+  private static final quotes.AQuote x = quotes.AQuote.getInstance();
+
   public Number opA() {
 
     return 1L;
@@ -33,7 +35,7 @@ public class C extends B implements A {
 
   public String toString() {
 
-    return "C{}";
+    return "C{" + "x = " + Utils.toString(x) + "}";
   }
 }
 
@@ -69,4 +71,7 @@ public interface A {
   public abstract Number opA();
 }
 
+##########
+*Quotes*
+A
 ##########
