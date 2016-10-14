@@ -31,6 +31,8 @@ import org.overture.signature.SignatureChange;
 import org.overture.rename.Renaming;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
+import org.overture.unreachable.stm.remover.Removal;
+import org.overture.unreachable.stm.remover.UnreachableStmRemover;
 
 public class RefactoringBase {
 	
@@ -38,6 +40,7 @@ public class RefactoringBase {
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
 	private List<SignatureChange> allSignatureChanges;
+	private List<Removal> allRemovals;
 	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
@@ -88,6 +91,25 @@ public class RefactoringBase {
 
 		generatedData = new GeneratedData();
 		generatedData.setAllSignatureChanges(allSignatureChanges);
+
+		return userModules;
+	}
+
+	public List<INode> removeUnreachableStm(List<INode> ast) throws AnalysisException
+	{
+
+		List<INode> userModules = extractUserModules(ast);
+		
+		allRemovals = new LinkedList<Removal>();
+		
+		UnreachableStmRemover stmRemover = new UnreachableStmRemover();
+		for (INode node : userModules)
+		{
+			node.apply(stmRemover);
+		}
+		
+		generatedData = new GeneratedData();
+		generatedData.setAllRemovals(allRemovals);
 
 		return userModules;
 	}

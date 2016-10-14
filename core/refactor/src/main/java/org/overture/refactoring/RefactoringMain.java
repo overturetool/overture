@@ -27,12 +27,14 @@ public class RefactoringMain {
 	public static final String RENAME_ARG = "-rename;";
 	public static final String EXTRACT_ARG = "-extract;";
 	public static final String SIGNATURE_ARG = "-signature;";
+	public static final String UNREACHABLESTMREMOVE_ARG = "-UnreachableStmRemove";
 	
 	private static boolean printClasses = false;
 	private static boolean testClass = false;
 	private static boolean rename = false;
 	private static boolean extract = false;
 	private static boolean signature = false;
+	private static boolean UnreachableStmRemove = false;
 	
 	private static List<INode> generatedAST;
 	private static GeneratedData generatedData;
@@ -48,6 +50,7 @@ public class RefactoringMain {
 		rename = false;
 		extract = false;
 		signature = false;
+		UnreachableStmRemove = false;
 		generatedAST = null;
 		generatedData = null;
 		List<String> listArgs = Arrays.asList(args);
@@ -76,6 +79,9 @@ public class RefactoringMain {
 			} else if (arg.equals(TEST_ARG))
 			{
 				testClass = true;
+			} else if (arg.equals(UNREACHABLESTMREMOVE_ARG))
+			{
+				UnreachableStmRemove = true;
 			} else if (arg.contains(RENAME_ARG)){
 				String parms = arg;
 				parms = parms.replace(RENAME_ARG,"");
@@ -152,12 +158,6 @@ public class RefactoringMain {
 			if(rename){
 				if(parameters != null && parameters.length >= 3){
 					generatedAST = refactoringBase.generateRenaming(RefactoringBase.getNodes(tcResult.result), parameters);
-					if(printClasses){
-						PrintOutputAST(generatedAST);
-					}
-					if(testClass){
-						generatedData = refactoringBase.getGeneratedData();
-					}
 				} else {
 					MsgPrinter.getPrinter().println("No parameters");
 				}
@@ -165,12 +165,6 @@ public class RefactoringMain {
 			if(extract){
 				if(parameters != null && parameters.length >= 3){
 					generatedAST = refactoringBase.generateExtraction(RefactoringBase.getNodes(tcResult.result), parameters);
-					if(printClasses){
-						PrintOutputAST(generatedAST);
-					}
-					if(testClass){
-						generatedData = refactoringBase.getGeneratedData();
-					}
 				} else {
 					MsgPrinter.getPrinter().println("No parameters");
 				}
@@ -178,21 +172,38 @@ public class RefactoringMain {
 			if(signature){
 				if(parameters != null && parameters.length >= 3){
 					generatedAST = refactoringBase.generateSignatureChanges(RefactoringBase.getNodes(tcResult.result), parameters);
-					if(printClasses){
-						PrintOutputAST(generatedAST);
-					}
-					if(testClass){
-						generatedData = refactoringBase.getGeneratedData();
-					}
 				} else {
 					MsgPrinter.getPrinter().println("No parameters");
 				}
 			}
+			checkDefaultConfig(refactoringBase, tcResult);
 
 		} catch (AnalysisException e)
 		{
 			MsgPrinter.getPrinter().println("Could not code generate model: "
 					+ e.getMessage());
+		}
+	}
+	
+	private static void checkDefaultConfig(RefactoringBase refactoringBase, TypeCheckResult<List<AModuleModules>> tcResult){
+		if(UnreachableStmRemove){
+			try {
+				generatedAST = refactoringBase.removeUnreachableStm(RefactoringBase.getNodes(tcResult.result));
+			} catch (AnalysisException e) {
+				MsgPrinter.getPrinter().println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		if(printClasses){
+			try {
+				PrintOutputAST(generatedAST);
+			} catch (AnalysisException e) {
+				MsgPrinter.getPrinter().println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		if(testClass){
+			generatedData = refactoringBase.getGeneratedData();
 		}
 	}
 	

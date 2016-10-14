@@ -1,26 +1,19 @@
-package org.overture.rename;
+package org.overture.unreachable.stm.remover;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.refactoring.BasicRefactoringType;
+import org.overture.rename.Renaming;
 
-public class Renaming extends BasicRefactoringType implements Comparable<Renaming> 
+public class Removal  extends BasicRefactoringType implements Comparable<Renaming> 
 {
 	private ILexLocation loc;
-
-	private String oldName;
-	private String newName;
-
-	private String oldModule;
-	private String newModule;
-
-	public Renaming(ILexLocation loc, String oldName, String newName,
-			String oldModule, String newModule)
+	private String name;
+	
+	public Removal(ILexLocation loc, String name)
 	{
 		this.loc = loc;
-		this.oldName = oldName;
-		this.newName = newName;
-		this.oldModule = oldModule;
-		this.newModule = newModule;
+		this.name = name;
+
 	}
 
 	public ILexLocation getLoc()
@@ -28,30 +21,16 @@ public class Renaming extends BasicRefactoringType implements Comparable<Renamin
 		return loc;
 	}
 
-	public String getOldName()
+	public String getName()
 	{
-		return oldName;
+		return name;
 	}
 
-	public String getNewName()
-	{
-		return newName;
-	}
-
-	public String getOldModule()
-	{
-		return oldModule;
-	}
-
-	public String getNewModule()
-	{
-		return newModule;
-	}
 
 	@Override
 	public String toString()
 	{
-		return String.format("'%s' changed to '%s' %s", oldName, newName, loc);
+		return String.format("'%s' removed from %s", name, loc);
 	}
 
 	@Override

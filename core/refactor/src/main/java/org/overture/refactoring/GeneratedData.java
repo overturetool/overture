@@ -6,6 +6,7 @@ import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.extract.Extraction;
 import org.overture.signature.SignatureChange;
+import org.overture.unreachable.stm.remover.Removal;
 import org.overture.rename.Renaming;
 
 public class GeneratedData
@@ -17,6 +18,7 @@ public class GeneratedData
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
 	private List<SignatureChange> allSignatureChanges;
+	private List<Removal> allRemovals;
 	private List<String> warnings;
 
 	public GeneratedData()
@@ -107,6 +109,15 @@ public class GeneratedData
 	public void setAllSignatureChanges(List<SignatureChange> allSignatureChanges)
 	{
 		this.allSignatureChanges = allSignatureChanges;
+	}
+	
+	public List<Removal> getAllRemovals()
+	{
+		return allRemovals;
+	}
+	
+	public void setAllRemovals(List<Removal> allRemovals) {
+		this.allRemovals = allRemovals;
 	}
 	
 	public List<String> getWarnings()
