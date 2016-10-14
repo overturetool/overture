@@ -79,6 +79,17 @@ public class GlobalFileTester {
 				String item = signatureChangeStrings.get(i);
 				Assert.assertTrue(resObj.getSignatureChanges().contains(item));
 			}
+			
+			//UNREACHABLE CODE REMOVE CHECKER
+			List<BasicRefactoringType> removedStm =(List<BasicRefactoringType>)(List<?>) genData.getAllRemovals();
+			List<String> removedStmStrings = removeFilePathFromText(removedStm);
+
+			Assert.assertTrue((resObj.getUnreachableStmRemoved() == null && (removedStmStrings == null || removedStmStrings.isEmpty())) || 
+					resObj.getUnreachableStmRemoved().size() == removedStmStrings.size());
+			for(int i = 0; i < removedStmStrings.size();i++ ) {
+				String item = removedStmStrings.get(i);
+				Assert.assertTrue(resObj.getUnreachableStmRemoved().contains(item));
+			}
 		}
 	}
 	

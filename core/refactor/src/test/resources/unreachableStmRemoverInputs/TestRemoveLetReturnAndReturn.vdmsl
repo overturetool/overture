@@ -1,0 +1,21 @@
+
+operations
+op: nat * bool ==> nat
+op(n, boolean) == (
+let a = n in return a;
+let a = n in return a;
+);
+
+b: () ==> nat
+b() == op(666, false);
+
+c: () ==> nat
+c() ==
+let a = op(111, false) in return a;
+
+d: () ==> nat
+d() == (
+return 1;
+return 1;
+return 1;
+)

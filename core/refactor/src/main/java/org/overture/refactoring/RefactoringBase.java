@@ -62,7 +62,9 @@ public class RefactoringBase {
 		allRenamings = new LinkedList<Renaming>();
 		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
 
-		generatedData = new GeneratedData();
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
 		generatedData.setAllRenamings(allRenamings);
 
 		return userModules;
@@ -76,7 +78,9 @@ public class RefactoringBase {
 		allExtractions = new LinkedList<Extraction>();
 		allExtractions.addAll(performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
 
-		generatedData = new GeneratedData();
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
 		generatedData.setAllExtractions(allExtractions);
 
 		return userModules;
@@ -89,7 +93,9 @@ public class RefactoringBase {
 		allSignatureChanges = new LinkedList<SignatureChange>();
 		allSignatureChanges.addAll(performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
 
-		generatedData = new GeneratedData();
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
 		generatedData.setAllSignatureChanges(allSignatureChanges);
 
 		return userModules;
@@ -100,16 +106,16 @@ public class RefactoringBase {
 
 		List<INode> userModules = extractUserModules(ast);
 		
-		allRemovals = new LinkedList<Removal>();
 		
 		UnreachableStmRemover stmRemover = new UnreachableStmRemover();
 		for (INode node : userModules)
 		{
 			node.apply(stmRemover);
 		}
-		
-		generatedData = new GeneratedData();
-		generatedData.setAllRemovals(allRemovals);
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
+		generatedData.setAllRemovals(stmRemover.getAllRemovals());
 
 		return userModules;
 	}
@@ -266,5 +272,9 @@ public class RefactoringBase {
 	
 	public GeneratedData getGeneratedData(){
 		return generatedData;
+	}
+	
+	public void init(){	
+		generatedData = new GeneratedData();
 	}
 }

@@ -8,6 +8,8 @@ public class ResultObject {
 	public List<String> renamings;
 	public List<String> extractions;
 	public List<String> signatureChanges;
+	private List<String> unreachableStmRemoved;
+	
 	public String getLanguage() {
 		return language;
 	}
@@ -50,5 +52,13 @@ public class ResultObject {
 
 	public void setSignatureChanges(List<String> signatureChanges) {
 		this.signatureChanges = signatureChanges;
+	}
+
+	public List<String> getUnreachableStmRemoved() {
+		return unreachableStmRemoved;
+	}
+
+	public void setUnreachableStmRemoved(List<String> unreachableStmRemoved) {
+		this.unreachableStmRemoved = unreachableStmRemoved;
 	}	
 }

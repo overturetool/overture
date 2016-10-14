@@ -29,6 +29,8 @@ public class RefactoringMain {
 	public static final String SIGNATURE_ARG = "-signature;";
 	public static final String UNREACHABLESTMREMOVE_ARG = "-UnreachableStmRemove";
 	
+	private static RefactoringBase refactoringBase = new RefactoringBase();
+	
 	private static boolean printClasses = false;
 	private static boolean testClass = false;
 	private static boolean rename = false;
@@ -154,7 +156,7 @@ public class RefactoringMain {
 				return;
 			}
 			
-			RefactoringBase refactoringBase = new RefactoringBase();
+			refactoringBase.init();
 			if(rename){
 				if(parameters != null && parameters.length >= 3){
 					generatedAST = refactoringBase.generateRenaming(RefactoringBase.getNodes(tcResult.result), parameters);

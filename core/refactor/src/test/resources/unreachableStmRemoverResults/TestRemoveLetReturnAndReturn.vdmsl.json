@@ -1,0 +1,11 @@
+[
+	{
+		"language": "-sl",
+		"config": "-UnreachableStmRemove",
+	    "unreachableStmRemoved": [
+		    "'let a:nat = n in return ' removed from in 'DEFAULT' at line 6:1",
+			"'return ' removed from in 'DEFAULT' at line 19:1",
+			"'return ' removed from in 'DEFAULT' at line 20:1"
+	    ]
+	}
+]
