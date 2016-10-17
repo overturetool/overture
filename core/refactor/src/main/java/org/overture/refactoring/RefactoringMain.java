@@ -198,6 +198,9 @@ public class RefactoringMain {
 		}
 		if(printClasses){
 			try {
+				if(generatedAST == null){
+					generatedAST = refactoringBase.extractUserModules(RefactoringBase.getNodes(tcResult.result));
+				}
 				PrintOutputAST(generatedAST);
 			} catch (AnalysisException e) {
 				MsgPrinter.getPrinter().println(e.getMessage());

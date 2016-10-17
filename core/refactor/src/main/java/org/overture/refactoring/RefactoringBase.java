@@ -120,7 +120,7 @@ public class RefactoringBase {
 		return userModules;
 	}
 	
-	private List<INode> extractUserModules(List<INode> ast) {
+	public List<INode> extractUserModules(List<INode> ast) {
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			ModuleList moduleList = new ModuleList(getModules(ast));
