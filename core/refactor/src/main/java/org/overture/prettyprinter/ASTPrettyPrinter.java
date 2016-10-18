@@ -160,7 +160,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, IndentTracker question) throws AnalysisException
 	{
-		
+
 		if (!proceed(node))
 		{
 			return null;

@@ -20,6 +20,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
+import org.overture.convert.function.to.operation.ConvertFunctionToOperation;
 import org.overture.extract.Extraction;
 import org.overture.extract.Extractor;
 import org.overture.extract.RefactoringExtractionCollector;
@@ -116,6 +117,25 @@ public class RefactoringBase {
 			generatedData = new GeneratedData();
 		}
 		generatedData.setAllRemovals(stmRemover.getAllRemovals());
+
+		return userModules;
+	}
+	
+	public List<INode> convertFunctionToOperation(List<INode> ast, int line) throws AnalysisException
+	{
+
+		List<INode> userModules = extractUserModules(ast);
+		
+		
+		ConvertFunctionToOperation converter = new ConvertFunctionToOperation(line);
+		for (INode node : userModules)
+		{
+			node.apply(converter);
+		}
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
+//		generatedData.setAllRemovals(stmRemover.getAllRemovals());
 
 		return userModules;
 	}

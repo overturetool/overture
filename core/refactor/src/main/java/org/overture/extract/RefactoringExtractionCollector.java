@@ -142,14 +142,6 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
-//		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
-
-
-
-//		node.getBody().apply(this);
-
-
 	}
 
 	
@@ -185,7 +177,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			{
 				enclosingDef = def;
 				enclosingCounter = 0;
-				setNamesToAvoid(def);
+				setNamesToAvoid(def); //TODO could be removed
 				this.nameGen = new TempVarNameGen();
 
 				def.apply(this);
@@ -281,11 +273,4 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	public void addToNodeCurrentModule(PDefinition node){
-		System.out.println("Sized:" + currentModule.getDefs().size());
-
-		currentModule.getDefs().add(node);
-		
-		System.out.println("Sizea:" + currentModule.getDefs().size());
-	}
 }

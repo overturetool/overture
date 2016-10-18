@@ -1,15 +1,15 @@
-package org.overture.unreachable.stm.remover;
+package org.overture.convert.function.to.operation;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.refactoring.BasicRefactoringType;
 import org.overture.rename.Renaming;
 
-public class Removal extends BasicRefactoringType implements Comparable<Removal> 
+public class ConversionFromFuncToOp extends BasicRefactoringType implements Comparable<ConversionFromFuncToOp> 
 {
 	private ILexLocation loc;
 	private String name;
 	
-	public Removal(ILexLocation loc, String name)
+	public ConversionFromFuncToOp(ILexLocation loc, String name)
 	{
 		this.loc = loc;
 		this.name = name;
@@ -30,7 +30,7 @@ public class Removal extends BasicRefactoringType implements Comparable<Removal>
 	@Override
 	public String toString()
 	{
-		return String.format("'%s' removed from %s", name, loc);
+		return String.format("'%s' converted to operation at %s", name, loc);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class Removal extends BasicRefactoringType implements Comparable<Removal>
 	}
 
 	@Override
-	public int compareTo(Removal other)
+	public int compareTo(ConversionFromFuncToOp other)
 	{
 		if (loc.getModule() != null && other.getLoc().getModule() != null)
 		{

@@ -28,6 +28,7 @@ public class RefactoringMain {
 	public static final String EXTRACT_ARG = "-extract;";
 	public static final String SIGNATURE_ARG = "-signature;";
 	public static final String UNREACHABLESTMREMOVE_ARG = "-UnreachableStmRemove";
+	public static final String CONVERTFUNCTIONTOOPERATION = "-ConvertFunctionToOperation;";
 	
 	private static RefactoringBase refactoringBase = new RefactoringBase();
 	
@@ -36,8 +37,8 @@ public class RefactoringMain {
 	private static boolean rename = false;
 	private static boolean extract = false;
 	private static boolean signature = false;
-	private static boolean UnreachableStmRemove = false;
-	
+	private static boolean unreachableStmRemove = false;
+	private static boolean convertFunctionToOperation = false;
 	private static List<INode> generatedAST;
 	private static GeneratedData generatedData;
 	
@@ -52,7 +53,8 @@ public class RefactoringMain {
 		rename = false;
 		extract = false;
 		signature = false;
-		UnreachableStmRemove = false;
+		unreachableStmRemove = false;
+		convertFunctionToOperation = false;
 		generatedAST = null;
 		generatedData = null;
 		List<String> listArgs = Arrays.asList(args);
@@ -83,7 +85,12 @@ public class RefactoringMain {
 				testClass = true;
 			} else if (arg.equals(UNREACHABLESTMREMOVE_ARG))
 			{
-				UnreachableStmRemove = true;
+				unreachableStmRemove = true;
+			} else if (arg.contains(CONVERTFUNCTIONTOOPERATION)){
+				String parms = arg;
+				parms = parms.replace(CONVERTFUNCTIONTOOPERATION,"");
+				parameters = parms.split(";");
+				convertFunctionToOperation = true;
 			} else if (arg.contains(RENAME_ARG)){
 				String parms = arg;
 				parms = parms.replace(RENAME_ARG,"");
@@ -178,6 +185,14 @@ public class RefactoringMain {
 					MsgPrinter.getPrinter().println("No parameters");
 				}
 			}
+			if(convertFunctionToOperation){
+				if(parameters != null && parameters.length >= 1){
+					generatedAST = refactoringBase.convertFunctionToOperation(RefactoringBase.getNodes(tcResult.result), Integer.parseInt(parameters[0]));
+				} else {
+					MsgPrinter.getPrinter().println("No parameters");
+				}
+			}
+			
 			checkDefaultConfig(refactoringBase, tcResult);
 
 		} catch (AnalysisException e)
@@ -188,7 +203,7 @@ public class RefactoringMain {
 	}
 	
 	private static void checkDefaultConfig(RefactoringBase refactoringBase, TypeCheckResult<List<AModuleModules>> tcResult){
-		if(UnreachableStmRemove){
+		if(unreachableStmRemove){
 			try {
 				generatedAST = refactoringBase.removeUnreachableStm(RefactoringBase.getNodes(tcResult.result));
 			} catch (AnalysisException e) {
