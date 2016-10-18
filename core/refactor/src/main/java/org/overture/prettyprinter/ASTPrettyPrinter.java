@@ -22,7 +22,6 @@
 package org.overture.prettyprinter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
@@ -44,7 +44,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
-import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
@@ -70,8 +69,8 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
@@ -93,7 +92,8 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	private int enclosingCounter;
 	private Set<String> namesToAvoid;
 	private boolean operationFlag;
-
+	private boolean functionFlag;
+	
 	private int outerScopeCounter = -1;
 	private List<ArrayList<String>> stringOuterStack;
 	private static String NODE_NOT_FOUND = "ERROR: Node not found";
@@ -114,6 +114,8 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		this.namesToAvoid = new HashSet<String>();
 		new TempVarNameGen();
 		this.stringOuterStack = new ArrayList<ArrayList<String>>();
+		this.operationFlag = false;
+		this.functionFlag = false;
 	}
 
 	@Override
@@ -150,7 +152,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		return node.getName().getFullName();
 	}
 
-
 	// For operations and functions it works as a single pattern
 	// Thus f(1,mk_(2,2),5) will fail
 	// public f : nat * (nat * nat) * nat -> nat
@@ -177,8 +178,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		strBuilder.append(opName);
 		strBuilder.append(" : ");
 		
-		VDMDefinitionInfo defInfo = new VDMDefinitionInfo(node.getParamDefinitions(), af);
-		
 		PType typeDef = node.getType();
 		LinkedList<? extends PType> typeDefs = new LinkedList<AOperationType>();
 		
@@ -186,16 +185,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			typeDefs = ((AOperationType) typeDef).getParameters();
 		}
 		
-		if(typeDefs != null && typeDefs.size() > 0){	
-			for (PType def : typeDefs){
-				if(def != typeDefs.get(0)){
-					strBuilder.append("*");
-				}	
-				strBuilder.append(def.toString());
-			}
-		} else {
-			strBuilder.append("()");
-		}
+		parametertypesPrinter(strBuilder, typeDefs);
 		
 		strBuilder.append(" ==> ");
 		AOperationType defOp = node.getType().getAncestor(AOperationType.class);
@@ -209,13 +199,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		LinkedList<PPattern> patterns = node.getParameterPatterns();
 		
-		for (PPattern def : patterns){
-			if(def != patterns.get(0)){
-				strBuilder.append(", ");
-			}	
-			strBuilder.append(def.toString());
-		}
-		strBuilder.append(") ==");
+		parameterNamePrinter(strBuilder, patterns);
 		if(node.getBody() instanceof ABlockSimpleBlockStm){
 			strBuilder.append(" (\n");
 		}else{
@@ -226,8 +210,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		question.incrIndent();
 		node.getBody().apply(this, question);
 		question.decrIndent();
-		endScope(defInfo);
-		
+
 		if(node.getBody() instanceof ABlockSimpleBlockStm){
 			insertIntoStringStack(question.getIndentation() + ");");
 		}
@@ -236,6 +219,89 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		return node.getName().getFullName();
 	}
 
+	@Override
+	public String caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node, IndentTracker question)
+			throws AnalysisException {
+		if (!proceed(node))
+		{
+			return null;
+		}
+		if(!functionFlag){
+			insertIntoStringStack("\n");
+			insertIntoStringStack("functions");
+			insertIntoStringStack("\n\n");
+			functionFlag = true;
+		}
+		
+		StringBuilder strBuilder = new StringBuilder();
+		String funcName = node.getName().getFullName();
+		strBuilder.append(funcName);
+		strBuilder.append(" : ");
+		
+		PType typeDef = node.getType();
+		LinkedList<? extends PType> typeDefs = new LinkedList<AFunctionType>();
+		
+		if(typeDef instanceof AFunctionType){
+			typeDefs = ((AFunctionType) typeDef).getParameters();
+		}
+		
+		parametertypesPrinter(strBuilder, typeDefs);
+		
+		strBuilder.append(" -> ");
+		AFunctionType defOp = node.getType().getAncestor(AFunctionType.class);
+		if (defOp != null){
+			strBuilder.append(defOp.getResult().toString());
+		}
+		
+		// Top part done:" op: nat ==> nat "
+		strBuilder.append("\n");
+		strBuilder.append(question.getIndentation() + funcName + "(");
+		
+		List<PPattern> patterns = node.getParamPatternList().getFirst();
+		
+		parameterNamePrinter(strBuilder, patterns);
+		if(node.getBody() instanceof ABlockSimpleBlockStm){
+			strBuilder.append(" (\n");
+		}else{
+			strBuilder.append("\n");
+		}		
+		
+		insertIntoStringStack(question.getIndentation() + strBuilder.toString());
+		question.incrIndent();
+		node.getBody().apply(this, question);
+		question.decrIndent();
+
+		if(node.getBody() instanceof ABlockSimpleBlockStm){
+			insertIntoStringStack(question.getIndentation() + ");");
+		}
+		
+		finishElementInStack();
+		return node.getName().getFullName();
+	}
+
+	private void parameterNamePrinter(StringBuilder strBuilder, List<PPattern> patterns) {
+		for (PPattern def : patterns){
+			if(def != patterns.get(0)){
+				strBuilder.append(", ");
+			}	
+			strBuilder.append(def.toString());
+		}
+		strBuilder.append(") ==");
+	}
+
+	private void parametertypesPrinter(StringBuilder strBuilder, LinkedList<? extends PType> typeDefs) {
+		if(typeDefs != null && typeDefs.size() > 0){	
+			for (PType def : typeDefs){
+				if(def != typeDefs.get(0)){
+					strBuilder.append("*");
+				}	
+				strBuilder.append(def.toString());
+			}
+		} else {
+			strBuilder.append("()");
+		}
+	}
+	
 	@Override
 	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, IndentTracker question)
 			throws AnalysisException
@@ -286,7 +352,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		question.incrIndent();
 		node.getStatement().apply(this, question);
 		question.decrIndent();
-		endScope(defInfo);
 		return node.toString();
 	}
 	
@@ -369,21 +434,30 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		return Utilities.wrap(sb.toString());
 	}
 	
+	public String basicLiteralExpPrinter(String value, IndentTracker question, INode parent){
+		
+		StringBuilder sb = new StringBuilder();
+		if(parent instanceof AExplicitFunctionDefinition || 
+				parent instanceof AExplicitOperationDefinition){
+			sb.append(question.getIndentation());
+		}
+		sb.append(value);
+		insertIntoStringStack(sb.toString());
+		return sb.toString();
+	}
 	
 	@Override
 	public String caseAIntLiteralExp(AIntLiteralExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		insertIntoStringStack(Long.toString(node.getValue().getValue()));
-		return Long.toString(node.getValue().getValue());
+		return basicLiteralExpPrinter(Long.toString(node.getValue().getValue()),question,node.parent());
 	}
 	
 	@Override
 	public String caseARealLiteralExp(ARealLiteralExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		insertIntoStringStack(Double.toString(node.getValue().getValue()));
-		return Double.toString(node.getValue().getValue());
+		return basicLiteralExpPrinter(Double.toString(node.getValue().getValue()),question,node.parent());
 	}
 	
 	@Override
@@ -397,16 +471,12 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	
 	@Override
 	public String caseABooleanConstExp(ABooleanConstExp node, IndentTracker question) throws AnalysisException {
-		String var = String.valueOf(node.getValue().getValue());
-		insertIntoStringStack(var);
-		return var;
+		return basicLiteralExpPrinter(String.valueOf(node.getValue().getValue()),question,node.parent());
 	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node, IndentTracker question) throws AnalysisException {
-		String var = String.valueOf(node.getValue().getValue());
-		insertIntoStringStack(var);
-		return super.caseACharLiteralExp(node, question);
+		return basicLiteralExpPrinter(String.valueOf(node.getValue().getValue()),question,node.parent());
 	}
 	
 	@Override
@@ -669,11 +739,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		return enclosingDef == def;
 	}
 
-	public void endScope(VDMDefinitionInfo defInfo)
-	{
-		this.localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
-	}
-
 	public void removeLocalDefFromScope(PDefinition localDef)
 	{
 		localDefsInScope.remove(localDef.getName());
@@ -719,10 +784,13 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	
 	public void finishElementInStack(){
 		 String lastInput = stringOuterStack.get(outerScopeCounter).get(stringOuterStack.get(outerScopeCounter).size() - 1);
-		 if(lastInput.charAt(lastInput.length() - 1) == '\n'){
+		 char lastChar = lastInput.charAt(lastInput.length() - 1);
+		 if(lastChar == '\n'){
 			 insertIntoStringStack("\n");
-		 }else{
+		 }else if (lastChar == ';') {
 			 insertIntoStringStack("\n\n");
+		 } else{
+			 insertIntoStringStack(";\n\n");
 		 }
 	}
 	

@@ -128,7 +128,6 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 			AIntLiteralExp aIntLiteralExp = (AIntLiteralExp) pExp;
 			return AstFactory.newAReturnStm(pExp.getLocation(), aIntLiteralExp);
 		}
-
 		return null;
 	}
 	
@@ -139,11 +138,8 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	}
 	
 	public void addToNodeCurrentModuleAndRemoveOld(PDefinition newNode, PDefinition oldNode){
-		System.out.println("Size1:" + currentModule.getDefs().size());
 		currentModule.getDefs().remove(oldNode);
-		System.out.println("Size2:" + currentModule.getDefs().size());
 		currentModule.getDefs().add(newNode);
-		System.out.println("Size3:" + currentModule.getDefs().size());
 	}
 	
 	public static boolean isInRange(ILexLocation loc, int from){	

@@ -26,13 +26,12 @@ import org.overture.extract.Extractor;
 import org.overture.extract.RefactoringExtractionCollector;
 import org.overture.rename.RefactoringRenameCollector;
 import org.overture.rename.Renamer;
-import org.overture.signature.RefactoringSignatureChangeCollector;
-import org.overture.signature.SignatureChanger;
-import org.overture.signature.SignatureChange;
 import org.overture.rename.Renaming;
+import org.overture.signature.RefactoringSignatureChangeCollector;
+import org.overture.signature.SignatureChange;
+import org.overture.signature.SignatureChanger;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
-import org.overture.unreachable.stm.remover.Removal;
 import org.overture.unreachable.stm.remover.UnreachableStmRemover;
 
 public class RefactoringBase {
@@ -41,7 +40,6 @@ public class RefactoringBase {
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
 	private List<SignatureChange> allSignatureChanges;
-	private List<Removal> allRemovals;
 	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
