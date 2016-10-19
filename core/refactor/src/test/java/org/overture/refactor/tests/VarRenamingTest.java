@@ -1,30 +1,18 @@
 package org.overture.refactor.tests;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.refactor.tests.base.ResultObject;
 import org.overture.refactor.tests.base.TestUtils;
-import org.overture.refactoring.GeneratedData;
-import org.overture.refactoring.RefactoringMain;
-import org.overture.rename.Renaming;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(Parameterized.class)

@@ -47,49 +47,40 @@ public class GlobalFileTester {
 				System.out.println("There was not generated any data!");
 				Assert.assertTrue(genData == null);
 			}
-			//RENAME CHECK
-			List<BasicRefactoringType> renamings =(List<BasicRefactoringType>)(List<?>) genData.getAllRenamings();
 			
-			List<String> renamingStrings = removeFilePathFromText(renamings);
-			Assert.assertTrue((resObj.getRenamings() == null && (renamingStrings == null || renamingStrings.isEmpty())) || 
-					resObj.getRenamings().size() == renamingStrings.size());
-
-			for(int i = 0; i < renamingStrings.size();i++ ) {
-				String item = renamingStrings.get(i);
-				Assert.assertTrue(resObj.getRenamings().contains(item));
-			}
+			//RENAME CHECK
+			List<BasicRefactoringType> renamings =(List<BasicRefactoringType>)(List<?>) genData.getAllRenamings();	
+			List<String> renamingStrings = removeFilePathFromText(renamings);			
+			checkAssertions(resObj.getRenamings(), renamingStrings);
 			
 			//EXTRACT CHECK
 			List<BasicRefactoringType> extractions =(List<BasicRefactoringType>)(List<?>) genData.getAllExtractions();
 			List<String> extractionStrings = removeFilePathFromText(extractions);
-			Assert.assertTrue((resObj.getExtractions() == null && (extractionStrings == null || extractionStrings.isEmpty())) || resObj.getExtractions().size() == extractionStrings.size());
-
-			for(int i = 0; i < extractionStrings.size();i++ ) {
-				String item = extractionStrings.get(i);
-				Assert.assertTrue(resObj.getExtractions().contains(item));
-			}
+			checkAssertions(resObj.getExtractions(), extractionStrings);
 			
 			//SIGNATURE CHANGE CHECK
 			List<BasicRefactoringType> signatureChanges =(List<BasicRefactoringType>)(List<?>) genData.getAllSignatureChanges();
 			List<String> signatureChangeStrings = removeFilePathFromText(signatureChanges);
-			Assert.assertTrue((resObj.getSignatureChanges() == null && (signatureChangeStrings == null || signatureChangeStrings.isEmpty())) || 
-					resObj.getSignatureChanges().size() == signatureChangeStrings.size());
-
-			for(int i = 0; i < signatureChangeStrings.size();i++ ) {
-				String item = signatureChangeStrings.get(i);
-				Assert.assertTrue(resObj.getSignatureChanges().contains(item));
-			}
+			checkAssertions(resObj.getSignatureChanges(), signatureChangeStrings);
 			
 			//UNREACHABLE CODE REMOVE CHECKER
 			List<BasicRefactoringType> removedStm =(List<BasicRefactoringType>)(List<?>) genData.getAllRemovals();
 			List<String> removedStmStrings = removeFilePathFromText(removedStm);
+			checkAssertions(resObj.getUnreachableStmRemoved(), removedStmStrings);
+			
+			//CONVERT FUNCTION TO OPERATION CHECKER
+			List<BasicRefactoringType> conversionFromFuncToOp =(List<BasicRefactoringType>)(List<?>) genData.getAllConversionFromFuncToOp();
+			List<String> conversionFromFuncToOpStrings = removeFilePathFromText(conversionFromFuncToOp);
+			checkAssertions(resObj.getConvertedFunctionToOperation(), conversionFromFuncToOpStrings);
+		}
+	}
 
-			Assert.assertTrue((resObj.getUnreachableStmRemoved() == null && (removedStmStrings == null || removedStmStrings.isEmpty())) || 
-					resObj.getUnreachableStmRemoved().size() == removedStmStrings.size());
-			for(int i = 0; i < removedStmStrings.size();i++ ) {
-				String item = removedStmStrings.get(i);
-				Assert.assertTrue(resObj.getUnreachableStmRemoved().contains(item));
-			}
+	private void checkAssertions(List<String> resObj, List<String> conversionFromFuncToOpStrings) {
+		Assert.assertTrue((resObj == null && (conversionFromFuncToOpStrings == null || conversionFromFuncToOpStrings.isEmpty())) || 
+				resObj.size() == conversionFromFuncToOpStrings.size());
+		for(int i = 0; i < conversionFromFuncToOpStrings.size();i++ ) {
+			String item = conversionFromFuncToOpStrings.get(i);
+			Assert.assertTrue(resObj.contains(item));
 		}
 	}
 	

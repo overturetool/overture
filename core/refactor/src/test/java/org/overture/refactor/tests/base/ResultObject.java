@@ -9,7 +9,16 @@ public class ResultObject {
 	public List<String> extractions;
 	public List<String> signatureChanges;
 	private List<String> unreachableStmRemoved;
+	private List<String> convertedFunctionToOperation;
 	
+	public List<String> getConvertedFunctionToOperation() {
+		return convertedFunctionToOperation;
+	}
+
+	public void setConvertedFunctionToOperation(List<String> convertedFunctionToOperation) {
+		this.convertedFunctionToOperation = convertedFunctionToOperation;
+	}
+
 	public String getLanguage() {
 		return language;
 	}
