@@ -82,7 +82,6 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private ITypeCheckerAssistantFactory af;
 
 	private PDefinition enclosingDef;
-	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
 
@@ -103,12 +102,9 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.af = af;
-
 		this.enclosingDef = null;
-		this.idDefs = idDefs;
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
-
 		this.signatureChanges = new HashSet<SignatureChange>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();

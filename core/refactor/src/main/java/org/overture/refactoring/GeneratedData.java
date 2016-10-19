@@ -15,8 +15,6 @@ public class GeneratedData
 {
 	private List<GeneratedModule> classes;
 	private List<GeneratedModule> quoteValues;
-	private InvalidNamesResult invalidNamesResult;
-	private List<String> skippedClasses;
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
 	private List<SignatureChange> allSignatureChanges;
