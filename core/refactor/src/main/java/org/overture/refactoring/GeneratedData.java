@@ -85,7 +85,9 @@ public class GeneratedData
 
 	public void addAllWarnings(List<String> warnings)
 	{
-		this.warnings.addAll(warnings);
+		if(warnings != null && !warnings.isEmpty()){
+			this.warnings.addAll(warnings);
+		}
 	}
 	
 	private boolean hasErrors(List<GeneratedModule> modules)

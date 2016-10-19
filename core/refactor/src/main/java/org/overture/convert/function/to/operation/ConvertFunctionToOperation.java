@@ -105,9 +105,9 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 				AOperationType operationType = AstFactory.newAOperationType(new LexLocation(), parameterTypes, nodeClone.getExpectedResult());
 				
 				AExplicitOperationDefinition convertedOperation = AstFactory.newAExplicitOperationDefinition(token, operationType, nodeClone.getParamPatternList().getFirst(),nodeClone.getPrecondition(), nodeClone.getPostcondition(),convertedPStm);
-				
-				applyOccurrenceSwitcher(convertedOperation, node);
+			
 				addToNodeCurrentModuleAndRemoveOld(convertedOperation, node);
+				applyOccurrenceSwitcher(convertedOperation, node);
 			} else {
 				refactoringLogger.addWarning("Function is used in another function!");
 			}

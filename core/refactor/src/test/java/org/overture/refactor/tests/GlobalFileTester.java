@@ -36,10 +36,8 @@ public class GlobalFileTester {
 		
 		for(Iterator<ResultObject> iter = objs.iterator(); iter.hasNext();){
 			ResultObject resObj = iter.next();
-			String languageStr = resObj.getLanguage();
-			String configStr = resObj.getConfig();
 			
-			String[] strArr = {TEST_ARG, languageStr,configStr,inputFile.getAbsolutePath()};
+			String[] strArr = {TEST_ARG, resObj.getLanguage(), resObj.getConfig(), inputFile.getAbsolutePath()};
 			RefactoringMain.main(strArr);
 
 			GeneratedData genData = RefactoringMain.getGeneratedData();
@@ -71,6 +69,11 @@ public class GlobalFileTester {
 			//CONVERT FUNCTION TO OPERATION CHECKER
 			List<BasicRefactoringType> conversionFromFuncToOp =(List<BasicRefactoringType>)(List<?>) genData.getAllConversionFromFuncToOp();
 			List<String> conversionFromFuncToOpStrings = removeFilePathFromText(conversionFromFuncToOp);
+			
+			for(String i : conversionFromFuncToOpStrings){
+				System.out.println(i);
+			}
+			
 			checkAssertions(resObj.getConvertedFunctionToOperation(), conversionFromFuncToOpStrings);
 		}
 	}
@@ -78,7 +81,7 @@ public class GlobalFileTester {
 	private void checkAssertions(List<String> resObj, List<String> conversionFromFuncToOpStrings) {
 		Assert.assertTrue((resObj == null && (conversionFromFuncToOpStrings == null || conversionFromFuncToOpStrings.isEmpty())) || 
 				resObj.size() == conversionFromFuncToOpStrings.size());
-		for(int i = 0; i < conversionFromFuncToOpStrings.size();i++ ) {
+		for(int i = 0; i < conversionFromFuncToOpStrings.size(); i++ ) {
 			String item = conversionFromFuncToOpStrings.get(i);
 			Assert.assertTrue(resObj.contains(item));
 		}
@@ -93,8 +96,7 @@ public class GlobalFileTester {
 				finishedStrings.add(item.toString().replaceAll("\\(.*?\\) ?", ""));
 			}
 		}
-		return finishedStrings;
-		
+		return finishedStrings;	
 	}
 }
 
