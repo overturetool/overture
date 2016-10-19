@@ -11,6 +11,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.PStm;
+import org.overture.refactoring.RefactoringLogger;
 
 public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 	
@@ -19,13 +20,16 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 	private int from;
 	private int to;
 	AModuleModules currentModule;
-	public DuplicateOccurrenceCollector(AExplicitOperationDefinition callingOp, AExplicitOperationDefinition extractedOp, int from, int to, String extractedOperationName, AModuleModules currentModule)
+	private RefactoringLogger<Extraction> refactoringLogger;
+	public DuplicateOccurrenceCollector(AExplicitOperationDefinition callingOp, AExplicitOperationDefinition extractedOp, int from, int to, 
+			String extractedOperationName, AModuleModules currentModule, RefactoringLogger<Extraction> refactoringLogger)
 	{
 		this.callingOperation = callingOp;
 		this.extractedOperation = extractedOp;
 		this.from = from;
 		this.to = to;
 		this.currentModule = currentModule;
+		this.refactoringLogger = refactoringLogger;
 	}
 	
 	@Override
@@ -58,9 +62,9 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 				if(ExtractUtil.isInRange(fromStatements.get(i).getLocation(), fromAndTo, fromAndTo)){
 					
 					if(ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i)){
-						ExtractionLog.addExtraction(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), null));					
+						refactoringLogger.add(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), null));					
 					}else{
-						ExtractionLog.addExtraction(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), extractedOperation.getName().getName()));					
+						refactoringLogger.add(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), extractedOperation.getName().getName()));					
 					}
 					
 					ExtractUtil.removeFromStatements(fromStatements.get(i), node.getStatements());

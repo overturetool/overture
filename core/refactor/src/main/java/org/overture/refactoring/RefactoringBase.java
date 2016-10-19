@@ -133,8 +133,8 @@ public class RefactoringBase {
 		if(generatedData == null){
 			generatedData = new GeneratedData();
 		}
-//		generatedData.setAllRemovals(stmRemover.getAllRemovals());
-
+		generatedData.setAllConversionFromFuncToOp(converter.getAllConversionFromFuncToOp());
+		generatedData.addAllWarnings(converter.getWarnings());
 		return userModules;
 	}
 	

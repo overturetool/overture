@@ -11,6 +11,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.PStm;
+import org.overture.refactoring.RefactoringLogger;
 
 public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 	
@@ -20,8 +21,10 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 	private int from;
 	private int to;
 	private String extractedOperationName;
+	private RefactoringLogger<Extraction> refactoringLogger;
 	
-	public BodyOccurrenceCollector(AExplicitOperationDefinition fromOp, AModuleModules currentModule, int from, int to, String extractedOperationName)
+	public BodyOccurrenceCollector(AExplicitOperationDefinition fromOp, AModuleModules currentModule, int from, int to,
+			String extractedOperationName, RefactoringLogger<Extraction> refactoringLogger)
 	{
 		this.fromOperation = fromOp;
 		this.toOperation = null;
@@ -29,6 +32,7 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 		this.from = from;
 		this.to = to;
 		this.extractedOperationName = extractedOperationName;
+		this.refactoringLogger = refactoringLogger;
 	}
 	
 	@Override
@@ -56,9 +60,9 @@ public class BodyOccurrenceCollector extends DepthFirstAnalysisAdaptor{
 				
 				if(ExtractUtil.addToOperationToFromOperation( stm, node, fromStatements, toOperation, counter)){
 					ExtractUtil.removeFromStatements(stm, node.getStatements());
-					ExtractionLog.addExtraction(new Extraction(stm.getLocation(), stm.toString(), null));					
+					refactoringLogger.add(new Extraction(stm.getLocation(), stm.toString(), null));					
 				}else{
-					ExtractionLog.addExtraction(new Extraction(stm.getLocation(), stm.toString(), toOperation.getName().getName()));					
+					refactoringLogger.add(new Extraction(stm.getLocation(), stm.toString(), toOperation.getName().getName()));					
 				}
 				
 			} else if(!ExtractUtil.isInRange(stm.getLocation(), from, to)){

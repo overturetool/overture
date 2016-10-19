@@ -3,6 +3,7 @@ package org.overture.convert.function.to.operation;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
@@ -24,6 +25,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
+import org.overture.refactoring.RefactoringLogger;
 
 public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	
@@ -32,13 +34,14 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	private AModuleModules currentModule;
 	private boolean foundFunctionToConvert;
 	private int line;
-	
+	private RefactoringLogger<ConversionFromFuncToOp> refactoringLogger;
 	public ConvertFunctionToOperation(int line)
 	{
 		this.enclosingDef = null;
 		this.currentModule = null;
 		this.foundFunctionToConvert = false;
 		this.line = line;
+		this.refactoringLogger = new RefactoringLogger<ConversionFromFuncToOp>();
 	}
 	
 	@Override
@@ -103,9 +106,11 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 				AOperationType operationType = AstFactory.newAOperationType(new LexLocation(), parameterTypes, nodeClone.getExpectedResult());
 				
 				AExplicitOperationDefinition convertedOperation = AstFactory.newAExplicitOperationDefinition(token, operationType, nodeClone.getParamPatternList().getFirst(),nodeClone.getPrecondition(), nodeClone.getPostcondition(),convertedPStm);
-		
-				addToNodeCurrentModuleAndRemoveOld(convertedOperation, node);
+				
 				applyOccurrenceSwitcher(convertedOperation, node);
+				addToNodeCurrentModuleAndRemoveOld(convertedOperation, node);
+			} else {
+				refactoringLogger.addWarning("Function is used in another function!");
 			}
 		}
 	}
@@ -133,16 +138,25 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	
 	private void applyOccurrenceSwitcher(AExplicitOperationDefinition toOperation, AExplicitFunctionDefinition function) throws AnalysisException
 	{
-		FunctionOccurrenceSwitcher collector = new FunctionOccurrenceSwitcher(toOperation, function);
+		FunctionOccurrenceSwitcher collector = new FunctionOccurrenceSwitcher(toOperation, function, refactoringLogger);
 		currentModule.apply(collector);
 	}
 	
 	public void addToNodeCurrentModuleAndRemoveOld(PDefinition newNode, PDefinition oldNode){
+		refactoringLogger.add(new ConversionFromFuncToOp(oldNode.getLocation(), oldNode.getName().getName()));
 		currentModule.getDefs().remove(oldNode);
 		currentModule.getDefs().add(newNode);
 	}
 	
 	public static boolean isInRange(ILexLocation loc, int from){	
 		return loc.getStartLine() == from;
+	}
+	
+	public List<ConversionFromFuncToOp> getAllConversionFromFuncToOp(){
+		return new ArrayList<ConversionFromFuncToOp>(refactoringLogger.get());
+	}
+	
+	public List<String> getWarnings(){
+		return new ArrayList<String>(refactoringLogger.getWarnings());
 	}
 }

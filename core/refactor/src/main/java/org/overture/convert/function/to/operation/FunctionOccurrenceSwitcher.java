@@ -14,27 +14,25 @@ import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.PStm;
+import org.overture.refactoring.RefactoringLogger;
 
 public class FunctionOccurrenceSwitcher extends DepthFirstAnalysisAdaptor{
 	private AExplicitOperationDefinition toOperation;
 	private AExplicitFunctionDefinition function;
+	private RefactoringLogger<ConversionFromFuncToOp> refactoringLogger;
 	
-	public FunctionOccurrenceSwitcher(AExplicitOperationDefinition toOperation, AExplicitFunctionDefinition function){
+	public FunctionOccurrenceSwitcher(AExplicitOperationDefinition toOperation, AExplicitFunctionDefinition function, RefactoringLogger<ConversionFromFuncToOp> refactoringLogger){
 		this.toOperation = toOperation;
 		this.function = function;	
+		this.refactoringLogger = refactoringLogger;
 	}
 	
-//	public Set<AApplyExp> getApplications(){
-//		return applyOccurrences;
-//	}
-		
 	private boolean compareNodeLocation(ILexLocation node){
 		if(node.getStartLine() == function.getLocation().getStartLine()){
 			return true;
 		}
 		return false;
 	}
-	
 	
 	@Override
 	public void caseAApplyExp(AApplyExp node) throws AnalysisException {
@@ -56,6 +54,7 @@ public class FunctionOccurrenceSwitcher extends DepthFirstAnalysisAdaptor{
 				aVariableExp.setVardef(toOperation);
 				AApplyExp aApplyExp = AstFactory.newAApplyExp(aVariableExp);
 				parent.setExpression(aApplyExp);
+				refactoringLogger.add(new ConversionFromFuncToOp(node.getLocation(), node.toString()));
 			}
 		}
 	}
@@ -84,6 +83,7 @@ public class FunctionOccurrenceSwitcher extends DepthFirstAnalysisAdaptor{
 			if(item.getLocation().getStartLine() == loc.getStartLine() 
 					&& item.getLocation().getStartOffset() == loc.getStartOffset()){
 				stmList.add(i, newStm);
+				refactoringLogger.add(new ConversionFromFuncToOp(loc, newStm.getName().getName()));
 				break;
 			}
 		}

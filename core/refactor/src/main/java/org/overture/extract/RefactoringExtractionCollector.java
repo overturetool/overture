@@ -26,6 +26,7 @@ import org.overture.ast.node.INode;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.ir.TempVarNameGen;
+import org.overture.refactoring.RefactoringLogger;
 
 public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 {
@@ -44,6 +45,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private List<INode> visitedOperations;
 	private AExplicitOperationDefinition extractedOperation;
 	private boolean replaceDuplicates;
+	private RefactoringLogger<Extraction> refactoringLogger;
 	
 	public RefactoringExtractionCollector()
 	{
@@ -54,7 +56,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		this.nameGen = new TempVarNameGen();
 		this.currentModule = null;
 		this.extractedOperation = null;
-		ExtractionLog.clearExtractions();
+		refactoringLogger = new RefactoringLogger<Extraction>(); 
 	}
 
 	@Override
@@ -118,7 +120,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		if(extractedOperation == null){
-			BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName);
+			BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName, refactoringLogger);
 			node.getBody().apply(bodyCollector);
 			if(bodyCollector.getToOperation() != null){
 				extractedOperation = bodyCollector.getToOperation();
@@ -127,7 +129,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		} 
 		if(replaceDuplicates){
 			if(extractedOperation != null && !visitedOperations.contains(node)){
-				DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule);
+				DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule, refactoringLogger);
 				node.getBody().apply(dubCollector);
 				visitedOperations.add(node);
 			}
@@ -199,13 +201,13 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		this.namesToAvoid.clear();
 		this.nameGen = new TempVarNameGen();
 		if(clearExtracions){
-			ExtractionLog.clearExtractions();
+			refactoringLogger.clear();
 		}
 	}
 
 	public Set<Extraction> getExtractions()
 	{
-		return ExtractionLog.getExtractions();
+		return refactoringLogger.get();
 	}
 
 	private boolean proceed(INode node)
