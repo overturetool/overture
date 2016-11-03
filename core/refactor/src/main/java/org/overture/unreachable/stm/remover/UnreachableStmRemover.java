@@ -5,7 +5,13 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -15,7 +21,8 @@ import org.overture.ast.types.PType;
 public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 {
 	private List<Removal> allRemovals = new LinkedList<Removal>();
-
+	private OccurrenceCollector collector = new OccurrenceCollector();
+	
 	@Override
 	public void caseABlockSimpleBlockStm(ABlockSimpleBlockStm node)
 			throws AnalysisException
@@ -69,11 +76,50 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 		{
 			node.getStatements().remove(unreachStmIndices.get(i).intValue());
 		}
+		//TODO Check warning
+		LinkedList<AAssignmentDefinition> assignmentDefs = (LinkedList<AAssignmentDefinition>) node.getAssignmentDefs().clone();
+		
+		for (int i = 0; i < node.getAssignmentDefs().size(); i++) {
+			AAssignmentDefinition def = node.getAssignmentDefs().get(i);
+			collector.init(def.getLocation());
+			node.apply(collector);
+			if(!collector.isFoundUsage()){
+				allRemovals.add(new Removal(node.getLocation(), node.toString()));
+				assignmentDefs.remove(def);
+			}
+		}
+		node.setAssignmentDefs(assignmentDefs);
+		
 	}
 	
 	public List<Removal> getAllRemovals()
 	{
 		return allRemovals;
 	}
-	
+
+	@Override
+	public void caseAValueDefinition(AValueDefinition node) throws AnalysisException {
+		
+		collector.init(node.getLocation());
+		node.parent().apply(collector);
+
+		if(!collector.isFoundUsage()){
+			if(node.parent() instanceof ALetStm){
+				ALetStm parent = (ALetStm) node.parent();
+				parent.getLocalDefs().remove(node);
+				if(parent.getLocalDefs().size() < 1){
+					
+					if(parent.parent() instanceof ABlockSimpleBlockStm){
+						ABlockSimpleBlockStm grandparent = (ABlockSimpleBlockStm) parent.parent();
+						grandparent.getStatements().remove(parent);
+						grandparent.getStatements().add(parent.getStatement());
+					}
+					if(parent.parent() instanceof AExplicitOperationDefinition){
+						AExplicitOperationDefinition grandparent = (AExplicitOperationDefinition) parent.parent();
+						grandparent.setBody(parent.getStatement());
+					}
+				}
+			}
+		} 
+	}
 }
