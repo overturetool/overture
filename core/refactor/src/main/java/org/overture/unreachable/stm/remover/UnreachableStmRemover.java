@@ -6,9 +6,9 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ALetStm;
@@ -81,15 +81,12 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 		
 		for (int i = 0; i < node.getAssignmentDefs().size(); i++) {
 			AAssignmentDefinition def = node.getAssignmentDefs().get(i);
-			collector.init(def.getLocation());
-			node.apply(collector);
-			if(!collector.isFoundUsage()){
+			if(applyOccurenceCollector(node, def.getLocation())){
 				allRemovals.add(new Removal(node.getLocation(), node.toString()));
 				assignmentDefs.remove(def);
 			}
 		}
 		node.setAssignmentDefs(assignmentDefs);
-		
 	}
 	
 	public List<Removal> getAllRemovals()
@@ -97,13 +94,19 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 		return allRemovals;
 	}
 
+	public boolean applyOccurenceCollector(INode node, ILexLocation loc){
+		collector.init(loc);
+		try {
+			node.apply(collector);
+		} catch (AnalysisException e) {
+			e.printStackTrace();
+		}
+		return !collector.isFoundUsage();
+	}
+	
 	@Override
 	public void caseAValueDefinition(AValueDefinition node) throws AnalysisException {
-		
-		collector.init(node.getLocation());
-		node.parent().apply(collector);
-
-		if(!collector.isFoundUsage()){
+		if(applyOccurenceCollector(node.parent(), node.getLocation())){
 			if(node.parent() instanceof ALetStm){
 				ALetStm parent = (ALetStm) node.parent();
 				parent.getLocalDefs().remove(node);
