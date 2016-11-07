@@ -8,6 +8,7 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -17,11 +18,11 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.refactoring.RefactoringUtils;
 
 public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 {
 	private List<Removal> allRemovals = new LinkedList<Removal>();
-	private OccurrenceCollector collector = new OccurrenceCollector();
 	
 	@Override
 	public void caseABlockSimpleBlockStm(ABlockSimpleBlockStm node)
@@ -95,7 +96,8 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 	}
 
 	public boolean applyOccurenceCollector(INode node, ILexLocation loc){
-		collector.init(loc);
+		System.out.println(node.toString());
+		OccurrenceCollector collector = new OccurrenceCollector(loc);
 		try {
 			node.apply(collector);
 		} catch (AnalysisException e) {
@@ -108,8 +110,11 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 	public void caseAValueDefinition(AValueDefinition node) throws AnalysisException {
 		if(applyOccurenceCollector(node.parent(), node.getLocation())){
 			if(node.parent() instanceof ALetStm){
+				
 				ALetStm parent = (ALetStm) node.parent();
-				parent.getLocalDefs().remove(node);
+				allRemovals.add(new Removal(node.getLocation(), node.toString()));
+				removeNodeIndex(node.getLocation(),parent.getLocalDefs());
+				
 				if(parent.getLocalDefs().size() < 1){
 					
 					if(parent.parent() instanceof ABlockSimpleBlockStm){
@@ -124,5 +129,14 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 				}
 			}
 		} 
+	}
+	
+	private void removeNodeIndex(ILexLocation loc, LinkedList<PDefinition> list){
+		
+		for(int i = 0; i < list.size(); i ++){
+			if(RefactoringUtils.compareNodeLocations(loc, list.get(i).getLocation())){
+				list.remove(i);
+			}
+		}
 	}
 }

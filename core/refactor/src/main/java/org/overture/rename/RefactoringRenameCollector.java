@@ -149,7 +149,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
+		//TODO make bi-directional
 		if(compareNodeLocation(node.getLocation())){
 			findRenamings(node,node.parent(),node.parent());
 		}

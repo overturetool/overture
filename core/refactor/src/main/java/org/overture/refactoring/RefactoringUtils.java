@@ -2,6 +2,7 @@ package org.overture.refactoring;
 
 import java.io.File;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMWarning;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -98,5 +99,14 @@ public class RefactoringUtils {
 		}
 
 		return sb.toString();
+	}
+	
+	public static boolean compareNodeLocations(ILexLocation loc1, ILexLocation loc2){
+		if(loc1.getStartLine() == loc2.getStartLine() && 
+				loc1.getStartOffset() == loc2.getStartOffset()){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
