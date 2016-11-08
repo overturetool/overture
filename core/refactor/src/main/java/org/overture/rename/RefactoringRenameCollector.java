@@ -1,5 +1,6 @@
 package org.overture.rename;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -68,6 +69,7 @@ import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
 import org.overture.codegen.ir.TempVarNameGen;
+import org.overture.refactoring.RefactoringLogger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
@@ -80,13 +82,13 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
 
-	private Set<Renaming> renamings;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
-	
+	private RefactoringLogger<Renaming> refactoringLogger;
+
 	public RefactoringRenameCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
@@ -97,9 +99,10 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
 
-		this.renamings = new HashSet<Renaming>();
+		
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
+		this.refactoringLogger = new RefactoringLogger<Renaming>();
 	}
 
 	@Override
@@ -822,15 +825,15 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		this.namesToAvoid.clear();
 		this.nameGen = new TempVarNameGen();
 
-		if (renamings != null && clearRenamings)
+		if (refactoringLogger != null && clearRenamings)
 		{
-			renamings.clear();
+			refactoringLogger.clear();
 		}
 	}
 
 	public Set<Renaming> getRenamings()
 	{
-		return renamings;
+		return refactoringLogger.get();
 	}
 
 	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
@@ -971,18 +974,32 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		
 		if(parameters.length >= 3){
 			String newName = parameters[2];
-			ILexNameToken localDefName = localDefToRename.getName();
-			renameVarOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-			renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);	
-			renameCallOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+			if(!checkNameNotInUse(newName)){
 			
-			if (!contains(localDefToRename.getName().getLocation()))
-			{
-				registerRenaming(new RenameObject(localDefToRename.getName(), newName, localDefToRename::setName));	
-				localDefToRename.toString();
+				ILexNameToken localDefName = localDefToRename.getName();
+				renameVarOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+				renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);	
+				renameCallOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
+				
+				if (!contains(localDefToRename.getName().getLocation()))
+				{
+					registerRenaming(new RenameObject(localDefToRename.getName(), newName, localDefToRename::setName));	
+					localDefToRename.toString();
+				}
+				renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
+			}else{
+				refactoringLogger.addWarning("Name is already in use!");
 			}
-			renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
 		}
+	}
+	
+	private boolean checkNameNotInUse(String name){
+		for(ILexNameToken item : localDefsInScope){
+			if(item.getName().equals(name)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private Set<ACallStm> renameCallOccurences(ILexLocation defLoc, INode defScope,
@@ -1000,14 +1017,14 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		if (!contains(reObj.name.getLocation()))
 		{
 			LexNameToken token = new LexNameToken(reObj.name.getModule(), reObj.newName, reObj.name.getLocation());
-			renamings.add(new Renaming(reObj.name.getLocation(), reObj.name.getName(), reObj.newName, reObj.name.getModule(), reObj.name.getModule()));
+			refactoringLogger.add(new Renaming(reObj.name.getLocation(), reObj.name.getName(), reObj.newName, reObj.name.getModule(), reObj.name.getModule()));
 			reObj.function.accept(token);
 		}
 	}
 
 	private boolean contains(ILexLocation loc)
 	{
-		for (Renaming r : renamings)
+		for (Renaming r : refactoringLogger.get())
 		{
 			if (r.getLoc().equals(loc))
 			{
@@ -1135,5 +1152,9 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	
 	public void setRefactoringParameters(String[] parameters) {
 		this.parameters = parameters;
+	}
+	
+	public List<String> getWarnings(){
+		return new ArrayList<String>(refactoringLogger.getWarnings());
 	}
 }

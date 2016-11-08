@@ -6,10 +6,13 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ALetStm;
@@ -96,7 +99,6 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 	}
 
 	public boolean applyOccurenceCollector(INode node, ILexLocation loc){
-		System.out.println(node.toString());
 		OccurrenceCollector collector = new OccurrenceCollector(loc);
 		try {
 			node.apply(collector);
@@ -115,8 +117,7 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 				allRemovals.add(new Removal(node.getLocation(), node.toString()));
 				removeNodeIndex(node.getLocation(),parent.getLocalDefs());
 				
-				if(parent.getLocalDefs().size() < 1){
-					
+				if(parent.getLocalDefs().size() < 1){	
 					if(parent.parent() instanceof ABlockSimpleBlockStm){
 						ABlockSimpleBlockStm grandparent = (ABlockSimpleBlockStm) parent.parent();
 						grandparent.getStatements().remove(parent);
@@ -125,6 +126,23 @@ public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
 					if(parent.parent() instanceof AExplicitOperationDefinition){
 						AExplicitOperationDefinition grandparent = (AExplicitOperationDefinition) parent.parent();
 						grandparent.setBody(parent.getStatement());
+					}
+				}
+			}
+			if(node.parent() instanceof AModuleModules){
+				AModuleModules parent = (AModuleModules) node.parent();
+				allRemovals.add(new Removal(node.getLocation(), node.toString()));
+				removeNodeIndex(node.getLocation(),parent.getDefs());
+			}
+			if(node.parent() instanceof ALetDefExp){
+				ALetDefExp parent = (ALetDefExp) node.parent();
+				allRemovals.add(new Removal(node.getLocation(), node.toString()));
+				removeNodeIndex(node.getLocation(),parent.getLocalDefs());
+				
+				if(parent.getLocalDefs().size() < 1){	
+					if(parent.parent() instanceof AExplicitFunctionDefinition){
+						AExplicitFunctionDefinition grandparent = (AExplicitFunctionDefinition) parent.parent();
+						grandparent.setBody(parent.getExpression());
 					}
 				}
 			}

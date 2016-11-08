@@ -44,16 +44,26 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ASetDifferenceBinaryExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -63,11 +73,14 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
@@ -93,7 +106,8 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	private Set<String> namesToAvoid;
 	private boolean operationFlag;
 	private boolean functionFlag;
-	
+	private boolean valuesFlag;
+	private boolean stateFlag;
 	private int outerScopeCounter = -1;
 	private List<ArrayList<String>> stringOuterStack;
 	private static String NODE_NOT_FOUND = "ERROR: Node not found";
@@ -116,6 +130,8 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		this.stringOuterStack = new ArrayList<ArrayList<String>>();
 		this.operationFlag = false;
 		this.functionFlag = false;
+		this.valuesFlag = false;
+		this.stateFlag = false;
 	}
 
 	@Override
@@ -125,6 +141,11 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		{
 			return null;
 		}
+		
+		this.operationFlag = false;
+		this.functionFlag = false;
+		this.valuesFlag = false;
+		this.stateFlag = false;
 		
 		incrementOuterScopeCounter();
 		if(!node.getName().getName().equals("DEFAULT")){
@@ -484,13 +505,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseACallStm(ACallStm node, IndentTracker question) throws AnalysisException {
 		if(node.getName() != null){
 		insertIntoStringStack(question.getIndentation() + node.getName().getFullName() + "(");
-		for(PExp stm : node.getArgs()){
-			
-			if(stm != node.getArgs().getFirst()){
-				insertIntoStringStack(", ");
-			}
-			stm.apply(THIS,question);
-		}
+		printArgsList(node.getArgs(), question);
 		insertIntoStringStack(");");
 		insertIntoStringStack("\n");
 		}
@@ -500,23 +515,134 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	@Override
 	public String caseAApplyExp(AApplyExp node, IndentTracker question) throws AnalysisException {
 		AVariableExp printNode = node.getRoot().getAncestor(AVariableExp.class);
-		insertIntoStringStack(printNode.getName().getFullName() + "(");
-		for(PExp stm : node.getArgs()){
+		if(printNode != null){
+			insertIntoStringStack(printNode.getName().getFullName() + "(");
+			printArgsList(node.getArgs(), question);
+			insertIntoStringStack(")");
+		}
+		return "";
+	}
+	
+	@Override
+	public String caseAIfStm(AIfStm node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack(question.getIndentation() + "if");
+		node.getIfExp().apply(this, question);
+		
+		insertIntoStringStack("\n" + question.getIndentation() + "then\n");
+		question.incrIndent();
+		node.getThenStm().apply(this, question);
+		question.decrIndent();
+		
+		if(node.getElseStm() != null){
+			insertIntoStringStack("\n" + question.getIndentation() + "else\n");
+			question.incrIndent();
+			node.getElseStm().apply(this, question);
+			question.decrIndent();
+		}
 			
-			if(stm != node.getArgs().getFirst()){
+		return super.caseAIfStm(node, question);
+	}
+	
+	@Override
+	public String caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node, IndentTracker question) throws AnalysisException {
+		return expressionWriter(node, node.getOp().toString() ,question);
+	}
+	
+	@Override
+	public String caseAEqualsBinaryExp(AEqualsBinaryExp node, IndentTracker question) throws AnalysisException {
+		return expressionWriter(node, mytable.getEQUALS() ,question);
+	}
+	
+	
+	@Override
+	public String caseAInSetBinaryExp(AInSetBinaryExp node, IndentTracker question) throws AnalysisException {
+		return expressionWriter(node, node.getOp().toString() ,question);
+	}
+	@Override
+	public String caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node, IndentTracker question)
+			throws AnalysisException {
+		return expressionWriter(node, node.getOp().toString() ,question);
+	}
+	
+	@Override
+	public String caseAMapDomainUnaryExp(AMapDomainUnaryExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack("dom ");
+		node.getExp().apply(this, question);
+		return node.toString();
+	}
+	
+	@Override
+	public String caseACardinalityUnaryExp(ACardinalityUnaryExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack("card ");
+		node.getExp().apply(this, question);
+		return node.toString();
+	}
+	
+	@Override
+	public String caseASkipStm(ASkipStm node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack(question.getIndentation() + "skip");
+		return "";
+	}
+	
+	@Override
+	public String caseAAssignmentStm(AAssignmentStm node, IndentTracker question) throws AnalysisException {
+		node.getTarget().apply(this, question);
+		insertIntoStringStack(" := ");
+		node.getExp().apply(this, question); 
+		insertIntoStringStack(";\n"); // make global check for ; used for indent
+		return "";
+	}
+	
+	@Override
+	public String caseAIdentifierStateDesignator(AIdentifierStateDesignator node, IndentTracker question)
+			throws AnalysisException {
+		insertIntoStringStack(question.getIndentation() + node.getName().getName());
+		return node.getName().getName();
+	}
+	
+	@Override
+	public String caseAMkTypeExp(AMkTypeExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack("mk_" + node.getTypeName().getName() + "("); //TODO maybe question.getIndentation() +
+	    printArgsList(node.getArgs(), question);
+	    insertIntoStringStack(")\n");
+		return "";
+	}
+
+	@Override
+	public String caseASetUnionBinaryExp(ASetUnionBinaryExp node, IndentTracker question) throws AnalysisException {
+		return expressionWriter(node, node.getOp().toString() ,question);
+	}
+	
+	private void printArgsList(LinkedList<PExp> list, IndentTracker question) throws AnalysisException {
+		for(PExp stm : list){
+			
+			if(stm != list.getFirst()){
 				insertIntoStringStack(", ");
 			}
 			stm.apply(THIS,question);
 		}
-		insertIntoStringStack(")");
-		return printNode.getName().getFullName();
+	}
+	
+	@Override
+	public String caseASetEnumSetExp(ASetEnumSetExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack("{");
+		printArgsList(node.getMembers(), question);
+		insertIntoStringStack("}");
+		return "";
+	}
+	
+	@Override
+	public String caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node, IndentTracker question)
+			throws AnalysisException {
+		return expressionWriter(node, node.getOp().toString() ,question);
 	}
 	
 	private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker question)
 			throws AnalysisException
 	{
 		VDMDefinitionInfo defInfo = getStateDefs(defs, module);
-
+		
+		
 		if (defInfo != null)
 		{
 			
@@ -530,16 +656,27 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			{		
 				insertIntoStringStack(question.getIndentation() + typeDef.getName().getFullName() + " = " + getTypeDefAncestor(typeDef) + ";\n");
 			}
-			
-			if(!defInfo.getAllLocalDefs().isEmpty()){
-				insertIntoStringStack("\n");
-				insertIntoStringStack("values");
-				insertIntoStringStack("\n\n");
-			}
-			
+
 			for (PDefinition localDef : defInfo.getAllLocalDefs()) // check if it matches position
 			{
-				insertIntoStringStack(question.getIndentation() + localDef.parent().toString() + ";\n");
+				if(localDef.parent() instanceof AValueDefinition){
+					if(!valuesFlag){
+						insertIntoStringStack("\n");
+						insertIntoStringStack("values");
+						insertIntoStringStack("\n\n");
+						valuesFlag = true;
+					}
+					insertIntoStringStack(question.getIndentation() + localDef.parent().toString() + ";\n");
+				}
+				if(localDef.parent() instanceof AStateDefinition){
+					if(!stateFlag){
+						insertIntoStringStack("\n");
+						insertIntoStringStack("state");
+						insertIntoStringStack("\n\n");
+						stateFlag = true;
+					}
+//					insertIntoStringStack(question.getIndentation() + localDef.parent().toString() + ";\n"); //TODO fix state
+				}
 			}
 			
 			handleExecutables(defs,question);

@@ -37,9 +37,6 @@ import org.overture.unreachable.stm.remover.UnreachableStmRemover;
 public class RefactoringBase {
 	
 	protected IRGenerator generator;
-	private List<Renaming> allRenamings;
-	private List<Extraction> allExtractions;
-	private List<SignatureChange> allSignatureChanges;
 	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
@@ -55,32 +52,16 @@ public class RefactoringBase {
 	
 	public List<INode> generateRenaming(List<INode> ast, String[] parameters) throws AnalysisException
 	{
-
-		List<INode> userModules = extractUserModules(ast);
-		
-		allRenamings = new LinkedList<Renaming>();
-		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
-
-		if(generatedData == null){
-			generatedData = new GeneratedData();
-		}
-		generatedData.setAllRenamings(allRenamings);
+		List<INode> userModules = extractUserModules(ast);		
+		performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), parameters);
 
 		return userModules;
 	}
 	
 	public List<INode> generateExtraction(List<INode> ast, String[] parameters) throws AnalysisException
 	{
-
 		List<INode> userModules = extractUserModules(ast);
-		
-		allExtractions = new LinkedList<Extraction>();
-		allExtractions.addAll(performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
-
-		if(generatedData == null){
-			generatedData = new GeneratedData();
-		}
-		generatedData.setAllExtractions(allExtractions);
+		performExtraction(userModules, getInfo().getIdStateDesignatorDefs(), parameters);
 
 		return userModules;
 	}
@@ -88,24 +69,14 @@ public class RefactoringBase {
 	public List<INode> generateSignatureChanges(List<INode> ast, String[] parameters) throws AnalysisException
 	{
 		List<INode> userModules = extractUserModules(ast);
-		
-		allSignatureChanges = new LinkedList<SignatureChange>();
-		allSignatureChanges.addAll(performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters));
-
-		if(generatedData == null){
-			generatedData = new GeneratedData();
-		}
-		generatedData.setAllSignatureChanges(allSignatureChanges);
+		performSignatureChanges(userModules, getInfo().getIdStateDesignatorDefs(), parameters);
 
 		return userModules;
 	}
 
 	public List<INode> removeUnreachableStm(List<INode> ast) throws AnalysisException
 	{
-
 		List<INode> userModules = extractUserModules(ast);
-		
-		
 		UnreachableStmRemover stmRemover = new UnreachableStmRemover();
 		for (INode node : userModules)
 		{
@@ -121,10 +92,7 @@ public class RefactoringBase {
 	
 	public List<INode> convertFunctionToOperation(List<INode> ast, int line) throws AnalysisException
 	{
-
 		List<INode> userModules = extractUserModules(ast);
-		
-		
 		ConvertFunctionToOperation converter = new ConvertFunctionToOperation(line);
 		for (INode node : userModules)
 		{
@@ -172,7 +140,6 @@ public class RefactoringBase {
 	public static List<INode> getNodes(List<? extends INode> ast)
 	{
 		List<INode> nodes = new LinkedList<>();
-
 		nodes.addAll(ast);
 
 		return nodes;
@@ -189,7 +156,6 @@ public class RefactoringBase {
 				modules.add((AModuleModules) n);
 			}
 		}
-
 		return modules;
 	}
 	
@@ -197,9 +163,7 @@ public class RefactoringBase {
 			Map<AIdentifierStateDesignator, PDefinition> idDefs, String[] parameters)
 			throws AnalysisException
 	{
-
 		List<Renaming> allRenamings = new LinkedList<Renaming>();
-
 		RefactoringRenameCollector renamingsCollector = new RefactoringRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		Renamer renamer = new Renamer();
 		renamingsCollector.setRefactoringParameters(parameters);
@@ -214,7 +178,12 @@ public class RefactoringBase {
 		}
 
 		Collections.sort(allRenamings);
-
+		
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
+		generatedData.setAllRenamings(allRenamings);
+		generatedData.addAllWarnings(renamingsCollector.getWarnings());
 		return allRenamings;
 	}
 	
@@ -222,9 +191,7 @@ public class RefactoringBase {
 			Map<AIdentifierStateDesignator, PDefinition> idDefs, String[] parameters)
 			throws AnalysisException
 	{
-
 		List<Extraction> allExtractions = new LinkedList<Extraction>();
-
 		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector();
 		Extractor extractor = new Extractor();
 		extractionsCollector.setRefactoringParameters(parameters);
@@ -239,6 +206,11 @@ public class RefactoringBase {
 		}
 
 		Collections.sort(allExtractions);
+		
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
+		generatedData.setAllExtractions(allExtractions);
 
 		return allExtractions;
 	}
@@ -247,9 +219,7 @@ public class RefactoringBase {
 			Map<AIdentifierStateDesignator, PDefinition> idDefs, String[] parameters)
 			throws AnalysisException
 	{
-
 		List<SignatureChange> allSignatureChanges = new LinkedList<SignatureChange>();
-
 		RefactoringSignatureChangeCollector signatureChangeCollector = new RefactoringSignatureChangeCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		SignatureChanger changer = new SignatureChanger();
 		signatureChangeCollector.setRefactoringParameters(parameters);
@@ -264,6 +234,11 @@ public class RefactoringBase {
 		}
 
 		Collections.sort(allSignatureChanges);
+
+		if(generatedData == null){
+			generatedData = new GeneratedData();
+		}
+		generatedData.setAllSignatureChanges(allSignatureChanges);
 
 		return allSignatureChanges;
 	}
