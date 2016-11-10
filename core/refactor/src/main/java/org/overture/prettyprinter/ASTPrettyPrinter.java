@@ -831,8 +831,8 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			
 			if(!stateFlag && outerState != null){
 				insertIntoStringStack("\n");
-				insertIntoStringStack("state " + outerState.getName().getName());
-				insertIntoStringStack("\n\n");
+				insertIntoStringStack("state " + outerState.getName().getName() + " of");
+				insertIntoStringStack("\n");
 				stateFlag = true;
 			}
 			
