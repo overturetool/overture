@@ -51,15 +51,22 @@ import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.ADomainResByBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.AMapEnumMapExp;
+import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
+import org.overture.ast.expressions.APlusPlusBinaryExp;
+import org.overture.ast.expressions.APreExp;
+import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
@@ -79,6 +86,7 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.PStm;
@@ -231,15 +239,28 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		question.incrIndent();
 		node.getBody().apply(this, question);
 		question.decrIndent();
-
-		if(node.getBody() instanceof ABlockSimpleBlockStm){
-			insertIntoStringStack(question.getIndentation() + ");");
-		}
 		
+		boolean lastSemiColonFixed = false;
+		
+		if(node.getBody() instanceof ABlockSimpleBlockStm){
+			insertIntoStringStack(question.getIndentation() + ")");
+		}
+		if(node.getPrecondition() != null){
+			lastSemiColonFixed = removeLastSemiColon(lastSemiColonFixed);
+			insertIntoStringStack("pre ");
+			node.getPrecondition().apply(this, question);
+		}
+		if(node.getPostcondition() != null){
+			lastSemiColonFixed = removeLastSemiColon(lastSemiColonFixed);
+			insertIntoStringStack("post ");
+			node.getPostcondition().apply(this, question);
+		}
 		finishElementInStack();
 		return node.getName().getFullName();
 	}
 
+	
+	
 	@Override
 	public String caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node, IndentTracker question)
 			throws AnalysisException {
@@ -540,7 +561,57 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			question.decrIndent();
 		}
 			
-		return super.caseAIfStm(node, question);
+		return "";
+	}
+	
+	@Override
+	public String caseAIfExp(AIfExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack(question.getIndentation() + "if");
+		node.getTest().apply(this, question);
+		
+		insertIntoStringStack("\n" + question.getIndentation() + "then\n");
+		question.incrIndent();
+		node.getThen().apply(this, question);
+		question.decrIndent();
+		
+		if(node.getElse() != null){
+			insertIntoStringStack("\n" + question.getIndentation() + "else\n");
+			question.incrIndent();
+			node.getElse().apply(this, question);
+			question.decrIndent();
+		}
+			
+		return "";
+	}
+	
+	@Override
+	public String caseAPlusPlusBinaryExp(APlusPlusBinaryExp node, IndentTracker question) throws AnalysisException {
+		return expressionWriter(node, node.getOp().toString() ,question);
+	}
+	
+	@Override
+	public String caseAMapEnumMapExp(AMapEnumMapExp node, IndentTracker question) throws AnalysisException {
+		// TODO Auto-generated method stub
+		insertIntoStringStack("{");
+		for(AMapletExp item : node.getMembers()){
+			item.apply(this, question);			
+		}
+		insertIntoStringStack("}");
+		return super.caseAMapEnumMapExp(node, question);
+	}
+	
+	@Override
+	public String caseAMapletExp(AMapletExp node, IndentTracker question) throws AnalysisException {
+		node.getLeft().apply(this, question);
+		insertIntoStringStack(" |-> ");
+		node.getRight().apply(this, question);
+		return "";
+	}
+	
+	@Override
+	public String caseADomainResByBinaryExp(ADomainResByBinaryExp node, IndentTracker question)
+			throws AnalysisException {
+		return expressionWriter(node, node.getOp().toString() ,question);
 	}
 	
 	@Override
@@ -552,7 +623,6 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseAEqualsBinaryExp(AEqualsBinaryExp node, IndentTracker question) throws AnalysisException {
 		return expressionWriter(node, mytable.getEQUALS() ,question);
 	}
-	
 	
 	@Override
 	public String caseAInSetBinaryExp(AInSetBinaryExp node, IndentTracker question) throws AnalysisException {
@@ -594,6 +664,18 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	}
 	
 	@Override
+	public String caseAMapSeqStateDesignator(AMapSeqStateDesignator node, IndentTracker question)
+			throws AnalysisException {
+		node.getMapseq().apply(this, question); 
+		insertIntoStringStack("(");
+		node.getExp().apply(this, question); 
+		insertIntoStringStack(")");
+		return super.caseAMapSeqStateDesignator(node, question);
+	}
+	
+
+	
+	@Override
 	public String caseAIdentifierStateDesignator(AIdentifierStateDesignator node, IndentTracker question)
 			throws AnalysisException {
 		insertIntoStringStack(question.getIndentation() + node.getName().getName());
@@ -604,7 +686,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseAMkTypeExp(AMkTypeExp node, IndentTracker question) throws AnalysisException {
 		insertIntoStringStack("mk_" + node.getTypeName().getName() + "("); //TODO maybe question.getIndentation() +
 	    printArgsList(node.getArgs(), question);
-	    insertIntoStringStack(")\n");
+	    insertIntoStringStack(")");
 		return "";
 	}
 
@@ -635,6 +717,18 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node, IndentTracker question)
 			throws AnalysisException {
 		return expressionWriter(node, node.getOp().toString() ,question);
+	}
+	
+	@Override
+	public String caseAPreExp(APreExp node, IndentTracker question) throws AnalysisException {
+		// TODO Auto-generated method stub
+		return super.caseAPreExp(node, question);
+	}
+	
+	@Override
+	public String caseAPreOpExp(APreOpExp node, IndentTracker question) throws AnalysisException {
+		// TODO Auto-generated method stub
+		return super.caseAPreOpExp(node, question);
 	}
 	
 	private void visitModuleDefs(List<PDefinition> defs, INode module, IndentTracker question)
@@ -920,15 +1014,32 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		stringOuterStack.get(outerScopeCounter).add(str);
 	}
 	
+	private boolean removeLastSemiColon(boolean lastSemiColonFixed){
+		if(!lastSemiColonFixed){
+			List<String> strList = stringOuterStack.get(outerScopeCounter);
+			String lastStr = strList.get(strList.size()-1);
+			strList.set(strList.size()-1, removeAllCharUntil(lastStr) + "\n");
+		}
+		return true;
+	}
+	
+	private static String removeAllCharUntil(String str) {
+        return str.substring(0,str.lastIndexOf(";"));
+    }
+	
 	public void finishElementInStack(){
 		 String lastInput = stringOuterStack.get(outerScopeCounter).get(stringOuterStack.get(outerScopeCounter).size() - 1);
+		 
+		 removeLastSemiColon(true);
 		 char lastChar = lastInput.charAt(lastInput.length() - 1);
 		 if(lastChar == '\n'){
 			 insertIntoStringStack("\n");
-		 }else if (lastChar == ';') {
-			 insertIntoStringStack("\n\n");
-		 } else{
+		 }
+		 else if (lastChar == ')') {
 			 insertIntoStringStack(";\n\n");
+		 } 
+		 else{
+			 insertIntoStringStack("\n\n");
 		 }
 	}
 	

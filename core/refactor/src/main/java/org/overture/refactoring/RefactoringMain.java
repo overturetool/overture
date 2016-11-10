@@ -17,6 +17,7 @@ import org.overture.config.Settings;
 import org.overture.prettyprinter.RefactoringPrettyPrinter;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
+import org.overture.unreachable.stm.remover.Removal;
 
 public class RefactoringMain {
 	public static final String PRINT_ARG = "-print";
@@ -223,7 +224,12 @@ public class RefactoringMain {
 			}
 		}
 		if(testClass){
-			generatedData = refactoringBase.getGeneratedData();
+			if(generatedData != null){
+				generatedData = refactoringBase.getGeneratedData();
+				for(Removal item : generatedData.getAllRemovals()){
+					System.out.println(item.toString());
+				}
+			}
 		}
 	}
 	
