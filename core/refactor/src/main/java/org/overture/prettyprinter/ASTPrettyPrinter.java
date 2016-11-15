@@ -258,23 +258,21 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		boolean lastSemiColonFixed = false;
 		
 		if(node.getBody() instanceof ABlockSimpleBlockStm){
-			insertIntoStringStack(question.getIndentation() + ")");
+			insertIntoStringStack("\n" + question.getIndentation() + ")");
 		}
 		if(node.getPrecondition() != null){
 			lastSemiColonFixed = removeLastSemiColon(lastSemiColonFixed);
-			insertIntoStringStack("pre ");
+			insertIntoStringStack(question.getIndentation() + "pre ");
 			node.getPrecondition().apply(this, question);
 		}
 		if(node.getPostcondition() != null){
 			lastSemiColonFixed = removeLastSemiColon(lastSemiColonFixed);
-			insertIntoStringStack("post ");
+			insertIntoStringStack(question.getIndentation() + "post ");
 			node.getPostcondition().apply(this, question);
 		}
 		finishElementInStack();
 		return node.getName().getFullName();
-	}
-
-	
+	}	
 	
 	@Override
 	public String caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node, IndentTracker question)
@@ -334,12 +332,12 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		}
 		if(node.getPrecondition() != null){
 			lastSemiColonFixed = removeLastSemiColon(lastSemiColonFixed);
-			insertIntoStringStack("pre ");
+			insertIntoStringStack(question.getIndentation() + "pre ");
 			node.getPrecondition().apply(this, question);
 		}
 		if(node.getPostcondition() != null){
 			lastSemiColonFixed = removeLastSemiColon(lastSemiColonFixed);
-			insertIntoStringStack("post ");
+			insertIntoStringStack(question.getIndentation() + "post ");
 			node.getPostcondition().apply(this, question);
 		}
 		finishElementInStack();
@@ -397,6 +395,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, IndentTracker question)
 			throws AnalysisException
 	{
+		
 		if (!proceed(node))
 		{
 			return "";
@@ -427,6 +426,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		}
 		letWriter(node.getLocalDefs(), question);
 		question.incrIndent();
+		insertIntoStringStack(question.getIndentation());
 		node.getExpression().apply(this, question);
 		question.decrIndent();
 		return node.toString();
@@ -593,11 +593,16 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	
 	@Override
 	public String caseACallStm(ACallStm node, IndentTracker question) throws AnalysisException {
-		if(node.getName() != null){
-		insertIntoStringStack(question.getIndentation() + node.getName().getFullName() + "(");
-		printArgsList(node.getArgs(), question);
-		insertIntoStringStack(");");
-		insertIntoStringStack("\n");
+		if(node.getName() != null){ //TODO
+			List<String> strList = stringOuterStack.get(outerScopeCounter);
+			String lastStr = strList.get(strList.size()-1);
+			if(!lastStr.contains("\n")){
+				insertIntoStringStack("\n");
+			}
+			insertIntoStringStack(question.getIndentation() + node.getName().getFullName() + "(");
+			printArgsList(node.getArgs(), question);
+			insertIntoStringStack(");");
+			insertIntoStringStack("\n");
 		}
 		return "";
 	}
@@ -626,35 +631,71 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		insertIntoStringStack(question.getIndentation() + "if");
 		node.getIfExp().apply(this, question);
 		
-		insertIntoStringStack("\n" + question.getIndentation() + "then\n");
+		insertIntoStringStack("\n" + question.getIndentation() + "then");
+		blockStmStartChecker(node.getThenStm(), question);	
 		question.incrIndent();
 		node.getThenStm().apply(this, question);
+		blockStmEndChecker(node.getThenStm(), question);
 		question.decrIndent();
 		
 		if(node.getElseStm() != null){
-			insertIntoStringStack("\n" + question.getIndentation() + "else\n");
+			insertIntoStringStack("\n" + question.getIndentation() + "else");
+			blockStmStartChecker(node.getElseStm(), question);
 			question.incrIndent();
 			node.getElseStm().apply(this, question);
-			question.decrIndent();
+			blockStmEndChecker(node.getElseStm(), question);
+			question.decrIndent();			
 		}
 			
 		return "";
 	}
+
+	private void blockStmStartChecker(PStm stm, IndentTracker question){
+		if(stm instanceof ABlockSimpleBlockStm){
+			insertIntoStringStack(" (\n");
+		}else{
+			insertIntoStringStack("\n");
+		}		
+	}
+	
+	private void blockStmEndChecker(PStm stm, IndentTracker question){
+		if(stm instanceof ABlockSimpleBlockStm){
+			insertIntoStringStack(question.getIndentation() + ");\n");
+		}	
+	}
+
+	private void blockExpStartChecker(PExp exp, IndentTracker question){
+		if(exp instanceof ABlockSimpleBlockStm){
+			insertIntoStringStack(" (\n");
+		}else{
+			insertIntoStringStack(question.getIndentation());
+		}		
+	}
+	
+	private void blockExpEndChecker(PExp exp, IndentTracker question){
+		if(exp instanceof ABlockSimpleBlockStm){
+			insertIntoStringStack(question.getIndentation() + ");\n");
+		}	
+	}
 	
 	@Override
 	public String caseAIfExp(AIfExp node, IndentTracker question) throws AnalysisException {
-		insertIntoStringStack(question.getIndentation() + "if");
+		insertIntoStringStack("if");
 		node.getTest().apply(this, question);
 		
 		insertIntoStringStack("\n" + question.getIndentation() + "then\n");
 		question.incrIndent();
+		blockExpStartChecker(node.getThen(), question);
 		node.getThen().apply(this, question);
+		blockExpEndChecker(node.getThen(), question);
 		question.decrIndent();
 		
 		if(node.getElse() != null){
 			insertIntoStringStack("\n" + question.getIndentation() + "else\n");
 			question.incrIndent();
+			blockExpStartChecker(node.getElse(), question);
 			node.getElse().apply(this, question);
+			blockExpEndChecker(node.getElse(), question);
 			question.decrIndent();
 		}
 			
@@ -735,7 +776,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		node.getTarget().apply(this, question);
 		insertIntoStringStack(" := ");
 		node.getExp().apply(this, question); 
-		insertIntoStringStack(";\n"); // make global check for ; used for indent
+		insertIntoStringStack(";"); // make global check for ; used for indent
 		return "";
 	}
 	
@@ -1280,14 +1321,14 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		if(!lastSemiColonFixed){
 			List<String> strList = stringOuterStack.get(outerScopeCounter);
 			String lastStr = strList.get(strList.size()-1);
-			strList.set(strList.size()-1, removeAllCharUntilSemiColon(lastStr) + "\n");
+			strList.set(strList.size()-1, removeAllCharUntilSemiColon(lastStr, ";") + "\n");
 		}
 		return true;
 	}
 	
-	private static String removeAllCharUntilSemiColon(String str) {
-		if(str.contains(";")){
-			return str.substring(0,str.lastIndexOf(";"));
+	private static String removeAllCharUntilSemiColon(String str, String character) {
+		if(str.contains(character)){
+			return str.substring(0,str.lastIndexOf(character));
 		}
 		return str;
     }
