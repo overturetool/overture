@@ -55,6 +55,7 @@ import org.overture.ast.expressions.ADomainResByBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
@@ -63,13 +64,13 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
+import org.overture.ast.expressions.AMapRangeUnaryExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
+import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
-import org.overture.ast.expressions.APreExp;
-import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
@@ -84,6 +85,8 @@ import org.overture.ast.expressions.SBinaryExpBase;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -862,6 +865,75 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		insertIntoStringStack("\n");
 	}
 	
+	private void writeInvFromExpFunc(AExplicitFunctionDefinition node, IndentTracker question) throws AnalysisException{
+		insertIntoStringStack(question.getIndentation() + "inv ");
+		
+		if(node.getParamPatternList() != null && node.getParamPatternList().size() > 0){
+			for(PPattern item :node.getParamPatternList().getFirst()){
+				item.apply(this,question);
+			}
+			question.incrIndent();
+			insertIntoStringStack(" ==\n" + question.getIndentation());
+			node.getBody().apply(this,question);
+			question.decrIndent();
+		}
+		
+	}
+	
+	@Override
+	public String caseANotEqualBinaryExp(ANotEqualBinaryExp node, IndentTracker question) throws AnalysisException {
+		return expressionWriter(node, "<>", question);
+	}
+	
+	@Override
+	public String caseAFieldExp(AFieldExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack(node.toString());
+		return "";
+	}
+	
+	@Override
+	public String caseAForAllExp(AForAllExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack("forall ");
+		for(PMultipleBind item : node.getBindList()){
+			item.apply(this,question);
+		}
+		insertIntoStringStack(" & ");
+		node.getPredicate().apply(this,question);
+		return super.caseAForAllExp(node, question);
+	}
+	
+	@Override
+	public String caseASetMultipleBind(ASetMultipleBind node, IndentTracker question) throws AnalysisException {
+		for(PPattern item : node.getPlist()){
+			if(!item.equals(node.getPlist().getFirst())){
+				insertIntoStringStack(", ");
+			}
+			item.apply(this,question);
+		}
+		insertIntoStringStack(" in set ");
+		node.getSet().apply(this,question);
+		return "";
+	}
+	
+	@Override
+	public String caseAIdentifierPattern(AIdentifierPattern node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack(node.getName().getName());
+		return "";
+	}
+	
+	@Override
+	public String caseAMapRangeUnaryExp(AMapRangeUnaryExp node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack("rng ");
+		node.getExp().apply(this,question);
+		return "";
+	}
+	
+	@Override
+	public String caseARecordPattern(ARecordPattern node, IndentTracker question) throws AnalysisException {
+		insertIntoStringStack(node.toString());
+		return "";
+	}
+	
 	@Override
 	public String caseAStateInitExp(AStateInitExp node, IndentTracker question) throws AnalysisException {
 		insertIntoStringStack("init ");
@@ -893,11 +965,20 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			insertIntoStringStack(question.getIndentation());
 			node.getType().apply(this,question);
 			insertIntoStringStack(" = " + defInvType.getType().toString());
+			if(defInvType.getInvDef() != null){
+				insertIntoStringStack("\n");
+				writeInvFromExpFunc(defInvType.getInvDef(), question);
+			}
 			insertIntoStringStack(";\n\n");
 		}
 		if(node.getType() instanceof ARecordInvariantType){
+			ARecordInvariantType defRecType = (ARecordInvariantType) node.getType();
 			node.getType().apply(this,question);
-
+			if(defRecType.getInvDef() != null){
+				insertIntoStringStack("\n");
+				writeInvFromExpFunc(defRecType.getInvDef(), question);
+			}
+			insertIntoStringStack(";\n\n");
 		}
 		
 			
@@ -916,7 +997,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 			}
 			item.apply(this,question);
 		}
-		insertIntoStringStack(";\n\n");
+		
 		return "";
 	}
 	
