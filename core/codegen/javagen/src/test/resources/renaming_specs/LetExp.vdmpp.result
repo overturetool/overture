@@ -43,6 +43,10 @@ public class A_X_ {
 ##########
 
 
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
 public interface Func_1<T_1> {
   public abstract T_1 eval();
 }

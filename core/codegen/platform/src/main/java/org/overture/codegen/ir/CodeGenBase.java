@@ -10,14 +10,17 @@ import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
@@ -444,14 +447,32 @@ abstract public class CodeGenBase implements IREventCoordinator
 	}
 
 	/**
-	 * Pre-processing of a user class. This method is invoked by {@link #preProcessAst(List)}. This method does nothing
-	 * by default.
+	 * Pre-processing of a user class. This method is invoked by {@link #preProcessAst(List)}.
 	 * 
 	 * @param vdmModule
 	 *            The user module or class.
 	 */
 	protected void preProcessVdmUserClass(INode vdmModule)
 	{
+		final Set<String> instantiatedClasses = new HashSet<>();
+		
+		try {
+			vdmModule.apply(new DepthFirstAnalysisAdaptor() {
+				
+				@Override
+				public void caseANewExp(ANewExp node) throws AnalysisException {
+				
+					super.caseANewExp(node);
+					instantiatedClasses.add(node.getClassName().getName());
+				}
+			});
+		} catch (AnalysisException e) {
+
+			log.error("Got unexpected error when trying to find classes that are instantiated: " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+		this.generator.getIRInfo().getInstantiatedClasses().addAll(instantiatedClasses);
 	}
 
 	/**

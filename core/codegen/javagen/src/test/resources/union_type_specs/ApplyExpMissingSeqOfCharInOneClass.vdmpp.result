@@ -20,21 +20,6 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class B {
-  public B() {}
-
-  public String toString() {
-
-    return "B{}";
-  }
-}
-
-##########
-
-import java.util.*;
-import org.overture.codegen.runtime.*;
-
-@SuppressWarnings("all")
 public class Entry {
   public static Object Run() {
 
@@ -63,5 +48,14 @@ public class Entry {
     return "Entry{}";
   }
 }
+
+##########
+
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface B {}
 
 ##########
