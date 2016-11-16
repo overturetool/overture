@@ -13,6 +13,7 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 
 public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
@@ -49,7 +50,18 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 
 		if (root.getLocation().equals(defLoc)){
 			String newParamNameStr = newParamName;
-			AExplicitOperationDefinition parent = (AExplicitOperationDefinition)node.parent();
+			
+			AExplicitOperationDefinition parent = null;
+			
+			if(node.parent() instanceof AExplicitOperationDefinition){
+				parent = (AExplicitOperationDefinition)node.parent();
+			}
+			
+			if(node.parent() instanceof ABlockSimpleBlockStm){
+				parent = (AExplicitOperationDefinition)node.parent().parent();
+			}
+			
+			
 			LinkedList<PExp> paramListOfParent = node.getArgs();
 			LexLocation newLastLoc = new LexLocation();
 			
