@@ -61,6 +61,9 @@ public class VDMUtil
 			ExpressionReader reader = new ExpressionReader(ltr);
 			reader.setCurrentModule("VDMUtil");
 			PExp exp = reader.readExpression();
+			Interpreter ip = Interpreter.getInstance();
+			ip.typeCheck(exp, ip.getGlobalEnvironment());
+
 			result.add(new BooleanValue(true));
 			Context ctxt = new Context(Interpreter.getInstance().getAssistantFactory(), null, "seq_of_char2val_", null);
 			ctxt.setThreadState(null, null);
