@@ -43,13 +43,18 @@ public class ApplyOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor{
 	
 	@Override
 	public void caseAApplyExp(AApplyExp node) throws AnalysisException {
-		AVariableExp root = (AVariableExp) node.getRoot();
+		AVariableExp root = null;		
+		if(node.getRoot() instanceof AVariableExp){
+			root = (AVariableExp) node.getRoot();
+		} else{
+			return;
+		}		
 		
-		if(root == null){
+		if(root == null || !(root.getVardef() instanceof AExplicitOperationDefinition)){
 			return;
 		}
 		
-		AExplicitOperationDefinition rootOperationDef = (AExplicitOperationDefinition) root.getVardef();
+		AExplicitOperationDefinition rootOperationDef = (AExplicitOperationDefinition) root.getVardef();;
 		ILexLocation operationLoc = rootOperationDef.getLocation();
 				
 		if (operationLoc.equals(defLoc)){
