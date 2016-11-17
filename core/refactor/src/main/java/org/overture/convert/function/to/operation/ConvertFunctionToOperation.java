@@ -12,7 +12,6 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
-import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -20,9 +19,9 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.refactoring.RefactoringLogger;
 
@@ -34,6 +33,8 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	private boolean foundFunctionToConvert;
 	private int line;
 	private RefactoringLogger<ConversionFromFuncToOp> refactoringLogger;
+	private AExplicitOperationDefinition lastOperation = null;
+	
 	public ConvertFunctionToOperation(int line)
 	{
 		this.enclosingDef = null;
@@ -88,7 +89,7 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	
 	@Override
 	public void caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node) throws AnalysisException {
-		
+
 		if(isInRange(node.getLocation(), line) && !foundFunctionToConvert){
 			foundFunctionToConvert = true;
 			if(!checkIfUsedInFunction(node)){
@@ -97,14 +98,16 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 				AExplicitFunctionDefinition nodeClone = node.clone();
 				LexNameToken token = new LexNameToken(nodeClone.getName().getModule(), (nodeClone.getName().getName()), new LexLocation());
 				
-				List<PType> parameterTypes = new ArrayList<>();
-				for(PDefinition item : nodeClone.getParamDefinitionList()){
-					parameterTypes.add(item.getType());
+				List<PPattern> parameterTypes = new ArrayList<>();
+				for(PPattern item : nodeClone.getParamPatternList().getFirst()){
+					PPattern itemClone = item.clone();
+					
+					parameterTypes.add(itemClone);
 				}
 				
-				AOperationType operationType = AstFactory.newAOperationType(new LexLocation(), parameterTypes, nodeClone.getExpectedResult());
+				AOperationType operationType = AstFactory.newAOperationType(new LexLocation(), nodeClone.getType().getParameters(), nodeClone.getExpectedResult());
 				
-				AExplicitOperationDefinition convertedOperation = AstFactory.newAExplicitOperationDefinition(token, operationType, nodeClone.getParamPatternList().getFirst(),nodeClone.getPrecondition(), nodeClone.getPostcondition(),convertedPStm);
+				AExplicitOperationDefinition convertedOperation = AstFactory.newAExplicitOperationDefinition(token, operationType, parameterTypes,nodeClone.getPrecondition(), nodeClone.getPostcondition(),convertedPStm);
 			
 				addToNodeCurrentModuleAndRemoveOld(convertedOperation, node);
 				applyOccurrenceSwitcher(convertedOperation, node);
@@ -119,18 +122,16 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 		currentModule.apply(checker);
 		return checker.isFunctionUsedInFunction();
 	}
-	
 	@Override
 	public void caseAExplicitOperationDefinition(AExplicitOperationDefinition node) throws AnalysisException {
-
+		lastOperation = node;
 		super.caseAExplicitOperationDefinition(node);
 	}
 	
 	public PStm convertPExpToPStm(PExp pExp){
 		
-		if(pExp instanceof AIntLiteralExp){
-			AIntLiteralExp aIntLiteralExp = (AIntLiteralExp) pExp;
-			return AstFactory.newAReturnStm(pExp.getLocation(), aIntLiteralExp);
+		if(pExp instanceof PExp){
+			return AstFactory.newAReturnStm(pExp.getLocation(), pExp);
 		}
 		return null;
 	}
@@ -143,8 +144,11 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	
 	public void addToNodeCurrentModuleAndRemoveOld(PDefinition newNode, PDefinition oldNode){
 		refactoringLogger.add(new ConversionFromFuncToOp(oldNode.getLocation(), oldNode.getName().getName()));
-		currentModule.getDefs().remove(oldNode);
-		currentModule.getDefs().add(newNode);
+		if(lastOperation != null){
+			int index = currentModule.getDefs().indexOf(lastOperation) + 1;
+			currentModule.getDefs().remove(oldNode);
+			currentModule.getDefs().add(index,newNode);
+		}
 	}
 	
 	public static boolean isInRange(ILexLocation loc, int from){	

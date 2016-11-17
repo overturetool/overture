@@ -10,6 +10,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.PStm;
 import org.overture.refactoring.RefactoringLogger;
 
@@ -42,8 +43,31 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 	}
 	
 	@Override
+	public void caseAIfStm(AIfStm node) throws AnalysisException {
+		
+		if(node.getThenStm() != null){
+			node.getThenStm().apply(THIS);
+		}
+		if(node.getElseStm() != null){
+			node.getElseStm().apply(THIS);
+		}
+		super.caseAIfStm(node);
+	}
+	
+	@Override
+	public void caseAExplicitOperationDefinition(AExplicitOperationDefinition node) throws AnalysisException {
+		if(extractedOperation.getLocation().getStartLine() == node.getLocation().getStartLine()){
+			return;
+		}
+		super.caseAExplicitOperationDefinition(node);
+	}
+	
+	@Override
 	public void caseABlockSimpleBlockStm(ABlockSimpleBlockStm node) throws AnalysisException {
 		dublicateRemover(node);
+		for(PStm item : node.getStatements()){
+			item.apply(THIS);
+		}
 	}
 	
 	public void dublicateRemover(ABlockSimpleBlockStm node){
