@@ -1,6 +1,11 @@
 
 operations
 
+run: () ==> nat
+run() == (
+d();
+);
+
 d: () ==> nat
 d() == (
 c();

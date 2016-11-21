@@ -1,6 +1,17 @@
 package org.overture.refactoring;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,7 +28,6 @@ import org.overture.config.Settings;
 import org.overture.prettyprinter.RefactoringPrettyPrinter;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
-import org.overture.unreachable.stm.remover.Removal;
 
 public class RefactoringMain {
 	public static final String PRINT_ARG = "-print";
@@ -194,8 +204,10 @@ public class RefactoringMain {
 				}
 			}
 			
-			checkDefaultConfig(refactoringBase, tcResult);
-
+			if(files.size() > 0){
+				checkDefaultConfig(refactoringBase, tcResult, files.get(0));
+			}
+			
 		} catch (AnalysisException e)
 		{
 			MsgPrinter.getPrinter().println("Could not code generate model: "
@@ -203,7 +215,7 @@ public class RefactoringMain {
 		}
 	}
 	
-	private static void checkDefaultConfig(RefactoringBase refactoringBase, TypeCheckResult<List<AModuleModules>> tcResult){
+	private static void checkDefaultConfig(RefactoringBase refactoringBase, TypeCheckResult<List<AModuleModules>> tcResult, File file){
 		if(unreachableStmRemove){
 			try {
 				generatedAST = refactoringBase.removeUnreachableStm(RefactoringBase.getNodes(tcResult.result));
@@ -224,11 +236,17 @@ public class RefactoringMain {
 			}
 		}
 		if(testClass){
-			if(generatedData != null){
+			if(generatedData == null){
 				generatedData = refactoringBase.getGeneratedData();
-				for(Removal item : generatedData.getAllRemovals()){
-					System.out.println(item.toString());
-				}
+			}
+			if(generatedAST == null){
+				generatedAST = refactoringBase.extractUserModules(RefactoringBase.getNodes(tcResult.result));
+			}
+			
+			try {
+				writeOutputASTToFile(generatedAST, file, true);
+			} catch (AnalysisException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -287,5 +305,27 @@ public class RefactoringMain {
 		System.out.println("####################### Generated AST ##########################");
 		String actual = RefactoringPrettyPrinter.prettyPrint(nodes);
 		System.out.println(actual);
+	}
+	
+	public static void writeOutputASTToFile(List<INode> nodes, File file, boolean test)
+			throws AnalysisException {
+		String actual = RefactoringPrettyPrinter.prettyPrint(nodes);
+		String filePath = file.getPath();
+		if(test){
+			filePath = filePath.replaceAll(".vdmsl", "Test.vdmsl");
+		}
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+		              new FileOutputStream(filePath), "utf-8"))) {
+		   writer.write(actual);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

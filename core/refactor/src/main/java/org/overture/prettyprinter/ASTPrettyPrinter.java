@@ -887,14 +887,14 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 				insertIntoStringStack("\n");
 				stateFlag = true;
 			}
-			
-			for(PDefinition item : outerState.getStateDefs()){
-				if(!item.getName().toString().contains("~") && !item.getName().toString().contains(outerState.getName().getName())){
-					writeState(item, question);
+			if(outerState != null){
+				for(PDefinition item : outerState.getStateDefs()){
+					if(!item.getName().toString().contains("~") && !item.getName().toString().contains(outerState.getName().getName())){
+						writeState(item, question);
+					}
 				}
+				outerState.getInitdef().getBody().apply(this,question);
 			}
-			outerState.getInitdef().getBody().apply(this,question);
-			
 			handleExecutables(defs,question);
 		} else
 		{

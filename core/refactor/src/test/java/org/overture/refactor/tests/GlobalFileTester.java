@@ -8,6 +8,11 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.interpreter.util.InterpreterUtil;
+import org.overture.interpreter.values.Value;
 import org.overture.refactor.tests.base.ResultObject;
 import org.overture.refactoring.BasicRefactoringType;
 import org.overture.refactoring.GeneratedData;
@@ -30,6 +35,18 @@ public class GlobalFileTester {
 		Assert.assertTrue(inputFile.getName() + " has type errors", originalSpecTcResult.errors.isEmpty());
 		
 		String resultFilePath = ROOT_RESULT + inputFile.getName() + ".json";
+		
+		Settings.dialect = Dialect.VDM_SL;
+        Settings.release = Release.VDM_10;
+
+        Value beforeValue = null;
+        Value afterValue = null;
+        
+		try {
+			beforeValue = InterpreterUtil.interpret(Settings.dialect, "DEFAULT`run()", inputFile);
+		} catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
 		
 		//JSON from file to Object
 		List<ResultObject> objs = mapper.readValue(new File(resultFilePath), new TypeReference<List<ResultObject>>(){});
@@ -76,6 +93,25 @@ public class GlobalFileTester {
 			
 			checkAssertions(resObj.getConvertedFunctionToOperation(), conversionFromFuncToOpStrings);
 		}
+		
+		String filePath = inputFile.getPath();
+		filePath = filePath.replaceAll(".vdmsl", "Test.vdmsl");
+		File afterFile = new File(filePath);
+		
+		try {
+			afterValue = InterpreterUtil.interpret(Settings.dialect, "DEFAULT`run()", afterFile);
+			afterFile.delete();
+		} catch (Exception e) {
+			Assert.fail(e.getMessage());
+			afterFile.delete();
+		}
+		
+	    if(beforeValue != null || afterValue != null)
+        {
+            Assert.assertEquals(beforeValue, afterValue);
+        }else{
+        	Assert.fail("VDM results are null");
+        }
 	}
 
 	private void checkAssertions(List<String> resObj, List<String> conversionFromFuncToOpStrings) {

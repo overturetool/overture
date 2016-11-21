@@ -1,5 +1,11 @@
 
-operations	
+operations
+
+run: () ==> nat
+run() == (
+b();
+);
+
 op: nat * bool ==> nat
 op(n, boolean) ==
 let a = n in return a;

@@ -65,6 +65,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.codegen.analysis.vdm.DefinitionInfo;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.VarOccurencesCollector;
@@ -81,7 +82,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
-
+	private AModuleModules currentModule;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 
@@ -98,7 +99,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		this.idDefs = idDefs;
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
-
+		this.currentModule = null;
 		
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
@@ -112,7 +113,19 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		visitModuleDefs(node.getDefs(), node);
+		
+		if(node instanceof CombinedDefaultModule)
+		{
+			for(AModuleModules m : ((CombinedDefaultModule) node).getModules())
+			{
+				m.apply(THIS);
+			}
+		}
+		else 
+		{
+			currentModule = node;
+			visitModuleDefs(node.getDefs(), node);
+		}
 	}
 
 	@Override
@@ -975,17 +988,32 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		if(parameters.length >= 3){
 			String newName = parameters[2];
 			if(!checkNameNotInUse(newName)){
-			
+				String oldName = localDefToRename.getName().getName();
 				ILexNameToken localDefName = localDefToRename.getName();
 				renameVarOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
 				renameIdDesignatorOccurrences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);	
 				renameCallOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
-				
+				renameAssignmentOccurences(localDefToRename.getLocation(), defScope, this::registerRenaming, newName);
 				if (!contains(localDefToRename.getName().getLocation()))
 				{
 					registerRenaming(new RenameObject(localDefToRename.getName(), newName, localDefToRename::setName));	
 					localDefToRename.toString();
 				}
+				
+				if(localDefToRename.parent() instanceof AExplicitOperationDefinition){
+					AExplicitOperationDefinition parent = (AExplicitOperationDefinition) localDefToRename.parent();
+					
+					for( PPattern item :parent.getParameterPatterns()){
+						if(item instanceof AIdentifierPattern){
+							AIdentifierPattern id = (AIdentifierPattern) item;
+							if(id.getName().getName().equals(oldName)){
+								ILexNameToken token = new LexNameToken(currentModule.getName().getName(),newName, item.getLocation());						
+								id.setName(token);						
+							}
+						}
+					}
+				}
+				
 				renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
 			}else{
 				refactoringLogger.addWarning("Name is already in use!");
@@ -1012,6 +1040,16 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		return collector.getCalls();
 	}
 
+	private Set<AIdentifierStateDesignator> renameAssignmentOccurences(ILexLocation defLoc, INode defScope,
+			Consumer<RenameObject> function, String newName) throws AnalysisException
+	{
+		AssignmentOccurenceRenamer collector = new AssignmentOccurenceRenamer(defLoc, function, newName);
+
+		defScope.apply(collector);
+
+		return collector.getCalls();
+	}
+	
 	private void registerRenaming(RenameObject reObj)
 	{
 		if (!contains(reObj.name.getLocation()))

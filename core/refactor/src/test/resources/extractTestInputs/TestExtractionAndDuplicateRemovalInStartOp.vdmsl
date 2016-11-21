@@ -6,6 +6,11 @@ values
 
 operations
 
+  run: () ==> nat
+  run() == (
+  b();
+  );
+
   op : () ==> nat
   op() ==
     let a = 5

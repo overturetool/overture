@@ -13,7 +13,6 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 
 public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
@@ -47,37 +46,28 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 		if (root == null){
 			return;
 		}
-
 		if (root.getLocation().equals(defLoc)){
 			String newParamNameStr = newParamName;
 			
-			AExplicitOperationDefinition parent = null;
+			AExplicitOperationDefinition parent = node.getAncestor(AExplicitOperationDefinition.class);
+			if(parent != null){
+				LinkedList<PExp> paramListOfParent = node.getArgs();
+				LexLocation newLastLoc = new LexLocation();
+				
+				if(!isParamListEmpty){
+					ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
+					newLastLoc = SignatureChangeUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
+				} else{
+					newLastLoc = SignatureChangeUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
+				}		
+				
+				ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);				
+				
+				function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, 
+						paramListOfParent, parent.getName().getName(), newParamType));
 			
-			if(node.parent() instanceof AExplicitOperationDefinition){
-				parent = (AExplicitOperationDefinition)node.parent();
+				callOccurences.add(node);
 			}
-			
-			if(node.parent() instanceof ABlockSimpleBlockStm){
-				parent = (AExplicitOperationDefinition)node.parent().parent();
-			}
-			
-			
-			LinkedList<PExp> paramListOfParent = node.getArgs();
-			LexLocation newLastLoc = new LexLocation();
-			
-			if(!isParamListEmpty){
-				ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
-				newLastLoc = SignatureChangeUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
-			} else{
-				newLastLoc = SignatureChangeUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
-			}		
-			
-			ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);				
-			
-			function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, 
-					paramListOfParent, parent.getName().getName(), newParamType));
-		
-			callOccurences.add(node);
 		}
 	}
 }

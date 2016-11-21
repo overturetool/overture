@@ -8,7 +8,6 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIfStm;
