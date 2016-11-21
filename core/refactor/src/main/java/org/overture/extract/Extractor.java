@@ -18,7 +18,6 @@ public class Extractor {
 			node.apply(extractionCollector);
 			extractionCollector.init(false);
 		}
-
 		return extractionCollector.getExtractions();
 	}
 	
@@ -27,7 +26,6 @@ public class Extractor {
 	{
 		collector.init(true);
 		node.apply(collector);
-
 		return collector.getExtractions();
 	}
 }

@@ -58,9 +58,7 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 			{
 				m.apply(THIS);
 			}
-		}
-		else 
-		{
+		}else{
 			currentModule = node;
 			visitModuleDefs(node.getDefs(), node);
 		}
@@ -101,12 +99,10 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 				List<PPattern> parameterTypes = new ArrayList<>();
 				for(PPattern item : nodeClone.getParamPatternList().getFirst()){
 					PPattern itemClone = item.clone();
-					
 					parameterTypes.add(itemClone);
 				}
 				
 				AOperationType operationType = AstFactory.newAOperationType(new LexLocation(), nodeClone.getType().getParameters(), nodeClone.getExpectedResult());
-				
 				AExplicitOperationDefinition convertedOperation = AstFactory.newAExplicitOperationDefinition(token, operationType, parameterTypes,nodeClone.getPrecondition(), nodeClone.getPostcondition(),convertedPStm);
 			
 				addToNodeCurrentModuleAndRemoveOld(convertedOperation, node);
@@ -129,7 +125,6 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 	}
 	
 	public PStm convertPExpToPStm(PExp pExp){
-		
 		if(pExp instanceof PExp){
 			return AstFactory.newAReturnStm(pExp.getLocation(), pExp);
 		}

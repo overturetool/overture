@@ -25,7 +25,6 @@ public class Renamer
 				node.apply(renamer);
 				renamer.init(false);
 			}
-
 			return renamer.getRenamings();
 		}
 		
@@ -34,7 +33,6 @@ public class Renamer
 		{
 			collector.init(true);
 			node.apply(collector);
-
 			return collector.getRenamings();
 		}
 	}

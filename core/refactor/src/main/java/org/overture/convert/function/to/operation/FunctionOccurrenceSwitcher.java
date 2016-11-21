@@ -87,7 +87,5 @@ public class FunctionOccurrenceSwitcher extends DepthFirstAnalysisAdaptor{
 				break;
 			}
 		}
-		
 	}
-	
 }

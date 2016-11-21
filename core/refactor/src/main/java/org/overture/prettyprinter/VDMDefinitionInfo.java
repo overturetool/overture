@@ -51,7 +51,6 @@ public class VDMDefinitionInfo {
 		return typeDefs;
 	}
 	
-	
 	public List<PDefinition> getAllLocalDefs()
 	{
 		return getLocalDefs(nodeDefs);
@@ -80,7 +79,6 @@ public class VDMDefinitionInfo {
 			List<? extends PDefinition> dd = getLocalDefs(d);
 			localDefs.addAll(dd);
 		}
-
 		return localDefs;
 	}
 

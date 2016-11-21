@@ -8,17 +8,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -43,8 +38,8 @@ public class RefactoringMain {
 	
 	private static RefactoringBase refactoringBase = new RefactoringBase();
 	
-	private static boolean printClasses = false;
-	private static boolean testClass = false;
+	private static boolean printAST = false;
+	private static boolean test = false;
 	private static boolean rename = false;
 	private static boolean extract = false;
 	private static boolean signature = false;
@@ -59,8 +54,8 @@ public class RefactoringMain {
 		{
 			usage("Too few arguments provided");
 		}	
-		printClasses = false;
-		testClass = false;
+		printAST = false;
+		test = false;
 		rename = false;
 		extract = false;
 		signature = false;
@@ -90,10 +85,10 @@ public class RefactoringMain {
 				Settings.dialect = Dialect.VDM_SL;
 			} else if (arg.equals(PRINT_ARG))
 			{
-				printClasses = true;
+				printAST = true;
 			} else if (arg.equals(TEST_ARG))
 			{
-				testClass = true;
+				test = true;
 			} else if (arg.equals(UNREACHABLESTMREMOVE_ARG))
 			{
 				unreachableStmRemove = true;
@@ -139,9 +134,6 @@ public class RefactoringMain {
 		{
 			usage("No VDM dialect specified");
 		}
-		if(printClasses){
-			MsgPrinter.getPrinter().println("Starting refactoring...");
-		}
 		if (files.isEmpty())
 		{
 			usage("Input files are missing");
@@ -149,11 +141,8 @@ public class RefactoringMain {
 		
 		if (refacMode == RefactoringMode.SL_SPEC)
 		{
-			handleSl(files, printClasses, parameters);
+			handleSl(files, printAST, parameters);
 			
-		} else if (refacMode == RefactoringMode.OO_SPEC)
-		{
-			handleOo(files, Settings.dialect, printClasses, parameters);
 		} else
 		{
 			MsgPrinter.getPrinter().errorln("Unexpected dialect: "
@@ -224,7 +213,7 @@ public class RefactoringMain {
 				e.printStackTrace();
 			}
 		}
-		if(printClasses){
+		if(printAST){
 			try {
 				if(generatedAST == null){
 					generatedAST = refactoringBase.extractUserModules(RefactoringBase.getNodes(tcResult.result));
@@ -235,7 +224,7 @@ public class RefactoringMain {
 				e.printStackTrace();
 			}
 		}
-		if(testClass){
+		if(test){
 			if(generatedData == null){
 				generatedData = refactoringBase.getGeneratedData();
 			}
@@ -248,40 +237,6 @@ public class RefactoringMain {
 			} catch (AnalysisException e) {
 				e.printStackTrace();
 			}
-		}
-	}
-	
-	public static void handleOo(List<File> files, Dialect dialect, boolean printCode, String[] parameters)
-	{
-		try
-		{
-			TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
-			
-			if (GeneralCodeGenUtils.hasErrors(tcResult))
-			{
-				MsgPrinter.getPrinter().error("Found errors in VDM model:");
-				MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
-				return;
-			}
-			
-			RefactoringBase refactoringBase = new RefactoringBase();
-			if(rename){
-				if(parameters != null && parameters.length >= 3){
-					generatedAST = refactoringBase.generateRenaming(RefactoringBase.getNodes(tcResult.result), parameters);
-					if(printClasses){
-					}
-					if(testClass){
-						generatedData = refactoringBase.getGeneratedData();
-					}
-				} else {
-					MsgPrinter.getPrinter().println("No parameters");
-				}
-			}
-
-		} catch (AnalysisException e)
-		{
-			MsgPrinter.getPrinter().println("Could not code generate model: "
-					+ e.getMessage());
 		}
 	}
 	
@@ -302,9 +257,7 @@ public class RefactoringMain {
 	
 	public static void PrintOutputAST(List<INode> nodes)
 			throws AnalysisException {
-		System.out.println("####################### Generated AST ##########################");
-		String actual = RefactoringPrettyPrinter.prettyPrint(nodes);
-		System.out.println(actual);
+		System.out.println(RefactoringPrettyPrinter.prettyPrint(nodes));
 	}
 	
 	public static void writeOutputASTToFile(List<INode> nodes, File file, boolean test)
@@ -318,13 +271,10 @@ public class RefactoringMain {
 		              new FileOutputStream(filePath), "utf-8"))) {
 		   writer.write(actual);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

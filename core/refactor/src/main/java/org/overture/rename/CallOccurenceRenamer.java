@@ -35,7 +35,6 @@ public class CallOccurenceRenamer  extends DepthFirstAnalysisAdaptor {
 		{
 			return;
 		}
-
 		if (node.getRootdef().getLocation().equals(defLoc))
 		{
 			function.accept(new RenameObject(node.getName(), newName, node::setName));

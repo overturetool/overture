@@ -74,7 +74,6 @@ public class Renaming extends BasicRefactoringType implements Comparable<Renamin
 		}
 
 		Renaming other = (Renaming) obj;
-
 		return loc.equals(other.getLoc());
 	}
 
@@ -90,7 +89,6 @@ public class Renaming extends BasicRefactoringType implements Comparable<Renamin
 		}
 
 		ILexLocation otherLoc = other.getLoc();
-
 		return otherLoc.getStartOffset() - loc.getStartOffset();
 	}
 }

@@ -13,7 +13,6 @@ public class Removal extends BasicRefactoringType implements Comparable<Removal>
 	{
 		this.loc = loc;
 		this.name = name;
-
 	}
 
 	public ILexLocation getLoc()
@@ -25,7 +24,6 @@ public class Removal extends BasicRefactoringType implements Comparable<Removal>
 	{
 		return name;
 	}
-
 
 	@Override
 	public String toString()
@@ -46,14 +44,11 @@ public class Removal extends BasicRefactoringType implements Comparable<Removal>
 		{
 			return true;
 		}
-
 		if (!(obj instanceof Renaming))
 		{
 			return false;
 		}
-
 		Renaming other = (Renaming) obj;
-
 		return loc.equals(other.getLoc());
 	}
 
@@ -67,9 +62,7 @@ public class Removal extends BasicRefactoringType implements Comparable<Removal>
 				return other.getLoc().getModule().compareTo(loc.getModule());
 			}
 		}
-
 		ILexLocation otherLoc = other.getLoc();
-
 		return otherLoc.getStartOffset() - loc.getStartOffset();
 	}
 }

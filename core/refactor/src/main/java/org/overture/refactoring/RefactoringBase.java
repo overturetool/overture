@@ -40,7 +40,6 @@ public class RefactoringBase {
 	private GeneratedData generatedData;
 	public RefactoringBase(){
 		this.generator = new IRGenerator();
-		
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(true);
 		irSettings.setGeneratePreConds(false);
@@ -113,7 +112,6 @@ public class RefactoringBase {
 			moduleList.combineDefaults();
 			ast = getNodes(moduleList);
 		}
-		
 		List<INode> userModules = getUserModules(ast);
 		return userModules;
 	}
@@ -121,7 +119,6 @@ public class RefactoringBase {
 	public List<INode> getAST(String fileName) throws AnalysisException
 	{
 		File file = new File(fileName);
-		
 		TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(file);
 
 		if (GeneralCodeGenUtils.hasErrors(tcResult))
@@ -132,7 +129,6 @@ public class RefactoringBase {
 		}
 
 		List<INode> ast = getNodes(tcResult.result);
-		
 		List<INode> userModules = extractUserModules(ast);
 		return userModules;
 	}
@@ -141,7 +137,6 @@ public class RefactoringBase {
 	{
 		List<INode> nodes = new LinkedList<>();
 		nodes.addAll(ast);
-
 		return nodes;
 	}
 	

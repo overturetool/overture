@@ -94,13 +94,11 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.af = af;
-
 		this.enclosingDef = null;
 		this.idDefs = idDefs;
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
 		this.currentModule = null;
-		
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 		this.refactoringLogger = new RefactoringLogger<Renaming>();
@@ -113,7 +111,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-		
 		if(node instanceof CombinedDefaultModule)
 		{
 			for(AModuleModules m : ((CombinedDefaultModule) node).getModules())
@@ -136,7 +133,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		visitModuleDefs(node.getDefinitions(), node);
 	}
 
@@ -148,14 +144,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		visitModuleDefs(node.getDefinitions(), node);
 	}
-
-	// For operations and functions it works as a single pattern
-	// Thus f(1,mk_(2,2),5) will fail
-	// public f : nat * (nat * nat) * nat -> nat
-	// f (b,mk_(b,b), a) == b;
 
 	@Override
 	public void caseAExplicitOperationDefinition(
@@ -170,13 +160,9 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			findRenamings(node,node.parent(),node.parent());
 		}
 		
-		//Check this 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
-
 		openScope(defInfo, node);
-
 		node.getBody().apply(this);
-
 		endScope(defInfo);
 	}
 
@@ -190,11 +176,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
-
 		openScope(defInfo, node);
-
 		node.getBody().apply(this);
-
 		endScope(defInfo);
 	}
 
@@ -208,13 +191,9 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getAssignmentDefs(), af);
-
 		visitDefs(defInfo.getNodeDefs());
-
 		openScope(defInfo, node);
-
 		visitStms(node.getStatements());
-
 		endScope(defInfo);
 	}
 
@@ -227,13 +206,9 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
-
 		visitDefs(defInfo.getNodeDefs());
-
 		openScope(defInfo, node);
-
 		node.getExpression().apply(this);
-
 		endScope(defInfo);
 	}
 
@@ -246,13 +221,9 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
-
 		visitDefs(defInfo.getNodeDefs());
-
 		openScope(defInfo, node);
-
 		node.getStatement().apply(this);
-
 		endScope(defInfo);
 	}
 
@@ -265,9 +236,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getDef().apply(this);
-
 		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-
 		openScope(defInfo, node);
 
 		if (node.getSuchThat() != null)
@@ -276,13 +245,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getValue().apply(this);
-
 		endScope(defInfo);
 	}
-
-	/*
-	 * Exists1 needs no treatment it uses only a bind
-	 */
 
 	@Override
 	public void caseAForAllExp(AForAllExp node) throws AnalysisException
@@ -291,7 +255,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
 	}
 
@@ -302,13 +265,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
 	}
-
-	/*
-	 * Sequence comp needs no treatment it uses only a bind
-	 */
 
 	@Override
 	public void caseASetCompSetExp(ASetCompSetExp node) throws AnalysisException
@@ -317,7 +275,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleMultipleBindConstruct(node, node.getBindings(), node.getFirst(), node.getPredicate());
 	}
 
@@ -328,7 +285,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleMultipleBindConstruct(node, node.getBindings(), node.getFirst(), node.getPredicate());
 	}
 
@@ -341,9 +297,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getDef().apply(this);
-
 		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-
 		openScope(defInfo, node);
 
 		if (node.getSuchThat() != null)
@@ -352,7 +306,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getStatement().apply(this);
-
 		endScope(defInfo);
 	}
 
@@ -366,9 +319,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getDef().apply(this);
-
 		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
-
 		openScope(defInfo, node);
 
 		if (node.getStexp() != null)
@@ -377,7 +328,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		node.getBody().apply(this);
-
 		endScope(defInfo);
 	}
 
@@ -390,11 +340,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
-
 		openScope(defInfo, node);
-
 		node.getExpression().apply(this);
-
 		endScope(defInfo);
 	}
 
@@ -418,7 +365,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		openScope(node.getPatternBind(), node.getPatternBind().getDefs(), node.getStatement());
-
 		node.getStatement().apply(this);
 
 		// End scope
@@ -469,7 +415,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getStatement());
-
 		node.getStatement().apply(this);
 
 		for (PDefinition def : node.getPatternBind().getDefs())
@@ -531,7 +476,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		ILexNameToken var = node.getVar();
-		//TODO Check that it in fact is the setVar()
 		openLoop(var, null, node.getStatement(), node::setVar);
 		node.getStatement().apply(this);
 
@@ -545,7 +489,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleCaseNode(node.getExp(), node.getCases(), node.getOthers());
 	}
 
@@ -556,7 +499,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleCaseNode(node.getExpression(), node.getCases(), node.getOthers());
 	}
 
@@ -568,7 +510,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleCase(node.getDefs(), node.getPattern(), node.getResult());
 	}
 
@@ -580,7 +521,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		handleCase(node.getDefs(), node.getPattern(), node.getResult());
 	}
 
@@ -678,7 +618,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 				defs.addAll(af.createPPatternAssistant().getDefinitions(pattern, af.createPMultipleBindAssistant().getPossibleType(mb), NameScope.LOCAL));
 			}
 		}
-
 		return defs;
 	}
 
@@ -693,7 +632,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		namesToAvoid.add(newNameSuggestion);
-
 		return newNameSuggestion;
 	}
 
@@ -801,7 +739,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 				return (AStateDefinition) def;
 			}
 		}
-
 		return null;
 	}
 
@@ -860,7 +797,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			paramDefFlattened.addAll(list);
 		}
-
 		return paramDefFlattened;
 	}
 
@@ -979,7 +915,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 	private void findRenamings(PDefinition localDefToRename, INode parentNode,
 			INode defScope) throws AnalysisException
 	{
-
 		if (localDefToRename.getName() == null)
 		{
 			return;
@@ -1013,7 +948,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 						}
 					}
 				}
-				
 				renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
 			}else{
 				refactoringLogger.addWarning("Name is already in use!");
@@ -1034,9 +968,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			Consumer<RenameObject> function, String newName) throws AnalysisException
 	{
 		CallOccurenceRenamer collector = new CallOccurenceRenamer(defLoc, function, newName);
-
 		defScope.apply(collector);
-
 		return collector.getCalls();
 	}
 
@@ -1044,9 +976,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			Consumer<RenameObject> function, String newName) throws AnalysisException
 	{
 		AssignmentOccurenceRenamer collector = new AssignmentOccurenceRenamer(defLoc, function, newName);
-
 		defScope.apply(collector);
-
 		return collector.getCalls();
 	}
 	
@@ -1069,7 +999,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -1077,9 +1006,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			INode defScope, Consumer<RenameObject> function, String newName) throws AnalysisException
 	{
 		VarOccurencesRenamer collector = new VarOccurencesRenamer(defLoc, function, newName);
-
 		defScope.apply(collector);
-
 		return collector.getVars();
 	}
 	
@@ -1087,7 +1014,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			INode defScope) throws AnalysisException
 	{
 		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc);
-		
 		defScope.apply(collector);
 		Set<AVariableExp> setOfVars = collector.getVars();
 		
@@ -1097,7 +1023,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 				return true;
 			}
 		}
-		
 		return false;
 	}
 
@@ -1105,9 +1030,7 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			INode defScope, Consumer<RenameObject> function, String newName) throws AnalysisException
 	{
 		IdDesignatorOccurencesRenamer collector = new IdDesignatorOccurencesRenamer(defLoc, idDefs, function, newName);
-
 		defScope.apply(collector);
-
 		return collector.getIds();
 	}
 	
@@ -1115,16 +1038,13 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 			INode parent, Consumer<RenameObject> function, String newName) throws AnalysisException
 	{
 		IdOccurencesRenamer collector = new IdOccurencesRenamer(name, parent, function, newName);
-
 		parent.apply(collector);
-
 		return collector.getIdOccurences();
 	}
 	
 	private boolean contains(PDefinition defToCheck)
 	{
 		ILexNameToken nameToCheck = getName(defToCheck);
-
 		return contains(nameToCheck);
 	}
 
@@ -1142,7 +1062,6 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 				}
 			}
 		}
-
 		return false;
 	}
 

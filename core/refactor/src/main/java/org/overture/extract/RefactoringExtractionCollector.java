@@ -30,10 +30,8 @@ import org.overture.refactoring.RefactoringLogger;
 
 public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 {
-
 	private PDefinition enclosingDef;
 	private int enclosingCounter;
-
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 	private AModuleModules currentModule;
@@ -41,7 +39,6 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private int from;
 	private int to;
 	private String extractedName;
-	
 	private List<INode> visitedOperations;
 	private AExplicitOperationDefinition extractedOperation;
 	private boolean replaceDuplicates;
@@ -89,7 +86,6 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		visitModuleDefs(node.getDefinitions(), node);
 	}
 
@@ -101,16 +97,9 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 		visitModuleDefs(node.getDefinitions(), node);
 	}
 
-	// For operations and functions it works as a single pattern
-	// Thus f(1,mk_(2,2),5) will fail
-	// public f : nat * (nat * nat) * nat -> nat
-	// f (b,mk_(b,b), a) == b;
-
-	
 	@Override
 	public void caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
@@ -158,7 +147,6 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		}
 
 		namesToAvoid.add(newNameSuggestion);
-
 		return newNameSuggestion;
 	}
 

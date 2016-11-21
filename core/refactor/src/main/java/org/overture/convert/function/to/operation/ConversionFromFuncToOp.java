@@ -13,7 +13,6 @@ public class ConversionFromFuncToOp extends BasicRefactoringType implements Comp
 	{
 		this.loc = loc;
 		this.name = name;
-
 	}
 
 	public ILexLocation getLoc()
@@ -53,7 +52,6 @@ public class ConversionFromFuncToOp extends BasicRefactoringType implements Comp
 		}
 
 		Renaming other = (Renaming) obj;
-
 		return loc.equals(other.getLoc());
 	}
 
@@ -69,7 +67,6 @@ public class ConversionFromFuncToOp extends BasicRefactoringType implements Comp
 		}
 
 		ILexLocation otherLoc = other.getLoc();
-
 		return otherLoc.getStartOffset() - loc.getStartOffset();
 	}
 }
