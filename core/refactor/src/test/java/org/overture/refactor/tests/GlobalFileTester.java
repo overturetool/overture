@@ -84,14 +84,14 @@ public class GlobalFileTester {
 			checkAssertions(resObj.getUnreachableStmRemoved(), removedStmStrings);
 			
 			//CONVERT FUNCTION TO OPERATION CHECKER
-			List<BasicRefactoringType> conversionFromFuncToOp =(List<BasicRefactoringType>)(List<?>) genData.getAllConversionFromFuncToOp();
-			List<String> conversionFromFuncToOpStrings = removeFilePathFromText(conversionFromFuncToOp);
-			
-			for(String i : conversionFromFuncToOpStrings){
-				System.out.println(i);
-			}
-			
-			checkAssertions(resObj.getConvertedFunctionToOperation(), conversionFromFuncToOpStrings);
+//			List<BasicRefactoringType> conversionFromFuncToOp =(List<BasicRefactoringType>)(List<?>) genData.getAllConversionFromFuncToOp();
+//			List<String> conversionFromFuncToOpStrings = removeFilePathFromText(conversionFromFuncToOp);
+//			
+//			for(String i : conversionFromFuncToOpStrings){
+//				System.out.println(i);
+//			}
+//			
+//			checkAssertions(resObj.getConvertedFunctionToOperation(), conversionFromFuncToOpStrings);
 		}
 		
 		String filePath = inputFile.getPath();

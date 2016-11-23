@@ -1,25 +1,25 @@
 [
 	{
 		"language": "-sl",
-		"config": "-extract;18;19;testName;true",
+		"config": "-extract;23;24;testName;true",
 		"renamings": [],
 	    "extractions": [  
-	    	"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 35:5",
+	    	"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 40:5",
+			"'op' removed from in 'DEFAULT' at line 39:5 replaced with 'testName'",
+			"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 35:5",
 			"'op' removed from in 'DEFAULT' at line 34:5 replaced with 'testName'",
-			"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 30:5",
-			"'op' removed from in 'DEFAULT' at line 29:5 replaced with 'testName'",
-			"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 19:5",
-			"'op' removed from in 'DEFAULT' at line 18:5 replaced with 'testName'"
+			"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 24:5",
+			"'op' removed from in 'DEFAULT' at line 23:5 replaced with 'testName'"
 	    ]
 	    
 	},
 	{
 		"language": "-sl",
-		"config": "-extract;18;19;testName",
+		"config": "-extract;23;24;testName",
 		"renamings": [],
 	    "extractions": [
-			"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 19:5", 
-			"'op' removed from in 'DEFAULT' at line 18:5 replaced with 'testName'"
+			"'let a:nat1 = 5 in return ' removed from in 'DEFAULT' at line 24:5", 
+			"'op' removed from in 'DEFAULT' at line 23:5 replaced with 'testName'"
 	    ]
 	}
 ]

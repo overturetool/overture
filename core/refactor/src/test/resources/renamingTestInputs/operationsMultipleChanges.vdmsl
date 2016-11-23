@@ -1,0 +1,14 @@
+
+operations
+
+op: () ==> nat
+op() ==
+let a = 5 in return a;
+
+b: () ==> nat
+b() ==
+return op();
+
+run: () ==> nat
+run() ==
+let a = op() in return a;

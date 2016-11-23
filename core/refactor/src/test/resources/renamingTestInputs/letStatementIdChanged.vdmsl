@@ -1,0 +1,5 @@
+operations
+
+run: () ==> nat
+run() ==
+let a = 5 in return a;

@@ -1,0 +1,10 @@
+
+operations
+
+run: () ==> bool
+run() ==
+	return testOp(1);
+
+testOp: nat ==> bool
+testOp(n) ==
+	return n > 10;
