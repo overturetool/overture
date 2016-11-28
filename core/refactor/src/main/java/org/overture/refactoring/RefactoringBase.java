@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.overture.add.remove.parameter.RefactoringSignatureChangeCollector;
+import org.overture.add.remove.parameter.SignatureChange;
+import org.overture.add.remove.parameter.SignatureChanger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.Dialect;
@@ -21,18 +24,16 @@ import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Settings;
 import org.overture.convert.function.to.operation.ConvertFunctionToOperation;
+import org.overture.dead.model.part.removal.DeadModelPartRemover;
 import org.overture.extract.Extraction;
 import org.overture.extract.Extractor;
 import org.overture.extract.RefactoringExtractionCollector;
 import org.overture.rename.RefactoringRenameCollector;
 import org.overture.rename.Renamer;
 import org.overture.rename.Renaming;
-import org.overture.signature.RefactoringSignatureChangeCollector;
-import org.overture.signature.SignatureChange;
-import org.overture.signature.SignatureChanger;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
-import org.overture.unreachable.stm.remover.UnreachableStmRemover;
+
 
 public class RefactoringBase {
 	
@@ -76,7 +77,7 @@ public class RefactoringBase {
 	public List<INode> removeUnreachableStm(List<INode> ast) throws AnalysisException
 	{
 		List<INode> userModules = extractUserModules(ast);
-		UnreachableStmRemover stmRemover = new UnreachableStmRemover();
+		DeadModelPartRemover stmRemover = new DeadModelPartRemover();
 		for (INode node : userModules)
 		{
 			node.apply(stmRemover);

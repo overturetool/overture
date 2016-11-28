@@ -1,4 +1,4 @@
-package org.overture.signature;
+package org.overture.add.remove.parameter;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.refactoring.BasicRefactoringType;

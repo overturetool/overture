@@ -1,4 +1,4 @@
-package org.overture.signature;
+package org.overture.add.remove.parameter;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;

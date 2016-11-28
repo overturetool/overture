@@ -33,7 +33,7 @@ public class RefactoringMain {
 	public static final String RENAME_ARG = "-rename;";
 	public static final String EXTRACT_ARG = "-extract;";
 	public static final String SIGNATURE_ARG = "-signature;";
-	public static final String UNREACHABLESTMREMOVE_ARG = "-UnreachableStmRemove";
+	public static final String DEADMODELPARTREMOVER_ARG = "-DeadModelPartRemover";
 	public static final String CONVERTFUNCTIONTOOPERATION = "-ConvertFunctionToOperation;";
 	
 	private static RefactoringBase refactoringBase = new RefactoringBase();
@@ -89,7 +89,7 @@ public class RefactoringMain {
 			} else if (arg.equals(TEST_ARG))
 			{
 				test = true;
-			} else if (arg.equals(UNREACHABLESTMREMOVE_ARG))
+			} else if (arg.equals(DEADMODELPARTREMOVER_ARG))
 			{
 				unreachableStmRemove = true;
 			} else if (arg.contains(CONVERTFUNCTIONTOOPERATION)){

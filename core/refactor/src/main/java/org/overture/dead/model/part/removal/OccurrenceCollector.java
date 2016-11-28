@@ -1,4 +1,4 @@
-package org.overture.unreachable.stm.remover;
+package org.overture.dead.model.part.removal;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;

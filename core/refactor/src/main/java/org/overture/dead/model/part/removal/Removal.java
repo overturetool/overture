@@ -1,4 +1,4 @@
-package org.overture.unreachable.stm.remover;
+package org.overture.dead.model.part.removal;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.refactoring.BasicRefactoringType;

@@ -3,12 +3,13 @@ package org.overture.refactoring;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.overture.add.remove.parameter.SignatureChange;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.convert.function.to.operation.ConversionFromFuncToOp;
+import org.overture.dead.model.part.removal.Removal;
 import org.overture.extract.Extraction;
-import org.overture.signature.SignatureChange;
-import org.overture.unreachable.stm.remover.Removal;
+
 import org.overture.rename.Renaming;
 
 public class GeneratedData

@@ -1,4 +1,4 @@
-package org.overture.signature;
+package org.overture.add.remove.parameter;
 
 import java.util.LinkedList;
 import org.overture.ast.expressions.PExp;

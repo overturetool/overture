@@ -1,4 +1,4 @@
-package org.overture.unreachable.stm.remover;
+package org.overture.dead.model.part.removal;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.refactoring.RefactoringUtils;
 
-public class UnreachableStmRemover extends DepthFirstAnalysisAdaptor
+public class DeadModelPartRemover extends DepthFirstAnalysisAdaptor
 {
 	private List<Removal> allRemovals = new LinkedList<Removal>();
 	
