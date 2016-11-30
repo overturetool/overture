@@ -1,11 +1,11 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import java.util.LinkedList;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 
-public class SignatureChangeObject {
+public class AddParameterObject {
 
 	public LinkedList<PExp> paramList;
 	public ILexLocation location;
@@ -13,7 +13,7 @@ public class SignatureChangeObject {
 	public String parentName;
 	public String paramType;
 	
-	public SignatureChangeObject(ILexLocation loc, ILexNameToken newParamName, LinkedList<PExp> paramList, 
+	public AddParameterObject(ILexLocation loc, ILexNameToken newParamName, LinkedList<PExp> paramList, 
 			String parentName, String paramType){
 		this.location = loc;
 		this.paramList = paramList;

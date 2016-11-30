@@ -1,23 +1,22 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.refactoring.BasicRefactoringType;
 
-public class SignatureChange extends BasicRefactoringType implements Comparable<SignatureChange> {
+public class AddParameterRefactoring extends BasicRefactoringType implements Comparable<AddParameterRefactoring> {
 
 	private ILexLocation loc;
 	private String paramName;
-	private boolean isAddParam;
+
 	private String parentName;
 	private String paramType;
 
-	public SignatureChange(ILexLocation loc, String paramName, String parentName, String paramType, boolean isAddParam)
+	public AddParameterRefactoring(ILexLocation loc, String paramName, String parentName, String paramType)
 	{
 		this.loc = loc;
 		this.parentName = parentName;
 		this.paramName = paramName;
 		this.paramType = paramType;
-		this.isAddParam = isAddParam;
 	}
 
 	public ILexLocation getLoc()
@@ -36,27 +35,18 @@ public class SignatureChange extends BasicRefactoringType implements Comparable<
 	public String getParamType(){
 		return paramType;
 	}
-	
-	public boolean isAddParam() {
-		return isAddParam;
-	}
 
 	@Override
 	public String toString()
 	{
 		StringBuilder stb = new StringBuilder();
-		
-		if(isAddParam){
-			stb.append("Added ");
-			stb.append("'" + paramName + "'");
-			stb.append(" of type " + "'" + paramType + "'");
-			stb.append(" in parent node ");
-			stb.append("'" + parentName + "'");
-			stb.append(" ");
-			stb.append(loc);
-		} else{
-			//Remove parameter
-		}
+		stb.append("Added ");
+		stb.append("'" + paramName + "'");
+		stb.append(" of type " + "'" + paramType + "'");
+		stb.append(" in parent node ");
+		stb.append("'" + parentName + "'");
+		stb.append(" ");
+		stb.append(loc);
 		return stb.toString();
 	}
 
@@ -74,18 +64,18 @@ public class SignatureChange extends BasicRefactoringType implements Comparable<
 			return true;
 		}
 
-		if (!(obj instanceof SignatureChange))
+		if (!(obj instanceof AddParameterRefactoring))
 		{
 			return false;
 		}
 
-		SignatureChange other = (SignatureChange) obj;
+		AddParameterRefactoring other = (AddParameterRefactoring) obj;
 
 		return loc.equals(other.loc);
 	}
 
 	@Override
-	public int compareTo(SignatureChange other)
+	public int compareTo(AddParameterRefactoring other)
 	{
 		if (loc.getModule() != null && other.loc.getModule() != null)
 		{

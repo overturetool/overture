@@ -1,4 +1,4 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -78,14 +78,14 @@ import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
-public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdaptor {
+public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor {
 	private ITypeCheckerAssistantFactory af;
 
 	private PDefinition enclosingDef;
 	private Stack<ILexNameToken> localDefsInScope;
 	private int enclosingCounter;
 
-	private Set<SignatureChange> signatureChanges;
+	private Set<AddParameterRefactoring> addParameterRefactorings;
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 	private AModuleModules currentModule;
@@ -95,17 +95,16 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	private String paramType;
 	private String paramName;
 	private String paramPlaceholder;
-	private boolean isAddParamChange;
 	private boolean isParamListEmpty = true;
 	
-	public RefactoringSignatureChangeCollector(ITypeCheckerAssistantFactory af,
+	public RefactoringAddParameterCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.af = af;
 		this.enclosingDef = null;
 		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.enclosingCounter = 0;
-		this.signatureChanges = new HashSet<SignatureChange>();
+		this.addParameterRefactorings = new HashSet<AddParameterRefactoring>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 		this.currentModule = null;
@@ -170,88 +169,83 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		}
 		
 		if(compareNodeLocation(node.getLocation())){
-			if(isAddParamChange){
-				LexNameToken parName = new LexNameToken(node.getName().getModule(), paramName, null);
-				
-				//Add parameter to node patterns
-				LinkedList<PPattern> patterns = node.getParameterPatterns();
-				AIdentifierPattern pat = new AIdentifierPattern();
-				LexLocation newLastLoc = new LexLocation();
-				isParamListEmpty = patterns.isEmpty();
-				PDefinition newParam;
-				
-				if(!isParamListEmpty){
-					PPattern lastPattern = patterns.getLast();
-					ILexLocation lastLoc = lastPattern.getLocation();
-					newLastLoc = SignatureChangeUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, parName.toString());
-				} else{
-					newLastLoc = SignatureChangeUtil.calculateParamLocationWhenEmptyList(node.getType().getLocation(), parName.toString());
-				}
-				
-				//Set patterns
-				pat.setLocation(newLastLoc);
-				pat.setName(parName);
-				patterns.add(pat);
-				
-				//Set paramName
-				newParam = new ALocalDefinition();
-				newParam.setName(parName);
-				
-				//Get expression object
-				SignatureChangeExpObject expObj = getParamExpObj(paramType, paramPlaceholder, newLastLoc);
-				newParam.setType(expObj.getType());
-				
-				//Add parameter to node definitions
-				node.getParamDefinitions().add(newParam);
-				
-				//Add parameter to node operation type
-				PType operationType = node.getType();
-				if(operationType instanceof AOperationType){
-					((AOperationType) operationType).getParameters().add(expObj.getType());
-				} else if(operationType instanceof AFunctionType){
-					//Add param to function...
-				}
-				
-				signatureChanges.add(new SignatureChange(newLastLoc, parName.toString(), node.getName().getName(), newParam.getType().toString(), true));
-				
-				//Update calls
-				signatureChangeCallOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
-				
-				//Update applications
-				signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
-				
+
+			LexNameToken parName = new LexNameToken(node.getName().getModule(), paramName, null);
+			
+			//Add parameter to node patterns
+			LinkedList<PPattern> patterns = node.getParameterPatterns();
+			AIdentifierPattern pat = new AIdentifierPattern();
+			LexLocation newLastLoc = new LexLocation();
+			isParamListEmpty = patterns.isEmpty();
+			PDefinition newParam;
+			
+			if(!isParamListEmpty){
+				PPattern lastPattern = patterns.getLast();
+				ILexLocation lastLoc = lastPattern.getLocation();
+				newLastLoc = AddParameterUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, parName.toString());
 			} else{
-				//Remove parameter...
-				findParametersToRemove(node,node.parent(),node.parent());
+				newLastLoc = AddParameterUtil.calculateParamLocationWhenEmptyList(node.getType().getLocation(), parName.toString());
 			}
+			
+			//Set patterns
+			pat.setLocation(newLastLoc);
+			pat.setName(parName);
+			patterns.add(pat);
+			
+			//Set paramName
+			newParam = new ALocalDefinition();
+			newParam.setName(parName);
+			
+			//Get expression object
+			AddParameterExpObject expObj = getParamExpObj(paramType, paramPlaceholder, newLastLoc);
+			newParam.setType(expObj.getType());
+			
+			//Add parameter to node definitions
+			node.getParamDefinitions().add(newParam);
+			
+			//Add parameter to node operation type
+			PType operationType = node.getType();
+			if(operationType instanceof AOperationType){
+				((AOperationType) operationType).getParameters().add(expObj.getType());
+			} else if(operationType instanceof AFunctionType){
+				//Add param to function...
+			}
+			
+			addParameterRefactorings.add(new AddParameterRefactoring(newLastLoc, parName.toString(), node.getName().getName(), newParam.getType().toString()));
+			
+			//Update calls
+			signatureChangeCallOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
+			
+			//Update applications
+			signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
 		}		
 	}
 	
 	private Set<AApplyExp> signatureChangeApplicationOccurences(ILexLocation defLoc, INode defScope, 
-			Consumer<SignatureChangeObject> function) throws AnalysisException{
+			Consumer<AddParameterObject> function) throws AnalysisException{
 		ApplyOccurrenceSignatureChanger collector = new ApplyOccurrenceSignatureChanger(defLoc, function, paramName, paramPlaceholder, paramType, isParamListEmpty);
 		defScope.apply(collector);
 		return collector.getApplications();		
 	}
 
 	private Set<ACallStm> signatureChangeCallOccurences(ILexLocation defLoc, INode defScope,
-			Consumer<SignatureChangeObject> function) throws AnalysisException{
+			Consumer<AddParameterObject> function) throws AnalysisException{
 		CallOccurrenceSignatureChanger collector = new CallOccurrenceSignatureChanger(defLoc, function, paramName, paramPlaceholder, paramType, isParamListEmpty);
 		defScope.apply(collector);
 		return collector.getCalls();
 	}
 
-	private void registerSignatureChange(SignatureChangeObject reObj){
+	private void registerSignatureChange(AddParameterObject reObj){
 		if (!contains(reObj.location))
 		{
-			signatureChanges.add(new SignatureChange(reObj.location, reObj.newParamName.getName(), reObj.parentName, 
-					reObj.paramType, isAddParamChange));	
+			addParameterRefactorings.add(new AddParameterRefactoring(reObj.location, reObj.newParamName.getName(), reObj.parentName, 
+					reObj.paramType));	
 			reObj.paramList.add(getParamExpObj(paramType, paramPlaceholder, reObj.location).getExpression());
 		}
 	}
 	
-	private SignatureChangeExpObject getParamExpObj(String aParamType, String aParamPlaceholder, ILexLocation loc){
-		SignatureChangeExpObject expObj = new SignatureChangeExpObject();
+	private AddParameterExpObject getParamExpObj(String aParamType, String aParamPlaceholder, ILexLocation loc){
+		AddParameterExpObject expObj = new AddParameterExpObject();
 		
 		switch(ParamType.valueOf(aParamType.toUpperCase())){
 		case BOOL:
@@ -286,7 +280,7 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	
 	private boolean contains(ILexLocation loc)
 	{
-		for (SignatureChange r : signatureChanges)
+		for (AddParameterRefactoring r : addParameterRefactorings)
 		{
 			if (r.getLoc().equals(loc))
 			{
@@ -297,35 +291,6 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		return false;
 	}
 		
-	private void findParametersToRemove(AExplicitOperationDefinition opToRemoveParamFrom, INode parentNode,
-			INode defScope) throws AnalysisException {
-		if (opToRemoveParamFrom.getName() == null)
-		{
-			return;
-		}
-		
-		if(parameters.length >= 3){
-			
-			//Check this 
-			DefinitionInfo defInfo = new DefinitionInfo(opToRemoveParamFrom.getParamDefinitions(), af);
-			openScope(defInfo, opToRemoveParamFrom);
-			opToRemoveParamFrom.getBody().apply(this);
-			endScope(defInfo);
-						
-			
-//			renameVarOccurences(localDefToRemove.getLocation(), defScope, this::registerRenaming, newName);
-//			renameIdDesignatorOccurrences(localDefToRemove.getLocation(), defScope, this::registerRenaming, newName);	
-//			renameCallOccurences(localDefToRemove.getLocation(), defScope, this::registerRenaming, newName);
-//			
-//			if (!contains(localDefToRemove.getName().getLocation()))
-//			{
-//				registerRenaming(new RenameObject(localDefToRemove.getName(), newName, localDefToRemove::setName));	
-//				localDefToRemove.toString();
-//			}
-//			renameIdOccurences(localDefName, parentNode, this::registerRenaming, newName);
-		}		
-	}
-
 	@Override
 	public void caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node) throws AnalysisException
@@ -802,15 +767,15 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 		this.namesToAvoid.clear();
 		this.nameGen = new TempVarNameGen();
 
-		if (signatureChanges != null && clearSignatureChanges)
+		if (addParameterRefactorings != null && clearSignatureChanges)
 		{
-			signatureChanges.clear();
+			addParameterRefactorings.clear();
 		}
 	}
 
-	public Set<SignatureChange> getSignatureChanges()
+	public Set<AddParameterRefactoring> getSignatureChanges()
 	{
-		return signatureChanges;
+		return addParameterRefactorings;
 	}
 
 	private List<PDefinition> getParamDefs(AExplicitFunctionDefinition node)
@@ -958,9 +923,6 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	}
 	
 	private boolean compareNodeLocation(ILexLocation newNode){
-
-		//System.out.println("Pos " + newNode.getStartLine() + ": " + newNode.getStartPos());
-
 		if(parameters.length >= 3){
 			if(newNode.getStartLine() == startLine){
 				return true;
@@ -970,28 +932,15 @@ public class RefactoringSignatureChangeCollector extends DepthFirstAnalysisAdapt
 	}
 	
 	public void setRefactoringParameters(String[] parameters) {
-		if(parameters.length >= 3){
+		if(parameters.length >= 4){
 			this.parameters = parameters;
-			if(parameters[0].equals("add")){
-				this.isAddParamChange = true;
-			} else{
-				this.isAddParamChange = false;
-			}
-			
-			if(isAddParamChange){
-				this.startLine = Integer.parseInt(parameters[1]);
-				this.paramName = parameters[2];
-				this.paramType = parameters[3];
-				this.paramPlaceholder = parameters[4];
-			} else{
-				this.startLine = Integer.parseInt(parameters[1]);
-				Integer.parseInt(parameters[2]);
-			}
+			this.startLine = Integer.parseInt(parameters[0]);
+			this.paramName = parameters[1];
+			this.paramType = parameters[2];
+			this.paramPlaceholder = parameters[3];
 		}
 	}
 	
-	
-
 	public void addToNodeCurrentModule(PDefinition node){
 		System.out.println("Sized:" + currentModule.getDefs().size());
 

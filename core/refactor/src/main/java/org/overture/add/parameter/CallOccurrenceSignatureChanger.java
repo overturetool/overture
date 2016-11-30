@@ -1,4 +1,4 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,13 +18,13 @@ import org.overture.ast.statements.ACallStm;
 public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 	private ILexLocation defLoc;
 	private Set<ACallStm> callOccurences;
-	private Consumer<SignatureChangeObject> function;
+	private Consumer<AddParameterObject> function;
 	private String newParamName;
 	private String newParamPlaceholder;
 	private String newParamType;
 	private boolean isParamListEmpty;
 	
-	public CallOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> f, 
+	public CallOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<AddParameterObject> f, 
 			String newParamName, String newParamPlaceholder, String newParamType, boolean isParamListEmpty){
 		this.defLoc = defLoc;
 		this.newParamName = newParamName;
@@ -56,14 +56,14 @@ public class CallOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor {
 				
 				if(!isParamListEmpty){
 					ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
-					newLastLoc = SignatureChangeUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
+					newLastLoc = AddParameterUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
 				} else{
-					newLastLoc = SignatureChangeUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
+					newLastLoc = AddParameterUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
 				}		
 				
 				ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);				
 				
-				function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, 
+				function.accept(new AddParameterObject(newParamName.getLocation(), newParamName, 
 						paramListOfParent, parent.getName().getName(), newParamType));
 			
 				callOccurences.add(node);

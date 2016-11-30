@@ -1,4 +1,4 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,13 +20,13 @@ import org.overture.ast.node.INode;
 public class ApplyOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor{
 	private ILexLocation defLoc;
 	private Set<AApplyExp> applyOccurrences;
-	private Consumer<SignatureChangeObject> function;
+	private Consumer<AddParameterObject> function;
 	private String newParamName;
 	private String newParamPlaceholder;
 	private String newParamType;
 	private boolean isParamListEmpty;
 	
-	public ApplyOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<SignatureChangeObject> function, 
+	public ApplyOccurrenceSignatureChanger(ILexLocation defLoc, Consumer<AddParameterObject> function, 
 			String newParamName, String newParamPlaceholder, String newParamType, boolean isParamListEmpty){
 		this.defLoc = defLoc;
 		this.function = function;
@@ -70,13 +70,13 @@ public class ApplyOccurrenceSignatureChanger extends DepthFirstAnalysisAdaptor{
 			
 			if(!isParamListEmpty){
 				ILexLocation lastLoc = paramListOfParent.getLast().getLocation();
-				newLastLoc = SignatureChangeUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
+				newLastLoc = AddParameterUtil.calculateNewParamLocationWhenNotEmptyList(lastLoc, newParamPlaceholder);
 			} else{
-				newLastLoc = SignatureChangeUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
+				newLastLoc = AddParameterUtil.calculateParamLocationInCallWhenEmptyList(node.getLocation(), newParamPlaceholder);
 			}
 			ILexNameToken newParamName = new LexNameToken(root.getName().getModule(), newParamNameStr, newLastLoc);
 			
-			function.accept(new SignatureChangeObject(newParamName.getLocation(), newParamName, 
+			function.accept(new AddParameterObject(newParamName.getLocation(), newParamName, 
 					paramListOfParent ,operationName, newParamType));
 			
 			applyOccurrences.add(node);

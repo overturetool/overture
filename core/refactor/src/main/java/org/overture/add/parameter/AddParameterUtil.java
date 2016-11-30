@@ -1,9 +1,9 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 
-public class SignatureChangeUtil {
+public class AddParameterUtil {
 	public static LexLocation calculateParamLocationFromOldLocation(ILexLocation oldLoc, String paramStr, boolean fromStartPos, int nrOfCharsToMove){
 		if(fromStartPos){
 			LexLocation loc = new LexLocation(

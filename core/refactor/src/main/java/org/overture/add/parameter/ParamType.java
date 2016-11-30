@@ -1,4 +1,4 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 public enum ParamType {
 	BOOL,

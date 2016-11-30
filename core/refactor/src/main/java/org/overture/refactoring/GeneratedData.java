@@ -3,7 +3,7 @@ package org.overture.refactoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.overture.add.remove.parameter.SignatureChange;
+import org.overture.add.parameter.AddParameterRefactoring;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.convert.function.to.operation.ConversionFromFuncToOp;
@@ -18,7 +18,7 @@ public class GeneratedData
 	private List<GeneratedModule> quoteValues;
 	private List<Renaming> allRenamings;
 	private List<Extraction> allExtractions;
-	private List<SignatureChange> allSignatureChanges;
+	private List<AddParameterRefactoring> allSignatureChanges;
 	private List<Removal> allRemovals;
 	private List<ConversionFromFuncToOp> allConversionFromFuncToOp;
 	private List<String> warnings;
@@ -60,12 +60,12 @@ public class GeneratedData
 		this.allExtractions = allExtractions;
 	}
 	
-	public List<SignatureChange> getAllSignatureChanges()
+	public List<AddParameterRefactoring> getAllSignatureChanges()
 	{
 		return allSignatureChanges;
 	}
 
-	public void setAllSignatureChanges(List<SignatureChange> allSignatureChanges)
+	public void setAllSignatureChanges(List<AddParameterRefactoring> allSignatureChanges)
 	{
 		this.allSignatureChanges = allSignatureChanges;
 	}

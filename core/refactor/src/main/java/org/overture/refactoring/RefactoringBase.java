@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.overture.add.remove.parameter.RefactoringSignatureChangeCollector;
-import org.overture.add.remove.parameter.SignatureChange;
-import org.overture.add.remove.parameter.SignatureChanger;
+import org.overture.add.parameter.AddParameter;
+import org.overture.add.parameter.AddParameterRefactoring;
+import org.overture.add.parameter.RefactoringAddParameterCollector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.Dialect;
@@ -211,17 +211,17 @@ public class RefactoringBase {
 		return allExtractions;
 	}
 	
-	private List<SignatureChange> performSignatureChanges(List<INode> mergedParseLists,
+	private List<AddParameterRefactoring> performSignatureChanges(List<INode> mergedParseLists,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs, String[] parameters)
 			throws AnalysisException
 	{
-		List<SignatureChange> allSignatureChanges = new LinkedList<SignatureChange>();
-		RefactoringSignatureChangeCollector signatureChangeCollector = new RefactoringSignatureChangeCollector(generator.getIRInfo().getTcFactory(), idDefs);
-		SignatureChanger changer = new SignatureChanger();
+		List<AddParameterRefactoring> allSignatureChanges = new LinkedList<AddParameterRefactoring>();
+		RefactoringAddParameterCollector signatureChangeCollector = new RefactoringAddParameterCollector(generator.getIRInfo().getTcFactory(), idDefs);
+		AddParameter changer = new AddParameter();
 		signatureChangeCollector.setRefactoringParameters(parameters);
 		for (INode node : mergedParseLists)
 		{
-			Set<SignatureChange> currentSignatureChanges = changer.computeSignatureChanges(node, signatureChangeCollector);
+			Set<AddParameterRefactoring> currentSignatureChanges = changer.computeSignatureChanges(node, signatureChangeCollector);
 
 			if (!currentSignatureChanges.isEmpty())
 			{

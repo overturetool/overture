@@ -1,4 +1,4 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import java.util.List;
 import java.util.Map;
@@ -10,13 +10,13 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class SignatureChanger {
-	public Set<SignatureChange> computeSignatures(List<? extends INode> nodes,
+public class AddParameter {
+	public Set<AddParameterRefactoring> computeSignatures(List<? extends INode> nodes,
 			ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 			throws AnalysisException
 	{
-		RefactoringSignatureChangeCollector signatureChangeCollector = new RefactoringSignatureChangeCollector(af, idDefs);
+		RefactoringAddParameterCollector signatureChangeCollector = new RefactoringAddParameterCollector(af, idDefs);
 
 		for (INode node : nodes)
 		{
@@ -27,8 +27,8 @@ public class SignatureChanger {
 		return signatureChangeCollector.getSignatureChanges();
 	}
 	
-	public Set<SignatureChange> computeSignatureChanges(INode node,
-			RefactoringSignatureChangeCollector collector) throws AnalysisException
+	public Set<AddParameterRefactoring> computeSignatureChanges(INode node,
+			RefactoringAddParameterCollector collector) throws AnalysisException
 	{
 		collector.init(true);
 		node.apply(collector);

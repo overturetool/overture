@@ -1,13 +1,13 @@
-package org.overture.add.remove.parameter;
+package org.overture.add.parameter;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 
-public class SignatureChangeExpObject {
+public class AddParameterExpObject {
 	private PType type;
 	private PExp expression;
 	
-	public SignatureChangeExpObject(){
+	public AddParameterExpObject(){
 	}
 	
 	public PType getType() {
