@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="org.overture.ide.ui.templateContextType" name="Template Context Type" schema="schema/org.overture.ide.ui.templateContextType.exsd"/>
    <extension-point id="org.overture.ide.ui.workbenchDisplay" name="Extention for the workbench adatpr display mechanism in Overture" schema="schema/org.overture.ide.ui.workbenchDisplay.exsd"/>
+  
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
@@ -346,15 +347,21 @@
         point="org.eclipse.ui.bindings">
      <key
            commandId="org.overture.ide.ui.commands.toggleComment"
+           contextId="org.eclipse.ui.textEditorScope"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            contextId="org.eclipse.ui.textEditorScope"
            sequence="M1+/">
      </key>
-      <key
+     <key
            commandId="org.overture.ide.ui.editor.commandGoToDefinition"
+           contextId="org.eclipse.ui.textEditorScope"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            contextId="org.eclipse.ui.textEditorScope"
            sequence="F3">
+     </key>
+     <key
+           commandId="org.overture.ide.ui.command.rename"
+           contextId="org.eclipse.ui.contexts.window"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="½">
      </key>
   </extension>
   <extension
@@ -377,6 +384,12 @@
            id="org.overture.ide.ui.editor.commandGoToDefinition"
            name="Open Declaration">
     </command>
+      <command
+            categoryId="org.eclipse.ui.category.window"
+            defaultHandler="org.overture.ide.ui.refactoringCommand.RefactoringCommand"
+            id="org.overture.ide.ui.command.rename"
+            name="Refactoring Command">
+      </command>
   </extension>
   <extension
         point="org.eclipse.ui.decorators">
