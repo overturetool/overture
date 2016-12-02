@@ -7,17 +7,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.JFaceTextUtil;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -61,6 +58,7 @@ public class RefactoringCommand  extends AbstractHandler{
 
 				int lineOffset = (caretOffset - lineInfo.getOffset()) + 1;
 				System.out.println("line nr: " + (lineNumber + 1) + " offset: " + lineOffset);
+				run(path.toString(), lineNumber, lineOffset);
 			} else{
 				System.out.println("error in line");
 			}
@@ -68,9 +66,30 @@ public class RefactoringCommand  extends AbstractHandler{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
-	
+
+		
+//	    NewLambdaJavaFunctionProjectWizard newWizard = new NewLambdaJavaFunctionProjectWizard();
+//	    newWizard.init(PlatformUI.getWorkbench(), null);
+//	    WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), newWizard);
+//	    return dialog.open();
 		
 		return null;
 	}
+	
+//	@SuppressWarnings("restriction")
+//	public Object Openwizard(ExecutionEvent event) throws ExecutionException {
+//	    NewLambdaJavaFunctionProjectWizard newWizard = new NewLambdaJavaFunctionProjectWizard();
+//	    newWizard.init(PlatformUI.getWorkbench(), null);
+//	    WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), newWizard);
+//	    return dialog.open();
+//	}
+	
+
+	public void run(String filePath, int lineNumber, int lineOffset) {
+		CaptureRenameInformationWizard wizard = new CaptureRenameInformationWizard(filePath, lineNumber, lineOffset);
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+		dialog.create();
+		dialog.open();
+	}
+	 
 }
