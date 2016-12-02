@@ -1,0 +1,42 @@
+class A
+
+operations
+
+public opA : () ==> nat
+opA () == is subclass responsibility;
+
+end A
+
+class B
+
+operations
+
+public opB : () ==> nat
+opB () == return 2;
+
+end B
+
+class C is subclass of A,B
+
+values
+
+x = <A>
+
+operations
+
+public opA : () ==> nat
+opA () == return 1;
+
+end C
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let c : C = new C()
+in
+  return c.opA() + c.opB();
+
+end Entry

@@ -1,0 +1,77 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class B {
+  public Number opB() {
+
+    return 2L;
+  }
+
+  public B() {}
+
+  public String toString() {
+
+    return "B{}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class C extends B implements A {
+  private static final quotes.AQuote x = quotes.AQuote.getInstance();
+
+  public Number opA() {
+
+    return 1L;
+  }
+
+  public C() {}
+
+  public String toString() {
+
+    return "C{" + "x = " + Utils.toString(x) + "}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    final C c = new C();
+    return c.opA().longValue() + c.opB().longValue();
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
+
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface A {
+  public abstract Number opA();
+}
+
+##########
+*Quotes*
+A
+##########

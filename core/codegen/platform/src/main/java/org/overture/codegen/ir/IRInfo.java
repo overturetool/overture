@@ -85,6 +85,9 @@ public class IRInfo
 
 	// SL state reads
 	private List<SVarExpIR> slStateReads;
+	
+	// Names of classes that are instantiated
+	private Set<String> instantiatedClasses;
 
 	private Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -106,6 +109,7 @@ public class IRInfo
 		this.classes = new LinkedList<SClassDeclIR>();
 		this.modules = new LinkedList<AModuleDeclIR>();
 		this.slStateReads = new LinkedList<>();
+		this.instantiatedClasses = new HashSet<>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -452,5 +456,10 @@ public class IRInfo
 		}
 
 		return false;
+	}
+	
+	public Set<String> getInstantiatedClasses()
+	{
+		return instantiatedClasses;
 	}
 }

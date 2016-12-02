@@ -3,24 +3,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-abstract public class Employee {
-  public abstract Number getSalary();
-
-  public Employee() {}
-
-  public String toString() {
-
-    return "Employee{}";
-  }
-}
-
-##########
-
-import java.util.*;
-import org.overture.codegen.runtime.*;
-
-@SuppressWarnings("all")
-public class HourlyPaidEmployee extends Employee {
+public class HourlyPaidEmployee implements Employee {
   public Number hours;
   private Number rate;
 
@@ -70,7 +53,7 @@ import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
-public class FixedSalaryEmployee extends Employee {
+public class FixedSalaryEmployee implements Employee {
   private Number fixedSalary;
 
   public void cg_init_FixedSalaryEmployee_1(final Number pFixedSalary) {
@@ -182,6 +165,17 @@ public class World {
 
     return "World{}";
   }
+}
+
+##########
+
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public interface Employee {
+  public abstract Number getSalary();
 }
 
 ##########

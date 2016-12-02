@@ -16,6 +16,7 @@ If you encounter a problem with a VDM specification, please try to make a small 
 ## Other Resources and Links
 
 * [Overture Community site](http://www.overturetool.org)
+* [VDM-10 Language Manual](http://raw.github.com/overturetool/documentation/master/documentation/VDM10LangMan/VDM10_lang_man.pdf)
 * [VDM Tutorials](http://overturetool.org/documentation/tutorials.html)
 * [VDM Examples](http://overturetool.org/download/examples/)
 * [Wikipedia on VDM](http://en.wikipedia.org/wiki/Vienna_Development_Method)

@@ -73,6 +73,7 @@ import org.overture.codegen.ir.expressions.SLiteralExpIR;
 import org.overture.codegen.ir.expressions.SNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.SUnaryExpIR;
 import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.name.ATokenNameIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AForLoopStmIR;
@@ -618,10 +619,36 @@ public class JavaFormat
 			return "";
 		}
 
-		String implementsClause = "implements";
+		List<String> interfaceNames = new LinkedList<>();
+		for(AInterfaceDeclIR i : interfaces)
+		{
+			interfaceNames.add(i.getName());
+		}
+		
+		return formatInterfaceNames(interfaceNames, "implements");
+	}
+	
+	public String formatInterfaces(AInterfaceDeclIR inter)
+	{
+		if(inter.getExtension() == null || inter.getExtension().isEmpty())
+		{
+			return "";
+		}
+		
+		List<String> interfaceNames = new LinkedList<>();
+		for(ATokenNameIR e : inter.getExtension())
+		{
+			interfaceNames.add(e.getName());
+		}
+		
+		return formatInterfaceNames(interfaceNames, "extends");
+	}
+
+	private String formatInterfaceNames(List<String> interfaceNames, String keyword) {
+		String implementsClause = keyword;
 		String sep = " ";
 
-		if (interfaces.isEmpty())
+		if (interfaceNames.isEmpty())
 		{
 			// All classes must be declared Serializable when traces are being generated.
 			if (info.getSettings().generateTraces()
@@ -635,9 +662,9 @@ public class JavaFormat
 			}
 		}
 
-		for (int i = 0; i < interfaces.size(); i++)
+		for (int i = 0; i < interfaceNames.size(); i++)
 		{
-			implementsClause += sep + interfaces.get(i).getName();
+			implementsClause += sep + interfaceNames.get(i);
 			sep = ", ";
 		}
 

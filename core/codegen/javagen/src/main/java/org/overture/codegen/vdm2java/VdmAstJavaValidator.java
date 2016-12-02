@@ -8,6 +8,7 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -28,9 +29,8 @@ import org.overture.codegen.ir.VdmNodeInfo;
 public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-
-	public VdmAstJavaValidator(IRInfo info)
-	{
+	
+	public VdmAstJavaValidator(IRInfo info) {
 		this.info = info;
 	}
 
@@ -46,12 +46,21 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inAClassClassDefinition(AClassClassDefinition node)
-			throws AnalysisException
-	{
-		if (node.getSupernames().size() > 1)
-		{
-			info.addUnsupportedNode(node, "Multiple inheritance not supported.");
+	public void inAClassClassDefinition(AClassClassDefinition node) throws AnalysisException {
+		if (node.getSupernames().size() > 1) {
+			
+			int nonFullyAbstract = 0;
+			
+			for(SClassDefinition s : node.getSuperDefs())
+			{
+				if(!info.getDeclAssistant().isFullyAbstract(s, info))
+				{
+					nonFullyAbstract++;
+					if (nonFullyAbstract > 1) {
+						info.addUnsupportedNode(node, "Multiple inheritance not supported.");
+					}
+				}
+			}
 		}
 	}
 
