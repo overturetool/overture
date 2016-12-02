@@ -3,11 +3,13 @@ package org.overture.ide.ui.refactoringCommand;
 import org.eclipse.jface.wizard.Wizard;
 
 public class CaptureRenameInformationWizard extends Wizard {
+	
 	private RenameRefactoringWizard renameInfoPage;
 	private String filePath;
 	private int lineNumber;
 	private int lineOffset;
 	//private RefactoringMain refactoringMain;
+	
 	public CaptureRenameInformationWizard(String filePath, int lineNumber, int lineOffset){
 		
 		this.filePath = filePath;
