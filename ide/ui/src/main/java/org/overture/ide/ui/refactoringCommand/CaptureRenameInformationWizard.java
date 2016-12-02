@@ -1,6 +1,7 @@
 package org.overture.ide.ui.refactoringCommand;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.overture.refactoring.RefactoringMain;
 
 public class CaptureRenameInformationWizard extends Wizard {
 	
@@ -8,13 +9,14 @@ public class CaptureRenameInformationWizard extends Wizard {
 	private String filePath;
 	private int lineNumber;
 	private int lineOffset;
-	//private RefactoringMain refactoringMain;
+	private RefactoringMain refactoringMain;
 	
 	public CaptureRenameInformationWizard(String filePath, int lineNumber, int lineOffset){
 		
 		this.filePath = filePath;
 		this.lineNumber = lineNumber;
 		this.lineOffset = lineOffset;
+		refactoringMain = new RefactoringMain();
 	}
 	
     public void addPages() {
@@ -38,7 +40,7 @@ public class CaptureRenameInformationWizard extends Wizard {
     	//-rename;135;16;period
 		
     	parameters[3] = filePath;
-    	
+    	refactoringMain.main(parameters);
     	return true;
     }
 }

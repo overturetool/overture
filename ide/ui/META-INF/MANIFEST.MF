@@ -30,4 +30,12 @@ Export-Package: org.overture.ide.ui,org.overture.ide.ui.adapters,org.o
  rg.overture.ide.ui.outline,org.overture.ide.ui.templates,org.overture
  .ide.ui.utility,org.overture.ide.ui.utility.ast,org.overture.ide.ui.w
  izard,org.overture.ide.ui.wizard.pages
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ jars/ir.jar,
+ jars/refactor.jar,
+ jars/platform.jar,
+ jars/codegen-runtime.jar,
+ jars/commons-collections.jar,
+ jars/commons-lang.jar,
+ jars/log4j.jar,
+ jars/npp.jar
