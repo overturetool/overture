@@ -9,14 +9,12 @@ public class CaptureRenameInformationWizard extends Wizard {
 	private String filePath;
 	private int lineNumber;
 	private int lineOffset;
-	private RefactoringMain refactoringMain;
 	
 	public CaptureRenameInformationWizard(String filePath, int lineNumber, int lineOffset){
 		
 		this.filePath = filePath;
 		this.lineNumber = lineNumber;
 		this.lineOffset = lineOffset;
-		refactoringMain = new RefactoringMain();
 	}
 	
     public void addPages() {
@@ -26,9 +24,8 @@ public class CaptureRenameInformationWizard extends Wizard {
      
     public boolean performFinish() {
     	
-    	String[] parameters = new String[4];
-    	parameters[0] = "-print";
-    	parameters[1] = "-sl";
+    	String[] parameters = new String[3];
+    	parameters[0] = "-sl";
     	
     	StringBuilder renameInput = new StringBuilder();
     	renameInput.append("-rename;");
@@ -36,11 +33,11 @@ public class CaptureRenameInformationWizard extends Wizard {
     	renameInput.append(lineOffset + ";");
     	String newName = renameInfoPage.getNewNameText();
     	renameInput.append(newName);
-    	parameters[2] = renameInput.toString();
-    	//-rename;135;16;period
+    	parameters[1] = renameInput.toString();
+    	//e.g. -rename;135;16;period
 		
-    	parameters[3] = filePath;
-    	refactoringMain.main(parameters);
+    	parameters[2] = filePath;
+    	RefactoringMain.main(parameters);
     	return true;
     }
 }

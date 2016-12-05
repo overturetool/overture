@@ -231,13 +231,11 @@ public class RefactoringMain {
 			if(generatedAST == null){
 				generatedAST = refactoringBase.extractUserModules(RefactoringBase.getNodes(tcResult.result));
 			}
-			
-			try {
-				writeOutputASTToFile(generatedAST, file, true);
-			} catch (AnalysisException e) {
-				e.printStackTrace();
-			}
+			writeOutputASTToFile(generatedAST, file, true);
+		}else{
+			writeOutputASTToFile(generatedAST, file, false);
 		}
+		
 	}
 	
 	public static List<INode> getGeneratedAST(){
@@ -260,8 +258,7 @@ public class RefactoringMain {
 		System.out.println(RefactoringPrettyPrinter.prettyPrint(nodes));
 	}
 	
-	public static void writeOutputASTToFile(List<INode> nodes, File file, boolean test)
-			throws AnalysisException {
+	public static void writeOutputASTToFile(List<INode> nodes, File file, boolean test){
 		String actual = RefactoringPrettyPrinter.prettyPrint(nodes);
 		String filePath = file.getPath();
 		if(test){

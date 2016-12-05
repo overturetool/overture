@@ -1100,7 +1100,8 @@ public class RefactoringRenameCollector extends DepthFirstAnalysisAdaptor
 		
 		if(parameters.length >= 3){
 			if(newNode.getStartLine() == Integer.parseInt(parameters[0]) &&
-							newNode.getStartPos() == Integer.parseInt(parameters[1])){
+					(newNode.getStartPos() <= Integer.parseInt(parameters[1]) && 
+					newNode.getEndPos() >= Integer.parseInt(parameters[1]))){
 				return true;
 			}
 		}

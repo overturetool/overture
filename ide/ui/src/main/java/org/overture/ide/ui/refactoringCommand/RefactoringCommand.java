@@ -55,9 +55,9 @@ public class RefactoringCommand  extends AbstractHandler{
 			if(document != null && caretOffset != -1){
 				int lineNumber = document.getLineOfOffset(caretOffset); // one off need +1
 				IRegion lineInfo = document.getLineInformation(lineNumber);
-
+				lineNumber = lineNumber + 1; //gives the correct line number that starts with 1
 				int lineOffset = (caretOffset - lineInfo.getOffset()) + 1;
-				System.out.println("line nr: " + (lineNumber + 1) + " offset: " + lineOffset);
+				System.out.println("line nr: " + lineNumber + " offset: " + lineOffset);
 				run(path.toString(), lineNumber, lineOffset);
 			} else{
 				System.out.println("error in line");
