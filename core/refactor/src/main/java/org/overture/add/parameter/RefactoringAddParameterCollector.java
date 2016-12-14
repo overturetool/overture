@@ -7,25 +7,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.lex.LexBooleanToken;
-import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AModuleModules;
@@ -34,9 +25,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
@@ -45,11 +34,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor {
 
 	private PDefinition enclosingDef;
-	private int enclosingCounter;
-
 	private Set<AddParameterRefactoring> addParameterRefactorings;
 	private Set<String> namesToAvoid;
-	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private String[] parameters;
 	private int startLine;
 	private String paramType;
@@ -61,7 +47,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
 		this.enclosingDef = null;
-		this.enclosingCounter = 0;
 		this.addParameterRefactorings = new HashSet<AddParameterRefactoring>();
 		this.namesToAvoid = new HashSet<String>();
 	}
@@ -90,10 +75,7 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	@Override
 	public void caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException {
-		if (!proceed(node)) {
-			return;
-		}
-		
+
 		if(compareNodeLocation(node.getLocation())){
 
 			LexNameToken parName = new LexNameToken(node.getName().getModule(), paramName, null);
@@ -123,7 +105,7 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 			newParam.setName(parName);
 			
 			//Get expression object
-			AddParameterExpObject expObj = getParamExpObj(paramType, paramPlaceholder, newLastLoc);
+			AddParameterExpObject expObj = AddParameterUtil.getParamExpObj(paramType, paramPlaceholder, newLastLoc);
 			newParam.setType(expObj.getType());
 			
 			//Add parameter to node definitions
@@ -166,42 +148,8 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 		{
 			addParameterRefactorings.add(new AddParameterRefactoring(reObj.location, reObj.newParamName.getName(), reObj.parentName, 
 					reObj.paramType));	
-			reObj.paramList.add(getParamExpObj(paramType, paramPlaceholder, reObj.location).getExpression());
+			reObj.paramList.add(AddParameterUtil.getParamExpObj(paramType, paramPlaceholder, reObj.location).getExpression());
 		}
-	}
-	
-	private AddParameterExpObject getParamExpObj(String aParamType, String aParamPlaceholder, ILexLocation loc){
-		AddParameterExpObject expObj = new AddParameterExpObject();
-		
-		switch(ParamType.valueOf(aParamType.toUpperCase())){
-		case BOOL:
-			ABooleanBasicType boolType = new ABooleanBasicType();
-			expObj.setType(boolType);
-			ABooleanConstExp boolExp = new ABooleanConstExp();
-			LexBooleanToken boolToken = new LexBooleanToken(Boolean.parseBoolean(aParamPlaceholder), loc);
-			boolExp.setType(boolType);
-			boolExp.setValue(boolToken);
-			boolExp.setLocation(loc);
-			expObj.setExpression(boolExp);
-			return expObj;
-		case NAT:
-			ANatNumericBasicType natType = new ANatNumericBasicType();
-			expObj.setType(natType);
-			LexIntegerToken natToken = new LexIntegerToken(Integer.parseInt(aParamPlaceholder), loc);
-			AIntLiteralExp natExp = new AIntLiteralExp();
-			natExp.setType(natType);
-			natExp.setValue(natToken);
-			natExp.setLocation(loc);
-			expObj.setExpression(natExp);
-			return expObj;
-		case NAT1:
-//			this.paramType = new ANatOneNumericBasicType();
-//			this.paramPlaceholder = Integer.parseInt(aParamPlaceholder);
-			return null;
-		default:
-			paramPlaceholder = String.valueOf(aParamPlaceholder);
-			return null;
-		}		
 	}
 	
 	private boolean contains(ILexLocation loc)
@@ -233,8 +181,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 					|| def instanceof ANamedTraceDefinition)
 			{
 				enclosingDef = def;
-				enclosingCounter = 0;
-
 				def.apply(this);
 			}
 		}
@@ -243,7 +189,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	public void init(boolean clearSignatureChanges)
 	{
 		this.enclosingDef = null;
-		this.enclosingCounter = 0;
 		this.namesToAvoid.clear();
 
 		if (addParameterRefactorings != null && clearSignatureChanges)
@@ -256,65 +201,10 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	{
 		return addParameterRefactorings;
 	}
-
-	private boolean proceed(INode node)
-	{
-		if (node == enclosingDef)
-		{
-			enclosingCounter++;
-		}
-
-		if (enclosingCounter > 1)
-		{
-			// To protect against recursion
-			return false;
-		}
-
-		PDefinition def = node.getAncestor(SOperationDefinition.class);
-
-		if (def == null)
-		{
-			def = node.getAncestor(SFunctionDefinition.class);
-
-			if (def == null)
-			{
-				def = node.getAncestor(ANamedTraceDefinition.class);
-
-				if (def == null)
-				{
-					def = node.getAncestor(AValueDefinition.class);
-
-					if (def == null)
-					{
-						def = node.getAncestor(AInstanceVariableDefinition.class);
-
-						if (def == null)
-						{
-							def = node.getAncestor(ATypeDefinition.class);
-
-							if (def == null)
-							{
-								def = node.getAncestor(AStateDefinition.class);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		if (def == null)
-		{
-			log.error("Got unexpected definition: " + enclosingDef);
-		}
-
-		return enclosingDef == def;
-	}
 	
 	private boolean compareNodeLocation(ILexLocation newNode){
-		if(parameters.length >= 4){
-			if(newNode.getStartLine() == startLine){
+		if(parameters.length >= 4 && newNode.getStartLine() == startLine){
 				return true;
-			}
 		}
 		return false;
 	}
