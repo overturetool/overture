@@ -25,7 +25,6 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
@@ -35,7 +34,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 
 	private PDefinition enclosingDef;
 	private Set<AddParameterRefactoring> addParameterRefactorings;
-	private Set<String> namesToAvoid;
 	private String[] parameters;
 	private int startLine;
 	private String paramType;
@@ -48,7 +46,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	{
 		this.enclosingDef = null;
 		this.addParameterRefactorings = new HashSet<AddParameterRefactoring>();
-		this.namesToAvoid = new HashSet<String>();
 	}
 
 	@Override
@@ -58,7 +55,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 		{
 			return;
 		}
-		
 		if(node instanceof CombinedDefaultModule)
 		{
 			for(AModuleModules m : ((CombinedDefaultModule) node).getModules())
@@ -73,16 +69,14 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	}
 
 	@Override
-	public void caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node) throws AnalysisException {
+	public void caseAExplicitOperationDefinition(AExplicitOperationDefinition node) throws AnalysisException {
 
 		if(compareNodeLocation(node.getLocation())){
 
 			LexNameToken parName = new LexNameToken(node.getName().getModule(), paramName, null);
-			
 			//Add parameter to node patterns
 			LinkedList<PPattern> patterns = node.getParameterPatterns();
-			AIdentifierPattern pat = new AIdentifierPattern();
+			AIdentifierPattern idPattern = new AIdentifierPattern();
 			LexLocation newLastLoc = new LexLocation();
 			isParamListEmpty = patterns.isEmpty();
 			PDefinition newParam;
@@ -96,9 +90,9 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 			}
 			
 			//Set patterns
-			pat.setLocation(newLastLoc);
-			pat.setName(parName);
-			patterns.add(pat);
+			idPattern.setLocation(newLastLoc);
+			idPattern.setName(parName);
+			patterns.add(idPattern);
 			
 			//Set paramName
 			newParam = new ALocalDefinition();
@@ -115,15 +109,11 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 			PType operationType = node.getType();
 			if(operationType instanceof AOperationType){
 				((AOperationType) operationType).getParameters().add(expObj.getType());
-			} else if(operationType instanceof AFunctionType){
-				//Add param to function...
 			}
-			
 			addParameterRefactorings.add(new AddParameterRefactoring(newLastLoc, parName.toString(), node.getName().getName(), newParam.getType().toString()));
 			
 			//Update calls
 			signatureChangeCallOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
-			
 			//Update applications
 			signatureChangeApplicationOccurences(node.getLocation(), node.parent(), this::registerSignatureChange);
 		}		
@@ -161,7 +151,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -189,7 +178,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	public void init(boolean clearSignatureChanges)
 	{
 		this.enclosingDef = null;
-		this.namesToAvoid.clear();
 
 		if (addParameterRefactorings != null && clearSignatureChanges)
 		{
@@ -204,7 +192,7 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	
 	private boolean compareNodeLocation(ILexLocation newNode){
 		if(parameters.length >= 4 && newNode.getStartLine() == startLine){
-				return true;
+			return true;
 		}
 		return false;
 	}

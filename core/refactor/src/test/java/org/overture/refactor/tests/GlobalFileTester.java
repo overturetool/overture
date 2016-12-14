@@ -29,6 +29,7 @@ public class GlobalFileTester {
 
 	protected static final String TEST_ARG = "-test";
 
+	@SuppressWarnings("unchecked")
 	protected void globalTest(File inputFile, String ROOT_RESULT, ObjectMapper mapper) throws JsonParseException, JsonMappingException, IOException{
 		TypeCheckResult<List<SClassDefinition>> originalSpecTcResult = TypeCheckerUtil.typeCheckPp(inputFile);
 		
@@ -64,34 +65,29 @@ public class GlobalFileTester {
 			}
 			
 			//RENAME CHECK
-			List<BasicRefactoringType> renamings =(List<BasicRefactoringType>)(List<?>) genData.getAllRenamings();	
+			List<BasicRefactoringType> renamings = (List<BasicRefactoringType>)(List<?>) genData.getAllRenamings();	
 			List<String> renamingStrings = removeFilePathFromText(renamings);			
 			checkAssertions(resObj.getRenamings(), renamingStrings);
 			
 			//EXTRACT CHECK
-			List<BasicRefactoringType> extractions =(List<BasicRefactoringType>)(List<?>) genData.getAllExtractions();
+			List<BasicRefactoringType> extractions = (List<BasicRefactoringType>)(List<?>) genData.getAllExtractions();
 			List<String> extractionStrings = removeFilePathFromText(extractions);
 			checkAssertions(resObj.getExtractions(), extractionStrings);
 			
 			//SIGNATURE CHANGE CHECK
-			List<BasicRefactoringType> signatureChanges =(List<BasicRefactoringType>)(List<?>) genData.getAllSignatureChanges();
+			List<BasicRefactoringType> signatureChanges = (List<BasicRefactoringType>)(List<?>) genData.getAllSignatureChanges();
 			List<String> signatureChangeStrings = removeFilePathFromText(signatureChanges);
 			checkAssertions(resObj.getSignatureChanges(), signatureChangeStrings);
 			
 			//UNREACHABLE CODE REMOVE CHECKER
-			List<BasicRefactoringType> removedStm =(List<BasicRefactoringType>)(List<?>) genData.getAllRemovals();
+			List<BasicRefactoringType> removedStm = (List<BasicRefactoringType>)(List<?>) genData.getAllRemovals();
 			List<String> removedStmStrings = removeFilePathFromText(removedStm);
 			checkAssertions(resObj.getUnreachableStmRemoved(), removedStmStrings);
 			
 			//CONVERT FUNCTION TO OPERATION CHECKER
-//			List<BasicRefactoringType> conversionFromFuncToOp =(List<BasicRefactoringType>)(List<?>) genData.getAllConversionFromFuncToOp();
-//			List<String> conversionFromFuncToOpStrings = removeFilePathFromText(conversionFromFuncToOp);
-//			
-//			for(String i : conversionFromFuncToOpStrings){
-//				System.out.println(i);
-//			}
-//			
-//			checkAssertions(resObj.getConvertedFunctionToOperation(), conversionFromFuncToOpStrings);
+			List<BasicRefactoringType> conversionFromFuncToOp = (List<BasicRefactoringType>)(List<?>) genData.getAllConversionFromFuncToOp();
+			List<String> conversionFromFuncToOpStrings = removeFilePathFromText(conversionFromFuncToOp);
+			checkAssertions(resObj.getConvertedFunctionToOperation(), conversionFromFuncToOpStrings);
 		}
 		
 		String filePath = inputFile.getPath();
@@ -114,12 +110,12 @@ public class GlobalFileTester {
         }
 	}
 
-	private void checkAssertions(List<String> resObj, List<String> conversionFromFuncToOpStrings) {
-		Assert.assertTrue((resObj == null && (conversionFromFuncToOpStrings == null || conversionFromFuncToOpStrings.isEmpty())) || 
-				resObj.size() == conversionFromFuncToOpStrings.size());
-		for(int i = 0; i < conversionFromFuncToOpStrings.size(); i++ ) {
-			String item = conversionFromFuncToOpStrings.get(i);
-			Assert.assertTrue(resObj.contains(item));
+	private void checkAssertions(List<String> resultObj, List<String> stringsGeneratedByRefactoring) {
+		Assert.assertTrue((resultObj == null && (stringsGeneratedByRefactoring == null || stringsGeneratedByRefactoring.isEmpty())) || 
+				resultObj.size() == stringsGeneratedByRefactoring.size());
+		for(int i = 0; i < stringsGeneratedByRefactoring.size(); i++ ) {
+			String item = stringsGeneratedByRefactoring.get(i);
+			Assert.assertTrue(resultObj.contains(item));
 		}
 	}
 	
@@ -133,6 +129,14 @@ public class GlobalFileTester {
 			}
 		}
 		return finishedStrings;	
+	}
+	
+	public static <T> T convertInstanceOfObject(Object o, Class<T> clazz) {
+	    try {
+	        return clazz.cast(o);
+	    } catch(ClassCastException e) {
+	        return null;
+	    }
 	}
 }
 

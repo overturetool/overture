@@ -80,7 +80,8 @@ public class DeadModelPartRemover extends DepthFirstAnalysisAdaptor
 		{
 			node.getStatements().remove(unreachStmIndices.get(i).intValue());
 		}
-		//TODO Check warning
+
+		@SuppressWarnings("unchecked")
 		LinkedList<AAssignmentDefinition> assignmentDefs = (LinkedList<AAssignmentDefinition>) node.getAssignmentDefs().clone();
 		
 		for (int i = 0; i < node.getAssignmentDefs().size(); i++) {
