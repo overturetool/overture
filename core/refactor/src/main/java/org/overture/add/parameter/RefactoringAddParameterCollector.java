@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -217,17 +216,6 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 
 		return false;
 	}
-		
-	@Override
-	public void caseAExplicitFunctionDefinition(
-			AExplicitFunctionDefinition node) throws AnalysisException
-	{
-		if (!proceed(node))
-		{
-			return;
-		}
-
-	}
 
 	private void visitModuleDefs(List<PDefinition> defs, INode module)
 			throws AnalysisException
@@ -323,7 +311,7 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	}
 	
 	private boolean compareNodeLocation(ILexLocation newNode){
-		if(parameters.length >= 3){
+		if(parameters.length >= 4){
 			if(newNode.getStartLine() == startLine){
 				return true;
 			}
