@@ -2,7 +2,6 @@ package org.overture.dead.model.part.removal;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.refactoring.BasicRefactoringType;
-import org.overture.rename.Renaming;
 
 public class Removal extends BasicRefactoringType implements Comparable<Removal> 
 {
@@ -44,11 +43,11 @@ public class Removal extends BasicRefactoringType implements Comparable<Removal>
 		{
 			return true;
 		}
-		if (!(obj instanceof Renaming))
+		if (!(obj instanceof Removal))
 		{
 			return false;
 		}
-		Renaming other = (Renaming) obj;
+		Removal other = (Removal) obj;
 		return loc.equals(other.getLoc());
 	}
 

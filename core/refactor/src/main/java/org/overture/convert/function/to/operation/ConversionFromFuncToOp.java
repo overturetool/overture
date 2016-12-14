@@ -2,7 +2,6 @@ package org.overture.convert.function.to.operation;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.refactoring.BasicRefactoringType;
-import org.overture.rename.Renaming;
 
 public class ConversionFromFuncToOp extends BasicRefactoringType implements Comparable<ConversionFromFuncToOp> 
 {
@@ -46,12 +45,12 @@ public class ConversionFromFuncToOp extends BasicRefactoringType implements Comp
 			return true;
 		}
 
-		if (!(obj instanceof Renaming))
+		if (!(obj instanceof ConversionFromFuncToOp))
 		{
 			return false;
 		}
 
-		Renaming other = (Renaming) obj;
+		ConversionFromFuncToOp other = (ConversionFromFuncToOp) obj;
 		return loc.equals(other.getLoc());
 	}
 
