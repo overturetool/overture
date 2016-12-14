@@ -179,7 +179,7 @@ public class RefactoringMain {
 				}
 			}
 			if(signature){
-				if(parameters != null && parameters.length >= 3){
+				if(parameters != null && parameters.length >= 4){
 					generatedAST = refactoringBase.generateSignatureChanges(RefactoringBase.getNodes(tcResult.result), parameters);
 				} else {
 					MsgPrinter.getPrinter().println("No parameters");
