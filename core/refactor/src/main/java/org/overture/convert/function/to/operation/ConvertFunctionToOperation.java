@@ -21,6 +21,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.refactoring.RefactoringLogger;
@@ -90,26 +91,25 @@ public class ConvertFunctionToOperation  extends DepthFirstAnalysisAdaptor{
 
 		if(isInRange(node.getLocation(), line) && !foundFunctionToConvert){
 			foundFunctionToConvert = true;
-			if(!checkIfUsedInFunction(node)){
-			
-				PStm convertedPStm = convertPExpToPStm(node.getBody());
-				AExplicitFunctionDefinition nodeClone = node.clone();
-				LexNameToken token = new LexNameToken(nodeClone.getName().getModule(), (nodeClone.getName().getName()), new LexLocation());
-				
-				List<PPattern> parameterTypes = new ArrayList<>();
-				for(PPattern item : nodeClone.getParamPatternList().getFirst()){
-					PPattern itemClone = item.clone();
-					parameterTypes.add(itemClone);
-				}
-				
-				AOperationType operationType = AstFactory.newAOperationType(new LexLocation(), nodeClone.getType().getParameters(), nodeClone.getExpectedResult());
-				AExplicitOperationDefinition convertedOperation = AstFactory.newAExplicitOperationDefinition(token, operationType, parameterTypes,nodeClone.getPrecondition(), nodeClone.getPostcondition(),convertedPStm);
-			
-				addToNodeCurrentModuleAndRemoveOld(convertedOperation, node);
-				applyOccurrenceSwitcher(convertedOperation, node);
-			} else {
+			if(checkIfUsedInFunction(node)){
 				refactoringLogger.addWarning("Function is used in another function!");
 			}
+			PStm convertedPStm = convertPExpToPStm(node.getBody());
+			AExplicitFunctionDefinition nodeClone = node.clone();
+			LexNameToken token = new LexNameToken(nodeClone.getName().getModule(), (nodeClone.getName().getName()), new LexLocation());
+			
+			List<PPattern> parameterTypes = new ArrayList<>();
+			for(PPattern item : nodeClone.getParamPatternList().getFirst()){
+				PPattern itemClone = item.clone();
+				parameterTypes.add(itemClone);
+			}
+			
+			AOperationType operationType = AstFactory.newAOperationType(new LexLocation(), nodeClone.getType().getParameters(), nodeClone.getExpectedResult());
+			AExplicitOperationDefinition convertedOperation = AstFactory.newAExplicitOperationDefinition(token, operationType, parameterTypes,nodeClone.getPrecondition(), nodeClone.getPostcondition(),convertedPStm);
+			AAccessSpecifierAccessSpecifier accessSpec = convertedOperation.getAccess();
+			accessSpec.setPure(true);
+			addToNodeCurrentModuleAndRemoveOld(convertedOperation, node);
+			applyOccurrenceSwitcher(convertedOperation, node);
 		}
 	}
 

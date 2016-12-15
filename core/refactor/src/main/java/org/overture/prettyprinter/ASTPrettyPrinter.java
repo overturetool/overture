@@ -218,6 +218,10 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		}
 		
 		StringBuilder strBuilder = new StringBuilder();
+		if(node.getAccess().getPure()){
+			strBuilder.append("pure ");
+		}
+		
 		String opName = node.getName().getFullName();
 		strBuilder.append(opName);
 		strBuilder.append(" : ");

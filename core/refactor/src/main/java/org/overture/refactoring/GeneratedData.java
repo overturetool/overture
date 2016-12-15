@@ -25,6 +25,7 @@ public class GeneratedData
 
 	public GeneratedData()
 	{
+		warnings = new ArrayList<String>();
 	}
 
 	public GeneratedData(List<GeneratedModule> classes,
@@ -84,9 +85,9 @@ public class GeneratedData
 		return warnings;
 	}
 
-	public void addAllWarnings(List<String> warnings)
-	{
-		if(warnings != null && !warnings.isEmpty()){
+	public void addAllWarnings(List<String> warningsToAdd )
+	{		
+		if(warningsToAdd != null && !warningsToAdd.isEmpty()){
 			this.warnings.addAll(warnings);
 		}
 	}
