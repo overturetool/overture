@@ -205,6 +205,14 @@ public class RefactoringMain {
 	}
 	
 	private static void checkDefaultConfig(RefactoringBase refactoringBase, TypeCheckResult<List<AModuleModules>> tcResult, File file){
+		
+		if(generatedData == null){
+			generatedData = refactoringBase.getGeneratedData();
+		}
+		if(generatedData.getWarnings().size() > 0){
+			MsgPrinter.getPrinter().println("Warning: " + generatedData.getWarnings());
+		}
+		
 		if(unreachableStmRemove){
 			try {
 				generatedAST = refactoringBase.removeUnreachableStm(RefactoringBase.getNodes(tcResult.result));
@@ -225,9 +233,6 @@ public class RefactoringMain {
 			}
 		}
 		if(test){
-			if(generatedData == null){
-				generatedData = refactoringBase.getGeneratedData();
-			}
 			if(generatedAST == null){
 				generatedAST = refactoringBase.extractUserModules(RefactoringBase.getNodes(tcResult.result));
 			}

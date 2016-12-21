@@ -158,9 +158,9 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	public Set<Extraction> getExtractions()
+	public RefactoringLogger<Extraction> getRefactoringLogger()
 	{
-		return refactoringLogger.get();
+		return refactoringLogger;
 	}
 
 	private boolean proceed(INode node)

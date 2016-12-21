@@ -188,17 +188,16 @@ public class RefactoringBase {
 			throws AnalysisException
 	{
 		List<Extraction> allExtractions = new LinkedList<Extraction>();
+		List<String> allWarnings = new LinkedList<String>();
+		
 		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector(generator.getIRInfo().getTcFactory());
 		Extractor extractor = new Extractor();
 		extractionsCollector.setRefactoringParameters(parameters);
 		for (INode node : mergedParseLists)
 		{
-			Set<Extraction> currentExtractions = extractor.computeExtractions(node, extractionsCollector);
-
-			if (!currentExtractions.isEmpty())
-			{
-				allExtractions.addAll(currentExtractions);
-			}
+			RefactoringLogger<Extraction> logger = extractor.computeExtractions(node, extractionsCollector);
+			allExtractions.addAll(logger.get());
+			allWarnings.addAll(logger.getWarnings());
 		}
 
 		Collections.sort(allExtractions);
@@ -207,7 +206,7 @@ public class RefactoringBase {
 			generatedData = new GeneratedData();
 		}
 		generatedData.setAllExtractions(allExtractions);
-
+		generatedData.addAllWarnings(allWarnings);
 		return allExtractions;
 	}
 	
