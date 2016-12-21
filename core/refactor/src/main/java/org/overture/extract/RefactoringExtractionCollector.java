@@ -99,12 +99,13 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 					extractedOperation = bodyCollector.getToOperation();
 					currentModule.apply(THIS);
 				}
-			} 
-			if(replaceDuplicates){
-				if(extractedOperation != null && !visitedOperations.contains(node)){
-					DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule, refactoringLogger);
-					node.getBody().apply(dubCollector);
-					visitedOperations.add(node);
+			 
+				if(replaceDuplicates){
+					if(extractedOperation != null && !visitedOperations.contains(node)){
+						DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule, refactoringLogger);
+						node.getBody().apply(dubCollector);
+						visitedOperations.add(node);
+					}
 				}
 			}
 		} else {
