@@ -1,8 +1,11 @@
 package org.overture.extract;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -33,13 +36,11 @@ public class ExtractUtil {
 	public static boolean addToOperationToFromOperation(PStm stm, ABlockSimpleBlockStm node, 
 			LinkedList<PStm> statements, AExplicitOperationDefinition extractedOp, int stmIndex){
 		
-		if(!toOpAdded && stm instanceof ACallStm){
-			ACallStm newStm = (ACallStm) stm.clone();
+		if(!toOpAdded){
+			
+			ACallStm newStm = AstFactory.newACallStm(extractedOp.getName().clone(), Collections.<PExp>emptyList());
 			newStm.setLocation(new LexLocation());
 			newStm.setType(extractedOp.getType());
-			newStm.setRootdef(extractedOp);
-			newStm.setName(extractedOp.getName().clone());
-			newStm.getArgs().clear();
 			node.getStatements().set(stmIndex, newStm);
 			toOpAdded = true;	
 			return false;

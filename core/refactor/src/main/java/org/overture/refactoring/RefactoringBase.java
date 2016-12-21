@@ -188,7 +188,7 @@ public class RefactoringBase {
 			throws AnalysisException
 	{
 		List<Extraction> allExtractions = new LinkedList<Extraction>();
-		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector();
+		RefactoringExtractionCollector extractionsCollector = new RefactoringExtractionCollector(generator.getIRInfo().getTcFactory());
 		Extractor extractor = new Extractor();
 		extractionsCollector.setRefactoringParameters(parameters);
 		for (INode node : mergedParseLists)
