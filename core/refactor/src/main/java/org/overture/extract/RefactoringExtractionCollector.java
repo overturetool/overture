@@ -107,10 +107,10 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 						visitedOperations.add(node);
 					}
 				}
+			}else {
+				refactoringLogger.addWarning("Name in use!");
 			}
-		} else {
-			refactoringLogger.addWarning("Name in use!");
-		}
+		} 
 	}
 		
 	@Override
