@@ -1,0 +1,43 @@
+
+values
+
+  x:nat = 1;
+  y:nat = 1;
+
+operations
+
+  run: () ==> nat
+  run() == (
+  b();
+  );
+
+  op : () ==> nat
+  op() ==
+    let a = 5
+    in
+      return a;
+
+  b : () ==> nat
+  b() ==(
+    c();
+    op();
+    let a = 5
+    in
+      return a;
+    c();
+    op();
+  );
+
+  c : () ==> nat
+  c() ==(
+    op();
+    op();
+    let a = 5
+    in
+      return a;
+    b();
+    op();
+    let a = 5
+    in
+      return a;
+  );

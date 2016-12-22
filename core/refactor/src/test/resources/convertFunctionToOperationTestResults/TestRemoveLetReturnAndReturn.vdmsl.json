@@ -1,0 +1,9 @@
+[
+	{
+		"language": "-sl",
+		"config": "-ConvertFunctionToOperation;23",
+	    "convertedFunctionToOperation": [
+		    "'c' converted to operation at in 'DEFAULT' at line 23:1"
+	    ]
+	}
+]

@@ -1,0 +1,43 @@
+package org.overture.ide.ui.refactoringCommand;
+
+import org.eclipse.jface.wizard.Wizard;
+import org.overture.refactoring.RefactoringMain;
+
+public class CaptureRenameInformationWizard extends Wizard {
+	
+	private RenameRefactoringWizard renameInfoPage;
+	private String filePath;
+	private int lineNumber;
+	private int lineOffset;
+	
+	public CaptureRenameInformationWizard(String filePath, int lineNumber, int lineOffset){
+		
+		this.filePath = filePath;
+		this.lineNumber = lineNumber;
+		this.lineOffset = lineOffset;
+	}
+	
+    public void addPages() {
+		renameInfoPage = new RenameRefactoringWizard("Rename Information Page");
+		addPage(renameInfoPage);
+    }
+     
+    public boolean performFinish() {
+    	
+    	String[] parameters = new String[3];
+    	parameters[0] = "-sl";
+    	
+    	StringBuilder renameInput = new StringBuilder();
+    	renameInput.append("-rename;");
+    	renameInput.append(lineNumber + ";");
+    	renameInput.append(lineOffset + ";");
+    	String newName = renameInfoPage.getNewNameText();
+    	renameInput.append(newName);
+    	parameters[1] = renameInput.toString();
+    	//e.g. -rename;135;16;period
+		
+    	parameters[2] = filePath;
+    	RefactoringMain.main(parameters);
+    	return true;
+    }
+}

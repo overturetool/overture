@@ -35,17 +35,17 @@ import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 
-class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
+public class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
 {
 
-	ISymbolTable mytable;
-	IPrettyPrinter rootNpp;
+	protected ISymbolTable mytable;
+	protected IPrettyPrinter rootNpp;
 
 	private static String EXPRESSION_NOT_FOUND = "ERROR: Expression Node not found";
 	private static String space = " ";
 
-	public ExpressionNpp(NewPrettyPrinter root, ISymbolTable nst)
+	public ExpressionNpp(IPrettyPrinter root, ISymbolTable nst)
 	{
 		rootNpp = root;
 		mytable = nst;

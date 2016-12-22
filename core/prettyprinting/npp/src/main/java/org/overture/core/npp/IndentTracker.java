@@ -34,7 +34,7 @@ public class IndentTracker
 	private int count;
 
 	// indent character.
-	private String indent = "\t";
+	private String indent = "  ";
 
 	/**
 	 * Instantiates a new indent tracker.
@@ -47,7 +47,7 @@ public class IndentTracker
 	/**
 	 * Decrease the level of indentation by one. Does nothing if level is zero.
 	 */
-	void decrIndent()
+	public void decrIndent()
 	{
 		if (count > 0)
 		{
@@ -60,7 +60,7 @@ public class IndentTracker
 	 * 
 	 * @return the indentation
 	 */
-	String getIndentation()
+	public String getIndentation()
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -75,7 +75,7 @@ public class IndentTracker
 	/**
 	 * Increase the level of indentation by one.
 	 */
-	void incrIndent()
+	public void incrIndent()
 	{
 		count++;
 	}
@@ -88,7 +88,7 @@ public class IndentTracker
 	 *            the string to indent
 	 * @return the indented string: "  s"
 	 */
-	String indent(String s)
+	public String indent(String s)
 	{
 		if (count > 0)
 		{ // don't bother indenting if the level is zero

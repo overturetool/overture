@@ -1,0 +1,12 @@
+[
+	{
+		"language": "-sl",
+		"config": "-rename;4;1;testName",
+	    "renamings": [
+	    	"'op' changed to 'testName' in 'DEFAULT' at line 14:9", 
+			"'op' changed to 'testName' in 'DEFAULT' at line 10:8", 
+			"'op' changed to 'testName' in 'DEFAULT' at line 4:1"
+	    ],
+	    "extractions": []
+	}
+]

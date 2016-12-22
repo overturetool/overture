@@ -1,0 +1,25 @@
+
+operations
+
+run: () ==> nat
+run() == (
+d();
+);
+
+d: () ==> nat
+d() == (
+c();
+a();
+a();
+);
+
+a: () ==> nat
+a() ==
+return 2;
+
+
+functions
+
+c: () -> nat
+c() ==
+1;
