@@ -8,12 +8,12 @@ import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 
-public class ApplyAndCallDetectors extends DepthFirstAnalysisAdaptor {
+public class ApplyAndCallDetector extends DepthFirstAnalysisAdaptor {
 	
 	private String[] parameters;
 	private ILexLocation foundParentLocation;
 
-	ApplyAndCallDetectors(String[] param){
+	ApplyAndCallDetector(String[] param){
 		parameters = param;
 	}
 	

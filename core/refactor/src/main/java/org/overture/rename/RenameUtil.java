@@ -18,12 +18,12 @@ public class RenameUtil {
 		return false;
 	}
 	
-	private static ApplyAndCallDetectors applyAndCallDetector;
+	private static ApplyAndCallDetector applyAndCallDetector;
 	
 	public static ILexLocation GetApplyAndCallLocationParent(INode node,String[] parameters) throws AnalysisException{
 		
 		if(applyAndCallDetector == null){
-			applyAndCallDetector = new ApplyAndCallDetectors(parameters);
+			applyAndCallDetector = new ApplyAndCallDetector(parameters);
 			node.parent().apply(applyAndCallDetector);
 		}
 		
