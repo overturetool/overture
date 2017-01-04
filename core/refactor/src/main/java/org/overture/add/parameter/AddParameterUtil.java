@@ -1,13 +1,21 @@
 package org.overture.add.parameter;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.ACallStm;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class AddParameterUtil {
 	public static LexLocation calculateParamLocationFromOldLocation(ILexLocation oldLoc, String paramStr, boolean fromStartPos, int nrOfCharsToMove){
@@ -79,5 +87,37 @@ public class AddParameterUtil {
 		default:
 			return null;
 		}		
+	}
+
+	public static String createOperationModel(String paramType, String paramName, String paramPlaceholder, LexLocation newLastLoc) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("operations\n\n");
+		sb.append("op: " + paramType + " ==> ()\n");
+		sb.append("op(" + paramName + ") == skip;\n\n");
+		sb.append("op1: () ==> ()\n");
+		sb.append("op1() == op(" + paramPlaceholder + ");");
+		
+		String fin = sb.toString();
+		return fin;
+	}
+
+	public static AddParameterExpObject createParamObj(AModuleModules ast) {
+		AddParameterExpObject expObj = new AddParameterExpObject();
+		LinkedList<PDefinition> defs = ast.getDefs();
+		
+		//Get and set the type
+		PDefinition firstOp = defs.get(0); 
+		if(firstOp instanceof AExplicitOperationDefinition){
+			expObj.setType(((AExplicitOperationDefinition) firstOp).getParamDefinitions().getFirst().getType());
+		}
+		
+		//Get and set the expression
+		PDefinition secondOp = defs.get(1);
+		if(secondOp instanceof AExplicitOperationDefinition){
+			ACallStm callStm = (ACallStm) ((AExplicitOperationDefinition) secondOp).getBody();
+			expObj.setExpression(callStm.getArgs().getFirst());
+		}
+		
+		return expObj;
 	}
 }

@@ -29,6 +29,8 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor {
 
@@ -40,6 +42,8 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 	private String paramName;
 	private String paramPlaceholder;
 	private boolean isParamListEmpty = true;
+	private String operationModel = "";
+	private AddParameterExpObject expObj = null;
 	
 	public RefactoringAddParameterCollector(ITypeCheckerAssistantFactory af,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -99,7 +103,9 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 			newParam.setName(parName);
 			
 			//Get expression object
-			AddParameterExpObject expObj = AddParameterUtil.getParamExpObj(paramType, paramPlaceholder, newLastLoc);
+			operationModel = AddParameterUtil.createOperationModel(paramType, paramName, paramPlaceholder, newLastLoc);
+			TypeCheckResult<List<AModuleModules>> modules = TypeCheckerUtil.typeCheckSl(operationModel);
+			expObj = AddParameterUtil.createParamObj(modules.result.get(0));
 			newParam.setType(expObj.getType());
 			
 			//Add parameter to node definitions
@@ -138,7 +144,7 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 		{
 			addParameterRefactorings.add(new AddParameterRefactoring(reObj.location, reObj.newParamName.getName(), reObj.parentName, 
 					reObj.paramType));	
-			reObj.paramList.add(AddParameterUtil.getParamExpObj(paramType, paramPlaceholder, reObj.location).getExpression());
+			reObj.paramList.add(expObj.getExpression());
 		}
 	}
 	
