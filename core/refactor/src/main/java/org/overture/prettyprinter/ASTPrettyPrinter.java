@@ -32,6 +32,7 @@ import java.util.Stack;
 import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -256,6 +257,7 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		
 		insertIntoStringStack(question.getIndentation() + strBuilder.toString());
 		question.incrIndent();
+		
 		node.getBody().apply(this, question);
 		question.decrIndent();
 		
@@ -399,12 +401,15 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, IndentTracker question)
 			throws AnalysisException
 	{
-		
+
 		if (!proceed(node))
 		{
 			return "";
 		}
-		//TODO visit assigmentdefs
+		
+		for(AAssignmentDefinition item : node.getAssignmentDefs()){
+			item.apply(this, question);
+		}
 		visitStms(node.getStatements(), question);
 		return "";
 	}
@@ -1096,6 +1101,16 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 		}
 		
 		return "";
+	}
+	
+	@Override
+	public String caseAAssignmentDefinition(AAssignmentDefinition node, IndentTracker question)
+			throws AnalysisException {
+		
+		insertIntoStringStack(question.getIndentation() + "dcl " + node.getName().getName() + " : " + node.getType().toString() + " := ");
+		node.getExpression().apply(this,question);
+		insertIntoStringStack(";");
+		return super.caseAAssignmentDefinition(node, question);
 	}
 	
 	private String getIndentEqualToLength(String name){

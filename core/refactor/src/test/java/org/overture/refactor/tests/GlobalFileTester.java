@@ -55,7 +55,7 @@ public class GlobalFileTester {
 		for(Iterator<ResultObject> iter = objs.iterator(); iter.hasNext();){
 			ResultObject resObj = iter.next();
 			
-			String[] strArr = {TEST_ARG, resObj.getLanguage(), resObj.getConfig(), inputFile.getAbsolutePath()};
+			String[] strArr = {TEST_ARG,"-print", resObj.getLanguage(), resObj.getConfig(), inputFile.getAbsolutePath()};
 			RefactoringMain.main(strArr);
 
 			GeneratedData genData = RefactoringMain.getGeneratedData();
