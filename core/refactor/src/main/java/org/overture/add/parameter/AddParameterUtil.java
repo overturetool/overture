@@ -56,39 +56,6 @@ public class AddParameterUtil {
 	public static LexLocation calculateParamLocationInCallWhenEmptyList(ILexLocation oldLoc, String paramStr){
 		return calculateParamLocationFromOldLocation(oldLoc,paramStr,true,2);
 	}
-	
-	public static AddParameterExpObject getParamExpObj(String aParamType, String aParamPlaceholder, ILexLocation loc){
-		AddParameterExpObject expObj = new AddParameterExpObject();
-		
-		switch(ParamType.valueOf(aParamType.toUpperCase())){
-		case BOOL:
-			ABooleanBasicType boolType = new ABooleanBasicType();
-			expObj.setType(boolType);
-			ABooleanConstExp boolExp = new ABooleanConstExp();
-			LexBooleanToken boolToken = new LexBooleanToken(Boolean.parseBoolean(aParamPlaceholder), loc);
-			boolExp.setType(boolType);
-			boolExp.setValue(boolToken);
-			boolExp.setLocation(loc);
-			expObj.setExpression(boolExp);
-			return expObj;
-		case NAT:
-			ANatNumericBasicType natType = new ANatNumericBasicType();
-			expObj.setType(natType);
-			LexIntegerToken natToken = new LexIntegerToken(Integer.parseInt(aParamPlaceholder), loc);
-			AIntLiteralExp natExp = new AIntLiteralExp();
-			natExp.setType(natType);
-			natExp.setValue(natToken);
-			natExp.setLocation(loc);
-			expObj.setExpression(natExp);
-			return expObj;
-		case NAT1:
-//			this.paramType = new ANatOneNumericBasicType();
-//			this.paramPlaceholder = Integer.parseInt(aParamPlaceholder);
-			return null;
-		default:
-			return null;
-		}		
-	}
 
 	public static String createOperationModel(String paramType, String paramName, String paramPlaceholder, LexLocation newLastLoc) {
 		StringBuilder sb = new StringBuilder();
