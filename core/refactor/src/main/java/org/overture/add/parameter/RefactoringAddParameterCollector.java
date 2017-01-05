@@ -106,7 +106,7 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 			operationModel = AddParameterUtil.createOperationModel(paramType, paramName, paramPlaceholder, newLastLoc);
 			TypeCheckResult<List<AModuleModules>> modules = TypeCheckerUtil.typeCheckSl(operationModel);
 			expObj = AddParameterUtil.createParamObj(modules.result.get(0));
-			newParam.setType(expObj.getType());
+			newParam.setType(expObj.getType().clone());
 			
 			//Add parameter to node definitions
 			node.getParamDefinitions().add(newParam);
@@ -144,7 +144,7 @@ public class RefactoringAddParameterCollector extends DepthFirstAnalysisAdaptor 
 		{
 			addParameterRefactorings.add(new AddParameterRefactoring(reObj.location, reObj.newParamName.getName(), reObj.parentName, 
 					reObj.paramType));	
-			reObj.paramList.add(expObj.getExpression());
+			reObj.paramList.add(expObj.getExpression().clone());
 		}
 	}
 	

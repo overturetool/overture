@@ -19,27 +19,28 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class AddParameterUtil {
 	public static LexLocation calculateParamLocationFromOldLocation(ILexLocation oldLoc, String paramStr, boolean fromStartPos, int nrOfCharsToMove){
+		LexLocation cloneOldLoc = oldLoc.clone();
 		if(fromStartPos){
 			LexLocation loc = new LexLocation(
-					oldLoc.getFile(),
-					oldLoc.getModule(),
-					oldLoc.getStartLine(),
-					oldLoc.getStartPos()+nrOfCharsToMove,
-					oldLoc.getEndLine(),
-					oldLoc.getStartPos()+nrOfCharsToMove+String.valueOf(paramStr).length(),
-					oldLoc.getStartOffset(), 
-					oldLoc.getEndOffset());
+					cloneOldLoc.getFile(),
+					cloneOldLoc.getModule(),
+					cloneOldLoc.getStartLine(),
+					cloneOldLoc.getStartPos()+nrOfCharsToMove,
+					cloneOldLoc.getEndLine(),
+					cloneOldLoc.getStartPos()+nrOfCharsToMove+String.valueOf(paramStr).length(),
+					cloneOldLoc.getStartOffset(), 
+					cloneOldLoc.getEndOffset());
 			return loc;
 		}else{
 			LexLocation loc = new LexLocation(
-					oldLoc.getFile(),
-					oldLoc.getModule(),
-					oldLoc.getStartLine(),
-					oldLoc.getEndPos()+nrOfCharsToMove,
-					oldLoc.getEndLine(),
-					oldLoc.getEndPos()+nrOfCharsToMove+String.valueOf(paramStr).length(),
-					oldLoc.getStartOffset(), 
-					oldLoc.getEndOffset());
+					cloneOldLoc.getFile(),
+					cloneOldLoc.getModule(),
+					cloneOldLoc.getStartLine(),
+					cloneOldLoc.getEndPos()+nrOfCharsToMove,
+					cloneOldLoc.getEndLine(),
+					cloneOldLoc.getEndPos()+nrOfCharsToMove+String.valueOf(paramStr).length(),
+					cloneOldLoc.getStartOffset(), 
+					cloneOldLoc.getEndOffset());
 			return loc;
 		}
 	}
