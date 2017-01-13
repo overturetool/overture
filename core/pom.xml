@@ -13,7 +13,7 @@
   <name>Core Tools</name>
 
   <properties>
-    <astcreator.version>1.6.8</astcreator.version>
+    <astcreator.version>1.6.10</astcreator.version>
   </properties>
   
   <modules>
