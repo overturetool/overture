@@ -70,6 +70,7 @@ import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
+import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -1404,5 +1405,10 @@ class ASTPrettyPrinter extends QuestionAnswerAdaptor < IndentTracker, String >
 	{
 		return NODE_NOT_FOUND;
 	}
-
+	
+	@Override
+	public String caseANotInSetBinaryExp(ANotInSetBinaryExp node, IndentTracker question) throws AnalysisException {
+		expressionWriter(node, node.getOp().toString() ,question);		
+		return "";
+	}
 }
