@@ -12,10 +12,6 @@
   <artifactId>ast</artifactId>
   <name>The Overture Abstract Syntax Tree </name>
 
-  <properties>
-    <astcreator.version>1.6.6</astcreator.version>
-  </properties>
-
   <build>
     <plugins>
 

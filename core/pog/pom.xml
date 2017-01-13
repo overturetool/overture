@@ -12,10 +12,6 @@
   <artifactId>pog</artifactId>
   <name>The Proof Obligation Generator</name>
 
-  <properties>
-    <astcreator.version>1.6.6</astcreator.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>com.google.code.gson</groupId>

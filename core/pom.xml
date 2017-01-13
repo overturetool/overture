@@ -12,6 +12,10 @@
   <packaging>pom</packaging>
   <name>Core Tools</name>
 
+  <properties>
+    <astcreator.version>1.6.8</astcreator.version>
+  </properties>
+  
   <modules>
     <module>ast</module>
     <module>parser</module>
