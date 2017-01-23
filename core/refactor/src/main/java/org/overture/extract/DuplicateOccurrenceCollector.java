@@ -7,7 +7,7 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AIfStm;
@@ -20,17 +20,18 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 	private AExplicitOperationDefinition extractedOperation;
 	private int from;
 	private int to;
-	AModuleModules currentModule;
 	private RefactoringLogger<Extraction> refactoringLogger;
+	private List<PDefinition> neededParametersForNewOp;
+	
 	public DuplicateOccurrenceCollector(AExplicitOperationDefinition callingOp, AExplicitOperationDefinition extractedOp, int from, int to, 
-			String extractedOperationName, AModuleModules currentModule, RefactoringLogger<Extraction> refactoringLogger)
+			String extractedOperationName, RefactoringLogger<Extraction> refactoringLogger, List<PDefinition> neededParametersForNewOp)
 	{
 		this.callingOperation = callingOp;
 		this.extractedOperation = extractedOp;
 		this.from = from;
 		this.to = to;
-		this.currentModule = currentModule;
 		this.refactoringLogger = refactoringLogger;
+		this.neededParametersForNewOp = neededParametersForNewOp;
 	}
 	
 	@Override
@@ -85,7 +86,7 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 				
 				if(ExtractUtil.isInRange(fromStatements.get(i).getLocation(), fromAndTo, fromAndTo)){
 					
-					if(ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i)){
+					if(ExtractUtil.addToOperationToFromOperation( fromStatements.get(i), node, node.getStatements(), extractedOperation, i, neededParametersForNewOp)){
 						refactoringLogger.add(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), null));					
 					}else{
 						refactoringLogger.add(new Extraction(fromStatements.get(i).getLocation(), fromStatements.get(i).toString(), extractedOperation.getName().getName()));					
@@ -111,43 +112,47 @@ public class DuplicateOccurrenceCollector extends DepthFirstAnalysisAdaptor {
 
 		if(extractedOperation.getBody() instanceof ABlockSimpleBlockStm){
 			ABlockSimpleBlockStm extractedBlock = (ABlockSimpleBlockStm) extractedOperation.getBody();
-				int i = 0;
-
-			PStm extractedStm = extractedBlock.getStatements().get(i);
+			int i = 0;
 			
-			for(int j = 0; j < currentBlock.getStatements().size(); j++){
-				PStm callingStm = currentBlock.getStatements().get(j);
+			if(extractedBlock.getStatements().size() > 0){
+				PStm extractedStm = extractedBlock.getStatements().get(i);
 				
-				if(callingStm.equals(extractedStm)){
-					if(!callingStm.equals(extractedBlock.getStatements().getFirst()) &&
-							currentBlock.getStatements().get(j - 1).equals(listOfStm.get(listOfStm.size() - 1))){
-						listOfStm.add(callingStm);
-						
-						if(extractedBlock.getStatements().getLast().equals(extractedStm)){
-							return listOfStm;
+				for(int j = 0; j < currentBlock.getStatements().size(); j++){
+					PStm callingStm = currentBlock.getStatements().get(j);
+					
+					if(callingStm.equals(extractedStm)){
+						if(!callingStm.equals(extractedBlock.getStatements().getFirst()) &&
+								currentBlock.getStatements().get(j - 1).equals(listOfStm.get(listOfStm.size() - 1))){
+							listOfStm.add(callingStm);
+							
+							if(extractedBlock.getStatements().getLast().equals(extractedStm)){
+								return listOfStm;
+							}
+							
+						} else {
+							listOfStm.add(callingStm);
 						}
 						
-					} else {
-						listOfStm.add(callingStm);
-					}
-					
-					i++;
-					if(i < extractedBlock.getStatements().size()){
-						extractedStm = extractedBlock.getStatements().get(i);
+						i++;
+						if(i < extractedBlock.getStatements().size()){ //TODO
+							extractedStm = extractedBlock.getStatements().get(i);
+						}else if(extractedBlock.getStatements().size() == listOfStm.size()){
+							return listOfStm;
+						}else{
+	//							RETURN fail
+							listOfStm.clear();
+							return listOfStm;
+						}
+							
 					}else{
-//							RETURN fail
 						listOfStm.clear();
-						return listOfStm;
-					}
-						
-				}else{
-					listOfStm.clear();
-					if(i > 0){
-						i--;
-						j--;
-					}
-					if(i < extractedBlock.getStatements().size()){
-						extractedStm = extractedBlock.getStatements().get(i);
+						if(i > 0){
+							i--;
+							j--;
+						}
+						if(i < extractedBlock.getStatements().size()){
+							extractedStm = extractedBlock.getStatements().get(i);
+						}
 					}
 				}
 			}

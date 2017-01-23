@@ -25,7 +25,7 @@ import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.refactoring.RefactoringLogger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
+public class RefactoringExtractionCollector extends DepthFirstAnalysisAdaptor
 {
 	private PDefinition enclosingDef;
 	private int enclosingCounter;
@@ -40,9 +40,12 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	private boolean replaceDuplicates;
 	private RefactoringLogger<Extraction> refactoringLogger;
 	private NameCollector nameCollector;
-	
+	private ITypeCheckerAssistantFactory af;
+	private List<PDefinition> neededParametersForNewOp = new ArrayList<PDefinition>();
+
 	public RefactoringExtractionCollector(ITypeCheckerAssistantFactory af)
 	{
+		this.af = af;
 		this.enclosingDef = null;
 		this.enclosingCounter = 0;
 		this.visitedOperations = new ArrayList<INode>();
@@ -89,12 +92,17 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 	}
 
 	private void performExtraction(AExplicitOperationDefinition node) throws AnalysisException {
+		
 		if(extractedOperation == null){
 			
 			if(!nameCollector.checkNameNotInUse(extractedName)){
+			
 				
-				BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName, refactoringLogger);
+				BodyOccurrenceCollector bodyCollector = new BodyOccurrenceCollector(node, currentModule, from, to, extractedName, refactoringLogger,af);
 				node.getBody().apply(bodyCollector);
+				
+				neededParametersForNewOp = bodyCollector.getNeededParametersForNewOp();
+				
 				if(bodyCollector.getToOperation() != null){
 					extractedOperation = bodyCollector.getToOperation();
 					currentModule.apply(THIS);
@@ -102,7 +110,7 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			 
 				if(replaceDuplicates){
 					if(extractedOperation != null && !visitedOperations.contains(node)){
-						DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, currentModule, refactoringLogger);
+						DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, refactoringLogger, neededParametersForNewOp);
 						node.getBody().apply(dubCollector);
 						visitedOperations.add(node);
 					}
@@ -110,7 +118,16 @@ public class RefactoringExtractionCollector  extends DepthFirstAnalysisAdaptor
 			}else {
 				refactoringLogger.addWarning("Name in use!");
 			}
-		} 
+		}else{
+			
+			if(replaceDuplicates){
+				if(extractedOperation != null && !visitedOperations.contains(node)){
+					DuplicateOccurrenceCollector dubCollector = new DuplicateOccurrenceCollector(node, extractedOperation, from, to, extractedName, refactoringLogger, neededParametersForNewOp);
+					node.getBody().apply(dubCollector);
+					visitedOperations.add(node);
+				}
+			}
+		}
 	}
 		
 	@Override

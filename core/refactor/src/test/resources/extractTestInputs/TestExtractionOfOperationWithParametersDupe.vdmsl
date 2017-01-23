@@ -1,0 +1,30 @@
+
+values
+
+  x:nat = 1;
+  y:nat = 1;
+
+operations
+
+  run: () ==> nat
+  run() == (
+    return op(1) + op(2);
+  );
+
+  op : nat ==> nat
+  op(t) == (
+    dcl a : nat := 7;
+      if a > 5
+      then
+        return 4
+      else
+        return 5);
+
+  op1 : nat ==> nat
+  op1(t) == (
+    dcl a : nat := 7;
+      if a > 5
+      then
+        return 4
+      else
+        return 5);

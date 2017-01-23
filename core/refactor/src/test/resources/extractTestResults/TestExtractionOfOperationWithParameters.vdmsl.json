@@ -1,0 +1,10 @@
+[
+	{
+		"language": "-sl",
+		"config": "-extract;17;21;testName",
+		"renamings": [],
+	    "extractions": [
+			"'if thenreturn elsereturn ' removed from in 'DEFAULT' at line 17:7 replaced with 'testName'"
+	    ]
+	}
+]

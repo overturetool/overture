@@ -13,7 +13,7 @@ public class Extraction  extends BasicRefactoringType implements Comparable<Extr
 	public Extraction(ILexLocation removedLoc, String removedName, String extractedName)
 	{
 		this.removedLoc = removedLoc;
-		this.removedName = removedName;
+		this.removedName = removedName.replace("\n", "").replace("\r", "");;
 		this.extractedName = extractedName;
 	}
 
