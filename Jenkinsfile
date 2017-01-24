@@ -3,14 +3,10 @@ node {
     stage 'Checkout'
     checkout scm
 
-    // Mark the code build
-    stage ('Validate'){
 
-    withMaven(mavenLocalRepo: '.repository', mavenSettingsFilePath: '/var/lib/jenkins/internal-resources/settings.xml') {
-
-        // Run the maven build
-        // sh "mvn validate"
-    }}
+gitlabCommitStatus(name: 'overturetool') {
+    // some block
+}
 
 
     stage ('Clean'){
@@ -36,6 +32,8 @@ node {
         step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
     }}
 
+
+	stage('Report generation'){
     step([
             $class            : 'GitHubCommitStatusSetter',
             errorHandlers     : [[$class: 'ShallowAnyErrorHandler']],
@@ -50,4 +48,13 @@ node {
     ])
 
 
+step([$class: 'JacocoPublisher', exclusionPattern: '**/org/overture/ast/analysis/**/*.*, **/org/overture/ast/expressions/**/*.*, **/org/overture/ast/modules/**/*.*, **/org/overture/ast/node/**/*.*,**/org/overture/ast/patterns/**/*.*, **/org/overture/ast/statements/**/*.*, **/org/overture/ast/types/**/*.*, **/org/overture/codegen/ir/**/*, **/org/overture/ide/**/*'])
+
+step([$class: 'TasksPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', high: 'FIXME', ignoreCase: true, low: '', normal: 'TODO', pattern: '', unHealthy: ''])
+
+
+
+
+
+}
 }
