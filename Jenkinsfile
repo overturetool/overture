@@ -4,9 +4,7 @@ node {
     checkout scm
 
 
-gitlabCommitStatus(name: 'overturetool') {
-    // some block
-}
+step([$class: 'GitHubSetCommitStatusBuilder'])
 
 
     stage ('Clean'){
@@ -37,23 +35,9 @@ step([$class: 'TasksPublisher', canComputeNew: false, defaultEncoding: '', exclu
 
 
 	stage('Report generation'){
-    step([
-            $class            : 'GitHubCommitStatusSetter',
-            errorHandlers     : [[$class: 'ShallowAnyErrorHandler']],
-            statusResultSource: [
-                    $class : 'ConditionalStatusResultSource',
-                    results: [
-                            [$class: 'BetterThanOrEqualBuildResult', result: 'SUCCESS', state: 'SUCCESS', message: currentBuild.description],
-                            [$class: 'BetterThanOrEqualBuildResult', result: 'FAILURE', state: 'FAILURE', message: currentBuild.description],
-                            [$class: 'AnyBuildResult', state: 'FAILURE', message: 'Loophole']
-                    ]
-            ]
-    ])
 
 
-
-
-
+step([$class: 'GitHubCommitStatusSetter'])
 
 
 
