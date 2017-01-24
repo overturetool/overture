@@ -9,7 +9,7 @@ node {
     withMaven(mavenLocalRepo: '.repository', mavenSettingsFilePath: '/var/lib/jenkins/internal-resources/settings.xml') {
 
         // Run the maven build
-        sh "mvn validate"
+        // sh "mvn validate"
     }}
 
 
