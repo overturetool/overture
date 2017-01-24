@@ -4,37 +4,37 @@ node {
     checkout scm
 
     // Mark the code build
-    stage 'Validate'
+    stage ('Validate'){
 
     withMaven(mavenLocalRepo: '.repository', mavenSettingsFilePath: '/var/lib/jenkins/internal-resources/settings.xml') {
 
         // Run the maven build
         sh "mvn validate"
-    }
+    }}
 
 
-    stage 'Clean'
+    stage ('Clean'){
     withMaven(mavenLocalRepo: '.repository', mavenSettingsFilePath: '/var/lib/jenkins/internal-resources/settings.xml') {
 
         // Run the maven build
         sh "mvn clean"
-    }
+    }}
 
-    stage 'Compile'
+    stage ('Compile'){
     withMaven(mavenLocalRepo: '.repository', mavenSettingsFilePath: '/var/lib/jenkins/internal-resources/settings.xml') {
 
         // Run the maven build
         sh "mvn compile"
-    }
+    }}
 
-    stage 'Package'
+    stage ('Package'){
     withMaven(mavenLocalRepo: '.repository', mavenSettingsFilePath: '/var/lib/jenkins/internal-resources/settings.xml') {
 
         // Run the maven build
         sh "mvn package"
         step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
         step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-    }
+    }}
 
     step([
             $class            : 'GitHubCommitStatusSetter',
