@@ -1,1 +1,1 @@
-rng ($Isa.trans($node.Exp))
+rng\<^sub>v ($Isa.trans($node.Exp))

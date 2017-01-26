@@ -1,1 +1,1 @@
-($Isa.trans($node.Left) <> $Isa.trans($node.Right))
+($Isa.trans($node.Left) <>\<^sub>v $Isa.trans($node.Right))

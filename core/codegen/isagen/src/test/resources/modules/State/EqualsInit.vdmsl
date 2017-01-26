@@ -1,4 +1,5 @@
 state S of
   x : nat
-  init s == s = mk_S(0)
+  y : int
+  init s == s = mk_S(0,1)
 end

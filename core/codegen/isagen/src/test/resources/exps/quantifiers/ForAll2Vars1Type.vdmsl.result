@@ -1,1 +1,1 @@
-{"translation":"(forall x, y : @int \u0026 true)","errors":false}
+{"translation":"(forall x, y : int \u0026 true)","errors":false}

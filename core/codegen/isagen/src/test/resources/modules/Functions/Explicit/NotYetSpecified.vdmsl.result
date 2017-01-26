@@ -1,1 +1,1 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\nvdmefun f\n  inp x :: \"@int\"\n  out \"@token\"\n  is \"undef\" \n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\nvdmefun f\n  inp x :: \"int\"\n  out \"@token\"\n  is \"undef\" \n\nend","errors":false}

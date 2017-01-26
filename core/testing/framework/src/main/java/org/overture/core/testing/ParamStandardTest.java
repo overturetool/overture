@@ -131,5 +131,6 @@ public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 	 */
 	public abstract R processModel(List<INode> ast);
 
+	@Override
 	protected void checkAssumptions() {}
 }

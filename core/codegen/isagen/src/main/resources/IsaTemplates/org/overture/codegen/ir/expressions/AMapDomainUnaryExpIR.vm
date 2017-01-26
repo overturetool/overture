@@ -1,1 +1,1 @@
-dom ($Isa.trans($node.Exp))
+dom\<^sub>v ($Isa.trans($node.Exp))

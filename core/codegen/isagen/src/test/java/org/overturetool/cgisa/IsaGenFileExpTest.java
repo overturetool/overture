@@ -27,9 +27,12 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -60,6 +63,7 @@ public class IsaGenFileExpTest extends ParamFineGrainTest<CgIsaTestResult>
 
 	private static final String UPDATE = "tests.update.isagen";
 	private static final String EXPS_ROOT = "src/test/resources/exps";
+	private static final List<String> todoTests = Arrays.asList("ForAll2Vars1Type.vdmsl","ForAll2Vars2Types.vdmsl");
 	
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
@@ -119,6 +123,15 @@ public class IsaGenFileExpTest extends ParamFineGrainTest<CgIsaTestResult>
 		}
 
 		return CgIsaTestResult.convert(result);
+	}
+
+	@Override
+	protected void checkAssumptions() {
+		Assume.assumeTrue("Test in Todo list.",notTodo());
+	}
+
+	private boolean notTodo() {
+		return !todoTests.contains(testName);
 	}
 
 }

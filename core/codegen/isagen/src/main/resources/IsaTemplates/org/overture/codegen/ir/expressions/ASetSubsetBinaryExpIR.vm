@@ -1,1 +1,1 @@
-($Isa.trans($node.Left) subset $Isa.trans($node.Right))
+($Isa.trans($node.Left) \<subset>\<^sub>v $Isa.trans($node.Right))

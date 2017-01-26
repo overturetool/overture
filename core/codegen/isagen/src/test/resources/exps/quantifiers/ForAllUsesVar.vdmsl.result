@@ -1,1 +1,1 @@
-{"translation":"(forall x : @int \u0026 (\u003cx\u003e \u003c\u003e 0))","errors":false}
+{"translation":"(\\<forall>\\<^sub>v x : int \\<bullet> (\u003cx\u003e <>\\<^sub>v 0))","errors":false}

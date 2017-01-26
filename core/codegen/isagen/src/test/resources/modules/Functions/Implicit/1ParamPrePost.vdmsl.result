@@ -1,1 +1,1 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\nvdmifun f\n  inp x :: \"@int\"\n  out r :: \"@int\"\n  pre \"true\"\n  post \"(^r^ \u003d ^x^)\"\n\n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\nvdmifun f\n  inp x :: \"int\"\n  out r :: \"int\"\n  pre \"true\"\n  post \"(^r^ =\\<^sub>v ^x^)\"\n\n\nend","errors":false}

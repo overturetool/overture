@@ -1,0 +1,1 @@
+($Isa.trans($node.Left) \<Union>\<^sub>v $Isa.trans($node.Right))

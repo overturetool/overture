@@ -1,1 +1,1 @@
-not ($Isa.trans($node.Exp))
+\<not>\<^sub>v ($Isa.trans($node.Exp))
