@@ -1,7 +1,7 @@
 #if ($node.Implicit)
 vdmifun $Isa.norm($node.Name)
 #if ($node.FormalParams.isEmpty())
-  inp emptyParam :: "@bool"
+  inp emptyParam :: "bool"
 #else
   inp $Isa.transTypeParams($node.FormalParams)
 #end
