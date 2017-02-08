@@ -1,1 +1,1 @@
-new B().Test() = 'd' Run-Time Error 258: Construct is multiple defined within the current scope
+new B().Test() = 'd' -- Run-Time Error 258: Construct is multiple defined within the current scope
