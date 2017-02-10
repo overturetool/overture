@@ -5,6 +5,8 @@ instructions.configure=\
   addRepository(type:1,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
   addRepository(type:0,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/master/repository/);\
   addRepository(type:1,name:Overture VDM2C Development,enabled:true,location:http${#58}//overture.au.dk/vdm2c/master/repository/);\
+  addRepository(type:0,name:Overture FMI Support,enabled:true,location:http${#58}//overture.au.dk/into-cps/vdm-tool-wrapper/master/latest/);\
+  addRepository(type:1,name:Overture FMI Support,enabled:true,location:http${#58}//overture.au.dk/into-cps/vdm-tool-wrapper/master/latest/);\
   addRepository(type:0,name:Overture Graphics Plugin,enabled:true,location:http${#58}//overture.au.dk/overture-graphics-plugin/master/repository/);\
   addRepository(type:1,name:Overture Graphics Plugin,enabled:true,location:http${#58}//overture.au.dk/overture-graphics-plugin/master/repository/);\
   addRepository(type:0,name:Neon,enabled:true,location:http${#58}//download.eclipse.org/releases/neon/);\
