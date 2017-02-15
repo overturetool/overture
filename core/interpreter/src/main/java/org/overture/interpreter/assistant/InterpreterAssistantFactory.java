@@ -10,6 +10,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
@@ -57,6 +58,7 @@ import org.overture.interpreter.utilities.pattern.ValueCollector;
 import org.overture.interpreter.utilities.statement.StatementExpressionFinder;
 import org.overture.interpreter.utilities.statement.StatementFinder;
 import org.overture.interpreter.utilities.type.AllValuesCollector;
+import org.overture.interpreter.utilities.type.ConcreteTypeInstantiator;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -966,4 +968,9 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new AllValuesCollector(this);
 	}
 
+	@Override
+	public IQuestionAnswer<Context, PType> getAllConcreteTypeInstantiator()
+	{
+		return new ConcreteTypeInstantiator(this);
+	}
 }
