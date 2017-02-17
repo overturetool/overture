@@ -116,7 +116,7 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 
 	public void typeCheckExports(AModuleModules m) throws AnalysisException
 	{
-		if (m.getExports() != null)
+		if (m.getExports() != null && !m.getIsDLModule())
 		{
 			af.createAModuleExportsAssistant().typeCheck(m.getExports(), new ModuleEnvironment(af, m));
 		}
