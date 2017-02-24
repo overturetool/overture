@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="overture.css">
+    <link rel="stylesheet" type="text/css" href="overture.css"/>
     <title>The Overture Platform</title>
   </head>
   <body>
@@ -32,6 +32,53 @@
 			  <li>For help please use the "vdm++" tag on <a href="http://stackoverflow.com/">StackOverflow</a></li>
 			  <li>Bugs should be reported on the <a href="http://github.com/overturetool/overture/issues/new">GitHub tracker</a> (registration required).</li>
       </ul>
+
+      <p>
+        <h2>Additional Overture features</h2>
+      </p>
+      <p>
+        Overture offers additional tool features or plugins that have
+        been developed in connection with other research
+        projects. Currently, these features are:
+        <ul>
+          <li>
+            <a href="https://github.com/overturetool/vdm2c">The VDM2C
+            code generator</a> is developed as part of
+            the <a href="http://into-cps.au.dk/">INTO-CPS</a> project,
+            and enables code generation of VDM-RT models into C code.
+          </li>
+          <li>
+            <a href="https://github.com/overturetool/overture-fmu">The
+            Overture FMU Simulation Exporter</a> is an extension of
+            Overture which enables VDM-RT models to be exported as
+            Functional Mock-up Units (FMU) . Essentially, this feature
+            enables co-simulation of VDM-RT and other formalisms that
+            can be exported in FMUs. This plugin is also developed in
+            the INTO-CPS project.
+          </li>
+
+          <li>
+            <a href="https://github.com/overturetool/overture-fmu">The
+            Graphics Plotting</a> enables plotting of VDM models, as
+            they are being interpreted. Currently plotting is only
+            supported for instance variables that contain numeric
+            values, and which have been declared public and
+            static. This project has been developed as part of
+            the <a href="http://into-cps.au.dk/">TEMPO project</a>.
+          </li>
+          
+          <p>
+            These plugins are available via updates sites and can be
+            installed using Overture's update manager. This approach
+            follows that of installing any other Eclipse plug-in: go
+            to Overture's 'Help' menu, select the 'Install New
+            Software . . . ' item and choose the plugin you want to
+            install. For convenience, the update sites of the plugins
+            described above are all included in Overture.
+          </p>
+          
+        </ul>
+      </p>
       <!--p>
           <h2>Upgrading workspaces from earlier versions</h2>
 	    <p>
