@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.latex"
       label="VDM Latex Documentation Creator"
-      version="2.4.6">
+      version="2.4.7.qualifier">
 
    <description>
       %description
