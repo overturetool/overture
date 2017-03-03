@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.4.4</version>
+    <version>2.4.6</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -12,6 +12,10 @@
   <packaging>pom</packaging>
   <name>Core Tools</name>
 
+  <properties>
+    <astcreator.version>1.6.10</astcreator.version>
+  </properties>
+  
   <modules>
     <module>ast</module>
     <module>parser</module>

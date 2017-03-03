@@ -36,7 +36,10 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
@@ -56,6 +59,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ExpressionReader;
+import org.overture.parser.syntax.ParserException;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ModuleEnvironment;
@@ -220,7 +224,15 @@ public class ModuleInterpreter extends Interpreter
 		LexTokenReader ltr = new LexTokenReader(line, Dialect.VDM_SL, Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
 		reader.setCurrentModule(getDefaultName());
-		return reader.readExpression();
+		PExp ast = reader.readExpression();
+		LexToken end = ltr.getLast();
+		
+		if (!end.is(VDMToken.EOF))
+		{
+			throw new ParserException(2330, "Tokens found after expression at " + end, new LexLocation(), 0);
+		}
+		
+		return ast;
 	}
 
 	/**

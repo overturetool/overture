@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -75,7 +76,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
@@ -104,7 +104,6 @@ import org.overture.interpreter.values.NaturalValue;
 import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
-import org.overture.interpreter.values.ParameterValue;
 import org.overture.interpreter.values.Quantifier;
 import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.RecordValue;
@@ -484,25 +483,13 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PType ptype : node.getActualTypes())
 			{
-				if (ptype instanceof AParameterType)
+				if (ptype.toString().indexOf('@') >= 0)		// Ought to have isPolymorphic?
 				{
-					AParameterType pname = (AParameterType) ptype;
-					Value t = ctxt.lookup(pname.getName());
-
-					if (t == null)
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4008, "No such type parameter @"
-								+ pname + " in scope", ctxt);
-					} else if (t instanceof ParameterValue)
-					{
-						ParameterValue tv = (ParameterValue) t;
-						fixed.add(tv.type);
-					} else
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4009, "Type parameter/local variable name clash, @"
-								+ pname, ctxt);
-					}
-				} else
+					// Resolve any @T types referred to in the type parameters
+					IQuestionAnswer<Context, PType> instantiator = ctxt.assistantFactory.getAllConcreteTypeInstantiator();
+					fixed.add(ptype.apply(instantiator, ctxt));
+				}
+				else
 				{
 					fixed.add(ptype);
 				}

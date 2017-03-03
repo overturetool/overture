@@ -275,6 +275,12 @@ public class DefinitionReader extends SyntaxReader
 		// VDMToken access = VDMToken.PRIVATE;
 		PAccess access = new APrivateAccess();
 
+		// Keyword counts
+		int numStatic = 0;
+		int numAsync = 0;
+		int numPure = 0;
+		int numAccess = 0;
+
 		boolean more = true;
 
 		while (more)
@@ -284,9 +290,15 @@ public class DefinitionReader extends SyntaxReader
 				case ASYNC:
 					if (asyncOK)
 					{
+						if (++numAsync > 1)
+						{
+							throwMessage(2329, "Duplicate async keyword");
+						}
+						
 						isAsync = true;
 						nextToken();
-					} else
+					}
+					else
 					{
 						throwMessage(2278, "Async only permitted for operations");
 						more = false;
@@ -294,24 +306,45 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case STATIC:
+					if (++numStatic > 1)
+					{
+						throwMessage(2329, "Duplicate static keyword");
+					}
+					
 					isStatic = true;
 					nextToken();
 					break;
 
 				case PUBLIC:
+					if (++numAccess > 1)
+					{
+						throwMessage(2329, "Duplicate access specifier keyword");
+					}
+
 					access = new APublicAccess();
 					nextToken();
 					break;
+					
 				case PRIVATE:
+					if (++numAccess > 1)
+					{
+						throwMessage(2329, "Duplicate access specifier keyword");
+					}
+
 					access = new APrivateAccess();
 					nextToken();
 					break;
+					
 				case PROTECTED:
-					// access = lastToken().type;
+					if (++numAccess > 1)
+					{
+						throwMessage(2329, "Duplicate access specifier keyword");
+					}
+
 					access = new AProtectedAccess();
 					nextToken();
 					break;
-
+					
 				case PURE:
 					if (Settings.release == Release.CLASSIC)
 					{
@@ -320,6 +353,11 @@ public class DefinitionReader extends SyntaxReader
 
 					if (pureOK)
 					{
+						if (++numPure > 1)
+						{
+							throwMessage(2329, "Duplicate pure keyword");
+						}
+						
 						isPure = true;
 						nextToken();
 					}

@@ -9,6 +9,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
@@ -398,4 +399,5 @@ public interface IInterpreterAssistantFactory extends
 
 	IQuestionAnswer<Context, ValueList> getAllValuesCollector();
 
+	IQuestionAnswer<Context, PType> getAllConcreteTypeInstantiator();
 }

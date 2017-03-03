@@ -189,7 +189,7 @@ public class AllDefinitionLocator
 
 		PType type = pattern.getType();
 
-		if (!af.createPTypeAssistant().isRecord(type))
+		if (!af.createPTypeAssistant().isTag(type))		//.isRecord(type))
 		{
 			TypeCheckerErrors.report(3200, "Mk_ expression is not a record type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Type", type);

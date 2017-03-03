@@ -19,7 +19,10 @@ public class OutputTestUtil
 
 	public static void compare(String expected, String actual)
 	{
-		Assert.assertEquals("Unexpected code produced by the Java code generator", expected.trim(), actual.trim());
+		expected = expected.trim().replaceAll("\\r", "");
+		actual = actual.trim().replaceAll("\\r", "");
+		
+		Assert.assertEquals("Unexpected code produced by the Java code generator", expected, actual.trim());
 	}
 
 	public static String deSerialize(String resultPath)

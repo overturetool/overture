@@ -89,6 +89,9 @@ public class TraceDebugLauncher
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false);
 
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE));
+			
+			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, preferences.getString(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION));
+			
 			return wc;
 			// config = wc.doSave();
 		} catch (CoreException exception)

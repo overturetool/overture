@@ -1,6 +1,7 @@
 package org.overture.codegen.mojocg;
 
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -93,6 +94,13 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter
 	 */
 	protected Properties delegates;
+	
+	/**
+	 * Modules (or classes) that should not be code generated
+	 * 
+	 * @parameter
+	 */
+	protected List<String> modulesToSkip;
 
 	/**
 	 * @parameter
