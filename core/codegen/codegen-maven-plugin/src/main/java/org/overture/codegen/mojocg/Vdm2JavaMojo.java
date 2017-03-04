@@ -103,8 +103,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 
 		if (files == null || files.isEmpty())
 		{
-			getLog().info("Nothing to generate, no specification files.");
-			return;
+			throw new MojoFailureException("Nothing to generate, no specification files.");
 		}
 
 		outputDirectory.mkdirs();
