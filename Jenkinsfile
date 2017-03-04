@@ -1,4 +1,8 @@
 node {
+
+  // Only keep one build
+  properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '1']]])
+  
   // Mark the code checkout 'stage'....
   stage 'Checkout'
   checkout scm
