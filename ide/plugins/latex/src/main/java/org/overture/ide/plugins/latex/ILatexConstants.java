@@ -30,7 +30,7 @@ public interface ILatexConstants
 	public final static String LATEX_MODEL_ONLY = "LATEX_MODEL_ONLY";
 	public static final String QUALIFIER = "LATEX";
 
-	public static final String DEFAULT_OSX_LATEX_PATH = "/usr/texbin/pdflatex";
+	public static final String DEFAULT_OSX_LATEX_PATH = "/Library/TeX/texbin/pdflatex";
 	public static final String OSX_LATEX_PATH_PREFERENCE = "__OSX_LATEX_PATH_PREFERENCE__";
 	
 	public static final String PDF_BUILDER = "PDF_BUILDER".toLowerCase();
