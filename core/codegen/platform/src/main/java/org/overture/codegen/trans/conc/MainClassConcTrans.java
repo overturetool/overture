@@ -80,6 +80,11 @@ public class MainClassConcTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
+		if(info.getDeclAssistant().isFullyAbstract(info.getDeclAssistant().getSourceClass(node), info))
+		{
+			return;
+		}
+		
 		for (AFieldDeclIR fieldIR : node.getFields())
 		{
 			if (!fieldIR.getFinal())
