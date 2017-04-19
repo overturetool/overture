@@ -92,7 +92,7 @@ public class JavaCodeGenUtil
 		{
 			log.error("Could not format code: " + e.getMessage());
 			e.printStackTrace();
-			return null;
+			return code;
 		}
 	}
 
