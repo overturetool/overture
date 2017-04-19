@@ -77,6 +77,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		javaSettings.setFormatCode(formatCode);
 		javaSettings.setGenJUnit4tests(genJUnit4Tests);
 		javaSettings.setPrintVdmLocations(printVdmLocations);
+		javaSettings.setGenSystemClass(genSystemClass);
 		
 		if(modulesToSkip != null && !modulesToSkip.isEmpty())
 		{
