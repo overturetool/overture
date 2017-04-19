@@ -33,6 +33,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -286,9 +287,9 @@ public class JavaCodeGenUtil
 		File moduleOutputDir = outputDir;
 		String javaPackage = vdmCodGen.getJavaSettings().getJavaRootPackage();
 
-		if (generatedClass.getIrNode() instanceof ADefaultClassDeclIR)
+		if (generatedClass.getIrNode() instanceof SClassDeclIR)
 		{
-			javaPackage = ((ADefaultClassDeclIR) generatedClass.getIrNode()).getPackage();
+			javaPackage = ((SClassDeclIR) generatedClass.getIrNode()).getPackage();
 		} else if (generatedClass.getIrNode() instanceof AInterfaceDeclIR)
 		{
 			javaPackage = ((AInterfaceDeclIR) generatedClass.getIrNode()).getPackage();
