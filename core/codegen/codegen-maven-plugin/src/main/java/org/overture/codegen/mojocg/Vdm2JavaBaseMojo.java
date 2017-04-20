@@ -74,7 +74,7 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * 
 	 * @parameter
 	 */
-	protected boolean verbose = false;
+	protected boolean verbose = true;
 
 	/**
 	 * @parameter property="project" default-value="${project}"
