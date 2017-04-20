@@ -398,8 +398,6 @@ public class JavaCodeGenMain
 	{
 		List<GeneratedModule> generatedClasses = data.getClasses();
 
-		MsgPrinter.getPrinter().println("");
-
 		if (!generatedClasses.isEmpty())
 		{
 			for (GeneratedModule generatedClass : generatedClasses)
@@ -473,10 +471,10 @@ public class JavaCodeGenMain
 
 		List<GeneratedModule> quotes = data.getQuoteValues();
 
-		MsgPrinter.getPrinter().println("\nGenerated following quotes:");
-
 		if (quotes != null && !quotes.isEmpty())
 		{
+			MsgPrinter.getPrinter().println("\nGenerated following quotes:");
+			
 			if (outputDir != null)
 			{
 				for (GeneratedModule q : quotes)
