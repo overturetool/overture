@@ -21,16 +21,21 @@
  */
 package org.overture.codegen.printer;
 
-public interface IPrinter
+public abstract class AbstractPrinter
 {
-	public void setSilent(boolean silent);
+	protected boolean silent = false;
+	
+	public void setSilent(boolean silent)
+	{
+		this.silent = silent;
+	}
+	
+	abstract public void println(String msg);
 
-	public void println(String msg);
+	abstract public void print(String msg);
 
-	public void print(String msg);
+	abstract public void errorln(String msg);
 
-	public void errorln(String msg);
-
-	public void error(String msg);
+	abstract public void error(String msg);
 
 }

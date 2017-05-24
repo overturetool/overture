@@ -69,6 +69,8 @@ public class JavaCodeGenMain
 	public static final String VDM_LOC = "-vdmloc";
 	public static final String NO_CLONING = "-nocloning";
 	public static final String NO_STRINGS = "-nostrings";
+	public static final String CONC = "-concurrency";
+	public static final String GEN_SYS_CLASS = "-gensysclass";
 
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
@@ -213,7 +215,15 @@ public class JavaCodeGenMain
 			} else if(arg.equals(NO_STRINGS))
 			{
 				irSettings.setCharSeqAsString(false);
-			}	
+			}
+			else if(arg.equals(CONC))
+			{
+				irSettings.setGenerateConc(true);
+			}
+			else if(arg.equals(GEN_SYS_CLASS))
+			{
+				javaSettings.setGenSystemClass(true);
+			}
 			else
 			{
 				// It's a file or a directory
@@ -388,8 +398,6 @@ public class JavaCodeGenMain
 	{
 		List<GeneratedModule> generatedClasses = data.getClasses();
 
-		MsgPrinter.getPrinter().println("");
-
 		if (!generatedClasses.isEmpty())
 		{
 			for (GeneratedModule generatedClass : generatedClasses)
@@ -463,10 +471,10 @@ public class JavaCodeGenMain
 
 		List<GeneratedModule> quotes = data.getQuoteValues();
 
-		MsgPrinter.getPrinter().println("\nGenerated following quotes:");
-
 		if (quotes != null && !quotes.isEmpty())
 		{
+			MsgPrinter.getPrinter().println("\nGenerated following quotes:");
+			
 			if (outputDir != null)
 			{
 				for (GeneratedModule q : quotes)
@@ -570,6 +578,12 @@ public class JavaCodeGenMain
 				+ ": Generate VDM location information for code generated constructs");
 		MsgPrinter.getPrinter().errorln(NO_CLONING
 				+ ": To disable deep cloning of value types");
+
+		MsgPrinter.getPrinter().errorln(CONC
+				+ ": To enable code generation of VDM++'s concurrency constructs");
+		
+		MsgPrinter.getPrinter().errorln(GEN_SYS_CLASS
+				+ ": To generate the VDM-RT system class");
 
 		// Terminate
 		System.exit(1);

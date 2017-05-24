@@ -74,7 +74,7 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * 
 	 * @parameter
 	 */
-	protected boolean verbose = false;
+	protected boolean verbose = true;
 
 	/**
 	 * @parameter property="project" default-value="${project}"
@@ -118,6 +118,13 @@ public abstract class Vdm2JavaBaseMojo extends AbstractMojo
 	 * @parameter
 	 */
 	protected boolean genConcurrency = false;
+	
+	/**
+	 * Code generate the VDM-RT system class
+	 * 
+	 * @parameter
+	 */
+	protected boolean genSystemClass = false;
 
 	protected File getProjectOutputDirectory()
 	{

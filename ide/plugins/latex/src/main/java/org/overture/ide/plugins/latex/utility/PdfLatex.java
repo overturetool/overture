@@ -101,7 +101,7 @@ public class PdfLatex extends Thread implements PdfGenerator
 				String osxpath = LatexPlugin.getDefault().getPreferenceStore().getString(ILatexConstants.OSX_LATEX_PATH_PREFERENCE);
 				if (osxpath.equals(""))
 				{
-					pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
+					pb.command(ILatexConstants.DEFAULT_OSX_LATEX_PATH, "-interaction=nonstopmode", documentName);
 				} else
 				{
 					pb.command(osxpath, "-interaction=nonstopmode", documentName);

@@ -102,8 +102,7 @@ public class Xetex extends Thread implements PdfGenerator
 				String osxpath = LatexPlugin.getDefault().getPreferenceStore().getString(ILatexConstants.OSX_LATEX_PATH_PREFERENCE);
 				if (osxpath.equals(""))
 				{
-					// pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
-					pb.command("/usr/texbin/xelatex", "-interaction=nonstopmode", documentName); // modified by his
+					pb.command("/Library/TeX/texbin/xelatex", "-interaction=nonstopmode", documentName); // modified by his
 																									// 2013/10/08
 				} else
 				{
