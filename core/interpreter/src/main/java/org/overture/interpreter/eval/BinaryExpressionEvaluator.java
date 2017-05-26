@@ -478,17 +478,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		if (lv.isOrdered() && rv.isOrdered())
+		try
 		{
-			int cmp = lv.compareTo(rv);
-			
-			if (cmp != Integer.MIN_VALUE)	// Indicates comparable
-			{
-				return new BooleanValue(cmp >= 0);
-			}
+			return new BooleanValue(lv.realValue(ctxt) >= rv.realValue(ctxt));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return VdmRuntimeError.abort(node.getLocation(), 4171, "Values cannot be compared: " + lv + ", " + rv, ctxt);
 	}
 
 	@Override
@@ -501,17 +497,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		if (lv.isOrdered() && rv.isOrdered())
+		try
 		{
-			int cmp = lv.compareTo(rv);
-			
-			if (cmp != Integer.MIN_VALUE)	// Indicates comparable
-			{
-				return new BooleanValue(cmp > 0);
-			}
+			return new BooleanValue(lv.realValue(ctxt) > rv.realValue(ctxt));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return VdmRuntimeError.abort(node.getLocation(), 4171, "Values cannot be compared: " + lv + ", " + rv, ctxt);
 	}
 
 	@Override
@@ -525,17 +517,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		if (lv.isOrdered() && rv.isOrdered())
+		try
 		{
-			int cmp = lv.compareTo(rv);
-			
-			if (cmp != Integer.MIN_VALUE)	// Indicates comparable
-			{
-				return new BooleanValue(cmp <= 0);
-			}
+			return new BooleanValue(lv.realValue(ctxt) <= rv.realValue(ctxt));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return VdmRuntimeError.abort(node.getLocation(), 4171, "Values cannot be compared: " + lv + ", " + rv, ctxt);
 	}
 
 	@Override
@@ -548,17 +536,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		if (lv.isOrdered() && rv.isOrdered())
+		try
 		{
-			int cmp = lv.compareTo(rv);
-			
-			if (cmp != Integer.MIN_VALUE)	// Indicates comparable
-			{
-				return new BooleanValue(cmp < 0);
-			}
+			return new BooleanValue(lv.realValue(ctxt) < rv.realValue(ctxt));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return VdmRuntimeError.abort(node.getLocation(), 4171, "Values cannot be compared: " + lv + ", " + rv, ctxt);
 	}
 
 	@Override
