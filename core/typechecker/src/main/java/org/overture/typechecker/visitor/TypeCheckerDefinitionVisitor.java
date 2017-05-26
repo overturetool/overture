@@ -1536,7 +1536,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			for (PType compose : question.assistantFactory.getTypeComparator().checkComposeTypes(ntype.getType(), question.env, true))
 			{
 				ARecordInvariantType rtype = (ARecordInvariantType) compose;
-				PDefinition cdef = AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null);
+				PDefinition cdef = AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null, null, null);
 				cdef.setAccess(node.getAccess().clone());
 				node.getComposeDefinitions().add(cdef);
 				rtype.getDefinitions().get(0).setAccess(node.getAccess().clone());

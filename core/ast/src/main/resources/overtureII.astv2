@@ -464,7 +464,7 @@ relation {-> package='org.overture.ast.definitions.relations'
 	|	[location]:location
     | [lhsPattern]:pattern 
     | [rhsPattern]:pattern [clauseExpression]:exp 
-    | [reldef]:definition.#Function.explicit}
+    | [relexp]:exp}
     = {eq}
     | {ord} [minDef]:definition.#Function.explicit [maxDef]:definition.#Function.explicit
     ; 
