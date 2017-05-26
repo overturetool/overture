@@ -206,6 +206,17 @@ abstract public class ReferenceValue extends Value
 	}
 
 	@Override
+	public int compareTo(Value other)
+	{
+		if (other instanceof Value)
+		{
+   			return value.compareTo(other);
+		}
+
+		return super.compareTo(other);
+	}
+
+	@Override
 	public String kind()
 	{
 		return value.kind();
