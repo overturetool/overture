@@ -31,6 +31,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ValueException;
 
 public class ValueFactory
 {
@@ -125,7 +126,14 @@ public class ValueFactory
 	{
 		ValueSet vList = new ValueSet();
 		vList.addAll(collection);
-		return new SetValue(vList);
+		try
+		{
+			return new SetValue(vList);
+		}
+		catch (ValueException e)
+		{
+			return null;	// Not reached
+		}
 	}
 
 	public SeqValue createSeq(Collection<Value> collection)

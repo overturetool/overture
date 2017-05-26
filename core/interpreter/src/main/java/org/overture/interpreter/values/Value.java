@@ -104,7 +104,6 @@ abstract public class Value implements Comparable<Value>, Serializable,
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-
 	public int compareTo(Value other)
 	{
 		return toString().compareTo(other.toString());
@@ -308,6 +307,11 @@ abstract public class Value implements Comparable<Value>, Serializable,
 	public boolean isNumeric()
 	{
 		return this instanceof NumericValue;
+	}
+
+	public boolean isOrdered()
+	{
+		return isNumeric();
 	}
 
 	public boolean isType(Class<? extends Value> valueclass)

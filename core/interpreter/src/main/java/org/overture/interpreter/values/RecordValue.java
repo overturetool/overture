@@ -33,6 +33,7 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ValueException;
 
 public class RecordValue extends Value
 {
@@ -40,6 +41,8 @@ public class RecordValue extends Value
 	public final ARecordInvariantType type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;
+	public final FunctionValue equality;
+	public final FunctionValue ordering;
 
 	// mk_ expressions
 	public RecordValue(ARecordInvariantType type, ValueList values, Context ctxt)
@@ -48,6 +51,8 @@ public class RecordValue extends Value
 		this.type = type;
 		this.fieldmap = new FieldMap();
 		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type, ctxt);
+		this.equality = ctxt.assistantFactory.createSInvariantTypeAssistant().getEquality(type, ctxt);
+		this.ordering = ctxt.assistantFactory.createSInvariantTypeAssistant().getOrder(type, ctxt);
 
 		if (values.size() != type.getFields().size())
 		{
@@ -72,6 +77,8 @@ public class RecordValue extends Value
 		this.type = type;
 		this.fieldmap = new FieldMap();
 		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type, ctxt);
+		this.equality = ctxt.assistantFactory.createSInvariantTypeAssistant().getEquality(type, ctxt);
+		this.ordering = ctxt.assistantFactory.createSInvariantTypeAssistant().getOrder(type, ctxt);
 
 		if (mapvalues.size() != type.getFields().size())
 		{
@@ -98,11 +105,13 @@ public class RecordValue extends Value
 
 	// Only called by clone()
 	private RecordValue(ARecordInvariantType type, FieldMap mapvalues,
-			FunctionValue invariant)
+			FunctionValue invariant, FunctionValue equality, FunctionValue ordering)
 	{
 		this.type = type;
 		this.invariant = invariant;
 		this.fieldmap = mapvalues;
+		this.equality = equality;
+		this.ordering = ordering;
 	}
 
 	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues,
@@ -110,6 +119,8 @@ public class RecordValue extends Value
 	{
 		this.type = type;
 		this.invariant = null;
+		this.equality = null;
+		this.ordering = null;
 		this.fieldmap = new FieldMap();
 
 		for (NameValuePair nvp : mapvalues)
@@ -118,6 +129,12 @@ public class RecordValue extends Value
 			this.fieldmap.add(nvp.name.getName(), nvp.value, !f.getEqualityAbstraction());
 		}
 	}
+
+	@Override
+	public boolean isOrdered()
+	{
+		return ordering != null;
+	} 
 
 	public void checkInvariant(Context ctxt) throws AnalysisException
 	{
@@ -179,7 +196,7 @@ public class RecordValue extends Value
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		UpdatableValue uval = UpdatableValue.factory(new RecordValue(type, nm, invariant), listeners);
+		UpdatableValue uval = UpdatableValue.factory(new RecordValue(type, nm, invariant, equality, ordering), listeners);
 
 		if (invl != null)
 		{
@@ -201,7 +218,7 @@ public class RecordValue extends Value
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		return new RecordValue(type, nm, invariant);
+		return new RecordValue(type, nm, invariant, equality, ordering);
 	}
 
 	@Override
@@ -215,25 +232,54 @@ public class RecordValue extends Value
     		{
     			RecordValue ot = (RecordValue)val;
     
-    			if (ot.type.getName().equals(type.getName()))	// Should use type equality
+    			if (ot.type.equals(type))
     			{
-    				for (AFieldField f: type.getFields())
+    				if (equality != null)
     				{
-    					if (!f.getEqualityAbstraction())
+    					Context ctxt = Interpreter.getInstance().initialContext;
+    					ctxt.setThreadState(null, null);
+    					ctxt.threadState.setAtomic(true);
+
+    					try
+						{
+   	    					ValueList args = new ValueList();
+   	    					args.add(this);
+   	    					args.add(ot);
+							return equality.eval(equality.location, args, ctxt).boolValue(ctxt);
+						}
+   						catch (ValueException e)
+						{
+   							throw new RuntimeException(e);
+						}
+						catch (AnalysisException e)
+						{
+   							throw new RuntimeException(e);
+						}
+    					finally
     					{
-    						Value fv = fieldmap.get(f.getTag());
-    						Value ofv = ot.fieldmap.get(f.getTag());
-    
-    						if (fv == null || ofv == null)
-    						{
-    							return false;
-    						}
-    
-    						if (!fv.equals(ofv))
-    						{
-    							return false;
-    						}
+    						ctxt.threadState.setAtomic(false);
     					}
+    				}
+    				else
+    				{
+	    				for (AFieldField f: type.getFields())
+	    				{
+	    					if (!f.getEqualityAbstraction())
+	    					{
+	    						Value fv = fieldmap.get(f.getTag());
+	    						Value ofv = ot.fieldmap.get(f.getTag());
+	    
+	    						if (fv == null || ofv == null)
+	    						{
+	    							return false;
+	    						}
+	    
+	    						if (!fv.equals(ofv))
+	    						{
+	    							return false;
+	    						}
+	    					}
+	    				}
     				}
     
     				return true;
@@ -251,37 +297,77 @@ public class RecordValue extends Value
 
 		if (val instanceof RecordValue)
 		{
-			RecordValue ot = (RecordValue) val;
+			RecordValue ot = (RecordValue)val;
 
-			if (Interpreter.getInstance().getAssistantFactory().createPTypeAssistant().equals(ot.type, type))
+			if (ot.type.equals(type))
 			{
-
-				for (AFieldField f : type.getFields())
+				if (ordering != null)
 				{
-					if (!f.getEqualityAbstraction())
+	    			Context ctxt = Interpreter.getInstance().initialContext;
+					ctxt.setThreadState(null, null);
+					ctxt.threadState.setAtomic(true);
+
+					try
 					{
-						Value fv = fieldmap.get(f.getTag());
-						Value ofv = ot.fieldmap.get(f.getTag());
-
-						if (fv == null || ofv == null)
+						ValueList args = new ValueList();
+						args.add(this);
+						args.add(ot);
+						
+						if (ordering.eval(ordering.location, args, ctxt).boolValue(ctxt))
 						{
-							return -1;
+							return -1;	// Less
 						}
-
-						int comp = fv.compareTo(ofv);
-
-						if (comp != 0)
+						else if (equals(other))
 						{
-							return comp;
+							return 0;	// Equal
+						}
+						else
+						{
+							return 1;	// More
 						}
 					}
+					catch (ValueException e)
+					{
+						throw new RuntimeException(e);
+					}
+					catch (AnalysisException e)
+					{
+						throw new RuntimeException(e);
+					}
+					finally
+					{
+						ctxt.threadState.setAtomic(false);
+					}
 				}
+				else
+				{
+					for (AFieldField f: type.getFields())
+					{
+						if (!f.getEqualityAbstraction())
+						{
+							Value fv = fieldmap.get(f.getTag());
+							Value ofv = ot.fieldmap.get(f.getTag());
+	
+							if (fv == null || ofv == null)
+							{
+								return -1;
+							}
+	
+							int comp = fv.compareTo(ofv);
+	
+							if (comp != 0)
+							{
+								return comp;
+							}
+						}
+					}
 
-				return 0;
+					return 0;
+				}
 			}
 		}
 
-		return -1;
+		return Integer.MIN_VALUE;	// Indicates incomparable values, but allows "sorting"
 	}
 
 	@Override
@@ -336,6 +422,6 @@ public class RecordValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new RecordValue(type, (FieldMap) fieldmap.clone(), invariant);
+		return new RecordValue(type, (FieldMap) fieldmap.clone(), invariant, equality, ordering);
 	}
 }

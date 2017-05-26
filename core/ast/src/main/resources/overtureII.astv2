@@ -266,7 +266,9 @@ type {-> package='org.overture.ast.types'
 #invariant {-> package='org.overture.ast.types'
     |	[inNarrower]:java_Boolean
 	|	(opaque):java_Boolean
-    |   (invDef):definition.#Function.explicit}
+    |   (invDef):definition.#Function.explicit
+    |   (eqDef):definition.#Function.explicit
+    |   (ordDef):definition.#Function.explicit}
     =   {named} (name):LexNameToken (type):type //[invdef]:#Function.explicit //super = invariant type
     |   {record} [name]:LexNameToken (fields):field.field* (infinite):java_Boolean (composed):java_Boolean //[invdef]:#Function.explicit //super = invariant type
     ;
