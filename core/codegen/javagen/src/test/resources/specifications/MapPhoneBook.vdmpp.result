@@ -30,12 +30,12 @@ public class PhoneBook {
           SeqUtil.seq(
               'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'e',
               'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(pb1.eq(pb2)));
+          SeqUtil.seq(pb1.cg_equals(pb2)));
       IO.printf(
           SeqUtil.seq(
               'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'N',
               'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(pb1.neq(pb2)));
+          SeqUtil.seq(pb1.nequals(pb2)));
       IO.print(SeqUtil.seq('\n'));
       IO.println(
           SeqUtil.seq(
@@ -82,12 +82,12 @@ public class PhoneBook {
           SeqUtil.seq(
               'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'e',
               'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(pb1.eq(pb2)));
+          SeqUtil.seq(pb1.cg_equals(pb2)));
       IO.printf(
           SeqUtil.seq(
               'p', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'p', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'N',
               'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(pb1.neq(pb2)));
+          SeqUtil.seq(pb1.nequals(pb2)));
       IO.print(SeqUtil.seq('\n'));
       IO.println(
           SeqUtil.seq(
@@ -268,12 +268,12 @@ public class PhoneBook {
     phoneNumbers = MapUtil.rngResBy(Utils.copy(phoneNumbers), Utils.copy(numbers));
   }
 
-  public Boolean eq(final PhoneBook other) {
+  public Boolean cg_equals(final PhoneBook other) {
 
     return Utils.equals(phoneNumbers, other.phoneNumbers);
   }
 
-  public Boolean neq(final PhoneBook other) {
+  public Boolean nequals(final PhoneBook other) {
 
     return !(Utils.equals(phoneNumbers, other.phoneNumbers));
   }
@@ -289,4 +289,11 @@ public class PhoneBook {
 ##########
 *Quotes*
 append,start
+##########
+*Name Violations*
+
+java.lang.Object method violation: [Violation in module PhoneBook: 'equals'. Location: line 28 at position: 51 in MapPhoneBook.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module PhoneBook: 'equals'. Location: line 51 at position: 51 in MapPhoneBook.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module PhoneBook: 'equals'. Location: line 148 at position: 8 in MapPhoneBook.vdmpp]. Prefix 'cg_' has been added to the name
+
 ##########

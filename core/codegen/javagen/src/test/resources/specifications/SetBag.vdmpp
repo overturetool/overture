@@ -75,10 +75,10 @@ Test () ==
 	
 	IO`print("\n");
 	
-	IO`printf("bag1 equals bag2: %s\n", [bag1.eq(bag2)]);
-	IO`printf("bag1 equals a bag containing elements {3 5}: %s\n", [bag1.eq(new Bag({3,5}))]);
-	IO`printf("bag1 NOT equals bag2: %s\n", [bag1.neq(bag2)]);
-	IO`printf("bag1 NOT equals a bag containing elements {3 5}: %s\n", [bag1.neq(new Bag({3,5}))]);
+	IO`printf("bag1 equals bag2: %s\n", [bag1.equals(bag2)]);
+	IO`printf("bag1 equals a bag containing elements {3 5}: %s\n", [bag1.equals(new Bag({3,5}))]);
+	IO`printf("bag1 NOT equals bag2: %s\n", [bag1.nequals(bag2)]);
+	IO`printf("bag1 NOT equals a bag containing elements {3 5}: %s\n", [bag1.nequals(new Bag({3,5}))]);
 
 	IO`print("\n");
 	
@@ -151,11 +151,11 @@ contains (bag) == return bag.getNumbers() subset numbers;
 public properContains : Bag ==> bool
 properContains (bag) == return bag.getNumbers() psubset numbers;
 
-public eq : Bag ==> bool
-eq (bag) == return numbers = bag.getNumbers();
+public equals : Bag ==> bool
+equals (bag) == return numbers = bag.getNumbers();
 
-public neq : Bag ==> bool
-neq (bag) == return numbers <> bag.getNumbers();
+public nequals : Bag ==> bool
+nequals (bag) == return numbers <> bag.getNumbers();
 
 public size : () ==> nat
 size () == return card numbers;
