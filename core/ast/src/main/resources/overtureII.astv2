@@ -465,7 +465,7 @@ definition {-> package='org.overture.ast.definitions'
 relation {-> package='org.overture.ast.definitions.relations'
 	|	[location]:location
     | [lhsPattern]:pattern 
-    | [rhsPattern]:pattern [clauseExpression]:exp 
+    | [rhsPattern]:pattern 
     | [relExp]:exp
     | [relDef]:definition.#Function.explicit}
     = {eq}
