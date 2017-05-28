@@ -147,6 +147,11 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 		return new LexNameToken(module, "inv_" + name, l);
 	}
 
+	public LexNameToken getEqName(ILexLocation l)
+	{
+		return new LexNameToken(module, "eq_" + name, l);
+	}
+
 	public LexNameToken getInitName(ILexLocation l)
 	{
 		return new LexNameToken(module, "init_" + name, l);
