@@ -413,7 +413,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		}
 
 		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(prepend(name, typedef.getName(),loc), NameScope.GLOBAL, null, ftype, parameters,
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(typedef.getName().getEqName(loc), NameScope.GLOBAL, null, ftype, parameters,
 				node.getRelExp(), null, null, true, null);
 
 		def.setAccess(typedef.getAccess().clone()); // Same as type's
@@ -453,11 +453,6 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		def.setClassDefinition(d.getClassDefinition());
 
 		return def;
-	}
-
-
-	private ILexNameToken prepend(String pre, ILexNameToken name, ILexLocation l) {
-		return  new LexNameToken(name.getModule(), pre+"_"+name.getSimpleName(), l);
 	}
 
 	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
