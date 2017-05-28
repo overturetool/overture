@@ -40,6 +40,9 @@ import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.relations.AEqRelation;
+import org.overture.ast.definitions.relations.AOrdRelation;
+import org.overture.ast.definitions.relations.PRelation;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -48,6 +51,8 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -318,6 +323,13 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			node.setInvdef(null);
 		}
 
+		if (node.getOrdRelation() != null) {
+		}
+
+		if (node.getEqRelation() != null) {
+			node.getEqRelation().setRelDef(getRelDef(node.getEqRelation(),node,"eq"));
+		}
+
 		if (node.getInvType() instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType ntype = (ANamedInvariantType) node.getInvType();
@@ -374,7 +386,42 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		return AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
 	}
-	
+
+	private AExplicitFunctionDefinition getRelDef(PRelation node, ATypeDefinition typedef, String name) {
+		ILexLocation loc = node.getLhsPattern().getLocation();
+
+		List<PPattern> params = new Vector<PPattern>();
+		params.add(node.getLhsPattern().clone());
+		params.add(node.getRhsPattern().clone());
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		parameters.add(params);
+
+
+		PTypeList ptypes = new PTypeList();
+		if (typedef.getInvType() instanceof ARecordInvariantType)
+		{
+			// Records are inv_R: R +> bool
+			AUnresolvedType uType=AstFactory.newAUnresolvedType(typedef.getName().clone());
+			ptypes.add(uType.clone());
+			ptypes.add(uType.clone());
+		} else
+		{
+			// Named types are inv_T: x +> bool, for T = x
+			ANamedInvariantType nt = (ANamedInvariantType) typedef.getInvType();
+			ptypes.add(nt.getType().clone());
+			ptypes.add(nt.getType().clone());
+		}
+
+		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(prepend(name, typedef.getName(),loc), NameScope.GLOBAL, null, ftype, parameters,
+				node.getRelExp(), null, null, true, null);
+
+		def.setAccess(typedef.getAccess().clone()); // Same as type's
+		def.setClassDefinition(typedef.getClassDefinition());
+
+		return def;
+	}
+
 	public AExplicitFunctionDefinition getInvDefinition(ATypeDefinition d)
 	{
 
@@ -407,7 +454,12 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		return def;
 	}
-	
+
+
+	private ILexNameToken prepend(String pre, ILexNameToken name, ILexLocation l) {
+		return  new LexNameToken(name.getModule(), pre+"_"+name.getSimpleName(), l);
+	}
+
 	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
 	{
 
