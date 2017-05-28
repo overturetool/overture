@@ -1,0 +1,7 @@
+functions
+compare : nat * nat -> bool
+compare (x,y) == x<y
+
+types
+A = nat
+eq a = b == compare(a,b)
