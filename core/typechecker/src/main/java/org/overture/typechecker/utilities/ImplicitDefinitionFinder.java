@@ -328,6 +328,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getEqRelation() != null) {
 			node.getEqRelation().setRelDef(getRelDef(node.getEqRelation(),node,"eq"));
+			node.getInvType().setEqDef(node.getEqRelation().getRelDef());
 		}
 
 		if (node.getInvType() instanceof ANamedInvariantType)
