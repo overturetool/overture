@@ -1,0 +1,7 @@
+functions
+compare : A * A -> bool
+compare (x,y) == max_A(x,y)
+
+types
+A = nat
+ord a < b == a<b

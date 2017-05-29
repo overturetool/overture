@@ -1,0 +1,4 @@
+types
+
+A = nat
+ord a < b == compare(a,b)
