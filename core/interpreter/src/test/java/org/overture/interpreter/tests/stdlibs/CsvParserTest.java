@@ -5,7 +5,6 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.utilities.stdlibs.CsvParser;
 import org.overture.interpreter.utilities.stdlibs.CsvResult;
@@ -98,14 +97,7 @@ public class CsvParserTest
 		rightValues.add(new IntegerValue(3));
 		rightValues.add(new IntegerValue(4));
 		
-		try
-		{
-			Assert.assertEquals(Arrays.asList(new SetValue(leftValues), new SetValue(rightValues)), res.getValues());
-		}
-		catch (ValueException e)
-		{
-			// Not reached
-		}
+		Assert.assertEquals(Arrays.asList(new SetValue(leftValues), new SetValue(rightValues)), res.getValues());
 	}
 	
 	@Test

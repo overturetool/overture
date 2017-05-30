@@ -31,7 +31,6 @@ import org.overture.ast.types.ASet1SetType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
 
 public class SetValue extends Value
 {
@@ -43,7 +42,7 @@ public class SetValue extends Value
 		this.values = new ValueSet();
 	}
 
-	public SetValue(ValueSet values) throws ValueException
+	public SetValue(ValueSet values)
 	{
 		// We arrange that VDMJ set values usually have sorted contents.
 		// This guarantees deterministic behaviour in places that would
@@ -52,16 +51,10 @@ public class SetValue extends Value
 		this(values, true);
 	}
 
-	public SetValue(ValueSet values, boolean sort) throws ValueException
+	public SetValue(ValueSet values, boolean sort)
 	{
 		if (sort)
 		{
-			// The ordering here can throw a ValueException in cases where an
-			// order exists over a union of types and some members of the union
-			// do not match the type of the ord_T function parameters. Throwing
-			// an exception here allows the union convertTo to choose another
-			// type from the union, until one succeeds.
-
 			values.sort();
 		}
 
@@ -85,14 +78,7 @@ public class SetValue extends Value
 			nset.add(v);
 		}
 
-		try
-		{
-			return UpdatableValue.factory(new SetValue(nset), listeners);
-		}
-		catch (ValueException e)
-		{
-			return null;	// Never reached
-		}
+		return UpdatableValue.factory(new SetValue(nset), listeners);
 	}
 
 	@Override
@@ -106,14 +92,7 @@ public class SetValue extends Value
 			nset.add(v);
 		}
 
-		try
-		{
-			return new SetValue(nset);
-		}
-		catch (ValueException e)
-		{
-			return null;	// Never reached
-		}
+		return new SetValue(nset);
 	}
 
 	@Override
@@ -152,14 +131,7 @@ public class SetValue extends Value
 
 		for (ValueSet v : psets)
 		{
-			try
-			{
-				rs.add(new SetValue(v, false));		// NB not re-sorted!
-			}
-			catch (ValueException e)
-			{
-				// Not reached
-			}
+			rs.add(new SetValue(v, false)); // NB not re-sorted!
 		}
 
 		return rs;
@@ -200,13 +172,6 @@ public class SetValue extends Value
 	@Override
 	public Object clone()
 	{
-		try
-		{
-			return new SetValue((ValueSet) values.clone());
-		}
-		catch (ValueException e)
-		{
-			return null;	// Never reached
-		}
+		return new SetValue((ValueSet) values.clone());
 	}
 }

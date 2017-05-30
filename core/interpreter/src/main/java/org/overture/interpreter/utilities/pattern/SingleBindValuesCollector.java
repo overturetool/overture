@@ -45,11 +45,11 @@ public class SingleBindValuesCollector extends
 
 			for (Value e : elements)
 			{
-				Value d = e.deref();
+				e = e.deref();
 
-				if (d instanceof SetValue && state.permuted)
+				if (e instanceof SetValue && state.permuted)
 				{
-					SetValue sv = (SetValue) d;
+					SetValue sv = (SetValue) e;
 					results.addAll(sv.permutedSets());
 				} else
 				{

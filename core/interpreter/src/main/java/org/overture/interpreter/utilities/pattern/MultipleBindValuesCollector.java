@@ -45,11 +45,11 @@ public class MultipleBindValuesCollector extends
 
 			for (Value v : vs)
 			{
-				Value d = v.deref();
+				v = v.deref();
 
-				if (d instanceof SetValue && state.permuted)
+				if (v instanceof SetValue && state.permuted)
 				{
-					SetValue sv = (SetValue) d;
+					SetValue sv = (SetValue) v;
 					vl.addAll(sv.permutedSets());
 				} else
 				{

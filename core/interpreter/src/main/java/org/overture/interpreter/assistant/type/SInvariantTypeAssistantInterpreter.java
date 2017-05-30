@@ -22,31 +22,16 @@ public class SInvariantTypeAssistantInterpreter implements IAstAssistant
 
 	public FunctionValue getInvariant(SInvariantType type, Context ctxt)
 	{
-		return findFunction(type.getInvDef(), ctxt);
-	}
-
-	public FunctionValue getEquality(SInvariantType type, Context ctxt)
-	{
-		return findFunction(type.getEqDef(), ctxt);
-	}
-
-	public FunctionValue getOrder(SInvariantType type, Context ctxt)
-	{
-		return findFunction(type.getOrdDef(), ctxt);
-	}
-
-	protected FunctionValue findFunction(AExplicitFunctionDefinition invdef, Context ctxt)
-	{
+		AExplicitFunctionDefinition invdef = type.getInvDef();
 		if (invdef != null)
 		{
 			try
 			{
 				Value v = ctxt.getGlobal().lookup(invdef.getName());
 				return v.functionValue(ctxt);
-			}
-			catch (ValueException e)
+			} catch (ValueException e)
 			{
-				VdmRuntimeError.abort(invdef.getLocation(), e);
+				VdmRuntimeError.abort(type.getLocation(), e);
 			}
 		}
 
