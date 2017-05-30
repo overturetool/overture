@@ -21,8 +21,12 @@
  */
 package org.overture.typechecker.utilities;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
@@ -43,17 +47,16 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.relations.AEqRelation;
 import org.overture.ast.definitions.relations.AOrdRelation;
 import org.overture.ast.definitions.relations.PRelation;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.ARealLiteralExp;
-import org.overture.ast.expressions.AUndefinedExp;
-import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
@@ -65,6 +68,9 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import sun.jvm.hotspot.runtime.ppc.PPCCurrentFrameGuess;
+
+import javax.imageio.stream.IIOByteBuffer;
 
 /**
  * This class implements a way to find ImplicitDefinitions from nodes from the AST.
@@ -324,10 +330,13 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		}
 
 		if (node.getOrdRelation() != null) {
+			node.getOrdRelation().setRelDef(getRelDef(node.getOrdRelation(),node,node.getName().getOrdName(node.getLocation().clone())));
+			node.getInvType().setOrdDef(node.getOrdRelation().getRelDef());
+			setMinMax(node.getOrdRelation(),node);
 		}
 
 		if (node.getEqRelation() != null) {
-			node.getEqRelation().setRelDef(getRelDef(node.getEqRelation(),node,"eq"));
+			node.getEqRelation().setRelDef(getRelDef(node.getEqRelation(),node,node.getName().getEqName(node.getLocation().clone())));
 			node.getInvType().setEqDef(node.getEqRelation().getRelDef());
 		}
 
@@ -388,7 +397,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		return AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
 	}
 
-	private AExplicitFunctionDefinition getRelDef(PRelation node, ATypeDefinition typedef, String name) {
+	private AExplicitFunctionDefinition getRelDef(PRelation node, ATypeDefinition typedef, ILexNameToken fname) {
 		ILexLocation loc = node.getLhsPattern().getLocation();
 
 		List<PPattern> params = new Vector<PPattern>();
@@ -397,12 +406,24 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		parameters.add(params);
 
+		PTypeList ptypes = getPTypes(typedef);
 
+		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(fname, NameScope.GLOBAL, null, ftype, parameters,
+				node.getRelExp(), null, null, true, null);
+
+		def.setAccess(typedef.getAccess().clone()); // Same as type's
+		def.setClassDefinition(typedef.getClassDefinition());
+
+		return def;
+	}
+
+	private PTypeList getPTypes(ATypeDefinition typedef) {
 		PTypeList ptypes = new PTypeList();
 		if (typedef.getInvType() instanceof ARecordInvariantType)
 		{
 			// Records are inv_R: R +> bool
-			AUnresolvedType uType=AstFactory.newAUnresolvedType(typedef.getName().clone());
+			AUnresolvedType uType= AstFactory.newAUnresolvedType(typedef.getName().clone());
 			ptypes.add(uType.clone());
 			ptypes.add(uType.clone());
 		} else
@@ -412,15 +433,51 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			ptypes.add(nt.getType().clone());
 			ptypes.add(nt.getType().clone());
 		}
+		return ptypes;
+	}
 
-		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(typedef.getName().getEqName(loc), NameScope.GLOBAL, null, ftype, parameters,
-				node.getRelExp(), null, null, true, null);
+	private void setMinMax(AOrdRelation ordRelation, ATypeDefinition typeDef) {
+		ILexLocation loc = ordRelation.getRelDef().getLocation().clone();
 
-		def.setAccess(typedef.getAccess().clone()); // Same as type's
-		def.setClassDefinition(typedef.getClassDefinition());
+		PExp left = AstFactoryTC.newAVariableExp(new LexNameToken("", "x", loc.clone()));
+		PExp right = AstFactoryTC.newAVariableExp(new LexNameToken("", "y", loc.clone()));
 
-		return def;
+		List<PPattern> params = new LinkedList<>();
+		params.add(new AstFactoryTC().newAIdentifierPattern(new LexNameToken("", "x", loc.clone())));
+		params.add(new AstFactoryTC().newAIdentifierPattern(new LexNameToken("", "y", loc.clone())));
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		parameters.add(params);
+
+		AIfExp maxBody = AstFactoryTC.newAIfExp(loc.clone(),
+				AstFactoryTC.newALessEqualNumericBinaryExp(left.clone(), new LexToken(loc.clone(), VDMToken.LE), right.clone()),
+				left.clone(),
+				new LinkedList<>(),
+				right.clone());
+
+		PTypeList ptypes = getPTypes(typeDef);
+
+		AFunctionType ftype = AstFactory.newAFunctionType(loc.clone(), false, ptypes, typeDef.getInvType().clone());
+		AExplicitFunctionDefinition maxD = AstFactory.newAExplicitFunctionDefinition(typeDef.getName().getMaxName(loc), NameScope.GLOBAL, null, ftype, parameters,
+				maxBody, null, null, true, null);
+		ordRelation.setMaxDef(maxD);
+
+		AIfExp minBody = maxBody.clone();
+		minBody.setThen(right.clone());
+		minBody.setElse(left.clone());
+
+
+		ptypes = getPTypes(typeDef);
+		List<PPattern> temp = new LinkedList<>();
+		for (PPattern a : parameters.get(0)) {
+			temp.add(a.clone());
+		}
+		List<List<PPattern>> parameters2 = new LinkedList<>();
+		parameters2.add((temp));
+		ftype = AstFactory.newAFunctionType(loc.clone(), false, ptypes, typeDef.getInvType().clone());
+
+		AExplicitFunctionDefinition minD = AstFactory.newAExplicitFunctionDefinition(typeDef.getName().getMinName(loc), NameScope.GLOBAL, null, ftype, parameters2,
+				minBody, null, null, true, null);
+		ordRelation.setMinDef(minD);
 	}
 
 	public AExplicitFunctionDefinition getInvDefinition(ATypeDefinition d)
