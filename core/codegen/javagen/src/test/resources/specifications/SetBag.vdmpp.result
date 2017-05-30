@@ -131,25 +131,25 @@ public class Bag {
         SeqUtil.seq(
             'b', 'a', 'g', '1', ' ', 'e', 'q', 'u', 'a', 'l', 's', ' ', 'b', 'a', 'g', '2', ':',
             ' ', '%', 's', '\n'),
-        SeqUtil.seq(bag1.cg_equals(bag2)));
+        SeqUtil.seq(bag1.eq(bag2)));
     IO.printf(
         SeqUtil.seq(
             'b', 'a', 'g', '1', ' ', 'e', 'q', 'u', 'a', 'l', 's', ' ', 'a', ' ', 'b', 'a', 'g',
             ' ', 'c', 'o', 'n', 't', 'a', 'i', 'n', 'i', 'n', 'g', ' ', 'e', 'l', 'e', 'm', 'e',
             'n', 't', 's', ' ', '{', '3', ' ', '5', '}', ':', ' ', '%', 's', '\n'),
-        SeqUtil.seq(bag1.cg_equals(new Bag(SetUtil.set(3L, 5L)))));
+        SeqUtil.seq(bag1.eq(new Bag(SetUtil.set(3L, 5L)))));
     IO.printf(
         SeqUtil.seq(
             'b', 'a', 'g', '1', ' ', 'N', 'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', 's', ' ', 'b',
             'a', 'g', '2', ':', ' ', '%', 's', '\n'),
-        SeqUtil.seq(bag1.nequals(bag2)));
+        SeqUtil.seq(bag1.neq(bag2)));
     IO.printf(
         SeqUtil.seq(
             'b', 'a', 'g', '1', ' ', 'N', 'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', 's', ' ', 'a',
             ' ', 'b', 'a', 'g', ' ', 'c', 'o', 'n', 't', 'a', 'i', 'n', 'i', 'n', 'g', ' ', 'e',
             'l', 'e', 'm', 'e', 'n', 't', 's', ' ', '{', '3', ' ', '5', '}', ':', ' ', '%', 's',
             '\n'),
-        SeqUtil.seq(bag1.nequals(new Bag(SetUtil.set(3L, 5L)))));
+        SeqUtil.seq(bag1.neq(new Bag(SetUtil.set(3L, 5L)))));
     IO.print(SeqUtil.seq('\n'));
     IO.printf(
         SeqUtil.seq(
@@ -255,12 +255,12 @@ public class Bag {
     return SetUtil.psubset(bag.getNumbers(), numbers);
   }
 
-  public Boolean cg_equals(final Bag bag) {
+  public Boolean eq(final Bag bag) {
 
     return Utils.equals(numbers, bag.getNumbers());
   }
 
-  public Boolean nequals(final Bag bag) {
+  public Boolean neq(final Bag bag) {
 
     return !(Utils.equals(numbers, bag.getNumbers()));
   }
@@ -304,11 +304,4 @@ public class Bag {
 ##########
 *Quotes*
 append,start
-##########
-*Name Violations*
-
-java.lang.Object method violation: [Violation in module Bag: 'equals'. Location: line 78 at position: 47 in SetBag.vdmpp]. Prefix 'cg_' has been added to the name
-java.lang.Object method violation: [Violation in module Bag: 'equals'. Location: line 79 at position: 74 in SetBag.vdmpp]. Prefix 'cg_' has been added to the name
-java.lang.Object method violation: [Violation in module Bag: 'equals'. Location: line 154 at position: 8 in SetBag.vdmpp]. Prefix 'cg_' has been added to the name
-
 ##########

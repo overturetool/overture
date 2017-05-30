@@ -25,8 +25,8 @@ in
 	
 	IO`print("\n");
 	
-	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.equals(pb2)]);
-	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.nequals(pb2)]);
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);
 	
 	IO`print("\n");
 	
@@ -48,8 +48,8 @@ in
 	
 	IO`print("\n");
 	
-	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.equals(pb2)]);
-	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.nequals(pb2)]);	
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);	
 
 	IO`print("\n");
 
@@ -145,11 +145,11 @@ restrictToNumbers (numbers) == phoneNumbers := phoneNumbers :> numbers;
 public restrictByNumbers : set of Str ==> ()
 restrictByNumbers (numbers) == phoneNumbers := phoneNumbers :-> numbers;
 
-public equals : PhoneBook ==> bool
-equals (other) == return phoneNumbers = other.phoneNumbers;
+public eq : PhoneBook ==> bool
+eq (other) == return phoneNumbers = other.phoneNumbers;
 
-public nequals : PhoneBook ==> bool
-nequals (other) == return phoneNumbers <> other.phoneNumbers;
+public neq : PhoneBook ==> bool
+neq (other) == return phoneNumbers <> other.phoneNumbers;
 
 end PhoneBook
 

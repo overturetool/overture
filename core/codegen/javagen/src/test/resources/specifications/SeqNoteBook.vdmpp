@@ -23,15 +23,15 @@ in
 	nb1.addMessages(["one", "two", "three", "four"]);
 	nb1.addMessagesDist(["red", "green"], ["blue", "yellow"]);
 	
-	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.equals(nb2)]);
-	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.nequals(nb2)]);
+	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.eq(nb2)]);
+	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.neq(nb2)]);
 	IO`print("\n");
 	
 	IO`println("Copying the nb1 messages to nb2..\n");
 	nb2.setMessages(nb1.getMessagesOrdered());
 	
-	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.equals(nb2)]);
-	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.nequals(nb2)]);
+	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.eq(nb2)]);
+	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.neq(nb2)]);
 	IO`print("\n");
 	
 	IO`printf("The current number of messages in nb1 is: %s\n\n", [nb1.noOfMessgages()]);
@@ -151,11 +151,11 @@ getMessageIndices () == return inds messages;
 public getReverseMessages : () ==> seq of seq of char
 getReverseMessages () == return reverse messages;
 
-public equals : NoteBook ==> bool
-equals (other) == return messages = other.messages;
+public eq : NoteBook ==> bool
+eq (other) == return messages = other.messages;
 
-public nequals : NoteBook ==> bool
-nequals (other) == return messages <> other.messages;
+public neq : NoteBook ==> bool
+neq (other) == return messages <> other.messages;
 
 end NoteBook
 
