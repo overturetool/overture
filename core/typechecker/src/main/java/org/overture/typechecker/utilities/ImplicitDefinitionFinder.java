@@ -326,7 +326,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			for (PType compose : af.createPTypeAssistant().getComposeTypes(ntype.getType()))
 			{
 				ARecordInvariantType rtype = (ARecordInvariantType) compose;
-				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null, null, null));
+				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));
 			}
 		}
 	}
