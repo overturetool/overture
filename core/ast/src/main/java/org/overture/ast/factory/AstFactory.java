@@ -532,12 +532,6 @@ public class AstFactory
 	}
 
 	public static ATypeDefinition newATypeDefinition(ILexNameToken name,
-		SInvariantType type, PPattern invPattern, PExp invExpression)
-	{
-		return newATypeDefinition(name, type, invPattern, invExpression, null, null);
-	}
-	
-	public static ATypeDefinition newATypeDefinition(ILexNameToken name,
 			SInvariantType type, PPattern invPattern, PExp invExpression,
 			AEqRelation eqRelation, AOrdRelation ordRelation)
 	{
