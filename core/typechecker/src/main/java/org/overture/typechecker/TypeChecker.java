@@ -41,6 +41,8 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 abstract public class TypeChecker
 {
+	private static boolean suppress=false;
+
 	public interface IStatusListener
 	{
 		void report(VDMError error);
@@ -74,8 +76,14 @@ abstract public class TypeChecker
 
 	abstract public void typeCheck();
 
+	public static void suppressErrors(boolean sup)
+	{
+		suppress =sup;
+	}
+
 	public static void report(int number, String problem, ILexLocation location)
 	{
+		if (suppress) return;
 		VDMError error = new VDMError(number, problem, location);
 		// System.out.println(error.toString());
 		errors.add(error);
@@ -95,6 +103,7 @@ abstract public class TypeChecker
 
 	public static void warning(int number, String problem, ILexLocation location)
 	{
+		if (suppress) return;
 		VDMWarning warning = new VDMWarning(number, problem, location);
 		warnings.add(warning);
 		lastMessage = warning;
