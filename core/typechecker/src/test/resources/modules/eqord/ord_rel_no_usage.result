@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
-<message column="1" line="2" message="Definition 'compare' not used" messageType="warning" number="5000" resource="eq_rel_no_usage"/>
-<message column="18" line="3" message="Name 'eq_A' is not in scope" messageType="error" number="3182" resource="eq_rel_no_usage"/>
+<message column="1" line="2" message="Definition 'compare' not used" messageType="warning" number="5000" resource="ord_rel_no_usage"/>
+<message column="18" line="3" message="Name 'ord_A' is not in scope" messageType="error" number="3182" resource="ord_rel_no_usage"/>
 <result/>
 </testResult>
