@@ -21,30 +21,10 @@
  */
 package org.overture.typechecker.utilities;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
 import org.overture.ast.assistant.pattern.PTypeList;
-import org.overture.ast.definitions.AClassInvariantDefinition;
-import org.overture.ast.definitions.AEqualsDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.relations.AEqRelation;
+import org.overture.ast.definitions.*;
 import org.overture.ast.definitions.relations.AOrdRelation;
 import org.overture.ast.definitions.relations.PRelation;
 import org.overture.ast.expressions.*;
@@ -56,21 +36,16 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.AUnresolvedType;
-import org.overture.ast.types.PType;
+import org.overture.ast.types.*;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import sun.jvm.hotspot.runtime.ppc.PPCCurrentFrameGuess;
 
-import javax.imageio.stream.IIOByteBuffer;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * This class implements a way to find ImplicitDefinitions from nodes from the AST.
