@@ -1,5 +1,5 @@
 functions
-compare : A * A -> bool
+compare : A * A -> A
 compare (x,y) == min_A(x,y)
 
 types
