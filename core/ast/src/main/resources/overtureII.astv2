@@ -393,8 +393,6 @@ definition {-> package='org.overture.ast.definitions'
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.#Operation.explicit
     |   {type} (invType):type.#invariant [invPattern]:pattern [invExpression]:exp 
                [invdef]:definition.#Function.explicit [infinite]:java_Boolean (name):LexNameToken//is access missing here
-               [ordRelation]:relation.ord
-               [eqRelation]:relation.eq
                (composeDefinitions):definition*
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
@@ -455,21 +453,7 @@ definition {-> package='org.overture.ast.definitions'
             [errors]:case.error*
             (stateDefinition):definition
      ;
-
-/*
- * relations for type definitions
- */
-
-relation {-> package='org.overture.ast.definitions.relations'
-	|	[location]:location
-    | [lhsPattern]:pattern 
-    | [rhsPattern]:pattern [clauseExpression]:exp 
-    | [reldef]:definition.#Function.explicit}
-    = {eq}
-    | {ord} [minDef]:definition.#Function.explicit [maxDef]:definition.#Function.explicit
-    ; 
-
-
+ 
 /*
  * Trace defintions which is not definitions...
  */  
