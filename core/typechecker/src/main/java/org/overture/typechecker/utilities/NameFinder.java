@@ -463,35 +463,7 @@ public class NameFinder extends
 		{
 			return invdef;
 		}
-		
-		PDefinition eqdef = node.getEqRelation() == null ? null : node.getEqRelation().getRelDef();
-		
-		if (eqdef != null && eqdef.apply(this, question) != null)
-		{
-			return eqdef;
-		}
-		
-		PDefinition orddef = node.getOrdRelation() == null ? null : node.getOrdRelation().getRelDef();
-		
-		if (orddef != null && orddef.apply(this, question) != null)
-		{
-			return orddef;
-		}
-		
-		PDefinition mindef = node.getOrdRelation() == null ? null : node.getOrdRelation().getMinDef();
-		
-		if (mindef != null && mindef.apply(this, question) != null)
-		{
-			return mindef;
-		}
-		
-		PDefinition maxdef = node.getOrdRelation() == null ? null : node.getOrdRelation().getMaxDef();
-		
-		if (maxdef != null && maxdef.apply(this, question) != null)
-		{
-			return maxdef;
-		}
-		
+
 		return null;
 	}
 

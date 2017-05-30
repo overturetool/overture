@@ -577,7 +577,7 @@ public class AstFactory
 		
 		result.setLhsPattern(leftPattern);
 		result.setRhsPattern(rightPattern);
-		result.setRelExp(exp);
+		result.setRelexp(exp);
 		
 		return result;
 	}
@@ -588,7 +588,7 @@ public class AstFactory
 		
 		result.setLhsPattern(leftPattern);
 		result.setRhsPattern(rightPattern);
-		result.setRelExp(exp);
+		result.setRelexp(exp);
 		
 		return result;
 	}
