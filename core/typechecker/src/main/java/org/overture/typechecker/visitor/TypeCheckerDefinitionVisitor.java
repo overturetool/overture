@@ -1526,6 +1526,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			node.getEqRelation().apply(THIS,question);
 		}
 
+		if (node.getOrdRelation() != null)
+		{
+			question.scope = NameScope.NAMES;
+			node.getOrdRelation().apply(THIS,question);
+		}
+
 		PType type = question.assistantFactory.createPDefinitionAssistant().getType(node);
 		node.setType(type);
 
@@ -1723,6 +1729,16 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAEqRelation(AEqRelation node, TypeCheckInfo question) throws AnalysisException {
 		return node.getRelDef().apply(THIS,question);
+	}
+
+	@Override
+	public PType caseAOrdRelation(AOrdRelation node, TypeCheckInfo question) throws AnalysisException {
+		// Do not report TC errors for Min or Max. Just confusing.
+		TypeChecker.suppressErrors(true);
+		node.getMinDef().apply(THIS,question);
+		node.getMaxDef().apply(THIS,question);
+		TypeChecker.suppressErrors(false);
+		return node.getRelDef().apply(THIS, question);
 	}
 
 	public void typeCheck(List<PTraceDefinition> term,
