@@ -50,6 +50,12 @@ public interface ILexNameToken extends ILexIdentifierToken
 
 	ILexNameToken getEqName(ILexLocation l);
 
+	ILexNameToken getOrdName(ILexLocation l);
+
+	ILexNameToken getMinName(ILexLocation l);
+
+	ILexNameToken getMaxName(ILexLocation l);
+
 	boolean isReserved();
 
 	ILexLocation getLocation();
