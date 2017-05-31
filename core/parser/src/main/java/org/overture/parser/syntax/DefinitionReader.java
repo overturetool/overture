@@ -440,6 +440,11 @@ public class DefinitionReader extends SyntaxReader
         			break;
         			
     			case EQ:
+    				if (Settings.release == Release.CLASSIC)
+    				{
+    					throwMessage(2333, "Type eq/ord clauses not available in classic");
+    				}
+
     				if (eqPattern1 != null)
     				{
     					throwMessage(2332, "Duplicate eq clause");
@@ -455,6 +460,11 @@ public class DefinitionReader extends SyntaxReader
     				break;
     				
     			case ORD:
+    				if (Settings.release == Release.CLASSIC)
+    				{
+    					throwMessage(2333, "Type eq/ord clauses not available in classic");
+    				}
+
     				if (ordPattern1 != null)
     				{
     					throwMessage(2332, "Duplicate ord clause");
