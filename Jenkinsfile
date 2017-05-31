@@ -51,7 +51,12 @@ node {
     currentBuild.result = 'FAILURE'
     throw any //rethrow exception to prevent the build from proceeding
   } finally {
-  
+
+    stage ('Clean up workspace'){
+
+      step([$class: 'WsCleanup'])
+    }
+
     stage('Reporting'){
 
       // Notify on build failure using the Email-ext plugin
