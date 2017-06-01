@@ -560,7 +560,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 
 		return actual;
 	}
-	
+
 	public boolean isUnknown(AUnionType type)
 	{
 		for (PType t : type.getTypes())
@@ -572,5 +572,16 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		}
 
 		return false;
+	}
+
+	public boolean isOrdered(PType type, ILexLocation from)
+	{
+		try
+		{
+			return type.apply(af.getIsOrderedVisitor(),from);
+		} catch (AnalysisException e)
+		{
+			return false;
+		}
 	}
 }

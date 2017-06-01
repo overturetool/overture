@@ -33,6 +33,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
@@ -399,4 +400,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
 	
 	IAnswer<Boolean> getInstanceVariableChecker();
+
+	IQuestionAnswer<ILexLocation,Boolean> getIsOrderedVisitor();
+
+	IQuestionAnswer<ILexLocation,Boolean> getIsEqVisitor();
 }
