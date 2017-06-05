@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="3" line="238" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
-<message column="9" line="323" message="Left hand of - is not numeric" messageType="error" number="3139" resource="ProgLangSL"/>
+<message column="9" line="323" message="Left hand of - is not ordered" messageType="error" number="3139" resource="ProgLangSL"/>
 <result/>
 </testResult>
