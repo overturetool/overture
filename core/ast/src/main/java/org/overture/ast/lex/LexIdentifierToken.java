@@ -39,17 +39,17 @@ public class LexIdentifierToken extends LexToken implements ILexIdentifierToken
 	public final String name;
 	public final boolean old;
 
-	@Override
-	public boolean getOld()
-	{
-		return old;
-	}
-
 	public LexIdentifierToken(String name, boolean old, ILexLocation location)
 	{
 		super(location, VDMToken.IDENTIFIER);
 		this.name = name;
 		this.old = old;
+	}
+
+	@Override
+	public boolean getOld()
+	{
+		return old;
 	}
 
 	public ILexNameToken getClassName()

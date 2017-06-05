@@ -60,6 +60,8 @@ public class DbgpDebugingEngine extends DbgpTermination implements
 	// FIXME [OutOfMemory]
 	private static boolean outOfMemory = false;
 
+	private final ListenerList listeners = new ListenerList();
+
 	public DbgpDebugingEngine(Socket socket) throws IOException
 	{
 		this.socket = socket;
@@ -183,8 +185,6 @@ public class DbgpDebugingEngine extends DbgpTermination implements
 
 		fireObjectTerminated(e);
 	}
-
-	private final ListenerList listeners = new ListenerList();
 
 	protected void firePacketReceived(IDbgpRawPacket content)
 	{

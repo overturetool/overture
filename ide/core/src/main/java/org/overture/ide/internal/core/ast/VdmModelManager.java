@@ -34,16 +34,16 @@ import org.overture.ide.core.resources.IVdmProject;
 public class VdmModelManager implements IVdmModelManager
 {
 	Map<IVdmProject, Map<String, IVdmModel>> asts;
-
-	protected VdmModelManager()
-	{
-		asts = new HashMap<IVdmProject, Map<String, IVdmModel>>();
-	}
-
+	
 	/**
 	 * A handle to the unique Singleton instance.
 	 */
 	static private volatile VdmModelManager _instance = null;
+	
+	protected VdmModelManager()
+	{
+		asts = new HashMap<IVdmProject, Map<String, IVdmModel>>();
+	}
 
 	/**
 	 * @return The unique instance of this class.

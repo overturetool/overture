@@ -46,6 +46,47 @@ public class TypeCheckInfo
 	 */
 	private static final Map<Class<?>, Object> context = new HashMap<Class<?>, Object>();
 
+	public final Environment env;
+	public NameScope scope;
+	public LinkedList<PType> qualifiers;
+	public final PType constraint; // expressions
+	public final PType returnType; // statements
+
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
+						 Environment env, NameScope scope, LinkedList<PType> qualifiers,
+						 PType constraint, PType returnType)
+	{
+		this.assistantFactory = assistantFactory;
+		this.env = env;
+		this.scope = scope;
+		this.qualifiers = qualifiers;
+		this.constraint = constraint;
+		this.returnType = returnType;
+	}
+
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
+						 Environment env, NameScope scope, LinkedList<PType> qualifiers)
+	{
+		this(assistantFactory, env, scope, qualifiers, null, null);
+	}
+
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
+						 Environment env, NameScope scope)
+	{
+		this(assistantFactory, env, scope, null, null, null);
+	}
+
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
+						 Environment env)
+	{
+		this(assistantFactory, env, null, null, null, null);
+	}
+
+	public TypeCheckInfo()
+	{
+		this(null, null, null, null, null, null);
+	}
+
 	public static void clearContext()
 	{
 		context.clear();
@@ -130,47 +171,6 @@ public class TypeCheckInfo
 			}
 		}
 		return null;
-	}
-
-	public final Environment env;
-	public NameScope scope;
-	public LinkedList<PType> qualifiers;
-	public final PType constraint; // expressions
-	public final PType returnType; // statements
-
-	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
-			Environment env, NameScope scope, LinkedList<PType> qualifiers,
-			PType constraint, PType returnType)
-	{
-		this.assistantFactory = assistantFactory;
-		this.env = env;
-		this.scope = scope;
-		this.qualifiers = qualifiers;
-		this.constraint = constraint;
-		this.returnType = returnType;
-	}
-
-	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
-			Environment env, NameScope scope, LinkedList<PType> qualifiers)
-	{
-		this(assistantFactory, env, scope, qualifiers, null, null);
-	}
-
-	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
-			Environment env, NameScope scope)
-	{
-		this(assistantFactory, env, scope, null, null, null);
-	}
-
-	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
-			Environment env)
-	{
-		this(assistantFactory, env, null, null, null, null);
-	}
-
-	public TypeCheckInfo()
-	{
-		this(null, null, null, null, null, null);
 	}
 
 	@Override

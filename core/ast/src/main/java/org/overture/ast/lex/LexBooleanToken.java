@@ -39,12 +39,6 @@ public class LexBooleanToken extends LexToken implements ILexBooleanToken
 	private static final long serialVersionUID = 1L;
 	public boolean value;
 
-	@Override
-	public boolean getValue()
-	{
-		return value;
-	}
-
 	public LexBooleanToken(VDMToken value, ILexLocation location)
 	{
 		super(location, value);
@@ -55,6 +49,12 @@ public class LexBooleanToken extends LexToken implements ILexBooleanToken
 	{
 		super(location, value ? VDMToken.TRUE : VDMToken.FALSE);
 		this.value = value;
+	}
+
+	@Override
+	public boolean getValue()
+	{
+		return value;
 	}
 
 	@Override
