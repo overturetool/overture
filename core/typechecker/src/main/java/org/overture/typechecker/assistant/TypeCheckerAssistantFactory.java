@@ -136,6 +136,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 	transient SFunctionDefinitionAssistantTC sfd;
 	transient IsEqVisitor iEqV;
 	transient IsOrderedVisitor iOrdV;
+	transient MultipleEqualityChecker mulEqCheckr;
 
 	//	@Override
 	//	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -1005,5 +1006,14 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 			iEqV = new IsEqVisitor();
 		}
 		return iOrdV;
+	}
+
+	@Override public IQuestion<TypeCheckInfo> getMultipleEqualityChecker()
+	{
+		if (mulEqCheckr == null)
+		{
+			mulEqCheckr = new MultipleEqualityChecker();
+		}
+		return mulEqCheckr;
 	}
 }
