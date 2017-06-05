@@ -30,9 +30,9 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.overture.codegen.printer.IPrinter;
+import org.overture.codegen.printer.AbstractPrinter;
 
-public class CodeGenConsole implements IPrinter
+public class CodeGenConsole extends AbstractPrinter
 {
 	private final PrintWriter out;
 	private final PrintWriter err;
@@ -128,11 +128,5 @@ public class CodeGenConsole implements IPrinter
 		{
 			codeGenConsole.clearConsole();
 		}
-	}
-
-	@Override
-	public void setSilent(boolean arg0)
-	{
-		// Do nothing..
 	}
 }

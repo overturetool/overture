@@ -450,7 +450,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.getLeft().apply(THIS, noConstraint);
 		node.getRight().apply(THIS, noConstraint);
 
-		if (!question.assistantFactory.getTypeComparator().compatible(node.getLeft().getType(), node.getRight().getType()))
+		if (!question.assistantFactory.getTypeComparator().compatible(node.getLeft().getType(), node.getRight().getType()) ||
+			!question.assistantFactory.getTypeComparator().compatible(node.getRight().getType(), node.getLeft().getType()))
 		{
 			TypeCheckerErrors.report(3087, "Left and right of '=' are incompatible types", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Left", node.getLeft().getType(), "Right", node.getRight().getType());

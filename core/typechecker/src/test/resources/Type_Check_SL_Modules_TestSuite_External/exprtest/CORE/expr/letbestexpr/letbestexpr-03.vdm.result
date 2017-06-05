@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<result/>
+<message column="31" line="17" message="Left and right of '=' are incompatible types" messageType="error" number="3087" resource="letbestexpr-103.vdm"/>
 </testResult>

@@ -1398,6 +1398,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				statusReason = DBGPReason.OK;
 				if (!traceExpression)
 				{
+	    			long before = System.currentTimeMillis();
 					if (expression.equals("###CONSOLE###"))
 					{
 						run();
@@ -1405,8 +1406,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 					{
 						theAnswer = interpreter.execute(expression, this);
 					}
-					stdout("\n" + expression + " = " + theAnswer.toString()
-							+ "\n");
+					stdout("\n" + expression + " = " + theAnswer.toString() + "\n");
+	    			long after = System.currentTimeMillis();
+	    			stdout("Executed in " + (double)(after-before)/1000 + " secs. ");
 				} else
 				{
 					String[] parts = expression.split("\\s+");

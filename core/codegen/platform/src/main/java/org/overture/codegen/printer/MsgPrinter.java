@@ -24,18 +24,18 @@ package org.overture.codegen.printer;
 public class MsgPrinter
 {
 
-	private static IPrinter log;
+	private static AbstractPrinter log;
 
 	private MsgPrinter()
 	{
 	}
 
-	public static void setPrinter(IPrinter newLog)
+	public static void setPrinter(AbstractPrinter newLog)
 	{
 		log = newLog;
 	}
 
-	public static IPrinter getPrinter()
+	public static AbstractPrinter getPrinter()
 	{
 		if (log == null)
 		{

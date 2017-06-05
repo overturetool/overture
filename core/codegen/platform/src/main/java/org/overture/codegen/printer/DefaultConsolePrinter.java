@@ -21,7 +21,7 @@
  */
 package org.overture.codegen.printer;
 
-public class DefaultConsolePrinter implements IPrinter
+public class DefaultConsolePrinter extends AbstractPrinter
 {
 
 	private static DefaultConsolePrinter log;
@@ -36,19 +36,13 @@ public class DefaultConsolePrinter implements IPrinter
 		return log;
 	}
 
-	private boolean silent;
+	protected boolean silent;
 
 	private DefaultConsolePrinter()
 	{
-		this.silent = false;
+		super();
 	}
-
-	@Override
-	public void setSilent(boolean silent)
-	{
-		this.silent = silent;
-	}
-
+	
 	@Override
 	public void println(String msg)
 	{

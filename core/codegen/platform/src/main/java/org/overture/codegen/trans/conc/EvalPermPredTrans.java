@@ -48,6 +48,11 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
+		if(transAssistant.getInfo().getDeclAssistant().isFullyAbstract(transAssistant.getInfo().getDeclAssistant().getSourceClass(node), transAssistant.getInfo()))
+		{
+			return;
+		}
+		
 		handleStateUpdate(node);
 	}
 
@@ -56,6 +61,11 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		if(transAssistant.getInfo().getDeclAssistant().isTest(node.getAncestor(ADefaultClassDeclIR.class)))
+		{
+			return;
+		}
+		
+		if(transAssistant.getInfo().getDeclAssistant().isFullyAbstract(transAssistant.getInfo().getDeclAssistant().getSourceClass(node), transAssistant.getInfo()))
 		{
 			return;
 		}
@@ -77,6 +87,11 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		if(transAssistant.getInfo().getDeclAssistant().isTest(node.getAncestor(ADefaultClassDeclIR.class)))
+		{
+			return;
+		}
+		
+		if(transAssistant.getInfo().getDeclAssistant().isFullyAbstract(transAssistant.getInfo().getDeclAssistant().getSourceClass(node), transAssistant.getInfo()))
 		{
 			return;
 		}

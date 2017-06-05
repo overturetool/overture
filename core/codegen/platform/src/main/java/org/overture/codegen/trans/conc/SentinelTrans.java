@@ -53,6 +53,11 @@ public class SentinelTrans extends DepthFirstAnalysisAdaptor
 			info.addTransformationWarning(node, MainClassConcTrans.MULTIPLE_INHERITANCE_WARNING);
 			return;
 		}
+		
+		if(info.getDeclAssistant().isFullyAbstract(info.getDeclAssistant().getSourceClass(node), info))
+		{
+			return;
+		}
 
 		ADefaultClassDeclIR innerClass = new ADefaultClassDeclIR();
 		innerClass.setStatic(true);

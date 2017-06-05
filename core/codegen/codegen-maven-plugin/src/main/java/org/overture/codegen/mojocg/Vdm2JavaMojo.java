@@ -16,7 +16,8 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.mojocg.util.DelegateTrans;
-import org.overture.codegen.printer.DefaultConsolePrinter;
+import org.overture.codegen.printer.AbstractPrinter;
+import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -48,9 +49,38 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
+		MsgPrinter.setPrinter(new AbstractPrinter() {
+
+			@Override
+			public void println(String msg) {
+
+				print(msg);
+			}
+
+			@Override
+			public void print(String msg) {
+
+				if (!silent) {
+					getLog().info(msg);
+				}
+			}
+
+			@Override
+			public void errorln(String msg) {
+
+				error(msg);
+			}
+
+			@Override
+			public void error(String msg) {
+
+				getLog().error(msg);
+			}
+		});
+		
 		if (!verbose)
 		{
-			DefaultConsolePrinter.getDefaultLogger().setSilent(true);
+			MsgPrinter.getPrinter().setSilent(true);
 		}
 
 		if (outputDirectory != null && outputDirectory.exists())
@@ -77,6 +107,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 		javaSettings.setFormatCode(formatCode);
 		javaSettings.setGenJUnit4tests(genJUnit4Tests);
 		javaSettings.setPrintVdmLocations(printVdmLocations);
+		javaSettings.setGenSystemClass(genSystemClass);
 		
 		if(modulesToSkip != null && !modulesToSkip.isEmpty())
 		{
@@ -103,8 +134,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo
 
 		if (files == null || files.isEmpty())
 		{
-			getLog().info("Nothing to generate, no specification files.");
-			return;
+			throw new MojoFailureException("Nothing to generate, no specification files.");
 		}
 
 		outputDirectory.mkdirs();

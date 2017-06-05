@@ -55,6 +55,7 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SPatternIR;
@@ -140,6 +141,11 @@ public class DeclAssistantIR extends AssistantBase
 	
 	public boolean isFullyAbstract(SClassDefinition clazz, IRInfo info)
 	{
+		if(clazz == null)
+		{
+			return false;
+		}
+		
 		if(info.getInstantiatedClasses().contains(clazz.getName().getName()))
 		{
 			return false;
@@ -1017,5 +1023,21 @@ public class DeclAssistantIR extends AssistantBase
 		constructor.setBody(new ABlockStmIR());
 
 		return constructor;
+	}
+	
+	public SClassDefinition getSourceClass(PIR node) {
+
+		SClassDeclIR enclosingClass = node.getAncestor(SClassDeclIR.class);
+
+		if (enclosingClass != null) {
+
+			INode sourceNode = AssistantBase.getVdmNode(node);
+
+			if (sourceNode instanceof SClassDefinition) {
+				return (SClassDefinition) sourceNode;
+			}
+		}
+
+		return null;
 	}
 }
