@@ -3399,7 +3399,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getLeft().getType()))
 		{
 			TypeCheckerErrors.report(3139, "Left hand of " + node.getOp()
-					+ " is not ordered", node.getLocation(), node);
+					+ " is not numeric", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", node.getLeft().getType());
 			node.getLeft().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		}
@@ -3407,7 +3407,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3140, "Right hand of " + node.getOp()
-					+ " is not ordered", node.getLocation(), node);
+					+ " is not numeric", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", node.getRight().getType());
 			node.getRight().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		}
