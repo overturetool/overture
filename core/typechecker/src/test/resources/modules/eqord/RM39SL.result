@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
-<message column="7" line="81" message="Mk_ expression is not a record type" messageType="error" number="3200" resource="RM39SL"/>
-<message column="26" line="81" message="Mk_ expression is not a record type" messageType="error" number="3200" resource="RM39SL"/>
-<message column="46" line="81" message="Name 'RM39`n1' is not in scope" messageType="error" number="3182" resource="RM39SL"/>
-<message column="55" line="81" message="Name 'RM39`s1' is not in scope" messageType="error" number="3182" resource="RM39SL"/>
-<message column="60" line="81" message="Name 'RM39`n2' is not in scope" messageType="error" number="3182" resource="RM39SL"/>
-<message column="69" line="81" message="Name 'RM39`s2' is not in scope" messageType="error" number="3182" resource="RM39SL"/>
 <result/>
 </testResult>

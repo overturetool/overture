@@ -355,6 +355,30 @@ public class DefinitionTypeResolver extends
 				af.createPPatternAssistant().typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
 			}
 
+			if (node.getEqRelation() != null)
+			{
+				node.getEqRelation().getRelDef().apply(this, question);
+				af.createPPatternAssistant().typeResolve(node.getEqRelation().getLhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant().typeResolve(node.getEqRelation().getRhsPattern(), question.rootVisitor, question.question);
+			}
+			
+			if (node.getOrdRelation() != null)
+			{
+				node.getOrdRelation().getRelDef().apply(this, question);
+				af.createPPatternAssistant().typeResolve(node.getOrdRelation().getLhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant().typeResolve(node.getOrdRelation().getRhsPattern(), question.rootVisitor, question.question);
+
+				if (node.getOrdRelation().getMinDef() != null)
+				{
+					node.getOrdRelation().getMinDef().apply(this, question);
+				}
+				
+				if (node.getOrdRelation().getMaxDef() != null)
+				{
+					node.getOrdRelation().getMaxDef().apply(this, question);
+				}
+			}
+
 			node.setType(node.getInvType());
 
 			if (!node.getComposeDefinitions().isEmpty())
