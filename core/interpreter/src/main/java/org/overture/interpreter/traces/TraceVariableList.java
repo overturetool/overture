@@ -56,7 +56,7 @@ public class TraceVariableList extends Vector<TraceVariable>
 
 			if (value.isType(ObjectValue.class))
 			{
-				ObjectValue obj = (ObjectValue) value;
+				ObjectValue obj = (ObjectValue) value.deref();
 				ObjectValue self = ctxt.getSelf();
 
 				// We have to clone new objects that were created within the trace,
