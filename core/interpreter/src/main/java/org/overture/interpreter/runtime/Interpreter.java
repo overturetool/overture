@@ -744,12 +744,9 @@ abstract public class Interpreter
 						+ test.getFilter());
 			} else
 			{
-				if(!failed)
-				{
-					// Initialize completely between every run...
-					init(ctxt.threadState.dbgp);
-					result = runOneTrace(tracedef, test, debug);
-				}
+				// Initialize completely between every run...
+				init(ctxt.threadState.dbgp);
+				result = runOneTrace(tracedef, test, debug);
 
 				tests.filter(result, test, n);
 				writer.println("Test " + n + " = " + clean);
