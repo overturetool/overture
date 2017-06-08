@@ -1,0 +1,47 @@
+class BirthdayBook
+
+instance variables
+	known: set of Name := {};
+	birthday: map Name to Date := { |-> };
+	inv known = dom birthday;
+
+operations	
+	public addBirthday: Name * Date ==> ()
+	addBirthday(name, date) == (
+		known := dom birthday;
+		birthday := birthday munion {name |-> date}
+	)
+	pre name not in set known;
+
+		
+end BirthdayBook
+
+class Entry
+instance variables
+	bb: BirthdayBook := new BirthdayBook();
+	nameSet: set of Name := {
+		new Name("Paul"),
+		new Name("Jacques")
+	};
+	
+traces
+  T1:
+    (
+    	let x in set nameSet in bb.addBirthday(x, new Date())
+    ){1,3}
+
+end Entry
+		
+
+class Name
+instance variables
+	name: seq of char := "";
+operations
+	public Name : seq of char ==> Name
+	Name(theName) == (
+		name := theName
+	)
+end Name
+
+class Date
+end Date
