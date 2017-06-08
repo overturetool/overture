@@ -1,1 +1,1 @@
-["Error 3155: seqcomprehensionexpr-03.vdm at 12:11 List comprehension must define one numeric bind variable"]
+["Error 3155: seqcomprehensionexpr-03.vdm at 12:11 List comprehension must define one ordered bind variable"]
