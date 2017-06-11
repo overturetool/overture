@@ -45,8 +45,14 @@ public enum POType
 			"state invariant initialized"), STATE_INV_SAT(
 			"state invariant satisfiable"), TYPE_COMP("type compatibility"), TYPE_INV_SAT(
 			"type invariant satisfiable"), TUPLE_SELECT("tuple selection"), UNIQUE_EXISTENCE(
-			"unique existence binding"), VALUE_BINDING("value binding"), WHILE_LOOP(
-			"while loop termination"), SET_MEMBER("set membership"), SEQ_MEMBER("sequence membership");
+			"unique existence binding"),
+			ORDERED("ordered"),
+			STRICT_ORDER("strict order relation"),
+			EQUIV_REL( "equivalence relation"),
+			VALUE_BINDING("value binding"),
+			WHILE_LOOP( "while loop termination"),
+			SET_MEMBER("set membership"),
+			SEQ_MEMBER("sequence membership");
 
 	private String kind;
 
