@@ -1,0 +1,9 @@
+-- This test exercises the generation of a Equivalence Obligation with an
+-- eq clause off a Type Definition
+
+
+types
+
+E = int
+eq e1=e2 == e1 = e2
+
