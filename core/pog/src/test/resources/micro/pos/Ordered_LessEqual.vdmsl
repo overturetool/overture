@@ -1,0 +1,17 @@
+-- This test exercises the generation of an Ordered Obligation with an
+-- ord clause off a Type Definition and a comparison of values
+
+
+types
+        A = nat
+        ord a < b == a < b;
+
+        B = real
+        ord a < b == a > b;
+
+        C = A | B      -- 2x warning 5019 here
+        ord a < b == a < b;
+
+functions
+        f: (A | B) * (C | char) -> bool
+        f(a, b) == a <= b;
