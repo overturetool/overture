@@ -151,7 +151,7 @@ public class Tuple implements ValueType, Comparable
 			final Object otherNthValue = other.get(i);
 			if (thisNthValue == null && otherNthValue != null
 					|| thisNthValue != null
-							&& !thisNthValue.equals(otherNthValue))
+							&& !Utils.equals(thisNthValue, otherNthValue))
 			{
 				return false;
 			}
