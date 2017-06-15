@@ -1,0 +1,12 @@
+class A
+
+types
+
+T = nat;
+
+operations
+
+public static op : (T * nat) ==> ()
+op(x) == is not yet specified;
+
+end A
