@@ -1,0 +1,35 @@
+<traces>
+	<class name="Entry">
+		<trace name="T1" testcount="14" filename="birthday-issue628" line="30" column="3" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">bb.addBirthday(x, new Date())</test>
+			<result no="1" verdict="FAILED">Error 4130: Instance invariant violated: inv_BirthdayBook in &apos;BirthdayBook&apos; at line 12:3</result>
+			<test no="2">bb.addBirthday(x, new Date())</test>
+			<result no="2" verdict="FAILED">Error 4130: Instance invariant violated: inv_BirthdayBook in &apos;BirthdayBook&apos; at line 12:3</result>
+			<test no="3">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="3" verdict="SKIPPED"></result>
+			<test no="4">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="4" verdict="SKIPPED"></result>
+			<test no="5">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="5" verdict="SKIPPED"></result>
+			<test no="6">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="6" verdict="SKIPPED"></result>
+			<test no="7">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="7" verdict="SKIPPED"></result>
+			<test no="8">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="8" verdict="SKIPPED"></result>
+			<test no="9">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="9" verdict="SKIPPED"></result>
+			<test no="10">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="10" verdict="SKIPPED"></result>
+			<test no="11">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="11" verdict="SKIPPED"></result>
+			<test no="12">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="12" verdict="SKIPPED"></result>
+			<test no="13">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="13" verdict="SKIPPED"></result>
+			<test no="14">bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date()); bb.addBirthday(x, new Date())</test>
+			<result no="14" verdict="SKIPPED"></result>
+			<status verdict="FAILED" testcount="14" skippedcount="12" faildcount="14" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>
