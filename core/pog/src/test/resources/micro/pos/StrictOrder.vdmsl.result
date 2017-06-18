@@ -1,1 +1,1 @@
-["strict order relation obligation in \u0027DEFAULT\u0027 (StrictOrder.vdmsl) at line 7:1: Strict Order"]
+["strict order relation obligation in \u0027DEFAULT\u0027 (StrictOrder.vdmsl) at line 7:1: (forall e1, e2:E \u0026 ((not (e1 \u003c e1)) and (((e1 \u003c e2) and (e2 \u003c x1)) \u003d\u003e (e1 \u003c x1))))"]
