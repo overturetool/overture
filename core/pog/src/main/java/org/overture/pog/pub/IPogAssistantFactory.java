@@ -1,10 +1,8 @@
 package org.overture.pog.pub;
 
 import org.overture.pog.utility.PDefinitionAssistantPOG;
-import org.overture.pog.visitors.IInvExpGetVisitor;
-import org.overture.pog.visitors.ILocaleExtractVisitor;
-import org.overture.pog.visitors.IVariableSubVisitor;
-import org.overture.pog.visitors.StateDesignatorNameGetter;
+import org.overture.pog.utility.UniqueNameGenerator;
+import org.overture.pog.visitors.*;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -27,5 +25,8 @@ public interface IPogAssistantFactory extends ITypeCheckerAssistantFactory {
 	ILocaleExtractVisitor getLocaleExtractVisitor();
 
 	IInvExpGetVisitor getInvExpGetVisitor();
+
+	PatternToExpVisitor getPatternToExpVisitor(
+			UniqueNameGenerator uniqueNameGen);
 
 }
