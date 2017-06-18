@@ -46,6 +46,8 @@ public class IntegerValue extends RationalValue
 	@Override
 	public int compareTo(Value other)
 	{
+		other = other.deref();
+		
 		if (other instanceof IntegerValue)
 		{
 			IntegerValue io = (IntegerValue) other;

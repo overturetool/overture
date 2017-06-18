@@ -56,6 +56,8 @@ public class RealValue extends NumericValue
 	@Override
 	public int compareTo(Value other)
 	{
+		other = other.deref();
+		
 		if (other instanceof RealValue)
 		{
 			RealValue ro = (RealValue) other;
