@@ -1595,29 +1595,33 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			System.out.println("fd");
 		}
 
-		if (aF.createPTypeAssistant().isUnion(ltype))
-		{
-			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question, aF);
-			if (sto != null)
-			{
-				obligations.add(sto);
-			}
-		}
-
-		if (aF.createPTypeAssistant().isUnion(rtype))
-		{
-			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(right, AstFactory.newARealNumericBasicType(right.getLocation()), rtype, question, aF);
-			if (sto != null)
-			{
-				obligations.add(sto);
-			}
-		}
+		handleBinExpSubNode(question, obligations, left, ltype);
+		handleBinExpSubNode(question, obligations, right , rtype);
 
 		obligations.addAll(left.apply(mainVisitor, question));
 		obligations.addAll(right.apply(mainVisitor, question));
 
 		return obligations;
 
+	}
+
+	private void handleBinExpSubNode(IPOContextStack question,
+			IProofObligationList obligations, PExp left, PType ltype)
+			throws AnalysisException
+	{
+		PTypeAssistantTC pTA = aF.createPTypeAssistant();
+		if (pTA.isUnion(ltype))
+		{
+			for (PType type : pTA.getUnion(ltype).getTypes()){
+				if (!pTA.isNumeric(type)){
+					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question, aF);
+					if (sto != null)
+					{
+						obligations.add(sto);
+					}
+				}
+			}
+		}
 	}
 
 	public IProofObligationList getCommonOrderedObligations(
