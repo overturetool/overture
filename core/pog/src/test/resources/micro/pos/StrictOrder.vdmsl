@@ -5,5 +5,5 @@
 types
 
 E = int
-ord e1<e2 == e1 < e2
+ord e1<e2 == e1 +1 < e2
 
