@@ -25,13 +25,16 @@ package org.overture.pog.obligation;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.statements.ASkipStm;
-import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.expressions.*;
+import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
+
+import java.util.List;
+import java.util.Vector;
 
 public class EquivalenceRelationObligation extends ProofObligation
 {
@@ -42,7 +45,49 @@ public class EquivalenceRelationObligation extends ProofObligation
 			throws AnalysisException
 	{
 		super(node, POType.EQUIV_REL, question, node.getLocation(), af);
-		AVariableExp nyexp = getVarExp(new LexNameToken("", "Equivalence", null));
-		valuetree.setPredicate(nyexp);
+
+		AVariableExp xExp = getVarExp(getUnique("x"));
+		AVariableExp yExp = getVarExp(getUnique("y"));
+		AVariableExp zExp = getVarExp(getUnique("z"));
+
+		AForAllExp forallExp = makeRelContext(node,xExp,yExp,zExp);
+
+		PExp andExp1 = makeAnd(makeReflexive(xExp,node),makeSymmetric(xExp,yExp,node));
+		PExp andExp2 = makeAnd(andExp1, makeTransitive(xExp,yExp,zExp,node));
+		forallExp.setPredicate(andExp2);
+		valuetree.setPredicate(forallExp);
+	}
+
+	private PExp makeTransitive(PExp x, PExp y, AVariableExp z,
+			ATypeDefinition node)
+	{
+		PExp xyExp = makeEqWithApply(x,y,node);
+		PExp yzExp = makeEqWithApply(y,z,node);
+		PExp xzExp = makeEqWithApply(x,z,node);
+		AAndBooleanBinaryExp andExp = AstExpressionFactory.newAAndBooleanBinaryExp(xyExp,yzExp);
+		AImpliesBooleanBinaryExp impExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(andExp,xzExp);
+		return impExp;
+	}
+
+	private PExp makeSymmetric(PExp x, PExp y,ATypeDefinition node)
+	{
+		PExp xyExp = makeEqWithApply(x,y,node);
+		PExp yxExp = makeEqWithApply(y,x,node);
+		PExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(xyExp,yxExp);
+		return impliesExp;
+	}
+
+	private PExp makeReflexive(PExp xExp, ATypeDefinition node)
+	{
+		PExp applyExp = makeEqWithApply(xExp, xExp, node);
+		return applyExp;
+	}
+
+	private PExp makeEqWithApply(PExp l, PExp r, ATypeDefinition node){
+		List<PExp> args = new Vector<>();
+		args.add(l.clone());
+		args.add(r.clone());
+		PExp root = AstFactory.newAVariableExp(node.getName().getEqName(node.getLocation()).clone());
+		return AstFactory.newAApplyExp(root,args);
 	}
 }

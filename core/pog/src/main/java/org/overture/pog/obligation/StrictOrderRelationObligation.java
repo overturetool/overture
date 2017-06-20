@@ -28,15 +28,11 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.patterns.ATypeMultipleBind;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -54,31 +50,12 @@ public class StrictOrderRelationObligation extends ProofObligation
 		AVariableExp yExp = getVarExp(getUnique("y"));
 		AVariableExp zExp = getVarExp(getUnique("z"));
 
-		AForAllExp forallExp = makeContext(node,xExp,yExp,zExp);
+		AForAllExp forallExp = makeRelContext(node,xExp,yExp,zExp);
 		PExp lExp = node.getOrdRelation().getLhsPattern().apply(af.getPatternToExpVisitor(getUniqueGenerator()));
 		PExp rExp = node.getOrdRelation().getRhsPattern().apply(af.getPatternToExpVisitor(getUniqueGenerator()));
 		PExp andExp = makeAnd(makeIrreflexive(xExp,node),makeTransitive(xExp,yExp,zExp, node));
 		forallExp.setPredicate(andExp);
 		valuetree.setPredicate(forallExp);
-	}
-
-	private AForAllExp makeContext(ATypeDefinition node, AVariableExp xExp,
-			AVariableExp yExp, AVariableExp zExp){
-
-		AForAllExp forall_exp = new AForAllExp();
-		forall_exp.setType(new ABooleanBasicType());
-
-		ATypeMultipleBind tmb = new ATypeMultipleBind();
-		List<PPattern> pats = new LinkedList<>();
-		pats.add(AstFactory.newAIdentifierPattern(xExp.getName().clone()));
-		pats.add(AstFactory.newAIdentifierPattern(yExp.getName().clone()));
-		pats.add(AstFactory.newAIdentifierPattern(zExp.getName().clone()));
-		tmb.setPlist(pats);
-		tmb.setType(node.getType().clone());
-		List<PMultipleBind> binds = new LinkedList<>();
-		binds.add(tmb);
-		forall_exp.setBindList(binds);
-		return forall_exp;
 	}
 
 	private PExp makeIrreflexive(PExp var, ATypeDefinition node){

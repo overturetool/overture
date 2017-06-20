@@ -1,1 +1,1 @@
-["equivalence relation obligation in \u0027DEFAULT\u0027 (Equiv.vdmsl) at line 7:1: Equivalence"]
+["equivalence relation obligation in \u0027DEFAULT\u0027 (Equiv.vdmsl) at line 7:1: (forall x1, y2, z3:E \u0026 ((eq_E(x1, x1) and (eq_E(x1, y2) \u003d\u003e eq_E(y2, x1))) and ((eq_E(x1, y2) and eq_E(y2, z3)) \u003d\u003e eq_E(x1, z3))))"]
