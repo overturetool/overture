@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
 Export-Package: org.overture.ast.analysis,org.overture.ast.analysis.in
  tf,org.overture.ast.assistant,org.overture.ast.assistant.definition,o
  rg.overture.ast.assistant.pattern,org.overture.ast.assistant.type,org
- .overture.ast.definitions,org.overture.ast.definitions.traces,org.ove
+ .overture.ast.definitions,org.overture.ast.definitions.relations,org.overture.ast.definitions.traces,org.ove
  rture.ast.expressions,org.overture.ast.factory,org.overture.ast.intf.
  lex,org.overture.ast.lex,org.overture.ast.messages,org.overture.ast.m
  odules,org.overture.ast.node,org.overture.ast.node.tokens,org.overtur
