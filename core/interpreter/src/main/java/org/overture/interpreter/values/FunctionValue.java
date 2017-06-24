@@ -735,6 +735,11 @@ public class FunctionValue extends Value
 				}
 				else
 				{
+					if (type.getParameters().size() != restrictedType.getParameters().size())
+					{
+						abort(4171, "Cannot convert " + type + " to " + to, ctxt);
+					}
+
 					TypeComparator tc = ctxt.assistantFactory.getTypeComparator();
 					List<PType> domain = tc.narrowest(type.getParameters(), restrictedType.getParameters());
 					PType range = tc.narrowest(type.getResult(), restrictedType.getResult());
