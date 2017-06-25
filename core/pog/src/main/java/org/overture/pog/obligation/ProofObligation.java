@@ -153,7 +153,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	@Override
 	public String toString()
 	{
-		return name + ": " + kind + " obligation " + "@ " + location + "\n"
+		return name + ": " + kind + " obligation " + location + "\n"
 				+ getFullPredString();
 	}
 
@@ -234,17 +234,17 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	 * Create the context (forall x,y,z...) for a Proof Obligation for
 	 * eq and ord relations.
 	 */
-	protected AForAllExp makeRelContext(ATypeDefinition node, AVariableExp xExp,
-			AVariableExp yExp, AVariableExp zExp){
+	protected AForAllExp makeRelContext(ATypeDefinition node, AVariableExp... exps){
 
 		AForAllExp forall_exp = new AForAllExp();
 		forall_exp.setType(new ABooleanBasicType());
 
 		ATypeMultipleBind tmb = new ATypeMultipleBind();
 		List<PPattern> pats = new LinkedList<>();
-		pats.add(AstFactory.newAIdentifierPattern(xExp.getName().clone()));
-		pats.add(AstFactory.newAIdentifierPattern(yExp.getName().clone()));
-		pats.add(AstFactory.newAIdentifierPattern(zExp.getName().clone()));
+		for (AVariableExp exp : exps)
+		{
+			pats.add(AstFactory.newAIdentifierPattern(exp.getName().clone()));
+		}
 		tmb.setPlist(pats);
 		tmb.setType(node.getType().clone());
 		List<PMultipleBind> binds = new LinkedList<>();
