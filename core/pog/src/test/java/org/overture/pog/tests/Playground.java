@@ -89,6 +89,7 @@ public class Playground
 		System.out.println("ACTUAL POs:");
 		for (IProofObligation po : ipol)
 		{
+			po.toString();
 			System.out.println(po.getKindString() + " / "
 					+ po.getFullPredString());
 		}

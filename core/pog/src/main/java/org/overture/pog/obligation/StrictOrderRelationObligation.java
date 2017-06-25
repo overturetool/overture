@@ -50,12 +50,14 @@ public class StrictOrderRelationObligation extends ProofObligation
 		AVariableExp yExp = getVarExp(getUnique("y"));
 		AVariableExp zExp = getVarExp(getUnique("z"));
 
-		AForAllExp forallExp = makeRelContext(node,xExp,yExp,zExp);
-		PExp lExp = node.getOrdRelation().getLhsPattern().apply(af.getPatternToExpVisitor(getUniqueGenerator()));
-		PExp rExp = node.getOrdRelation().getRhsPattern().apply(af.getPatternToExpVisitor(getUniqueGenerator()));
-		PExp andExp = makeAnd(makeIrreflexive(xExp,node),makeTransitive(xExp,yExp,zExp, node));
-		forallExp.setPredicate(andExp);
-		valuetree.setPredicate(forallExp);
+		AForAllExp forallExp1 = makeRelContext(node,xExp);
+		forallExp1.setPredicate(makeIrreflexive(xExp,node));
+
+		AForAllExp forallExp2 = makeRelContext(node, xExp, yExp, zExp);
+		forallExp2.setPredicate(makeTransitive(xExp,yExp,zExp,node));
+
+		PExp andExp = makeAnd(forallExp1,forallExp2);
+		valuetree.setPredicate(andExp);
 	}
 
 	private PExp makeIrreflexive(PExp var, ATypeDefinition node){
