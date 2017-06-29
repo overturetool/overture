@@ -35,6 +35,7 @@ import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameSet;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -89,6 +90,7 @@ import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.DefinitionTypeResolver.NewQuestion;
 import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
+import org.overture.typechecker.utilities.FreeVariablesChecker;
 import org.overture.typechecker.utilities.FunctionChecker;
 import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
 import org.overture.typechecker.utilities.InstanceVariableChecker;
@@ -97,6 +99,7 @@ import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.OperationChecker;
 import org.overture.typechecker.utilities.PTypeFunctionChecker;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
+import org.overture.typechecker.utilities.TypeDefinitionChecker;
 import org.overture.typechecker.utilities.UnusedChecker;
 import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
@@ -1105,5 +1108,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<Boolean> getInstanceVariableChecker()
 	{
 		return new InstanceVariableChecker(this);
+	}
+
+	@Override
+	public IAnswer<Boolean> getTypeDefinitionChecker()
+	{
+		return new TypeDefinitionChecker(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Environment, LexNameSet> getFreeVariablesChecker()
+	{
+		return new FreeVariablesChecker(this);
 	}
 }
