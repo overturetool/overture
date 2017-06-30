@@ -34,6 +34,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameSet;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMMessage;
@@ -105,7 +106,7 @@ abstract public class TypeChecker
 			{
     			for (ILexNameToken name: assistant.getVariableNames(def))
     			{
-    				dependencies.put(name.getExplicit(true), freevars);
+    				dependencies.put(nameFix(name.getExplicit(true)), nameFix(freevars));
     			}
 			}
 			
@@ -114,7 +115,7 @@ abstract public class TypeChecker
 			
 			if (assistant.isFunction(def) || assistant.isTypeDefinition(def))
 			{
-				skip.add(def.getName().getExplicit(true));
+				skip.add(nameFix(def.getName().getExplicit(true)));
 			}
     	}
     	
@@ -134,6 +135,58 @@ abstract public class TypeChecker
     			stack.pop();
 			}
 		}
+	}
+
+	private LexNameSet nameFix(LexNameSet names)
+	{
+		LexNameSet result = new LexNameSet();
+		
+		for (ILexNameToken name: names)
+		{
+			result.add(nameFix(name));
+		}
+		
+		return result;
+	}
+
+	private ILexNameToken nameFix(ILexNameToken name)
+	{
+		LexNameToken rv = new LexNameToken(name.getModule(), name.getName(), name.getLocation(), name.isOld(), name.getExplicit())
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean equals(Object other)
+			{
+				if (super.equals(other))
+				{
+					LexNameToken lother = (LexNameToken)other;
+					
+					if (typeQualifier != null && lother.typeQualifier != null)
+					{
+						TypeComparator comp = new TypeComparator(assistantFactory);
+						return comp.compatible(typeQualifier, lother.typeQualifier);
+					}
+					else
+					{
+						return true;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			@Override
+			public int hashCode()
+			{
+				return name.hashCode() + module.hashCode();
+			}
+		};
+		
+		rv.setTypeQualifier(name.getTypeQualifier());
+		return rv;
 	}
 
 	/**
