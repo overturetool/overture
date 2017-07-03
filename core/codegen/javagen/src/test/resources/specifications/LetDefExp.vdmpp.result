@@ -13,13 +13,18 @@ public class A {
 
   public A() {}
 
+  private static Number g(final Number ignorePattern_1) {
+
+    return 1L;
+  }
+
   public static Number f(final Number x) {
 
-    final Number x1 = f(1L);
-    final Number x2 = f(2L);
-    final Number x3 = f(3L);
+    final Number x1 = g(1L);
+    final Number x2 = g(2L);
+    final Number x3 = g(3L);
 
-    return x;
+    return x.longValue() + x1.longValue() + x2.longValue() + x3.longValue();
   }
 
   public String toString() {
