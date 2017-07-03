@@ -61,10 +61,14 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -96,6 +100,27 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private static final String MODULE_POST_FIX = "()";
 	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
+	private class ModuleNameFinder extends DepthFirstAnalysisAdaptor {
+
+		private String moduleName;
+		
+		@Override
+		public void caseAVariableExp(AVariableExp node) throws AnalysisException {
+			
+			// The expression reader assumes VDM++ when the "Class" text field
+			// is parsed. The expression specified in the "Class" text field is
+			// either a constructor call (VDMPP/VDM-RT), e.g. A() or A(5) or
+			// referring to a module, e.g. DEFAULT
+			
+			moduleName = node.getOriginal();
+		}
+		
+		public String getModuleName()
+		{
+			return moduleName;
+		}
+	}
+	
 	/**
 	 * Custom content provider for the operation selection. Overloads the default one to merge DEFAULT modules into one
 	 * module
@@ -235,7 +260,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				{
 					String moduleText = fModuleNameText.getText().trim();
 					
-					defaultModule = moduleText.replace(MODULE_POST_FIX, "");
+					defaultModule = findModuleName();
 					expression = getExpression(moduleText, fOperationText.getText().trim(), staticOperation);
 					return validateTypes(project, expression);
 				}
@@ -335,10 +360,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			setErrorMessage("No " + getModuleLabelName() + " specified");
 			return false;
 		}
-		LexTokenReader ltr;
-		ltr = new LexTokenReader(fModuleNameText.getText(), Dialect.VDM_PP, Console.charset);
-
-		ExpressionReader reader = new ExpressionReader(ltr);
+		ExpressionReader reader = consExpressionReader();
 		try
 		{
 			reader.readExpression();
@@ -353,7 +375,34 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					+ e.getMessage());
 			return false;
 		}
-		return !(fModuleNameText == null || fModuleNameText.getText().length() == 0);
+		
+		return true;
+	}
+	
+	public String findModuleName()
+	{
+		ExpressionReader rdr = consExpressionReader();
+		try {
+			PExp exp = rdr.readExpression();
+			
+			ModuleNameFinder an = new ModuleNameFinder();
+			
+			exp.apply(an);
+			
+			return an.getModuleName();
+			
+		} catch (AnalysisException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	private ExpressionReader consExpressionReader() {
+		LexTokenReader ltr = new LexTokenReader(fModuleNameText.getText(), Dialect.VDM_PP, Console.charset);
+		ExpressionReader reader = new ExpressionReader(ltr);
+		return reader;
 	}
 
 	public void createControl(Composite parent)

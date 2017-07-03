@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ClassesPpTypeCheckTest">
+<message column="15" line="9" message="Operation parameter visibility less than operation definition" messageType="error" number="3028" resource="issue631-type-visibillity"/>
+<result/>
+</testResult>

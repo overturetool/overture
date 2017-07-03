@@ -25,20 +25,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.ABracketType;
-import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AOptionalType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.SSetType;
-import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.PType;
-import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.*;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -63,6 +50,19 @@ public class NarrowerThanComparator extends
 			throws AnalysisException
 	{
 		return type.getType().apply(this, accessSpecifier);
+	}
+
+	@Override
+	public Boolean caseAProductType(AProductType type,
+									AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException {
+		for (PType t : type.getTypes()) {
+			if (t.apply(this, accessSpecifier)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
