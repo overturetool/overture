@@ -36,7 +36,7 @@ public class MutexDeclTrans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		if(info.getDeclAssistant().isTest(node))
+		if(info.getDeclAssistant().parentIsTest(node))
 		{
 			return;
 		}

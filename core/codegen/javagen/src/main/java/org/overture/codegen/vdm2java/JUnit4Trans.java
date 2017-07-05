@@ -1,9 +1,7 @@
 package org.overture.codegen.vdm2java;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.log4j.Logger;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.NodeAssistantIR;
 import org.overture.codegen.ir.IRConstants;
@@ -12,10 +10,16 @@ import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 {
+	protected Logger log = Logger.getLogger(this.getClass().getName());
+
 	private static final String TEST_NAME_PREFIX = "test";
 	public static final String TEST_ANNOTATION = "@Test";
 	public static final String JUNI4_IMPORT = "org.junit.*";
@@ -23,10 +27,25 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 	public TransAssistantIR assist;
 	private JavaCodeGen javaCg;
 
+	private List<SClassDeclIR> classCopies;
+
 	public JUnit4Trans(TransAssistantIR assist, JavaCodeGen javaCg)
 	{
 		this.assist = assist;
 		this.javaCg = javaCg;
+	}
+
+	public ADefaultClassDeclIR findCopy(ADefaultClassDeclIR clazz)
+	{
+		for(SClassDeclIR c : classCopies)
+		{
+			if(c instanceof ADefaultClassDeclIR && c.getName().equals(clazz.getName()))
+			{
+				return (ADefaultClassDeclIR) c;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -38,7 +57,28 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		if (!assist.getInfo().getDeclAssistant().isTest(node))
+		if(classCopies == null)
+		{
+			this.classCopies = new LinkedList<>();
+
+			for(SClassDeclIR c : assist.getInfo().getClasses())
+			{
+				if(c instanceof ADefaultClassDeclIR)
+				{
+					this.classCopies.add((ADefaultClassDeclIR) c.clone());
+				}
+			}
+		}
+
+		// We need to analyse the copy, as the counterpart might have been modified
+		ADefaultClassDeclIR copy = findCopy(node);
+
+		if(copy == null)
+		{
+			log.error("Could not find copy of " + node.getName());
+		}
+
+		if (!assist.getInfo().getDeclAssistant().isTest(copy, classCopies))
 		{
 			return;
 		}
@@ -50,7 +90,11 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 		/**
 		 * 2) Remove TestCase super class
 		 */
-		node.getSuperNames().clear();
+		if(assist.getInfo().getDeclAssistant().parentIsTest(copy))
+		{
+			node.getSuperNames().clear();
+		}
+
 		/**
 		 * 3) Import JUnit4
 		 */
