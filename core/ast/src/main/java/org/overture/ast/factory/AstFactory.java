@@ -757,7 +757,7 @@ public class AstFactory
 		initDefinition(result, Pass.DEFS, name.getLocation(), name, scope);
 
 		result.setType(type);
-		result.setValueDefinition(false);
+		result.setValueDefinition(null);
 
 		return result;
 	}

@@ -24,10 +24,12 @@
 package org.overture.typechecker;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
 import org.overture.ast.types.PType;
@@ -187,14 +189,19 @@ public class ClassTypeChecker extends TypeChecker
 			}
 		}
 
+		List<PDefinition> allDefs = new Vector<PDefinition>();
+
 		for (SClassDefinition c : classes)
 		{
 			if (!c.getTypeChecked())
 			{
 				assistantFactory.createSClassDefinitionAssistant().initializedCheck(c);
 				assistantFactory.createPDefinitionAssistant().unusedCheck(c);
+				allDefs.addAll(c.getDefinitions());
 			}
 		}
+    	
+    	cyclicDependencyCheck(allDefs);
 	}
 
 	protected Environment getAllClassesEnvronment()

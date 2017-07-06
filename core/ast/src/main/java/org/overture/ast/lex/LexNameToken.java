@@ -105,9 +105,11 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 		return new LexIdentifierToken(name, old, location);
 	}
 
-	public LexNameToken getExplicit(boolean ex)
+	public LexNameToken getExplicit(boolean b)
 	{
-		return new LexNameToken(module, name, location, old, ex);
+		LexNameToken ex = new LexNameToken(module, name, location, old, b);
+		ex.setTypeQualifier(typeQualifier);
+		return ex;
 	}
 
 	public LexNameToken getOldName()

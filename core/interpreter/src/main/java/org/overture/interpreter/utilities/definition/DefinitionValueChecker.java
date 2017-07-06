@@ -59,7 +59,7 @@ public class DefinitionValueChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseALocalDefinition(ALocalDefinition def)
 			throws AnalysisException
 	{
-		return def.getValueDefinition();
+		return def.getValueDefinition() != null;
 	}
 
 	@Override

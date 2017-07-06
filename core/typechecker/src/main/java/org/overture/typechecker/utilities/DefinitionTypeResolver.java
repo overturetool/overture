@@ -288,7 +288,6 @@ public class DefinitionTypeResolver extends
 		{
 			node.setType(af.createPTypeAssistant().typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
 		}
-
 	}
 
 	@Override
@@ -413,7 +412,7 @@ public class DefinitionTypeResolver extends
 			}
 
 			ALocalDefinition ld = (ALocalDefinition) d;
-			setValueDefinition(ld);
+			ld.setValueDefinition(node.clone());
 		}
 
 		node.setDefs(newdefs);
@@ -437,12 +436,4 @@ public class DefinitionTypeResolver extends
 	{
 		return;
 	}
-	
-	public void setValueDefinition(ALocalDefinition ld)
-	{
-		ld.setValueDefinition(true);
-
-	}
-
-
 }

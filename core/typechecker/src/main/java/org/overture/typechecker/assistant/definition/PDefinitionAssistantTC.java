@@ -40,6 +40,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameSet;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
@@ -355,6 +356,17 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 		}
 	}
 
+	public boolean isTypeDefinition(PDefinition d)
+	{
+		try
+		{
+			return d.apply(af.getTypeDefinitionChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
+		}
+	}
+
 	public boolean isOperation(PDefinition d)
 	{
 		try
@@ -436,6 +448,17 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 		} catch (AnalysisException e)
 		{
 			return false;
+		}
+	}
+
+	public LexNameSet getFreeVariables(PDefinition def, Environment empty)
+	{
+		try
+		{
+			return def.apply(af.getFreeVariablesChecker(), empty);
+		} catch (AnalysisException e)
+		{
+			return null;
 		}
 	}
 }

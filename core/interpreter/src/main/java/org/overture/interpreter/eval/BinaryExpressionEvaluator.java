@@ -83,8 +83,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			}
 
 			Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+			boolean rb = rv.boolValue(ctxt);
 
-			if (lb)
+			if (lb && rb)
 			{
 				return rv;
 			}
@@ -175,8 +176,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 
 				Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+				boolean rb = rv.boolValue(ctxt);
 
-				if (lb)
+				if (lb || rb)
 				{
 					return new BooleanValue(true);
 				} else

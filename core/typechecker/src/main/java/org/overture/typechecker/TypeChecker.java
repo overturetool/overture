@@ -24,16 +24,24 @@
 package org.overture.typechecker;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.Vector;
 
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexNameSet;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMMessage;
 import org.overture.parser.messages.VDMWarning;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 /**
  * The abstract root of all type checker classes.
@@ -73,6 +81,151 @@ abstract public class TypeChecker
 	}
 
 	abstract public void typeCheck();
+
+	/**
+	 * Check for cyclic dependencies between the free variables that definitions depend
+	 * on and the definition of those variables.
+	 */
+	protected void cyclicDependencyCheck(List<PDefinition> defs)
+	{
+		if (System.getProperty("skip.cyclic.check") != null)
+		{
+			return;		// For now, to allow us to skip if there are issues.
+		}
+		
+		Map<ILexNameToken, LexNameSet> dependencies = new HashMap<ILexNameToken, LexNameSet>();
+		LexNameSet skip = new LexNameSet();
+		PDefinitionAssistantTC assistant = assistantFactory.createPDefinitionAssistant();
+
+    	for (PDefinition def: defs)
+    	{
+    		Environment empty = new FlatEnvironment(assistantFactory, new Vector<PDefinition>());
+			LexNameSet freevars = assistant.getFreeVariables(def, empty);
+			
+			if (!freevars.isEmpty())
+			{
+    			for (ILexNameToken name: assistant.getVariableNames(def))
+    			{
+    				dependencies.put(nameFix(name.getExplicit(true)), nameFix(freevars));
+    			}
+			}
+			
+			// Skipped definition names occur in the cycle path, but are not checked
+			// for cycles themselves, because they are not "initializable".
+			
+			if (assistant.isFunction(def) || assistant.isTypeDefinition(def))
+			{
+				skip.add(nameFix(def.getName().getExplicit(true)));
+			}
+    	}
+    	
+		for (ILexNameToken sought: dependencies.keySet())
+		{
+			if (!skip.contains(sought))
+			{
+    			Stack<ILexNameToken> stack = new Stack<ILexNameToken>();
+    			stack.push(sought);
+    			
+    			if (reachable(sought, dependencies.get(sought), dependencies, stack))
+    			{
+    	    		report(3355, "Cyclic dependency detected for " + sought, sought.getLocation());
+    	    		detail("Cycle", stack.toString());
+    			}
+    			
+    			stack.pop();
+			}
+		}
+	}
+
+	private LexNameSet nameFix(LexNameSet names)
+	{
+		LexNameSet result = new LexNameSet();
+		
+		for (ILexNameToken name: names)
+		{
+			result.add(nameFix(name));
+		}
+		
+		return result;
+	}
+
+	private ILexNameToken nameFix(ILexNameToken name)
+	{
+		LexNameToken rv = new LexNameToken(name.getModule(), name.getName(), name.getLocation(), name.isOld(), name.getExplicit())
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean equals(Object other)
+			{
+				if (super.equals(other))
+				{
+					LexNameToken lother = (LexNameToken)other;
+					
+					if (typeQualifier != null && lother.typeQualifier != null)
+					{
+						TypeComparator comp = new TypeComparator(assistantFactory);
+						return comp.compatible(typeQualifier, lother.typeQualifier);
+					}
+					else
+					{
+						return true;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			@Override
+			public int hashCode()
+			{
+				return name.hashCode() + module.hashCode();
+			}
+		};
+		
+		rv.setTypeQualifier(name.getTypeQualifier());
+		return rv;
+	}
+
+	/**
+	 * Return true if the name sought is reachable via the next set of names passed using
+	 * the dependency map. The stack passed records the path taken to find a cycle.
+	 */
+	private boolean reachable(ILexNameToken sought, LexNameSet nextset,
+		Map<ILexNameToken, LexNameSet> dependencies, Stack<ILexNameToken> stack)
+	{
+		if (nextset == null)
+		{
+			return false;
+		}
+		
+		if (nextset.contains(sought))
+		{
+			stack.push(sought);
+			return true;
+		}
+		
+		for (ILexNameToken nextname: nextset)
+		{
+			if (stack.contains(nextname))	// Been here before!
+			{
+				return false;
+			}
+			
+			stack.push(nextname);
+			
+			if (reachable(sought, dependencies.get(nextname), dependencies, stack))
+			{
+				return true;
+			}
+			
+			stack.pop();
+		}
+		
+		return false;
+	}
 
 	public static void report(int number, String problem, ILexLocation location)
 	{

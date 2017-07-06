@@ -378,7 +378,7 @@ definition {-> package='org.overture.ast.definitions'
                                                         
     |   {imported} (def):definition (name):LexNameToken
     |   {inherited} (superdef):definition [oldname]:LexNameToken //is access missing here
-    |   {local} [valueDefinition]:java_Boolean (name):LexNameToken
+    |   {local} [valueDefinition]:definition.value (name):LexNameToken
     |   {multiBindList} (bindings):multipleBind* (defs):definition*
     |   {mutexSync} [operations]:LexNameToken*
     |   {namedTrace} [pathname]:clonableString* [terms]:term.traceDefinition*//Why is this not a definition
