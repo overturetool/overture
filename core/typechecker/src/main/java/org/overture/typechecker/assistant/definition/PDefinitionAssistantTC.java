@@ -52,6 +52,7 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
+import org.overture.typechecker.utilities.FreeVarInfo;
 import org.overture.typechecker.utilities.NameFinder;
 
 //TODO Add assistant Javadoc
@@ -451,7 +452,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 		}
 	}
 
-	public LexNameSet getFreeVariables(PDefinition def, Environment empty)
+	public LexNameSet getFreeVariables(PDefinition def, FreeVarInfo empty)
 	{
 		try
 		{

@@ -42,6 +42,7 @@ import org.overture.parser.messages.VDMWarning;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.utilities.FreeVarInfo;
 
 /**
  * The abstract root of all type checker classes.
@@ -99,7 +100,8 @@ abstract public class TypeChecker
 
     	for (PDefinition def: defs)
     	{
-    		Environment empty = new FlatEnvironment(assistantFactory, new Vector<PDefinition>());
+    		Environment env = new FlatEnvironment(assistantFactory, new Vector<PDefinition>());
+    		FreeVarInfo empty = new FreeVarInfo(env, false);
 			LexNameSet freevars = assistant.getFreeVariables(def, empty);
 			
 			if (!freevars.isEmpty())
@@ -113,9 +115,12 @@ abstract public class TypeChecker
 			// Skipped definition names occur in the cycle path, but are not checked
 			// for cycles themselves, because they are not "initializable".
 			
-			if (assistant.isFunction(def) || assistant.isTypeDefinition(def))
+			if (assistant.isFunction(def) || assistant.isTypeDefinition(def) || assistant.isOperation(def))
 			{
-				skip.add(nameFix(def.getName().getExplicit(true)));
+				if (def.getName() != null)
+				{
+					skip.add(nameFix(def.getName().getExplicit(true)));
+				}
 			}
     	}
     	
@@ -136,6 +141,12 @@ abstract public class TypeChecker
 			}
 		}
 	}
+	
+	/**
+	 * We have to "fix" names to include equals and hashcode methods that take the type qualifier
+	 * into account. This is so that we can distinguish (say) f(nat) and f(char). It also allows
+	 * us to realise that f(nat1) and f(nat) are "the same".
+	 */
 
 	private LexNameSet nameFix(LexNameSet names)
 	{

@@ -90,6 +90,7 @@ import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.DefinitionTypeResolver.NewQuestion;
 import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
+import org.overture.typechecker.utilities.FreeVarInfo;
 import org.overture.typechecker.utilities.FreeVariablesChecker;
 import org.overture.typechecker.utilities.FunctionChecker;
 import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
@@ -1117,7 +1118,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public IQuestionAnswer<Environment, LexNameSet> getFreeVariablesChecker()
+	public IQuestionAnswer<FreeVarInfo, LexNameSet> getFreeVariablesChecker()
 	{
 		return new FreeVariablesChecker(this);
 	}
