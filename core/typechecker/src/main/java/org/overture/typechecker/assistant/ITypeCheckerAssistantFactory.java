@@ -81,6 +81,7 @@ import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
+import org.overture.typechecker.utilities.FreeVarInfo;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
@@ -403,5 +404,5 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<Boolean> getTypeDefinitionChecker();
 
-	IQuestionAnswer<Environment, LexNameSet> getFreeVariablesChecker();
+	IQuestionAnswer<FreeVarInfo, LexNameSet> getFreeVariablesChecker();
 }

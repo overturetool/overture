@@ -28,10 +28,13 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -82,6 +85,32 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.AAtomicStm;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACallObjectStm;
+import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.ACasesStm;
+import org.overture.ast.statements.ACyclesStm;
+import org.overture.ast.statements.ADurationStm;
+import org.overture.ast.statements.AExitStm;
+import org.overture.ast.statements.AForAllStm;
+import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.APeriodicStm;
+import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.statements.ASporadicStm;
+import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
+import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATrapStm;
+import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AFunctionType;
@@ -95,14 +124,13 @@ import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASet1SetType;
 import org.overture.ast.types.ASetSetType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * Used to find the free variables in a definition, type or expression.
  */
-public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, LexNameSet>
+public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, LexNameSet>
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -110,39 +138,41 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	{
 		this.af = af;
 	}
-	
+
+	/************************* Definitions ***************************/
+
 	@Override
-	public LexNameSet caseAClassInvariantDefinition(AClassInvariantDefinition node, Environment question)
+	public LexNameSet caseAClassInvariantDefinition(AClassInvariantDefinition node, FreeVarInfo info)
 		throws AnalysisException
 	{
-		return node.getExpression().apply(this, question);
+		return node.getExpression().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseAEqualsDefinition(AEqualsDefinition node,	Environment question)
+	public LexNameSet caseAEqualsDefinition(AEqualsDefinition node,	FreeVarInfo info)
 		throws AnalysisException
 	{
-		Environment env = new FlatEnvironment(af, node.getDefs(), question);
-		return node.getTest().apply(this, env);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, node.getDefs(), info.env));
+		return node.getTest().apply(this, local);
 	}
 	
 	@Override
 	public LexNameSet caseAValueDefinition(AValueDefinition node,
-		Environment question) throws AnalysisException
+		FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getType() != null)
 		{
-			names.addAll(node.getType().apply(this, question));
+			names.addAll(node.getType().apply(this, info));
 		}
 		
-		names.addAll(node.getExpression().apply(this, question));
+		names.addAll(node.getExpression().apply(this, info));
 		return names;
 	}
 
 	@Override
-	public LexNameSet caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node, Environment question)
+	public LexNameSet caseAExplicitFunctionDefinition(AExplicitFunctionDefinition node, FreeVarInfo info)
 		throws AnalysisException
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -154,7 +184,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 			defs.addAll(list);
 		}
 
-		Environment local = new FlatEnvironment(af, defs, question);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, defs, info.env));
 		LexNameSet names = node.getBody().apply(this, local);
 		
 		if (node.getPredef() != null)
@@ -171,7 +201,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 
 	@Override
-	public LexNameSet caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node, Environment question)
+	public LexNameSet caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node, FreeVarInfo info)
 		throws AnalysisException
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -181,7 +211,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 			defs.addAll(getDefinitions(pltp, NameScope.LOCAL));
 		}
 		
-		Environment local = new FlatEnvironment(af, defs, question);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, defs, info.env));
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getBody() != null)
@@ -203,7 +233,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseATypeDefinition(ATypeDefinition node,	Environment env)
+	public LexNameSet caseATypeDefinition(ATypeDefinition node,	FreeVarInfo info)
 		throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
@@ -211,46 +241,46 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 		if (node.getType() instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType nt = (ANamedInvariantType)node.getType();
-			names.addAll(nt.getType().apply(this, env));
+			names.addAll(nt.getType().apply(this, info));
 		}
 		
 		if (node.getInvdef() != null)
 		{
-			names.addAll(node.getInvdef().apply(this, env));
+			names.addAll(node.getInvdef().apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseAInstanceVariableDefinition(AInstanceVariableDefinition node, Environment env)
+	public LexNameSet caseAInstanceVariableDefinition(AInstanceVariableDefinition node, FreeVarInfo info)
 		throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
-		names.addAll(node.getType().apply(this, env));
-		names.addAll(node.getExpression().apply(this, env));
+		names.addAll(node.getType().apply(this, info));
+		names.addAll(node.getExpression().apply(this, info));
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseALocalDefinition(ALocalDefinition node, Environment env)
+	public LexNameSet caseALocalDefinition(ALocalDefinition node, FreeVarInfo info)
 		throws AnalysisException
 	{
-		LexNameSet names = node.getType().apply(this, env);
+		LexNameSet names = node.getType().apply(this, info);
 		
 		if (node.getValueDefinition() != null)
 		{
-			names.addAll(node.getValueDefinition().apply(this, env));
+			names.addAll(node.getValueDefinition().apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseAStateDefinition(AStateDefinition node, Environment env)
+	public LexNameSet caseAStateDefinition(AStateDefinition node, FreeVarInfo info)
 		throws AnalysisException
 	{
-		Environment local = new FlatEnvironment(af, new Vector<PDefinition>(), env);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, new Vector<PDefinition>(), info.env));
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getInvdef() != null)
@@ -267,42 +297,103 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAVariableExp(AVariableExp node, Environment question) throws AnalysisException
+	public LexNameSet caseAExplicitOperationDefinition(AExplicitOperationDefinition node, FreeVarInfo info)
+		throws AnalysisException
 	{
-		if (question.findName(node.getName(), NameScope.NAMES) == null)
+		List<PDefinition> defs = new Vector<PDefinition>();
+
+		if (node.getParamDefinitions() != null)
+		{
+			defs.addAll(node.getParamDefinitions());
+		}
+
+		FreeVarInfo local = info.set(new FlatEnvironment(af, defs, info.env));
+		LexNameSet names = node.getBody().apply(this, local);
+
+		if (node.getPredef() != null)
+		{
+			names.addAll(node.getPredef().apply(this, local));
+		}
+
+		if (node.getPostdef() != null)
+		{
+			names.addAll(node.getPostdef().apply(this, local));
+		}
+
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseAImplicitOperationDefinition(AImplicitOperationDefinition node, FreeVarInfo info)
+		throws AnalysisException
+	{
+		List<PDefinition> defs = new Vector<PDefinition>();
+
+		for (APatternListTypePair pltp : node.getParameterPatterns())
+		{
+			defs.addAll(getDefinitions(pltp, NameScope.LOCAL));
+		}
+
+		FreeVarInfo local = info.set(new FlatEnvironment(af, defs, info.env));
+		LexNameSet names = new LexNameSet();
+
+		if (node.getBody() != null)
+		{
+			names.addAll(node.getBody().apply(this, local));
+		}
+
+		if (node.getPredef() != null)
+		{
+			names.addAll(node.getPredef().apply(this, local));
+		}
+
+		if (node.getPostdef() != null)
+		{
+			names.addAll(node.getPostdef().apply(this, local));
+		}
+
+		return names;
+	}
+	
+	/************************* Expressions ***************************/
+	
+	@Override
+	public LexNameSet caseAVariableExp(AVariableExp node, FreeVarInfo info) throws AnalysisException
+	{
+		if (info.env.findName(node.getName(), NameScope.NAMESANDSTATE) == null)
 		{
 			return new LexNameSet(node.getName().getExplicit(true));
 		}
 		else
 		{
-			return new LexNameSet();	// Already in local env, so not free 
+			return new LexNameSet();	// Already in local info.env, so not free 
 		}
 	}
 	
 	@Override
-	public LexNameSet caseAApplyExp(AApplyExp node, Environment env) throws AnalysisException
+	public LexNameSet caseAApplyExp(AApplyExp node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getRoot().apply(this, env);
+		LexNameSet names = node.getRoot().apply(this, info);
 		
 		for (PExp exp: node.getArgs())
 		{
-			names.addAll(exp.apply(this, env));
+			names.addAll(exp.apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseACasesExp(ACasesExp node, Environment env) throws AnalysisException
+	public LexNameSet caseACasesExp(ACasesExp node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getExpression().apply(this, env);
+		return node.getExpression().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseAExistsExp(AExistsExp node, Environment env)	throws AnalysisException
+	public LexNameSet caseAExistsExp(AExistsExp node, FreeVarInfo info)	throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
-		Environment local = new FlatEnvironment(af, def, env);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getPredicate() != null)
@@ -319,10 +410,10 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAExists1Exp(AExists1Exp node, Environment env) throws AnalysisException
+	public LexNameSet caseAExists1Exp(AExists1Exp node, FreeVarInfo info) throws AnalysisException
 	{
 		PDefinition def = node.getDef();
-		Environment local = new FlatEnvironment(af, def, env);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getPredicate() != null)
@@ -335,16 +426,16 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAFieldExp(AFieldExp node, Environment question) throws AnalysisException
+	public LexNameSet caseAFieldExp(AFieldExp node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getObject().apply(this, question);
+		return node.getObject().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseAForAllExp(AForAllExp node, Environment env) throws AnalysisException
+	public LexNameSet caseAForAllExp(AForAllExp node, FreeVarInfo info) throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
-		Environment local = new FlatEnvironment(af, def, env);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getPredicate() != null)
@@ -361,23 +452,23 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAFuncInstatiationExp(AFuncInstatiationExp node, Environment question)
+	public LexNameSet caseAFuncInstatiationExp(AFuncInstatiationExp node, FreeVarInfo info)
 		throws AnalysisException
 	{
-		return node.getFunction().apply(this, question);
+		return node.getFunction().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseAIfExp(AIfExp node, Environment question)	throws AnalysisException
+	public LexNameSet caseAIfExp(AIfExp node, FreeVarInfo info)	throws AnalysisException
 	{
-		return node.getTest().apply(this, question);
+		return node.getTest().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseAIotaExp(AIotaExp node, Environment env)	throws AnalysisException
+	public LexNameSet caseAIotaExp(AIotaExp node, FreeVarInfo info)	throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPBindAssistant().getMultipleBindList(node.getBind()));
-		Environment local = new FlatEnvironment(af, def, env);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getPredicate() != null)
@@ -390,9 +481,9 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAIsExp(AIsExp node, Environment question)	throws AnalysisException
+	public LexNameSet caseAIsExp(AIsExp node, FreeVarInfo info)	throws AnalysisException
 	{
-		LexNameSet names = node.getTest().apply(this, question);
+		LexNameSet names = node.getTest().apply(this, info);
 		
 		if (node.getTypeName() != null)
 		{
@@ -403,7 +494,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseALambdaExp(ALambdaExp node, Environment question) throws AnalysisException
+	public LexNameSet caseALambdaExp(ALambdaExp node, FreeVarInfo info) throws AnalysisException
 	{
 		List<PMultipleBind> mbinds = new Vector<PMultipleBind>();
 		
@@ -413,7 +504,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 		}
 		
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), mbinds);
-		Environment local = new FlatEnvironment(af, def, question);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = node.getExpression().apply(this, local);
 		
 		for (ATypeBind mb: node.getBindList())
@@ -425,10 +516,10 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseALetBeStExp(ALetBeStExp node, Environment question) throws AnalysisException
+	public LexNameSet caseALetBeStExp(ALetBeStExp node, FreeVarInfo info) throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPMultipleBindAssistant().getMultipleBindList(node.getBind()));
-		Environment local = new FlatEnvironment(af, def, question);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = node.getBind().apply(this, local);
 		
 		if (node.getSuchThat() != null)
@@ -441,9 +532,9 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseALetDefExp(ALetDefExp node, Environment env) throws AnalysisException
+	public LexNameSet caseALetDefExp(ALetDefExp node, FreeVarInfo info) throws AnalysisException
 	{
-		Environment local = env;
+		FreeVarInfo local = info;
 		LexNameSet names = new LexNameSet();
 
 		for (PDefinition d : node.getLocalDefs())
@@ -454,7 +545,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 			}
 			else
 			{
-				local = new FlatEnvironment(af, d, local);
+				local = info.set(new FlatEnvironment(af, d, local.env));
 				names.addAll(d.apply(this, local));
 			}
 		}
@@ -464,10 +555,10 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAMapCompMapExp(AMapCompMapExp node, Environment question) throws AnalysisException
+	public LexNameSet caseAMapCompMapExp(AMapCompMapExp node, FreeVarInfo info) throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindings());
-		Environment local = new FlatEnvironment(af, def, question);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = new LexNameSet();	// Note "first" is conditional
 		
 		if (node.getPredicate() != null)
@@ -484,64 +575,64 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAMapEnumMapExp(AMapEnumMapExp node, Environment env) throws AnalysisException
+	public LexNameSet caseAMapEnumMapExp(AMapEnumMapExp node, FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
 		
 		for (AMapletExp maplet: node.getMembers())
 		{
-			names.addAll(maplet.apply(this, env));
+			names.addAll(maplet.apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseAMapletExp(AMapletExp node, Environment question) throws AnalysisException
+	public LexNameSet caseAMapletExp(AMapletExp node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getLeft().apply(this, question);
-		names.addAll(node.getRight().apply(this, question));
+		LexNameSet names = node.getLeft().apply(this, info);
+		names.addAll(node.getRight().apply(this, info));
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseAMkBasicExp(AMkBasicExp node, Environment question) throws AnalysisException
+	public LexNameSet caseAMkBasicExp(AMkBasicExp node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getType().apply(this, question);
-		names.addAll(node.getArg().apply(this, question));
+		LexNameSet names = node.getType().apply(this, info);
+		names.addAll(node.getArg().apply(this, info));
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseAMkTypeExp(AMkTypeExp node, Environment question) throws AnalysisException
+	public LexNameSet caseAMkTypeExp(AMkTypeExp node, FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet(node.getTypeName());
 		
 		for (PExp arg: node.getArgs())
 		{
-			names.addAll(arg.apply(this, question));
+			names.addAll(arg.apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseAMuExp(AMuExp node, Environment question) throws AnalysisException
+	public LexNameSet caseAMuExp(AMuExp node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getRecord().apply(this, question);
+		LexNameSet names = node.getRecord().apply(this, info);
 		
 		for (ARecordModifier rm: node.getModifiers())
 		{
-			names.addAll(rm.getValue().apply(this, question));
+			names.addAll(rm.getValue().apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseANarrowExp(ANarrowExp node, Environment question) throws AnalysisException
+	public LexNameSet caseANarrowExp(ANarrowExp node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getTest().apply(this, question);
+		LexNameSet names = node.getTest().apply(this, info);
 		
 		if (node.getTypeName() != null)
 		{
@@ -552,21 +643,21 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseASeqCompSeqExp(ASeqCompSeqExp node, Environment env) throws AnalysisException
+	public LexNameSet caseASeqCompSeqExp(ASeqCompSeqExp node, FreeVarInfo info) throws AnalysisException
 	{
-		Environment local = null;
+		FreeVarInfo local = null;
 		LexNameSet names = new LexNameSet();	// Note "first" is conditional
 		
 		if (node.getSeqBind() != null)
 		{
 			PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPBindAssistant().getMultipleBindList(node.getSeqBind()));
-			local = new FlatEnvironment(af, def, env);
+			local = info.set(new FlatEnvironment(af, def, info.env));
 			names.addAll(node.getSeqBind().apply(this, local));
 		}
 		else if (node.getSetBind() != null)
 		{
 			PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPBindAssistant().getMultipleBindList(node.getSetBind()));
-			local = new FlatEnvironment(af, def, env);
+			local = info.set(new FlatEnvironment(af, def, info.env));
 			names.addAll(node.getSetBind().apply(this, local));
 		}
 		
@@ -579,23 +670,23 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseASeqEnumSeqExp(ASeqEnumSeqExp node, Environment question) throws AnalysisException
+	public LexNameSet caseASeqEnumSeqExp(ASeqEnumSeqExp node, FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
 		
 		for (PExp exp: node.getMembers())
 		{
-			names.addAll(exp.apply(this, question));
+			names.addAll(exp.apply(this, info));
 		}
 		
 		return names;
 	}
 
 	@Override
-	public LexNameSet caseASetCompSetExp(ASetCompSetExp node, Environment env) throws AnalysisException
+	public LexNameSet caseASetCompSetExp(ASetCompSetExp node, FreeVarInfo info) throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindings());
-		Environment local = new FlatEnvironment(af, def, env);
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getPredicate() != null)
@@ -612,115 +703,119 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseASetEnumSetExp(ASetEnumSetExp node, Environment question) throws AnalysisException
+	public LexNameSet caseASetEnumSetExp(ASetEnumSetExp node, FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
 		
 		for (PExp exp: node.getMembers())
 		{
-			names.addAll(exp.apply(this, question));
+			names.addAll(exp.apply(this, info));
 		}
 		
 		return names;
 	}
 
 	@Override
-	public LexNameSet caseASetRangeSetExp(ASetRangeSetExp node,	Environment env) throws AnalysisException
+	public LexNameSet caseASetRangeSetExp(ASetRangeSetExp node,	FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getFirst().apply(this, env);
-		names.addAll(node.getLast().apply(this, env));
+		LexNameSet names = node.getFirst().apply(this, info);
+		names.addAll(node.getLast().apply(this, info));
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseASubseqExp(ASubseqExp node, Environment env) throws AnalysisException
+	public LexNameSet caseASubseqExp(ASubseqExp node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getFrom().apply(this, env);
-		names.addAll(node.getTo().apply(this, env));
+		LexNameSet names = node.getFrom().apply(this, info);
+		names.addAll(node.getTo().apply(this, info));
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseATupleExp(ATupleExp node, Environment env) throws AnalysisException
+	public LexNameSet caseATupleExp(ATupleExp node, FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
 		
 		for (PExp exp: node.getArgs())
 		{
-			names.addAll(exp.apply(this, env));
+			names.addAll(exp.apply(this, info));
 		}
 		
 		return names;
 	}
 	
+	/************************* Binds ***************************/
+	
 	@Override
-	public LexNameSet caseASeqMultipleBind(ASeqMultipleBind node, Environment question) throws AnalysisException
+	public LexNameSet caseASeqMultipleBind(ASeqMultipleBind node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSeq().apply(this, question);
+		return node.getSeq().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseASetMultipleBind(ASetMultipleBind node, Environment question) throws AnalysisException
+	public LexNameSet caseASetMultipleBind(ASetMultipleBind node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSet().apply(this, question);
+		return node.getSet().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseATypeMultipleBind(ATypeMultipleBind node, Environment question) throws AnalysisException
+	public LexNameSet caseATypeMultipleBind(ATypeMultipleBind node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getType().apply(this, question);
+		return node.getType().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseASeqBind(ASeqBind node, Environment question) throws AnalysisException
+	public LexNameSet caseASeqBind(ASeqBind node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSeq().apply(this, question);
+		return node.getSeq().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseASetBind(ASetBind node, Environment question) throws AnalysisException
+	public LexNameSet caseASetBind(ASetBind node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSet().apply(this, question);
+		return node.getSet().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseATypeBind(ATypeBind node, Environment question) throws AnalysisException
+	public LexNameSet caseATypeBind(ATypeBind node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getType().apply(this, question);
+		return node.getType().apply(this, info);
+	}
+	
+	/************************* Types ***************************/
+	
+	@Override
+	public LexNameSet caseABracketType(ABracketType node, FreeVarInfo info) throws AnalysisException
+	{
+		return node.getType().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseABracketType(ABracketType node, Environment question) throws AnalysisException
-	{
-		return node.getType().apply(this, question);
-	}
-	
-	@Override
-	public LexNameSet caseAFunctionType(AFunctionType node, Environment question) throws AnalysisException
+	public LexNameSet caseAFunctionType(AFunctionType node, FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
 		
 		for (PType p: node.getParameters())
 		{
-			names.addAll(p.apply(this, question));
+			names.addAll(p.apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseAMapMapType(AMapMapType node, Environment env) throws AnalysisException
+	public LexNameSet caseAMapMapType(AMapMapType node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getFrom().apply(this, env);
-		names.addAll(node.getTo().apply(this, env));
+		LexNameSet names = node.getFrom().apply(this, info);
+		names.addAll(node.getTo().apply(this, info));
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseANamedInvariantType(ANamedInvariantType node, Environment env)
+	public LexNameSet caseANamedInvariantType(ANamedInvariantType node, FreeVarInfo info)
 		throws AnalysisException
 	{
-		if (env.findType(node.getName(), node.getLocation().getModule()) == null)
+		if (info.env.findType(node.getName(), node.getLocation().getModule()) == null)
 		{
 			// Invariant values covered in TCTypeDefinition
 			return new LexNameSet(node.getName().getExplicit(true));
@@ -732,28 +827,28 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseAOptionalType(AOptionalType node, Environment question) throws AnalysisException
+	public LexNameSet caseAOptionalType(AOptionalType node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getType().apply(this, question);
+		return node.getType().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseAProductType(AProductType node, Environment question) throws AnalysisException
+	public LexNameSet caseAProductType(AProductType node, FreeVarInfo info) throws AnalysisException
 	{
 		LexNameSet names = new LexNameSet();
 		
 		for (PType p: node.getTypes())
 		{
-			names.addAll(p.apply(this, question));
+			names.addAll(p.apply(this, info));
 		}
 		
 		return names;
 	}
 	
 	@Override
-	public LexNameSet caseARecordInvariantType(ARecordInvariantType node, Environment env) throws AnalysisException
+	public LexNameSet caseARecordInvariantType(ARecordInvariantType node, FreeVarInfo info) throws AnalysisException
 	{
-		if (env.findType(node.getName(), node.getLocation().getModule()) == null)
+		if (info.env.findType(node.getName(), node.getLocation().getModule()) == null)
 		{
 			// Invariant values covered in TCTypeDefinition
 			return new LexNameSet(node.getName().getExplicit(true));
@@ -765,51 +860,321 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<Environment, Lex
 	}
 	
 	@Override
-	public LexNameSet caseASeqSeqType(ASeqSeqType node, Environment question) throws AnalysisException
+	public LexNameSet caseASeqSeqType(ASeqSeqType node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSeqof().apply(this, question);
+		return node.getSeqof().apply(this, info);
 	}
 
 	@Override
-	public LexNameSet caseASeq1SeqType(ASeq1SeqType node, Environment question) throws AnalysisException
+	public LexNameSet caseASeq1SeqType(ASeq1SeqType node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSeqof().apply(this, question);
+		return node.getSeqof().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseASetSetType(ASetSetType node, Environment question) throws AnalysisException
+	public LexNameSet caseASetSetType(ASetSetType node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSetof().apply(this, question);
+		return node.getSetof().apply(this, info);
 	}
 	
 	@Override
-	public LexNameSet caseASet1SetType(ASet1SetType node, Environment question) throws AnalysisException
+	public LexNameSet caseASet1SetType(ASet1SetType node, FreeVarInfo info) throws AnalysisException
 	{
-		return node.getSetof().apply(this, question);
+		return node.getSetof().apply(this, info);
+	}
+	
+	/************************* Statements ***************************/
+	
+	@Override
+	public LexNameSet caseAAlwaysStm(AAlwaysStm node, FreeVarInfo info)	throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet();
+		names.addAll(node.getAlways().apply(this, info));
+		names.addAll(node.getBody().apply(this, info));
+		return names;
 	}
 	
 	@Override
-	public LexNameSet defaultSBinaryExp(SBinaryExp exp, Environment env) throws AnalysisException
+	public LexNameSet caseAAssignmentStm(AAssignmentStm node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = exp.getLeft().apply(this, env);
-		names.addAll(exp.getRight().apply(this, env));
+		LexNameSet names = new LexNameSet();
+		names.addAll(node.getExp().apply(this, info));
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseAAtomicStm(AAtomicStm node, FreeVarInfo info)	throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet();
+				
+		for (AAssignmentStm stmt: node.getAssignments())
+		{
+			names.addAll(stmt.apply(this, info));
+		}
+		
 		return names;
 	}
 
 	@Override
-	public LexNameSet defaultSUnaryExp(SUnaryExp exp, Environment env) throws AnalysisException
+	public LexNameSet caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, FreeVarInfo info)
+		throws AnalysisException
 	{
-		return exp.getExp().apply(this, env);
+		FreeVarInfo local = info;
+		
+		for (AAssignmentDefinition d: node.getAssignmentDefs())
+		{
+			local = local.set(new FlatEnvironment(af, d, local.env));	// cumulative
+		}
+		
+		return defaultSSimpleBlockStm(node, local);
+	}
+	
+	@Override
+	public LexNameSet caseACallObjectStm(ACallObjectStm node, FreeVarInfo info)
+		throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet();
+		
+		for (PExp arg: node.getArgs())
+		{
+			names.addAll(arg.apply(this, info));
+		}
+		
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseACallStm(ACallStm node, FreeVarInfo info)	throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet(node.getName().getExplicit(true));
+		
+		for (PExp arg: node.getArgs())
+		{
+			names.addAll(arg.apply(this, info));
+		}
+		
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseACasesStm(ACasesStm node, FreeVarInfo info) throws AnalysisException
+	{
+		return node.getExp().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseACyclesStm(ACyclesStm node, FreeVarInfo info) throws AnalysisException
+	{
+		LexNameSet names = node.getCycles().apply(this, info);
+		names.addAll(node.getStatement().apply(this, info));
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseADurationStm(ADurationStm node, FreeVarInfo info) throws AnalysisException
+	{
+		LexNameSet names = node.getDuration().apply(this, info);
+		names.addAll(node.getStatement().apply(this, info));
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseAExitStm(AExitStm node, FreeVarInfo info) throws AnalysisException
+	{
+		if (node.getExpression() == null)
+		{
+			return new LexNameSet();
+		}
+		
+		info.returns.set(true);
+		return node.getExpression().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseAForAllStm(AForAllStm node, FreeVarInfo info)	throws AnalysisException
+	{
+		return node.getSet().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseAForIndexStm(AForIndexStm node, FreeVarInfo info)	throws AnalysisException
+	{
+		LexNameSet names = node.getFrom().apply(this, info);
+		names.addAll(node.getTo().apply(this, info));
+		
+		if (node.getBy() != null)
+		{
+			names.addAll(node.getBy().apply(this, info));
+		}
+		
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseAForPatternBindStm(AForPatternBindStm node, FreeVarInfo info)
+		throws AnalysisException
+	{
+		return node.getExp().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseAIfStm(AIfStm node, FreeVarInfo info)	throws AnalysisException
+	{
+		return node.getIfExp().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseALetBeStStm(ALetBeStStm node, FreeVarInfo info) throws AnalysisException
+	{
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPMultipleBindAssistant().getMultipleBindList(node.getBind()));
+		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
+		LexNameSet names = node.getBind().apply(this, local);
+		
+		if (node.getSuchThat() != null)
+		{
+			names.addAll(node.getSuchThat().apply(this, local));
+		}
+		
+		names.addAll(node.getStatement().apply(this, local));
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseALetStm(ALetStm node, FreeVarInfo info) throws AnalysisException
+	{
+		FreeVarInfo local = info;
+		LexNameSet names = new LexNameSet();
+
+		for (PDefinition d : node.getLocalDefs())
+		{
+			if (d instanceof AExplicitFunctionDefinition)
+			{
+				// ignore
+			}
+			else
+			{
+				local = info.set(new FlatEnvironment(af, d, local.env));
+				names.addAll(d.apply(this, local));
+			}
+		}
+
+		names.addAll(node.getStatement().apply(this, local));
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseAPeriodicStm(APeriodicStm node, FreeVarInfo info) throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet();
+		
+		for (PExp arg: node.getArgs())
+		{
+			names.addAll(arg.apply(this, info));
+		}
+		
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseASporadicStm(ASporadicStm node, FreeVarInfo info) throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet();
+		
+		for (PExp arg: node.getArgs())
+		{
+			names.addAll(arg.apply(this, info));
+		}
+		
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseAReturnStm(AReturnStm node, FreeVarInfo info) throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet();
+		
+		if (node.getExpression() != null)
+		{
+			names.addAll(node.getExpression().apply(this, info));
+		}
+		
+		info.returns.set(true);
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseAStartStm(AStartStm node, FreeVarInfo info) throws AnalysisException
+	{
+		return node.getObj().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseAStopStm(AStopStm node, FreeVarInfo info)	throws AnalysisException
+	{
+		return node.getObj().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseATixeStm(ATixeStm node, FreeVarInfo info) throws AnalysisException
+	{
+		return node.getBody().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseATrapStm(ATrapStm node, FreeVarInfo info) throws AnalysisException
+	{
+		return node.getBody().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet caseAWhileStm(AWhileStm node, FreeVarInfo info) throws AnalysisException
+	{
+		return node.getExp().apply(this, info);
+	}
+	
+	/************************* Defaults ***************************/
+	
+	@Override
+	public LexNameSet defaultSBinaryExp(SBinaryExp exp, FreeVarInfo info) throws AnalysisException
+	{
+		LexNameSet names = exp.getLeft().apply(this, info);
+		names.addAll(exp.getRight().apply(this, info));
+		return names;
 	}
 
 	@Override
-	public LexNameSet createNewReturnValue(INode node, Environment question) throws AnalysisException
+	public LexNameSet defaultSUnaryExp(SUnaryExp exp, FreeVarInfo info) throws AnalysisException
+	{
+		return exp.getExp().apply(this, info);
+	}
+	
+	@Override
+	public LexNameSet defaultSSimpleBlockStm(SSimpleBlockStm node, FreeVarInfo info)
+		throws AnalysisException
+	{
+		LexNameSet names = new LexNameSet();
+		
+		for (PStm stmt: node.getStatements())
+		{
+			if (!info.returns.get())
+			{
+				names.addAll(stmt.apply(this, info));
+			}
+		}
+		
+		return names;
+	}
+
+	/************************* New values etc ***************************/
+
+	@Override
+	public LexNameSet createNewReturnValue(INode node, FreeVarInfo info) throws AnalysisException
 	{
 		return new LexNameSet();	// None
 	}
 
 	@Override
-	public LexNameSet createNewReturnValue(Object node, Environment question) throws AnalysisException
+	public LexNameSet createNewReturnValue(Object node, FreeVarInfo info) throws AnalysisException
 	{
 		return new LexNameSet();	// None
 	}
