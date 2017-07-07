@@ -23,6 +23,7 @@ package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.relations.PRelation;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
@@ -114,6 +115,13 @@ public class TypeCheckVisitor extends AbstractTypeCheckVisitor
 	public PType defaultPDefinition(PDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		return node.apply(tcDefinition, question);
+	}
+
+
+	@Override
+	public PType defaultPRelation(PRelation node, TypeCheckInfo question)
+			throws AnalysisException {
 		return node.apply(tcDefinition, question);
 	}
 

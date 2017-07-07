@@ -1,1 +1,1 @@
-["Error 3139: letexpr-17.vdm at 11:14 Left hand of \u003c is not numeric","Error 3327: letexpr-17.vdm at 23:32 Value is not of the right type","Error 3327: letexpr-17.vdm at 24:34 Value is not of the right type","Error 3051: letexpr-17.vdm at 22:14 Expression does not match declared type"]
+["Error 3139: letexpr-17.vdm at 11:14 Left hand of \u003c is not ordered","Error 3327: letexpr-17.vdm at 23:32 Value is not of the right type","Error 3327: letexpr-17.vdm at 24:34 Value is not of the right type","Error 3051: letexpr-17.vdm at 22:14 Expression does not match declared type"]

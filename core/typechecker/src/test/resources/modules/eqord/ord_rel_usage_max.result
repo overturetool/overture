@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="1" line="2" message="Definition 'compare' not used" messageType="warning" number="5000" resource="ord_rel_usage_max"/>
+<result/>
+</testResult>

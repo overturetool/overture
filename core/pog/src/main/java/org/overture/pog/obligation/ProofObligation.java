@@ -30,15 +30,11 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AAndBooleanBinaryExp;
-import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.AOrBooleanBinaryExp;
-import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexIntegerToken;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -157,7 +153,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	@Override
 	public String toString()
 	{
-		return name + ": " + kind + " obligation " + "@ " + location + "\n"
+		return name + ": " + kind + " obligation " + location + "\n"
 				+ getFullPredString();
 	}
 
@@ -232,6 +228,29 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	public ILexLocation getLocation()
 	{
 		return location;
+	}
+
+	/**
+	 * Create the context (forall x,y,z...) for a Proof Obligation for
+	 * eq and ord relations.
+	 */
+	protected AForAllExp makeRelContext(ATypeDefinition node, AVariableExp... exps){
+
+		AForAllExp forall_exp = new AForAllExp();
+		forall_exp.setType(new ABooleanBasicType());
+
+		ATypeMultipleBind tmb = new ATypeMultipleBind();
+		List<PPattern> pats = new LinkedList<>();
+		for (AVariableExp exp : exps)
+		{
+			pats.add(AstFactory.newAIdentifierPattern(exp.getName().clone()));
+		}
+		tmb.setPlist(pats);
+		tmb.setType(node.getType().clone());
+		List<PMultipleBind> binds = new LinkedList<>();
+		binds.add(tmb);
+		forall_exp.setBindList(binds);
+		return forall_exp;
 	}
 
 	/**

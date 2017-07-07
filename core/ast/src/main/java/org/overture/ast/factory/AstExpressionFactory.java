@@ -23,19 +23,7 @@ package org.overture.ast.factory;
 
 import java.util.List;
 
-import org.overture.ast.expressions.AAndBooleanBinaryExp;
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.AGreaterNumericBinaryExp;
-import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
-import org.overture.ast.expressions.AInSetBinaryExp;
-import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
-import org.overture.ast.expressions.ALessNumericBinaryExp;
-import org.overture.ast.expressions.AMkTypeExp;
-import org.overture.ast.expressions.ANotEqualBinaryExp;
-import org.overture.ast.expressions.AOrBooleanBinaryExp;
-import org.overture.ast.expressions.APlusNumericBinaryExp;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexToken;
@@ -61,6 +49,18 @@ public class AstExpressionFactory
 		mktype.setTypeName(typeName);
 		mktype.setArgs(arglist);
 		return mktype;
+	}
+
+	public static AIsExp newAIsExp(PType type, PExp exp)
+	{
+		AIsExp result = new AIsExp();
+		initExpression(result, null);
+
+		result.setBasicType(type);
+		result.setTest(exp);
+
+		return result;
+
 	}
 
 	public static AEqualsBinaryExp newAEqualsBinaryExp(PExp left, PExp right)

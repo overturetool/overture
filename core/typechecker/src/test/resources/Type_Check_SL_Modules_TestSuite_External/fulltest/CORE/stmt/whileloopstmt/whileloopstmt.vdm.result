@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="13" line="24" message="Right hand of &gt; is not numeric" messageType="error" number="3140" resource="whileloopstmt.vdm"/>
+<message column="13" line="24" message="Right hand of &gt; is not ordered" messageType="error" number="3140" resource="whileloopstmt.vdm"/>
 <message column="7" line="30" message="Unknown state variable 'a' in assignment" messageType="error" number="3247" resource="whileloopstmt.vdm"/>
 <message column="5" line="34" message="Expression is not boolean" messageType="error" number="3218" resource="whileloopstmt.vdm"/>
 <message column="7" line="35" message="Unknown state variable 'a' in assignment" messageType="error" number="3247" resource="whileloopstmt.vdm"/>

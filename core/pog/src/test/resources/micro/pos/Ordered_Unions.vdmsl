@@ -1,0 +1,17 @@
+-- This test exercises the generation of an Ordered Obligation with an
+-- ord clause off a Type Definition and a comparison of values
+
+types
+	A = nat
+	ord a < b == a < b;
+
+	D = nat
+	ord a < b == a < b;
+
+    B = token;
+    C = token;
+
+values
+    a : A | nat = 1;
+    b : C | D = mk_token("foo");
+    c = a>b;

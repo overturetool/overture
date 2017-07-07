@@ -266,7 +266,9 @@ type {-> package='org.overture.ast.types'
 #invariant {-> package='org.overture.ast.types'
     |	[inNarrower]:java_Boolean
 	|	(opaque):java_Boolean
-    |   (invDef):definition.#Function.explicit}
+    |   (invDef):definition.#Function.explicit
+    |   (eqDef):definition.#Function.explicit
+    |   (ordDef):definition.#Function.explicit}
     =   {named} (name):LexNameToken (type):type //[invdef]:#Function.explicit //super = invariant type
     |   {record} [name]:LexNameToken (fields):field.field* (infinite):java_Boolean (composed):java_Boolean //[invdef]:#Function.explicit //super = invariant type
     ;
@@ -393,6 +395,8 @@ definition {-> package='org.overture.ast.definitions'
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.#Operation.explicit
     |   {type} (invType):type.#invariant [invPattern]:pattern [invExpression]:exp 
                [invdef]:definition.#Function.explicit [infinite]:java_Boolean (name):LexNameToken//is access missing here
+               [ordRelation]:relation.ord
+               [eqRelation]:relation.eq
                (composeDefinitions):definition*
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
@@ -453,7 +457,22 @@ definition {-> package='org.overture.ast.definitions'
             [errors]:case.error*
             (stateDefinition):definition
      ;
- 
+
+/*
+ * relations for type definitions
+ */
+
+relation {-> package='org.overture.ast.definitions.relations'
+	|	[location]:location
+    | [lhsPattern]:pattern 
+    | [rhsPattern]:pattern 
+    | [relExp]:exp
+    | [relDef]:definition.#Function.explicit}
+    = {eq}
+    | {ord} [minDef]:definition.#Function.explicit [maxDef]:definition.#Function.explicit
+    ; 
+
+
 /*
  * Trace defintions which is not definitions...
  */  

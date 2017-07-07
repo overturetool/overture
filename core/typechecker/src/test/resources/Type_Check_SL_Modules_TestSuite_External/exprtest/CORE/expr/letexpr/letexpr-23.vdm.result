@@ -5,6 +5,6 @@
 <message column="13" line="28" message="Definition 'post_h' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
 <message column="13" line="24" message="Definition 'pre_g' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
 <message column="15" line="20" message="Definition 'inv_f' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
-<message column="14" line="11" message="Left hand of &lt; is not numeric" messageType="error" number="3139" resource="letexpr-23.vdm"/>
+<message column="14" line="11" message="Left hand of &lt; is not ordered" messageType="error" number="3139" resource="letexpr-23.vdm"/>
 <result/>
 </testResult>

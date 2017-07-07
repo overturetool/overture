@@ -1557,9 +1557,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				if (map.get(sortOn) == null)
 				{
-					if (nvpl.size() != 1 || !sortOn.isNumeric())
+					if (nvpl.size() != 1 || !sortOn.isOrdered())
 					{
-						VdmRuntimeError.abort(node.getLocation(), 4029, "Sequence comprehension bindings must be one numeric value", ctxt);
+						VdmRuntimeError.abort(node.getLocation(), 4029, "Sequence comprehension bindings must be one ordered value", ctxt);
 					}
 
 					evalContext.putList(nvpl);
@@ -1689,12 +1689,13 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					set.add(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), evalContext));
 				}
 			}
-		} catch (ValueException e)
+
+			return new SetValue(set);
+		}
+		catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return new SetValue(set);
 	}
 
 	@Override

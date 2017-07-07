@@ -53,6 +53,8 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.relations.AEqRelation;
+import org.overture.ast.definitions.relations.AOrdRelation;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
@@ -1518,6 +1520,18 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			node.getInvdef().apply(THIS, question);
 		}
 
+		if (node.getEqRelation() != null)
+		{
+			question.scope = NameScope.NAMES;
+			node.getEqRelation().apply(THIS,question);
+		}
+
+		if (node.getOrdRelation() != null)
+		{
+			question.scope = NameScope.NAMES;
+			node.getOrdRelation().apply(THIS,question);
+		}
+
 		PType type = question.assistantFactory.createPDefinitionAssistant().getType(node);
 		node.setType(type);
 
@@ -1711,10 +1725,25 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		return node.getCallStatement().apply(THIS, question);
 
 	}
-	
+
+	@Override
+	public PType caseAEqRelation(AEqRelation node, TypeCheckInfo question) throws AnalysisException {
+		return node.getRelDef().apply(THIS,question);
+	}
+
+	@Override
+	public PType caseAOrdRelation(AOrdRelation node, TypeCheckInfo question) throws AnalysisException {
+		// Do not report TC errors for Min or Max. Just confusing.
+		TypeChecker.suppressErrors(true);
+		node.getMinDef().apply(THIS,question);
+		node.getMaxDef().apply(THIS,question);
+		TypeChecker.suppressErrors(false);
+		return node.getRelDef().apply(THIS, question);
+	}
+
 	public void typeCheck(List<PTraceDefinition> term,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
+						  IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+						  TypeCheckInfo question) throws AnalysisException
 	{
 
 		for (PTraceDefinition def : term)

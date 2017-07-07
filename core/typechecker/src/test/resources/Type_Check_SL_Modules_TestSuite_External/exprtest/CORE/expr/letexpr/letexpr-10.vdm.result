@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="22" line="20" message="Definition 'b' not used" messageType="warning" number="5000" resource="letexpr-10.vdm"/>
-<message column="14" line="11" message="Left hand of &lt; is not numeric" messageType="error" number="3139" resource="letexpr-10.vdm"/>
+<message column="14" line="11" message="Left hand of &lt; is not ordered" messageType="error" number="3139" resource="letexpr-10.vdm"/>
 <message column="19" line="20" message="Name 'LetExprTest`b' is not in scope" messageType="error" number="3182" resource="letexpr-10.vdm"/>
 <result/>
 </testResult>

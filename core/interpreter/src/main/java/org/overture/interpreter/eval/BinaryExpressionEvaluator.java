@@ -884,17 +884,18 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		{
 			togo = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
 			result.addAll(node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt));
-		} catch (ValueException e)
+
+			for (Value r : togo)
+			{
+				result.remove(r);
+			}
+
+			return new SetValue(result);
+		}
+		catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		for (Value r : togo)
-		{
-			result.remove(r);
-		}
-
-		return new SetValue(result);
 	}
 
 	@Override

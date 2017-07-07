@@ -149,6 +149,26 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 		return new LexNameToken(module, "inv_" + name, l);
 	}
 
+	public LexNameToken getOrdName(ILexLocation l)
+	{
+		return new LexNameToken(module, "ord_" + name, l);
+	}
+
+	public LexNameToken getEqName(ILexLocation l)
+	{
+		return new LexNameToken(module, "eq_" + name, l);
+	}
+
+	public LexNameToken getMinName(ILexLocation l)
+	{
+		return new LexNameToken(module, "min_" + name, l);
+	}
+
+	public LexNameToken getMaxName(ILexLocation l)
+	{
+		return new LexNameToken(module, "max_" + name, l);
+	}
+
 	public LexNameToken getInitName(ILexLocation l)
 	{
 		return new LexNameToken(module, "init_" + name, l);
@@ -160,6 +180,10 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 			name.startsWith("pre_") ||
 			name.startsWith("post_") ||
 			name.startsWith("inv_") ||
+			name.startsWith("eq_") ||
+			name.startsWith("ord_") ||
+			name.startsWith("min_") ||
+			name.startsWith("max_") ||
 			name.startsWith("init_");
 	}
 

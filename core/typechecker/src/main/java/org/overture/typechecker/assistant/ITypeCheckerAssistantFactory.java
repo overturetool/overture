@@ -27,12 +27,14 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameSet;
@@ -405,4 +407,10 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<Boolean> getTypeDefinitionChecker();
 
 	IQuestionAnswer<FreeVarInfo, LexNameSet> getFreeVariablesChecker();
+
+	IQuestionAnswer<ILexLocation,Boolean> getIsOrderedVisitor();
+
+	IQuestionAnswer<ILexLocation,Boolean> getIsEqVisitor();
+
+	IQuestion<TypeCheckInfo> getMultipleEqualityChecker();
 }

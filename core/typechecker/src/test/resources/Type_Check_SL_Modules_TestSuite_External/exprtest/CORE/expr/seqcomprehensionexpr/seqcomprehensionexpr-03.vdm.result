@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="11" line="12" message="List comprehension must define one numeric bind variable" messageType="error" number="3155" resource="seqcomprehensionexpr-03.vdm"/>
+<message column="11" line="12" message="List comprehension must define one ordered bind variable" messageType="error" number="3155" resource="seqcomprehensionexpr-03.vdm"/>
 <result/>
 </testResult>
