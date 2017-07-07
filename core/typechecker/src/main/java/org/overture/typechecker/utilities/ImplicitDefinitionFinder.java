@@ -385,7 +385,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(fname, NameScope.GLOBAL, null, ftype, parameters,
-				node.getRelExp(), null, null, true, null);
+				node.getRelExp(), null, null, false, null);
 
 		def.setAccess(typedef.getAccess().clone()); // Same as type's
 		def.setClassDefinition(typedef.getClassDefinition());
