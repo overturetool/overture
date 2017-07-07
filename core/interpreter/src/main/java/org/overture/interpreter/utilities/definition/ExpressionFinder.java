@@ -250,6 +250,42 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
+		if (def.getEqRelation().getRelDef() != null)
+		{
+			PExp found = def.getEqRelation().getRelDef().apply(THIS, lineno);
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
+		if (def.getOrdRelation().getRelDef() != null)
+		{
+			PExp found = def.getOrdRelation().getRelDef().apply(THIS, lineno);
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
+		if (def.getOrdRelation().getMinDef() != null)
+		{
+			PExp found = def.getOrdRelation().getMinDef().apply(THIS, lineno);
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
+		if (def.getOrdRelation().getMaxDef() != null)
+		{
+			PExp found = def.getOrdRelation().getMaxDef().apply(THIS, lineno);
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
 		return null;
 	}
 

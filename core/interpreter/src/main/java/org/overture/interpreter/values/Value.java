@@ -310,6 +310,11 @@ abstract public class Value implements Comparable<Value>, Serializable,
 		return this instanceof NumericValue;
 	}
 
+	public boolean isOrdered()
+	{
+		return isNumeric();
+	}
+
 	public boolean isType(Class<? extends Value> valueclass)
 	{
 		return valueclass.isInstance(this);

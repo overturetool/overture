@@ -38,6 +38,8 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.relations.AEqRelation;
+import org.overture.ast.definitions.relations.AOrdRelation;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;

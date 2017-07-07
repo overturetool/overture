@@ -25,14 +25,14 @@ in
 	
 	IO`print("\n");
 	
-	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
-	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);
-	
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.equals(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.nequals(pb2)]);
+
 	IO`print("\n");
-	
+
 	IO`println("Printing entries in pb1");
 	pb1.listEntries();
-	
+
 	IO`print("\n");
 
 	IO`println("Printing entries in pb1 as <number>, <name>:");
@@ -40,37 +40,37 @@ in
 		IO`print("Number: " ^ number ^ ". Name: " ^ pb1.getName(number) ^ "\n");
 
 	IO`print("\n");
-	
+
 	IO`println("Overriding Martin |-> 11, Jens |-> 22, Denver |-> 8");
 	IO`println("Printing entries in pb1");
 	pb1.override({"Martin" |-> "11", "Jens" |-> "22", "Denver" |-> "8"});
 	pb1.listEntries();
-	
-	IO`print("\n");
-	
-	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
-	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);	
 
 	IO`print("\n");
 
-	IO`println("Loading default entries in pb1...");	
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.equals(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.nequals(pb2)]);
+
+	IO`print("\n");
+
+	IO`println("Loading default entries in pb1...");
 	pb1.loadDemo();
-	IO`print("Resitrct to names: Jens, Lala\n");		
+	IO`print("Resitrct to names: Jens, Lala\n");
 	pb1.restrictToNames({"Jens", "Denver", "Lala"});
 	IO`println("Printing entries in pb1");
 	pb1.listEntries();
-	
+
 	IO`print("\n");
-	
+
 	IO`println("Loading default entries in pb1...");
-	pb1.loadDemo();		
+	pb1.loadDemo();
 	IO`print("Resitrct by names: Mads, Cat, Lala\n");
 	pb1.restrictByNames({"Mads", "Cat", "Lala"});
 	IO`println("Printing entries in pb1");
 	pb1.listEntries();
-	
+
 	IO`print("\n");
-	
+
 	IO`println("Loading default entries in pb1...");
 	pb1.loadDemo();
 	IO`print("Resitrct to numbers 2, 4, 6, 8\n");
@@ -79,7 +79,7 @@ in
 	pb1.listEntries();
 
 	IO`print("\n");
-	
+
 	IO`println("Loading default entries in pb1...");
 	pb1.loadDemo();
 	IO`print("Resitrct by numbers 0,1,2,3\n");
@@ -105,7 +105,7 @@ loadDemo () ==
 );
 
 public listEntries: () ==> ()
-listEntries () == 	
+listEntries () ==
 	for all name in set getNames() do
 		IO`print("Name: " ^ name ^ ". Number: " ^ getNumber(name) ^ "\n");
 
@@ -145,11 +145,11 @@ restrictToNumbers (numbers) == phoneNumbers := phoneNumbers :> numbers;
 public restrictByNumbers : set of Str ==> ()
 restrictByNumbers (numbers) == phoneNumbers := phoneNumbers :-> numbers;
 
-public eq : PhoneBook ==> bool
-eq (other) == return phoneNumbers = other.phoneNumbers;
+public equals : PhoneBook ==> bool
+equals (other) == return phoneNumbers = other.phoneNumbers;
 
-public neq : PhoneBook ==> bool
-neq (other) == return phoneNumbers <> other.phoneNumbers;
+public nequals : PhoneBook ==> bool
+nequals (other) == return phoneNumbers <> other.phoneNumbers;
 
 end PhoneBook
 

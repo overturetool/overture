@@ -23,74 +23,74 @@ in
 	nb1.addMessages(["one", "two", "three", "four"]);
 	nb1.addMessagesDist(["red", "green"], ["blue", "yellow"]);
 	
-	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.eq(nb2)]);
-	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.neq(nb2)]);
+	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.equals(nb2)]);
+	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.nequals(nb2)]);
 	IO`print("\n");
-	
+
 	IO`println("Copying the nb1 messages to nb2..\n");
 	nb2.setMessages(nb1.getMessagesOrdered());
-	
-	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.eq(nb2)]);
-	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.neq(nb2)]);
+
+	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.equals(nb2)]);
+	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.nequals(nb2)]);
 	IO`print("\n");
-	
+
 	IO`printf("The current number of messages in nb1 is: %s\n\n", [nb1.noOfMessgages()]);
-	
+
 	IO`println("All messages so far: ");
 	nb1.printMessages();
 	IO`print("\n");
-	
+
 	IO`println("Latest message is: " ^ nb1.readLatest());
 	IO`println("Removing latest..");
 	nb1.removeLatest();
-	
+
 	IO`println("Latest message is: " ^ nb1.readLatest() ^ "\n");
-	
+
 	IO`printf("Overriding message %s with 'Hi'\n", [9]);
 	nb1.overrideMessage(9, "Hi!");
-	
-	
+
+
 	IO`println("All messages so far: ");
 	nb1.printMessages();
 	IO`print("\n");
-	
+
 	IO`printf("Message %s: " ^ nb1.getMessage(5) ^ "\n", [5]);
 	IO`print("\n");
-	
+
 	IO`printf("Message 8 is equal to 'Bye!': %s\n", [nb1.isMessage(8, "Bye!")]);
 	IO`printf("Message 1 is equal to 'Bye!': %s\n", [nb1.isMessage(1, "Bye!")]);
-	
+
 	IO`printf("Message 8 is NOT equal to 'Bye!': %s\n", [nb1.isNotMessage(8, "Bye!")]);
 	IO`printf("Message 1 is NOT equal to 'Bye!': %s\n", [nb1.isNotMessage(1, "Bye!")]);
 	IO`print("\n");
-	
+
 	IO`print("Adding duplicate message 'yellow'\n\n");
 	nb1.addMessage("yellow");
-	
+
 	IO`println("Printing messages reversed");
-	for i = 1 to nb1.noOfMessgages() do 
+	for i = 1 to nb1.noOfMessgages() do
 		let reversed = nb1.getReverseMessages()
 		in
 			IO`println(reversed(i));
-			
+
 	IO`print("\n");
-	
+
 	IO`println("Printing message indices of nb1");
 	for all idx in set nb1.getMessageIndices() do
 		IO`printf("%s ", [idx]);
-	
+
 	IO`println("\n");
-	
+
 	IO`println("Printing messages of nb1 using 'elems' operator");
 	for all msg in set elems nb1.getMessagesOrdered() do
-		IO`print(msg ^ "\n");	
-	
+		IO`print(msg ^ "\n");
+
 	IO`println("\n");
-	
+
 	IO`println("Printing messages of nb1 using the sequence loop");
 	for msg in nb1.getMessagesOrdered() do
-		IO`print(msg ^ "\n");	
-	
+		IO`print(msg ^ "\n");
+
 );
 
 public printMessages : () ==> ()
@@ -103,13 +103,13 @@ printMessages () ==
 public addMessage : seq of char ==> ()
 addMessage (msg) ==
 	messages := [msg] ^ messages;
-	
+
 public addMessages : seq of seq of char ==> ()
-addMessages (newMessages) == 
+addMessages (newMessages) ==
 	messages := newMessages ^ messages;
 
 private addMessagesDist : seq of seq of char * seq of seq of char ==> ()
-addMessagesDist (newMessages1, newMessages2) == 
+addMessagesDist (newMessages1, newMessages2) ==
 	messages := conc [newMessages1, newMessages2] ^ messages;
 
 public readLatest : () ==> seq of char
@@ -120,9 +120,9 @@ public removeLatest : () ==> ()
 removeLatest () == messages := tl messages;
 
 public overrideMessage : nat1 * seq of char ==> ()
-overrideMessage (index, newMessage) == 
+overrideMessage (index, newMessage) ==
 	messages := messages ++ {index |-> newMessage};
-	
+
 public getMessagesOrdered : () ==> seq of seq of char
 getMessagesOrdered () == return messages;
 
@@ -151,11 +151,11 @@ getMessageIndices () == return inds messages;
 public getReverseMessages : () ==> seq of seq of char
 getReverseMessages () == return reverse messages;
 
-public eq : NoteBook ==> bool
-eq (other) == return messages = other.messages;
+public equals : NoteBook ==> bool
+equals (other) == return messages = other.messages;
 
-public neq : NoteBook ==> bool
-neq (other) == return messages <> other.messages;
+public nequals : NoteBook ==> bool
+nequals (other) == return messages <> other.messages;
 
 end NoteBook
 

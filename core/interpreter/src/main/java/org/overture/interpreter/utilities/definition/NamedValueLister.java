@@ -430,7 +430,7 @@ public class NamedValueLister extends
 
 	@Override
 	public NameValuePairList caseATypeDefinition(ATypeDefinition def,
-			Context initialContext) throws AnalysisException
+												 Context initialContext) throws AnalysisException
 	{
 		NameValuePairList nvl = new NameValuePairList();
 
@@ -438,6 +438,30 @@ public class NamedValueLister extends
 		{
 			FunctionValue invfunc = new FunctionValue(def.getInvdef(), null, null, initialContext);
 			nvl.add(new NameValuePair(def.getInvdef().getName(), invfunc));
+		}
+
+		if (def.getEqRelation() != null && def.getEqRelation().getRelDef() != null)
+		{
+			FunctionValue func = new FunctionValue(def.getEqRelation().getRelDef(), null, null, initialContext);
+			nvl.add(new NameValuePair(def.getEqRelation().getRelDef().getName(), func));
+		}
+
+		if (def.getOrdRelation() != null && def.getOrdRelation().getRelDef() != null)
+		{
+			FunctionValue func = new FunctionValue(def.getOrdRelation().getRelDef(), null, null, initialContext);
+			nvl.add(new NameValuePair(def.getOrdRelation().getRelDef().getName(), func));
+		}
+
+		if (def.getOrdRelation() != null && def.getOrdRelation().getMinDef() != null)
+		{
+			FunctionValue func = new FunctionValue(def.getOrdRelation().getMinDef(), null, null, initialContext);
+			nvl.add(new NameValuePair(def.getOrdRelation().getMinDef().getName(), func));
+		}
+
+		if (def.getOrdRelation() != null && def.getOrdRelation().getMaxDef() != null)
+		{
+			FunctionValue func = new FunctionValue(def.getOrdRelation().getMaxDef(), null, null, initialContext);
+			nvl.add(new NameValuePair(def.getOrdRelation().getMaxDef().getName(), func));
 		}
 
 		return nvl;

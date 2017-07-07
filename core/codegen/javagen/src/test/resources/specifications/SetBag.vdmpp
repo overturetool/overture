@@ -75,34 +75,34 @@ Test () ==
 	
 	IO`print("\n");
 	
-	IO`printf("bag1 equals bag2: %s\n", [bag1.eq(bag2)]);
-	IO`printf("bag1 equals a bag containing elements {3 5}: %s\n", [bag1.eq(new Bag({3,5}))]);
-	IO`printf("bag1 NOT equals bag2: %s\n", [bag1.neq(bag2)]);
-	IO`printf("bag1 NOT equals a bag containing elements {3 5}: %s\n", [bag1.neq(new Bag({3,5}))]);
+	IO`printf("bag1 equals bag2: %s\n", [bag1.equals(bag2)]);
+	IO`printf("bag1 equals a bag containing elements {3 5}: %s\n", [bag1.equals(new Bag({3,5}))]);
+	IO`printf("bag1 NOT equals bag2: %s\n", [bag1.nequals(bag2)]);
+	IO`printf("bag1 NOT equals a bag containing elements {3 5}: %s\n", [bag1.nequals(new Bag({3,5}))]);
 
 	IO`print("\n");
-	
-	IO`printf("Size of bag1: %s\n", [bag1.size()]);	
-	
+
+	IO`printf("Size of bag1: %s\n", [bag1.size()]);
+
 	IO`print("\n");
-	
+
 	IO`println("Adding numbers '4' and '6' to bag1 using distributed union..");
 	bag1.addNumbersDist(new Bag({4}), new Bag({6}));
 	IO`println("Printing content of bag1");
 	bag1.printBag();
-	
+
 	IO`println("\n");
-	
+
 	IO`println("Setting bag1 to have numbers shared with {4 5} and then {5} using disributed intersection...");
 	bag1.setSharedNumbersDist(new Bag({4,5}), new Bag({5}));
 	IO`println("Printing content of bag1");
 	bag1.printBag();
-	
+
 	IO`println("\n");
 
 	IO`print("Printing power bags of bag2..\n");
-	
-	for all b in set bag2.powerBag() do 
+
+	for all b in set bag2.powerBag() do
 	(
 		b.printBag();
 		IO`print("\n");
@@ -110,17 +110,17 @@ Test () ==
 );
 
 public Bag : set of nat ==> Bag
-Bag (pNumbers) == 
+Bag (pNumbers) ==
 (
 	numbers := pNumbers;
 	return self;
 );
 
 public printBag : () ==> ()
-printBag () == 
+printBag () ==
 (
 	IO`print("{");
-	if card numbers = 0 then 
+	if card numbers = 0 then
 		IO`print(" ")
 	else
 		for all e in set numbers do IO`printf(" %s ", [e]);
@@ -151,11 +151,11 @@ contains (bag) == return bag.getNumbers() subset numbers;
 public properContains : Bag ==> bool
 properContains (bag) == return bag.getNumbers() psubset numbers;
 
-public eq : Bag ==> bool
-eq (bag) == return numbers = bag.getNumbers();
+public equals : Bag ==> bool
+equals (bag) == return numbers = bag.getNumbers();
 
-public neq : Bag ==> bool
-neq (bag) == return numbers <> bag.getNumbers();
+public nequals : Bag ==> bool
+nequals (bag) == return numbers <> bag.getNumbers();
 
 public size : () ==> nat
 size () == return card numbers;

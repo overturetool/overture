@@ -57,6 +57,8 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.relations.AEqRelation;
+import org.overture.ast.definitions.relations.AOrdRelation;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
@@ -530,7 +532,14 @@ public class AstFactory
 	}
 
 	public static ATypeDefinition newATypeDefinition(ILexNameToken name,
-			SInvariantType type, PPattern invPattern, PExp invExpression)
+													 SInvariantType type, PPattern invPattern, PExp invExpression)
+	{
+		return newATypeDefinition(name, type, invPattern, invExpression, null, null);
+	}
+
+	public static ATypeDefinition newATypeDefinition(ILexNameToken name,
+													 SInvariantType type, PPattern invPattern, PExp invExpression,
+													 AEqRelation eqRelation, AOrdRelation ordRelation)
 	{
 
 		ATypeDefinition result = new ATypeDefinition();
@@ -544,6 +553,9 @@ public class AstFactory
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
 
+		result.setEqRelation(eqRelation);
+		result.setOrdRelation(ordRelation);
+
 		result.setType(type);
 
 		if (type != null)
@@ -555,6 +567,28 @@ public class AstFactory
 
 			type.getDefinitions().add(result);
 		}
+
+		return result;
+	}
+
+	public static AEqRelation newAEqRelation(PPattern leftPattern, PPattern rightPattern, PExp exp)
+	{
+		AEqRelation result = new AEqRelation();
+
+		result.setLhsPattern(leftPattern);
+		result.setRhsPattern(rightPattern);
+		result.setRelExp(exp);
+
+		return result;
+	}
+
+	public static AOrdRelation newAOrdRelation(PPattern leftPattern, PPattern rightPattern, PExp exp)
+	{
+		AOrdRelation result = new AOrdRelation();
+
+		result.setLhsPattern(leftPattern);
+		result.setRhsPattern(rightPattern);
+		result.setRelExp(exp);
 
 		return result;
 	}

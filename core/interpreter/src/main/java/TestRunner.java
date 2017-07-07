@@ -2,10 +2,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.interpreter.runtime.ClassInterpreter;
-import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.Interpreter;
-import org.overture.interpreter.runtime.StateContext;
+import org.overture.interpreter.runtime.*;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.Value;
@@ -49,7 +46,14 @@ public class TestRunner
 			}
 		}
 
-		return new SetValue(vals);
+		try
+		{
+			return new SetValue(vals);
+		}
+		catch (ValueException e)
+		{
+			return null;	// Not reached
+		}
 	}
 
 	private static boolean isTestClass(SClassDefinition def)
