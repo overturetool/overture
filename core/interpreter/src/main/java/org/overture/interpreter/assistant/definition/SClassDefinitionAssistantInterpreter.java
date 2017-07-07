@@ -50,6 +50,7 @@ import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ClassInvariantListener;
+import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -246,11 +247,13 @@ public class SClassDefinitionAssistantInterpreter extends
 		members.putAll(VdmRuntime.getNodeState(af, node).publicStaticValues);
 		members.putAll(VdmRuntime.getNodeState(af, node).privateStaticValues);
 
-		// We create a RootContext here so that the scope for member
-		// initializations are restricted.
+		// We create an ObjectContext here so that the member initializers can run in
+		// a "self" context that is sensible.
 
-		Context initCtxt = new StateContext(af, node.getLocation(), "field initializers", ctxt, null);
-		initCtxt.putList(members.asList());
+		ObjectValue creator = ctxt.outer == null ? null : ctxt.outer.getSelf();
+		ObjectValue object = new ObjectValue((AClassType) af.createSClassDefinitionAssistant().getType(node),
+			members, inherited, ctxt.threadState.CPU, creator);
+		Context initCtxt = new ObjectContext(af, node.getLocation(), "field initializers", ctxt, object);
 
 		// We create an empty context to pass for function creation, so that
 		// there are no spurious free variables created.
@@ -280,6 +283,19 @@ public class SClassDefinitionAssistantInterpreter extends
 					
 					initCtxt.put(nvp.name, nvp.value);
 					members.put(nvp.name, nvp.value);
+					
+					Value deref = nvp.value.deref();
+					
+					if (deref instanceof OperationValue)
+					{
+						OperationValue op = (OperationValue)deref;
+						op.setSelf(object);
+					}
+					else if (deref instanceof FunctionValue)
+		 			{
+		 				FunctionValue fv = (FunctionValue)deref;
+		 				fv.setSelf(object);
+		 			}
 				}
 			}
 		}
@@ -298,10 +314,6 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		setPermissions(node, node.getDefinitions(), members, initCtxt);
 		setPermissions(node, node.getSuperInheritedDefinitions(), members, initCtxt);
-
-		ObjectValue creator = ctxt.outer == null ? null : ctxt.outer.getSelf();
-
-		ObjectValue object = new ObjectValue((AClassType) af.createSClassDefinitionAssistant().getType(node), members, inherited, ctxt.threadState.CPU, creator);
 
 		Value ctor = null;
 
