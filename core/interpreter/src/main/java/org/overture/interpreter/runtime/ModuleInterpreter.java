@@ -208,14 +208,16 @@ public class ModuleInterpreter extends Interpreter
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
 		CPUValue.init(scheduler, assistantFactory);
-		initialContext = assistantFactory.createModuleListAssistant().initialize(modules, dbgp);
+		initialContext = assistantFactory.createModuleListAssistant().createInitialContext(modules);
+		assistantFactory.createModuleListAssistant().initialize(initialContext, modules, dbgp);
 	}
 
 	@Override
 	public void traceInit(DBGPReader dbgp)
 	{
 		scheduler.reset();
-		initialContext = assistantFactory.createModuleListAssistant().initialize(modules, dbgp);
+		initialContext = assistantFactory.createModuleListAssistant().createInitialContext(modules);
+		assistantFactory.createModuleListAssistant().initialize(initialContext, modules, dbgp);
 	}
 
 	@Override
