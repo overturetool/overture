@@ -2048,11 +2048,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			// name. This only really affects trace expansion.
 
 			ARecordInvariantType recordType = node.getRecordType();
+			AExplicitFunctionDefinition eq = recordType.getEqDef();
+			AExplicitFunctionDefinition ord = recordType.getOrdDef();
 
 			AExplicitFunctionDefinition inv = recordType.getInvDef();
 
 			recordType = AstFactory.newARecordInvariantType(recordType.getName().getExplicit(true), recordType.getFields());
 			recordType.setInvDef(inv);
+			recordType.setEqDef(eq);
+			recordType.setOrdDef(ord);
 			node.setRecordType(recordType);
 		}
 
