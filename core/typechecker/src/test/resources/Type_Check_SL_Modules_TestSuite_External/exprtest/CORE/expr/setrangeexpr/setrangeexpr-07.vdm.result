@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="7" line="12" message="Definition 'A' not used" messageType="warning" number="5000" resource="setrangeexpr-07.vdm"/>
-<message column="19" line="14" message="Set range type must be an number" messageType="error" number="3167" resource="setrangeexpr-07.vdm"/>
+<message column="19" line="14" message="Set range type must be a number" messageType="error" number="3167" resource="setrangeexpr-07.vdm"/>
 <result/>
 </testResult>

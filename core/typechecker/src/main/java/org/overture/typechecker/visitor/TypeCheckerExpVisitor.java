@@ -2578,7 +2578,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ftype))
 		{
-			TypeCheckerErrors.report(3166, "Set range type must be an number", ftype.getLocation(), ftype);
+			TypeCheckerErrors.report(3166, "Set range type must be a number", first.getLocation(), ftype);
 			ftype = AstFactory.newAIntNumericBasicType(node.getLocation());
 		}
 
@@ -2592,7 +2592,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ltype))
 		{
-			TypeCheckerErrors.report(3167, "Set range type must be an number", ltype.getLocation(), ltype);
+			TypeCheckerErrors.report(3167, "Set range type must be a number", last.getLocation(), ltype);
 		}
 
 		node.setType(AstFactory.newASetSetType(first.getLocation(), ftype));
