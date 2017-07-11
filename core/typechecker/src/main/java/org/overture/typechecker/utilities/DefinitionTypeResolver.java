@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
@@ -406,6 +407,12 @@ public class DefinitionTypeResolver extends
 			// af.createAValueDefinitionAssistant().updateDefs(node, question.question);
 			updateDefs(node, question.question);
 		}
+	}
+	
+	public void caseAImportedDefinition(AImportedDefinition node, NewQuestion question)
+		throws AnalysisException
+	{
+		node.getDef().apply(this, question);
 	}
 
 	public void updateDefs(AValueDefinition node, TypeCheckInfo question)
