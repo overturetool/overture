@@ -99,11 +99,12 @@ abstract public class TypeChecker
 		Map<ILexNameToken, LexNameSet> dependencies = new HashMap<ILexNameToken, LexNameSet>();
 		LexNameSet skip = new LexNameSet();
 		PDefinitionAssistantTC assistant = assistantFactory.createPDefinitionAssistant();
+		Environment globals = new FlatEnvironment(assistantFactory, defs, null);
 
     	for (PDefinition def: defs)
     	{
     		Environment env = new FlatEnvironment(assistantFactory, new Vector<PDefinition>());
-    		FreeVarInfo empty = new FreeVarInfo(env, false);
+    		FreeVarInfo empty = new FreeVarInfo(globals, env, false);
 			LexNameSet freevars = assistant.getFreeVariables(def, empty);
 			
 			if (!freevars.isEmpty())

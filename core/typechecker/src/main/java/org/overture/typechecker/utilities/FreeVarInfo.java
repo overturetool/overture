@@ -32,23 +32,26 @@ import org.overture.typechecker.Environment;
  */
 public class FreeVarInfo
 {
+	public final Environment globals;
 	public final Environment env;
 	public final AtomicBoolean returns;
 	
-	public FreeVarInfo(Environment env, AtomicBoolean returns)
+	public FreeVarInfo(Environment globals, Environment env, AtomicBoolean returns)
 	{
+		this.globals = globals;
 		this.env = env;
 		this.returns = returns;
 	}
 
-	public FreeVarInfo(Environment env, boolean b)
+	public FreeVarInfo(Environment globals, Environment env, boolean b)
 	{
+		this.globals = globals;
 		this.env = env;
 		this.returns = new AtomicBoolean(b);
 	}
 
 	public FreeVarInfo set(Environment local)
 	{
-		return new FreeVarInfo(local, returns);
+		return new FreeVarInfo(globals, local, returns);
 	}
 }

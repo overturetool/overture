@@ -360,6 +360,13 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 	@Override
 	public LexNameSet caseAVariableExp(AVariableExp node, FreeVarInfo info) throws AnalysisException
 	{
+		PDefinition d = info.globals.findName(node.getName(), NameScope.NAMESANDSTATE);
+		
+		if (d != null && af.createPDefinitionAssistant().isFunction(d))
+		{
+			return new LexNameSet();
+		}
+
 		if (info.env.findName(node.getName(), NameScope.NAMESANDSTATE) == null)
 		{
 			return new LexNameSet(node.getName().getExplicit(true));
@@ -373,7 +380,19 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 	@Override
 	public LexNameSet caseAApplyExp(AApplyExp node, FreeVarInfo info) throws AnalysisException
 	{
-		LexNameSet names = node.getRoot().apply(this, info);
+		LexNameSet names = new LexNameSet();
+		
+		if (node.getRoot() instanceof AVariableExp && node.getRoot().getType() != null &&
+			af.createPTypeAssistant().isFunction(node.getRoot().getType()))
+		{
+			// If this is a global call, then we depend on the function
+			AVariableExp v = (AVariableExp)node.getRoot();
+			
+			if (info.globals.findName(v.getName(), NameScope.NAMESANDSTATE) != null)
+			{
+				names.add(v.getName());
+			}
+		}
 		
 		for (PExp exp: node.getArgs())
 		{
