@@ -496,20 +496,11 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 	@Override
 	public LexNameSet caseALambdaExp(ALambdaExp node, FreeVarInfo info) throws AnalysisException
 	{
-		List<PMultipleBind> mbinds = new Vector<PMultipleBind>();
-		
-		for (ATypeBind tb : node.getBindList())
-		{
-			mbinds.addAll(tb.apply(af.getMultipleBindLister()));
-		}
-		
-		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), mbinds);
-		FreeVarInfo local = info.set(new FlatEnvironment(af, def, info.env));
-		LexNameSet names = node.getExpression().apply(this, local);
+		LexNameSet names = new LexNameSet();
 		
 		for (ATypeBind mb: node.getBindList())
 		{
-			names.addAll(mb.apply(this, local));
+			names.addAll(mb.apply(this, info));
 		}
 		
 		return names;
