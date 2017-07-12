@@ -43,6 +43,7 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
@@ -537,6 +538,29 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 	
 	@Override
 	public LexNameSet caseALetDefExp(ALetDefExp node, FreeVarInfo info) throws AnalysisException
+	{
+		FreeVarInfo local = info;
+		LexNameSet names = new LexNameSet();
+
+		for (PDefinition d : node.getLocalDefs())
+		{
+			if (d instanceof AExplicitFunctionDefinition)
+			{
+				// ignore
+			}
+			else
+			{
+				local = info.set(new FlatEnvironment(af, d, local.env));
+				names.addAll(d.apply(this, local));
+			}
+		}
+
+		names.addAll(node.getExpression().apply(this, local));
+		return names;
+	}
+	
+	@Override
+	public LexNameSet caseADefExp(ADefExp node, FreeVarInfo info) throws AnalysisException
 	{
 		FreeVarInfo local = info;
 		LexNameSet names = new LexNameSet();

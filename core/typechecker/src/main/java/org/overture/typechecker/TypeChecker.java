@@ -118,7 +118,7 @@ abstract public class TypeChecker
 			// Skipped definition names occur in the cycle path, but are not checked
 			// for cycles themselves, because they are not "initializable".
 			
-			if (assistant.isFunction(def) || assistant.isTypeDefinition(def) || assistant.isOperation(def))
+			if (assistant.isTypeDefinition(def) || assistant.isOperation(def))
 			{
 				if (def.getName() != null)
 				{
