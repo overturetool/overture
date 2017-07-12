@@ -72,6 +72,7 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameSet;
@@ -502,14 +503,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 	@Override
 	public LexNameSet caseAIsExp(AIsExp node, FreeVarInfo info)	throws AnalysisException
 	{
-		LexNameSet names = node.getTest().apply(this, info);
-		
-		if (node.getTypeName() != null)
-		{
-			names.add(node.getTypeName());
-		}
-		
-		return names;
+		return node.getTest().apply(this, info);
 	}
 	
 	@Override
@@ -1150,6 +1144,11 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		LexNameSet names = exp.getLeft().apply(this, info);
 		names.addAll(exp.getRight().apply(this, info));
 		return names;
+	}
+	
+	public LexNameSet defaultSBooleanBinaryExp(SBooleanBinaryExp exp, FreeVarInfo info) throws AnalysisException
+	{
+		return exp.getLeft().apply(this, info);		// Only left is unconditional
 	}
 
 	@Override
