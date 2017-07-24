@@ -37,6 +37,7 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -369,6 +370,16 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 			return new LexNameSet();
 		}
 
+		if (d instanceof ARenamedDefinition)
+		{
+			ARenamedDefinition rd = (ARenamedDefinition)d;
+			
+			if (rd.getDef().getName() != null)
+			{
+				return new LexNameSet(rd.getDef().getName().getExplicit(true));
+			}
+		}
+		
 		if (info.env.findName(node.getName(), NameScope.NAMESANDSTATE) == null)
 		{
 			return new LexNameSet(node.getName().getExplicit(true));
