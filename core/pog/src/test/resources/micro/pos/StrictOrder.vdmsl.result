@@ -1,1 +1,1 @@
-["strict order relation obligation in \u0027DEFAULT\u0027 (StrictOrder.vdmsl) at line 7:1: ((forall x1:E \u0026 (not ord_E(x1, x1))) and (forall x1, y2, z3:E \u0026 ((ord_E(x1, y2) and ord_E(y2, z3)) \u003d\u003e ord_E(x1, z3))))"]
+["strict order relation obligation in \u0027DEFAULT\u0027 (StrictOrder.vdmsl) at line 7:1: ((forall x1:DEFAULT`E \u0026 (not ord_E(x1, x1))) and (forall x1, y2, z3:DEFAULT`E \u0026 ((ord_E(x1, y2) and ord_E(y2, z3)) \u003d\u003e ord_E(x1, z3))))"]

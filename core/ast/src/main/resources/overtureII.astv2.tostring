@@ -106,7 +106,7 @@ import org.overture.ast.util.ToStringUtil;
 %type->bracket = [type]
 %type->class =[classdef]$.getName().getName()$
 %type->function = "(" + $($ [parameters]$.isEmpty() ? "()" : Utils.listToString($[parameters]$, " * ")) + ($[partial]$ ? " -> " : " +> ")$ + [result] + ")"
-%type->#invariant->named = [name]
+%type->#invariant->named = [name]$.getExplicit(true).toString()$
 %type->#invariant->record = ""+$Utils.recNameToString($[name]$)$
 //map
 %type->#Map->inMap="inmap (" [from]  ") to ("  [to] ")"
