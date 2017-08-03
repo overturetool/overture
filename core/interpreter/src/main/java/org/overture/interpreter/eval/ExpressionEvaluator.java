@@ -148,7 +148,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				FunctionValue fv = object.functionValue(ctxt);
 				Value rv = fv.eval(node.getLocation(), argvals, ctxt);
            		
-				if (endstop)	// Catch after the return if we didn't skip
+				if (endstop && !breakpoint.isContinue(ctxt))
 				{
 					breakpoint.enterDebugger(ctxt);
 				}
@@ -166,7 +166,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				OperationValue ov = object.operationValue(ctxt);
 				Value rv = ov.eval(node.getLocation(), argvals, ctxt);
            		
-				if (endstop)	// Catch after the return if we didn't skip
+				if (endstop && !breakpoint.isContinue(ctxt))
 				{
 					breakpoint.enterDebugger(ctxt);
 				}

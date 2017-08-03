@@ -256,6 +256,17 @@ public class Breakpoint implements Serializable
 		return state.stepline != null && state.nextctxt == null && state.outctxt == null;
 	}
 
+	/**
+	 * True if the current context is in a "continue" state.
+	 * 
+	 * @param ctxt
+	 * @return
+	 */
+	public boolean isContinue(Context ctxt)
+	{
+		ThreadState state = ctxt.threadState;
+		return state.stepline == null && state.nextctxt == null && state.outctxt == null;
+	}
 
 	/**
 	 * True, if the context passed is above nextctxt. That means that the current context must have an "outer" chain

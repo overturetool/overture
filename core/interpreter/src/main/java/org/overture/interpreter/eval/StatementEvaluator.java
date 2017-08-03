@@ -343,7 +343,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				OperationValue op = v.operationValue(ctxt);
 				Value rv = op.eval(node.getLocation(), argValues, ctxt);
 				
-				if (endstop)	// Catch after the return if we didn't skip
+				if (endstop && !breakpoint.isContinue(ctxt))
 				{
 					breakpoint.enterDebugger(ctxt);
 				}
@@ -355,7 +355,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				FunctionValue fn = v.functionValue(ctxt);
 				Value rv = fn.eval(node.getLocation(), argValues, ctxt);
 				
-				if (endstop)	// Catch after the return if we didn't skip
+				if (endstop && !breakpoint.isContinue(ctxt))
 				{
 					breakpoint.enterDebugger(ctxt);
 				}
@@ -392,7 +392,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 				Value rv = op.eval(node.getLocation(), argValues, ctxt);
 				
-				if (endstop)	// Catch after the return if we didn't skip
+				if (endstop && !breakpoint.isContinue(ctxt))
 				{
 					breakpoint.enterDebugger(ctxt);
 				}
@@ -411,7 +411,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 				Value rv = fn.eval(node.getLocation(), argValues, ctxt);
 				
-				if (endstop)	// Catch after the return if we didn't skip
+				if (endstop && !breakpoint.isContinue(ctxt))
 				{
 					breakpoint.enterDebugger(ctxt);
 				}
