@@ -24,11 +24,7 @@
 package org.overture.interpreter.runtime;
 
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.config.Settings;
-import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.debug.BreakpointManager;
-import org.overture.interpreter.scheduler.BasicSchedulableThread;
-import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -97,22 +93,10 @@ public class Stoppoint extends Breakpoint
 
 			if (shouldBreak)
 			{
-				ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
-
-				if (th != null)
-				{
-					th.suspendOthers();
-				}
-
-				if (Settings.usingDBGP)
-				{
-					ctxt.threadState.dbgp.stopped(ctxt, this);
-				} else
-				{
-					new DebuggerReader(Interpreter.getInstance(), this, ctxt).run();
-				}
+				enterDebugger(ctxt);
 			}
-		} catch (DebuggerException e)
+		}
+		catch (DebuggerException e)
 		{
 			throw e;
 		}
