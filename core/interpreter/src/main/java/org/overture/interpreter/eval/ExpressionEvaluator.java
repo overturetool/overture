@@ -81,6 +81,7 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.BreakpointManager;
+import org.overture.interpreter.runtime.Breakpoint;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -126,9 +127,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		Breakpoint breakpoint = BreakpointManager.getBreakpoint(node);
+		breakpoint.check(node.getLocation(), ctxt);
 		node.getLocation().setHits(node.getLocation().getHits() / 1); // This is counted below when root is evaluated
-
+		boolean endstop = breakpoint.catchReturn(ctxt);
+		
 		try
 		{
 			Value object = node.getRoot().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
@@ -143,7 +146,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				FunctionValue fv = object.functionValue(ctxt);
-				return fv.eval(node.getLocation(), argvals, ctxt);
+				Value rv = fv.eval(node.getLocation(), argvals, ctxt);
+           		
+				if (endstop)	// Catch after the return if we didn't skip
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
 			} else if (object instanceof OperationValue)
 			{
 				ValueList argvals = new ValueList();
@@ -154,7 +164,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				OperationValue ov = object.operationValue(ctxt);
-				return ov.eval(node.getLocation(), argvals, ctxt);
+				Value rv = ov.eval(node.getLocation(), argvals, ctxt);
+           		
+				if (endstop)	// Catch after the return if we didn't skip
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
 			} else if (object instanceof SeqValue)
 			{
 				Value arg = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(), ctxt);

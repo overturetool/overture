@@ -64,6 +64,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.Breakpoint;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -264,8 +265,10 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseACallObjectStm(ACallObjectStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		Breakpoint breakpoint = BreakpointManager.getBreakpoint(node);
+		breakpoint.check(node.getLocation(), ctxt);
 		node.getField().getLocation().hit();
+		boolean endstop = breakpoint.catchReturn(ctxt);
 
 		// The check above increments the hit counter for the call, but so
 		// do the evaluations of the designator below, so we correct the
@@ -338,11 +341,26 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			if (v instanceof OperationValue)
 			{
 				OperationValue op = v.operationValue(ctxt);
-				return op.eval(node.getLocation(), argValues, ctxt);
-			} else
+				Value rv = op.eval(node.getLocation(), argValues, ctxt);
+				
+				if (endstop)	// Catch after the return if we didn't skip
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
+			}
+			else
 			{
-				FunctionValue op = v.functionValue(ctxt);
-				return op.eval(node.getLocation(), argValues, ctxt);
+				FunctionValue fn = v.functionValue(ctxt);
+				Value rv = fn.eval(node.getLocation(), argValues, ctxt);
+				
+				if (endstop)	// Catch after the return if we didn't skip
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
 			}
 		} catch (ValueException e)
 		{
@@ -354,7 +372,9 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseACallStm(ACallStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		Breakpoint breakpoint = BreakpointManager.getBreakpoint(node);
+		breakpoint.check(node.getLocation(), ctxt);
+		boolean endstop = breakpoint.catchReturn(ctxt);
 
 		try
 		{
@@ -370,8 +390,16 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					argValues.add(arg.apply(VdmRuntime.getStatementEvaluator(), ctxt));
 				}
 
-				return op.eval(node.getLocation(), argValues, ctxt);
-			} else
+				Value rv = op.eval(node.getLocation(), argValues, ctxt);
+				
+				if (endstop)	// Catch after the return if we didn't skip
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
+			}
+			else
 			{
 				FunctionValue fn = v.functionValue(ctxt);
 				ValueList argValues = new ValueList();
@@ -381,7 +409,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					argValues.add(arg.apply(VdmRuntime.getStatementEvaluator(), ctxt));
 				}
 
-				return fn.eval(node.getLocation(), argValues, ctxt);
+				Value rv = fn.eval(node.getLocation(), argValues, ctxt);
+				
+				if (endstop)	// Catch after the return if we didn't skip
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
 			}
 		} catch (ValueException e)
 		{
