@@ -43,7 +43,7 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 	public void caseAAssignmentStmIR(AAssignmentStmIR node)
 			throws AnalysisException
 	{
-		if(transAssistant.getInfo().getDeclAssistant().isTest(node.getAncestor(ADefaultClassDeclIR.class)))
+		if(transAssistant.getInfo().getDeclAssistant().parentIsTest(node.getAncestor(ADefaultClassDeclIR.class)))
 		{
 			return;
 		}
@@ -60,7 +60,7 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
 			throws AnalysisException
 	{
-		if(transAssistant.getInfo().getDeclAssistant().isTest(node.getAncestor(ADefaultClassDeclIR.class)))
+		if(transAssistant.getInfo().getDeclAssistant().parentIsTest(node.getAncestor(ADefaultClassDeclIR.class)))
 		{
 			return;
 		}
@@ -86,7 +86,7 @@ public class EvalPermPredTrans extends DepthFirstAnalysisAdaptor
 	public void caseAMapSeqUpdateStmIR(AMapSeqUpdateStmIR node)
 			throws AnalysisException
 	{
-		if(transAssistant.getInfo().getDeclAssistant().isTest(node.getAncestor(ADefaultClassDeclIR.class)))
+		if(transAssistant.getInfo().getDeclAssistant().parentIsTest(node.getAncestor(ADefaultClassDeclIR.class)))
 		{
 			return;
 		}

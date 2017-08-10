@@ -28,18 +28,25 @@ public class ModuleListAssistantInterpreter
 		this.af = af;
 	}
 
-	public RootContext initialize(ModuleList modules, DBGPReader dbgp)
+	public RootContext createInitialContext(ModuleList modules)
 	{
 		StateContext initialContext = null;
 
 		if (modules.isEmpty())
 		{
 			initialContext = new StateContext(af, new LexLocation(), "global environment");
-		} else
+		}
+		else
 		{
 			initialContext = new StateContext(af, modules.get(0).getName().getLocation(), "global environment");
 		}
+		
+		return initialContext;
+	}
 
+	public void initialize(RootContext ctxt, ModuleList modules, DBGPReader dbgp)
+	{
+		StateContext initialContext = (StateContext) ctxt;
 		initialContext.setThreadState(dbgp, null);
 		Set<ContextException> problems = null;
 		int retries = 5;
@@ -82,8 +89,6 @@ public class ModuleListAssistantInterpreter
 				throw new CollectedExceptions(problems);
 			}
 		}
-
-		return initialContext;
 	}
 
 	public IProofObligationList getProofObligations(ModuleList modules)

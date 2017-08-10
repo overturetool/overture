@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="12" line="14" message="Right hand of &gt; is not numeric" messageType="error" number="3140" resource="numgt-06.vdm"/>
+<message column="12" line="14" message="Right hand of &gt; is not ordered" messageType="error" number="3140" resource="numgt-06.vdm"/>
 <result/>
 </testResult>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="1" line="3" message="Definition 'A' not used" messageType="warning" number="5000" resource="eq_rel_not_bool"/>
+<message column="1" line="3" message="Function returns unexpected type" messageType="error" number="3018" resource="eq_rel_not_bool"/>
+<result/>
+</testResult>

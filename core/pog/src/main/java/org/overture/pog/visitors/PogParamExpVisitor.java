@@ -1,10 +1,5 @@
 package org.overture.pog.visitors;
 
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -17,52 +12,21 @@ import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.AIgnorePattern;
-import org.overture.ast.patterns.ATypeBind;
-import org.overture.ast.patterns.ATypeMultipleBind;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
-import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.PType;
-import org.overture.ast.types.SMapType;
-import org.overture.pog.contexts.OpPostConditionContext;
-import org.overture.pog.contexts.POCaseContext;
-import org.overture.pog.contexts.PODefContext;
-import org.overture.pog.contexts.POForAllContext;
-import org.overture.pog.contexts.POForAllPredicateContext;
-import org.overture.pog.contexts.POImpliesContext;
-import org.overture.pog.contexts.POLetDefContext;
-import org.overture.pog.contexts.PONameContext;
-import org.overture.pog.contexts.PONotCaseContext;
-import org.overture.pog.contexts.PONotImpliesContext;
-import org.overture.pog.obligation.CasesExhaustiveObligation;
-import org.overture.pog.obligation.FiniteMapObligation;
-import org.overture.pog.obligation.FuncComposeObligation;
-import org.overture.pog.obligation.FunctionApplyObligation;
-import org.overture.pog.obligation.LetBeExistsObligation;
-import org.overture.pog.obligation.MapApplyObligation;
-import org.overture.pog.obligation.MapCompatibleObligation;
-import org.overture.pog.obligation.MapComposeObligation;
-import org.overture.pog.obligation.MapInjectivityComp;
-import org.overture.pog.obligation.MapInjectivityEnum;
-import org.overture.pog.obligation.MapIterationObligation;
-import org.overture.pog.obligation.NonEmptySeqObligation;
-import org.overture.pog.obligation.NonZeroObligation;
-import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.obligation.RecursiveObligation;
-import org.overture.pog.obligation.SeqApplyObligation;
-import org.overture.pog.obligation.TupleSelectObligation;
-import org.overture.pog.obligation.TypeCompatibilityObligation;
-import org.overture.pog.obligation.UniqueExistenceObligation;
+import org.overture.ast.patterns.*;
+import org.overture.ast.types.*;
+import org.overture.pog.contexts.*;
+import org.overture.pog.obligation.*;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.PogAssistantFactory;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+
+import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
@@ -1615,7 +1579,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		return handleDivideNumericBinaryExp(node, question);
 	}
 
-	private <T> IProofObligationList handleNumericBinaryExpression(T node,
+	private IProofObligationList handleNumericBinaryExpression(SNumericBinaryExp node,
 			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
@@ -1631,36 +1595,107 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			System.out.println("fd");
 		}
 
-		if (aF.createPTypeAssistant().isUnion(ltype))
-		{
-			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question, aF);
-			if (sto != null)
-			{
-				obligations.add(sto);
-			}
-		}
-
-		if (aF.createPTypeAssistant().isUnion(rtype))
-		{
-			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(right, AstFactory.newARealNumericBasicType(right.getLocation()), rtype, question, aF);
-			if (sto != null)
-			{
-				obligations.add(sto);
-			}
-		}
+		handleBinExpSubNode(question, obligations, left, ltype);
+		handleBinExpSubNode(question, obligations, right , rtype);
 
 		obligations.addAll(left.apply(mainVisitor, question));
 		obligations.addAll(right.apply(mainVisitor, question));
+
 		return obligations;
 
 	}
 
-	@Override
+	private void handleBinExpSubNode(IPOContextStack question,
+			IProofObligationList obligations, PExp left, PType ltype)
+			throws AnalysisException
+	{
+		PTypeAssistantTC pTA = aF.createPTypeAssistant();
+		if (pTA.isUnion(ltype))
+		{
+			for (PType type : pTA.getUnion(ltype).getTypes()){
+				if (!pTA.isNumeric(type)){
+					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question, aF);
+					if (sto != null)
+					{
+						obligations.add(sto);
+					}
+				}
+			}
+		}
+	}
+
+	public IProofObligationList getCommonOrderedObligations(
+			SNumericBinaryExp exp, IPOContextStack ctxt) throws AnalysisException
+	{
+		IProofObligationList obligations = new ProofObligationList();
+
+		List<PType> lset = new LinkedList<>();
+		List<PType> rset = new LinkedList<>();
+
+		PTypeAssistantTC pta = aF.createPTypeAssistant();
+		if (pta.isUnion(exp.getLeft().getType()))
+		{
+			lset.addAll(pta.getUnion(exp.getLeft().getType()).getTypes());
+		} else
+		{
+			lset.add(exp.getLeft().getType());
+		}
+
+		if (pta.isUnion(exp.getRight().getType()))
+		{
+			rset.addAll(pta.getUnion(exp.getRight().getType()).getTypes());
+		} else
+		{
+			rset.add(exp.getRight().getType());
+		}
+
+		// For each LHS type, if there is a RHS type that is compatible, we potentially
+		// remember the type. If there is a RHS type that is incompatible, we note that
+		// a PO is actually needed.
+
+		boolean poNeeded = false;
+		List<PType> poTypes = new LinkedList<>();
+
+		for (PType lhs : lset)
+		{
+			if (lhs.apply(aF.getIsOrderedVisitor(), exp.getLocation()))
+			{
+				for (PType rhs : rset)
+				{
+					if (lhs.apply(aF.getIsOrderedVisitor(), exp.getLocation())
+							&& aF.getTypeComparator().compatible(lhs, rhs))
+					{
+						poTypes.add(lhs);
+					} else
+					{
+						poNeeded = true;
+					}
+				}
+			} else
+			{
+				poNeeded = true;
+			}
+		}
+
+		if (poNeeded && !poTypes.isEmpty())
+		{
+			obligations.add(new OrderedObligation(exp, poTypes, ctxt, aF));
+		}
+
+		return obligations;
+	}
+
+
+
+		@Override
 	public IProofObligationList caseAGreaterEqualNumericBinaryExp(
 			AGreaterEqualNumericBinaryExp node, IPOContextStack question)
 			throws AnalysisException
 	{
-		return handleNumericBinaryExpression(node, question);
+		IProofObligationList pol = getCommonOrderedObligations(node,question);
+		pol.addAll(node.getLeft().apply(mainVisitor,question));
+		pol.addAll(node.getRight().apply(mainVisitor,question));
+		return pol;
 	}
 
 	@Override
@@ -1668,7 +1703,10 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			AGreaterNumericBinaryExp node, IPOContextStack question)
 			throws AnalysisException
 	{
-		return handleNumericBinaryExpression(node, question);
+		IProofObligationList pol = getCommonOrderedObligations(node,question);
+		pol.addAll(node.getLeft().apply(mainVisitor,question));
+		pol.addAll(node.getRight().apply(mainVisitor,question));
+		return pol;
 	}
 
 	@Override
@@ -1676,7 +1714,10 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			ALessEqualNumericBinaryExp node, IPOContextStack question)
 			throws AnalysisException
 	{
-		return handleNumericBinaryExpression(node, question);
+		IProofObligationList pol = getCommonOrderedObligations(node,question);
+		pol.addAll(node.getLeft().apply(mainVisitor,question));
+		pol.addAll(node.getRight().apply(mainVisitor,question));
+		return pol;
 	}
 
 	@Override
@@ -1684,7 +1725,10 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			ALessNumericBinaryExp node, IPOContextStack question)
 			throws AnalysisException
 	{
-		return handleNumericBinaryExpression(node, question);
+		IProofObligationList pol = getCommonOrderedObligations(node,question);
+		pol.addAll(node.getLeft().apply(mainVisitor,question));
+		pol.addAll(node.getRight().apply(mainVisitor,question));
+		return pol;
 	}
 
 	@Override

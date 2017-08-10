@@ -47,20 +47,12 @@ import org.overture.pog.contexts.POFunctionResultContext;
 import org.overture.pog.contexts.POImpliesContext;
 import org.overture.pog.contexts.PONameContext;
 import org.overture.pog.contexts.POOperationDefinitionContext;
-import org.overture.pog.obligation.FunctionPostCondition;
-import org.overture.pog.obligation.OperationPostConditionObligation;
-import org.overture.pog.obligation.ParameterPatternObligation;
-import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.obligation.SatisfiabilityObligation;
-import org.overture.pog.obligation.SeqMembershipObligation;
-import org.overture.pog.obligation.SetMembershipObligation;
-import org.overture.pog.obligation.StateInvariantObligation;
-import org.overture.pog.obligation.TypeCompatibilityObligation;
-import org.overture.pog.obligation.ValueBindingObligation;
+import org.overture.pog.obligation.*;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.POException;
+import org.overture.pog.utility.PatternAlwaysMatchesVisitor;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.pog.utility.UniqueNameGenerator;
 
@@ -767,6 +759,19 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				list.addAll(invDef.apply(mainVisitor, question));
 				list.add(new SatisfiabilityObligation(node, question, assistantFactory));
+			}
+
+			if (node.getOrdRelation() != null)
+			{
+				list.addAll(node.getOrdRelation().getRelExp().apply(mainVisitor,question));
+				list.add(new StrictOrderRelationObligation(node, question, assistantFactory));
+			}
+
+			if (node.getEqRelation() != null)
+			{
+				list.addAll(node.getEqRelation().getRelExp().apply(mainVisitor,question));
+				list.add(new EquivalenceRelationObligation(node,question,assistantFactory));
+
 			}
 
 			return list;

@@ -736,6 +736,12 @@ public class FunctionValue extends Value
 				else
 				{
 					TypeComparator tc = ctxt.assistantFactory.getTypeComparator();
+					
+					if (!tc.compatible(to, type))
+					{
+						abort(4171, "Cannot convert " + type + " to " + to, ctxt);
+					}
+
 					List<PType> domain = tc.narrowest(type.getParameters(), restrictedType.getParameters());
 					PType range = tc.narrowest(type.getResult(), restrictedType.getResult());
 					AFunctionType newType = AstFactory.newAFunctionType(location, true, domain, range);

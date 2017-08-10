@@ -1,1 +1,1 @@
-["Inf \u003d Inf","Kg \u003d Kg\n\tinv k \u003d\u003d ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e (k \u003e\u003d 0))"]
+["Inf \u003d DEFAULT`Inf","Kg \u003d DEFAULT`Kg\n\tinv k \u003d\u003d ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e (k \u003e\u003d 0))"]

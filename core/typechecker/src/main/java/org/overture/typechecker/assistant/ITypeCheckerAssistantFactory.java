@@ -27,14 +27,17 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameSet;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -80,6 +83,7 @@ import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
+import org.overture.typechecker.utilities.FreeVarInfo;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
@@ -399,4 +403,14 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
 	
 	IAnswer<Boolean> getInstanceVariableChecker();
+
+	IAnswer<Boolean> getTypeDefinitionChecker();
+
+	IQuestionAnswer<FreeVarInfo, LexNameSet> getFreeVariablesChecker();
+
+	IQuestionAnswer<ILexLocation,Boolean> getIsOrderedVisitor();
+
+	IQuestionAnswer<ILexLocation,Boolean> getIsEqVisitor();
+
+	IQuestion<TypeCheckInfo> getMultipleEqualityChecker();
 }

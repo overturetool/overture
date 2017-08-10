@@ -80,7 +80,7 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-		return node.getValueDefinition()
+		return node.getValueDefinition() != null
 				|| af.createPTypeAssistant().isType(af.createPDefinitionAssistant().getType(node), AParameterType.class) ? false
 				: af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node));
 	}

@@ -36,12 +36,12 @@ public class NoteBook {
           SeqUtil.seq(
               'n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'e',
               'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(nb1.eq(nb2)));
+          SeqUtil.seq(nb1.cg_equals(nb2)));
       IO.printf(
           SeqUtil.seq(
               'n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'N',
               'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(nb1.neq(nb2)));
+          SeqUtil.seq(nb1.nequals(nb2)));
       IO.print(SeqUtil.seq('\n'));
       IO.println(
           SeqUtil.seq(
@@ -53,12 +53,12 @@ public class NoteBook {
           SeqUtil.seq(
               'n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'e',
               'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(nb1.eq(nb2)));
+          SeqUtil.seq(nb1.cg_equals(nb2)));
       IO.printf(
           SeqUtil.seq(
               'n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n', 'b', '2', ' ', 'a', 'r', 'e', ' ', 'N',
               'O', 'T', ' ', 'e', 'q', 'u', 'a', 'l', ':', ' ', '%', 's', '\n'),
-          SeqUtil.seq(nb1.neq(nb2)));
+          SeqUtil.seq(nb1.nequals(nb2)));
       IO.print(SeqUtil.seq('\n'));
       IO.printf(
           SeqUtil.seq(
@@ -272,12 +272,12 @@ public class NoteBook {
     return SeqUtil.reverse(Utils.copy(messages));
   }
 
-  public Boolean eq(final NoteBook other) {
+  public Boolean cg_equals(final NoteBook other) {
 
     return Utils.equals(messages, other.messages);
   }
 
-  public Boolean neq(final NoteBook other) {
+  public Boolean nequals(final NoteBook other) {
 
     return !(Utils.equals(messages, other.messages));
   }
@@ -293,4 +293,11 @@ public class NoteBook {
 ##########
 *Quotes*
 append,start
+##########
+*Name Violations*
+
+java.lang.Object method violation: [Violation in module NoteBook: 'equals'. Location: line 26 at position: 51 in SeqNoteBook.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module NoteBook: 'equals'. Location: line 33 at position: 51 in SeqNoteBook.vdmpp]. Prefix 'cg_' has been added to the name
+java.lang.Object method violation: [Violation in module NoteBook: 'equals'. Location: line 154 at position: 8 in SeqNoteBook.vdmpp]. Prefix 'cg_' has been added to the name
+
 ##########

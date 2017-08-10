@@ -193,7 +193,8 @@ public class ClassInterpreter extends Interpreter
 		ObjectValue.init();
 
 		logSwapIn();
-		initialContext = classes.initialize(assistantFactory, dbgp);
+		initialContext = classes.createInitialContext(assistantFactory);
+		classes.initialize(initialContext, assistantFactory, dbgp);
 		classes.systemInit(scheduler, dbgp, initialContext);
 		logSwapOut();
 
@@ -211,7 +212,8 @@ public class ClassInterpreter extends Interpreter
 		scheduler.reset();
 
 		SystemClock.init();
-		initialContext = classes.initialize(assistantFactory, dbgp);
+		initialContext = classes.createInitialContext(assistantFactory);
+		classes.initialize(initialContext, assistantFactory, dbgp);
 		createdValues = new NameValuePairMap();
 		createdDefinitions = assistantFactory.createPDefinitionSet();
 	}

@@ -1,4 +1,4 @@
-package org.overture.pog.visitors;
+package org.overture.pog.utility;
 
 import java.util.LinkedList;
 import java.util.List;

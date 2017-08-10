@@ -1,0 +1,686 @@
+module RM39
+exports all
+definitions
+
+types
+
+  N1 :: one: nat
+        two: seq of nat;
+
+  N2 :: one: nat
+        two:-seq of nat;
+
+  N :: n: nat
+  inv n == n.n < 10;
+
+  P = compose P' of n:nat end
+  inv n == n.n < 10;
+
+  T_INV = int
+  inv e == e mod 2 = 0;
+
+  T_EQ = bool * seq of nat
+  eq mk_(b1,s1) = mk_(b2,s2) == b1 = b2 or len s1 = len s2;
+
+  T_ORD = nat * nat
+  ord mk_(m1,m2) < mk_(n1,n2) == m1 < n1 or m1 = n1 and m2 < n2;
+
+  T_INV_EQ = set of char * seq of token
+  inv mk_(c,t) == card c mod 2 = 1 and len t mod 2 = 0
+  eq mk_(c1,t1) = mk_(c2,t2) == card c1 + len t1 = card c2 + len t2;
+
+  T_INV_ORD = set of char * seq of token
+  inv mk_(c,t) == card c mod 2 = 1 and len t mod 2 = 0
+  ord mk_(c1,t1) < mk_(c2,t2) == card c1 < card c2 or len t1 < len t2;
+
+  T_EQ_ORD = set of char * seq of token
+  eq mk_(c1,t1) = mk_(c2,t2) == card c1 + len t1 = card c2 + len t2
+  ord mk_(c1,t1) < mk_(c2,t2) == card c1 < card c2 or len t1 < len t2;
+
+  T_INV_EQ_ORD = set of char * seq of token
+  inv mk_(c,t) == card c mod 2 = 1 and len t mod 2 = 0
+  eq mk_(c1,t1) = mk_(c2,t2) == card c1 + len t1 = card c2 + len t2
+  ord mk_(c1,t1) < mk_(c2,t2) == card c1 < card c2 or len t1 < len t2;
+
+  C_INV = compose C_INV' of
+            num: nat
+            str: seq of char
+          end
+  inv c == c.num = len c.str;
+
+  C_INV2 = compose C_INV2' of
+             num: nat
+             str:-seq of char
+           end
+  inv c == c.num = len c.str;
+
+  R_INV :: num: nat
+           str: seq of char
+  inv r == r.num = len r.str;
+
+  C_EQ = compose C_EQ' of
+           num: nat
+           str: seq of char
+         end
+  eq c1 = c2 == c1.str = c2.str;
+
+  C_EQ2 = compose C_EQ2' of
+            num: nat
+            str:-seq of char
+          end
+  eq c1 = c2 == c1.str = c2.str;
+
+  R_EQ :: num: nat
+          str: seq of char
+  eq c1 = c2 == c1.str = c2.str;
+
+  C_ORD = compose C_ORD' of
+            num: nat
+            str: seq of char
+          end
+  ord mk_C_ORD'(n1,s1) < mk_C_ORD'(n2,s2) == n1 + len s1 < n2 + len s2;
+
+  C_ORD2 = compose C_ORD2' of
+             num: nat
+             str:-seq of char
+           end
+  ord c1 < c2 == c1.num + len c1.str < c2.num + len c2.str;
+
+  R_ORD :: num: nat
+           str: seq of char
+  ord c1 < c2 == c1.num + len c1.str < c2.num + len c2.str;
+
+  C_INV_EQ = compose C_INV_EQ' of
+               num: nat
+               str: seq of char
+             end
+  inv c == c.num < len c.str
+  eq c1 = c2 == c1.num = c2.num or len c1.str = len c2.str;
+
+  C_INV_EQ2 = compose C_INV_EQ2' of
+                num: nat
+                str:-seq of char
+              end
+  inv c == c.num < len c.str
+  eq c1 = c2 == c1.num = c2.num or len c1.str = len c2.str;
+
+  R_INV_EQ :: num: nat
+              str: seq of char
+  inv r == r.num < len r.str
+  eq c1 = c2 == c1.num = c2.num or len c1.str = len c2.str;
+
+  C_INV_ORD = compose C_INV_ORD' of
+                num: nat
+                str: seq of char
+              end
+  inv c == c.num <> len c.str
+  ord c1 < c2 == c1.num < c2.num or len c1.str < len c2.str;
+
+  R_INV_ORD :: num: nat
+               str: seq of char
+  inv c == c.num <> len c.str
+  ord c1 < c2 == c1.num < c2.num or len c1.str < len c2.str;
+
+  C_EQ_ORD = compose C_EQ_ORD' of
+               num: nat
+               str: seq of char
+             end
+  eq c1 = c2 == c1.num = c2.num
+  ord c1 < c2 == len c1.str < len c2.str;
+
+  C_EQ_ORD2 = compose C_EQ_ORD2' of
+                num: nat
+                str:-seq of char
+              end
+  eq c1 = c2 == c1.num = c2.num
+  ord c1 < c2 == len c1.str < len c2.str;
+
+  R_EQ_ORD :: num: nat
+              str: seq of char
+  eq c1 = c2 == c1.num = c2.num
+  ord c1 < c2 == len c1.str < len c2.str;
+
+  /* A simple date represented by a year and day in year. No leap years.
+  */
+  Date :: year  : nat
+          days  : nat
+  inv d == -- Days in year must be less than total number of days in a year
+           d.days < DAYS_PER_YEAR
+  ord d1 < d2 == d1.year < d2.year or d1.year = d2.year and d1.days < d2.days;
+
+  /* A relative date is a date with an offset number of days.
+     mk_RelDate(mk_Date(2014,53) ,-4) is four days before the 53rd day of 2014.
+  */
+  RelDate :: date  : Date
+             offset: int
+  inv rel == -- Offset cant go before the first day of year 0
+             numDays(rel.date) + rel.offset >= 0
+  eq rd1 = rd2 == normalise(rd1) = normalise(rd2)
+  ord rd1 < rd2 == normalise(rd1) < normalise(rd2);
+
+values
+
+  DAYS_PER_YEAR = 364;
+
+functions
+
+  ascending[@a]: seq of @a +> bool
+  ascending(s) == forall i in set {1,...,len s - 1} & s(i) <= s(i+1);
+
+  numDays: Date +> nat
+  numDays(d) == d.year * DAYS_PER_YEAR + d.days;
+
+  normalise: RelDate +> Date
+  normalise(d) == let numD = numDays(d.date) + d.offset
+                  in mk_Date(numD div DAYS_PER_YEAR, numD mod DAYS_PER_YEAR);
+
+operations
+
+  test : bool ==> ()
+  test(result) == skip
+  pre result;
+
+traces
+
+  -- Primitive equality
+  t_eq_prim:
+      -- Boolean
+      test(true = true);
+      test(true <> false);
+      -- Numeric
+      test(42 = 42);
+      test(0 <> 1);
+      test(-1 <> 1);
+      test(3.14 = 3.14);
+      test(3/4 <> 4/3);
+      test(1/24 = 2/48);
+      -- Character
+      test('a' = 'a');
+      test('a' <> 'A');
+      test('\n' = '\n');
+      test('1' <> 'l');
+      -- Quote
+      test(<ThisQuote> = <ThisQuote>);
+      -- Token
+      test(mk_token("A token") = mk_token("A token"));
+      test(mk_token("A token") <> mk_token("Another token"));
+      test(mk_token(true) <> mk_token(<true>));
+      -- Set
+      test({1,2} = {2,1});
+      test({1,1,2} = {2,2,1});
+      test({1,2,3} <> {1,2,4});
+      test({} <> {{}});
+      test({ x | x in set {0,...,10} & x mod 2 = 0 } = {0,2,4,6,8,10});
+      test({ x | x in set {0,...,99} & x > 0 } <> {0,...,99});
+      -- Sequence
+      test([] = []);
+      test([true,false] = [true,false]);
+      test([true,false] <> [false,true]);
+      test(["a","b","c"] <> ["a","b","c","c"]);
+      test([ x | x in set {1,...,99}] = [ x | x in set {0,...,200} & x > 0 and x < 100]);
+      test([ x | x in set {1,...,100} & x <> x ] = [ x | x in set {-100,...,-1} & x < x ]);
+      -- Map
+      test({|->} = {|->});
+      test({true|->1,false|->0} = {false|->0,true|->1});
+      test({1|->"one",2|->"two",3|->"three"} = {1|->"one",2|->"two",3|->"three"});
+      test({1|->"one",2|->"two",3|->"three"} <> {1|->"one",2|->"two",3|->"tree"});
+      test({b |-> not b | b : bool} = { not b |-> b | b : bool});
+      -- Product
+      test(mk_(1,2) = mk_(1,2));
+      test(mk_(true,[1],{3,4,5},<Q>,mk_token("AA")) = mk_(true,[1],{5,4,3,3,3,4,5},<Q>,mk_token(['A','A'])));
+      test(mk_(true,[1],{3,4,5},<Q>,mk_token("AAA")) <> mk_(true,[1],{5,4,3,3,3,4,5},<Q>,mk_token(['A','A'])));
+      -- Composite
+      test(mk_N1(1,[2]) = mk_N1(1,[2]));
+      test(mk_N1(1,[2]) <> mk_N1(1,[1]));
+      test(mk_N1(1,[2]) <> mk_N1(2,[2]));
+      test(mk_N2(1,[2]) = mk_N2(1,[2]));
+      test(mk_N2(1,[2]) = mk_N2(1,[1]));
+      test(mk_N2(1,[2]) <> mk_N2(2,[2]));
+      -- Union
+      let m:nat|bool = 7,
+          n:nat|bool = true,
+          p:nat|bool = false,
+          q:nat|bool = 9
+      in (test(m = 7);
+          test(m <> q);
+          test(n);
+          test(not p);
+          test(m <> n)
+         );
+      -- Optional
+      let m:[nat] = nil,
+          n:[nat] = 4,
+          p:[nat] = 4,
+          q:[nat] = 5
+      in (test(m = nil);
+          test(m <> n);
+          test(n = p);
+          test(p <> q)
+         )
+
+  -- Primitive order relation on numerics
+  t_ord_prim:
+      test(0 < 1);
+      test(42.0 <= 42.0);
+      test(99 > 98);
+      test(12.12 >= 12.11999);
+
+  -- Equality on type definition with inv but no eq or ord
+  t_type_inv:
+    let x:T_INV = 0,
+        y:T_INV = 42,
+        z:T_INV = -2,
+        w:T_INV = -2
+    in (test(x = 0);
+        test(x <> y);
+        test(y <> z);
+        test(z = w);
+        test(inv_T_INV(-12));
+        test(not inv_T_INV(123))
+       )
+
+  -- Equality on type definition with eq but no inv or ord
+  t_type_eq:
+      let x : T_EQ = mk_(true,[]),
+          y : T_EQ = mk_(true,[]),
+          z : T_EQ = mk_(true,[1]),
+          w : T_EQ = mk_(false,[])
+      in (test(x = y);
+          test(x = z);
+          test(y = w);
+          test(eq_T_EQ(x, y));
+          test(eq_T_EQ(x, z));
+          test(z <> w);
+          test(not eq_T_EQ(z, w))
+         )
+
+  -- Equality on type definition with ord but no inv or eq
+  t_type_ord:
+    let p1:T_ORD = mk_(1,2),
+        p2:T_ORD = mk_(1,3),
+        p3:T_ORD = mk_(2,0)
+    in (test(p1 < p2);
+        test(p1 < p3);
+        test(ord_T_ORD(p2, p3));
+        test(not p1 < p1);
+        test(not ord_T_ORD(p2, p1))
+       )
+
+  -- Equality on type definition with inv and eq but no ord
+  t_type_inv_eq:
+      let x:T_INV_EQ = mk_({'a'}, [mk_token(true),mk_token(<T>)]),
+          y:T_INV_EQ = mk_({'a','b','c'}, []),
+          z:T_INV_EQ = mk_({'x'},[]),
+          v:T_INV_EQ = mk_(elems "abcdefghijk",[mk_token(99),mk_token(<A>)]),
+          w:T_INV_EQ = mk_(elems "a",[mk_token(i) | i in set {1,...,12}])
+      in (test(x = y);
+          test(eq_T_INV_EQ(x, y));
+          test(y <> z);
+          test(not eq_T_INV_EQ(z, y));
+          test(eq_T_INV_EQ(v,w));
+          test(inv_T_INV_EQ(mk_(elems "xyz", [])));
+          test(inv_T_INV_EQ(mk_({'a'}, [mk_token(i) | i in set {1,...,100}])));
+          test(not inv_T_INV_EQ(mk_(elems "wxyz", [])));
+          test(not inv_T_INV_EQ(mk_(elems "xyz", [mk_token(true)])))
+         )
+
+  -- Equality on type definition with inv and ord but no eq
+  t_type_inv_ord:
+      let x:T_INV_ORD = mk_({'a'}, [mk_token(true),mk_token(<T>)]),
+          y:T_INV_ORD = mk_({'a','b','c'}, []),
+          z:T_INV_ORD = mk_({'x'},[]),
+          v:T_INV_ORD = mk_(elems "abcdefghijk",[mk_token(99),mk_token(<A>)]),
+          w:T_INV_ORD = mk_(elems "a",[mk_token(i) | i in set {1,...,12}])
+      in (test(x <> y);
+          test(v <> w);
+          test(x < y);
+          test(x <= v);
+          test(y < v);
+          test(v < w);
+          test(y > z);
+          test(w >= x);
+          test(ord_T_INV_ORD(x, y));
+          test(not ord_T_INV_ORD(y, z));
+          test(inv_T_INV_ORD(mk_(elems "xyz", [])));
+          test(inv_T_INV_ORD(mk_({'a'}, [mk_token(i) | i in set {1,...,100}])));
+          test(not inv_T_INV_ORD(mk_(elems "wxyz", [])));
+          test(not inv_T_INV_ORD(mk_(elems "xyz", [mk_token(true)])))
+         )
+
+  -- Equality on type definition with eq and ord but no inv
+  t_type_eq_ord:
+      let x:T_EQ_ORD = mk_({'a'}, [mk_token(true),mk_token(<T>)]),
+          y:T_EQ_ORD = mk_({'a','b','c'}, []),
+          z:T_EQ_ORD = mk_({'x'},[]),
+          v:T_EQ_ORD = mk_(elems "abcdefghijk",[mk_token(99),mk_token(<A>)]),
+          w:T_EQ_ORD = mk_(elems "a",[mk_token(i) | i in set {1,...,12}])
+      in (test(x = y);
+          test(v = w);
+          test(y <> z);
+          test(eq_T_EQ_ORD(w, v));
+          test(not eq_T_EQ_ORD(v, y));
+          test(v < w);
+          test(v <= v);
+          test(y > z);
+          test(w >= x);
+          test(ord_T_EQ_ORD(x, y));
+          test(not ord_T_EQ_ORD(y, z));
+          test(ord_T_EQ_ORD(x, y));
+          test(not ord_T_EQ_ORD(y, z))
+         )
+
+  -- Equality on type definition with inv, eq and ord
+  t_type_inv_eq_ord:
+      let x:T_INV_EQ_ORD = mk_({'a'}, [mk_token(true),mk_token(<T>)]),
+          y:T_INV_EQ_ORD = mk_({'a','b','c'}, []),
+          z:T_INV_EQ_ORD = mk_({'x'},[]),
+          v:T_INV_EQ_ORD = mk_(elems "abcdefghijk",[mk_token(99),mk_token(<A>)]),
+          w:T_INV_EQ_ORD = mk_(elems "a",[mk_token(i) | i in set {1,...,12}])
+      in (test(x = y);
+          test(v = w);
+          test(y <> z);
+          test(eq_T_INV_EQ_ORD(w, v));
+          test(not eq_T_INV_EQ_ORD(v, y));
+          test(v < w);
+          test(v <= v);
+          test(y > z);
+          test(w >= x);
+          test(ord_T_INV_EQ_ORD(x, y));
+          test(not ord_T_INV_EQ_ORD(y, z));
+          test(inv_T_INV_EQ_ORD(mk_(elems "xyz", [])));
+          test(inv_T_INV_EQ_ORD(mk_({'a'}, [mk_token(i) | i in set {1,...,100}])));
+          test(not inv_T_INV_EQ_ORD(mk_(elems "wxyz", [])));
+          test(not inv_T_INV_EQ_ORD(mk_(elems "xyz", [mk_token(true)])))
+         )
+
+  -- Equality on composite definition with inv but no eq or ord
+  t_comp_inv:
+    let c1 = mk_C_INV'(4,"ABCD"),
+        c2 = mk_C_INV'(4,"abcd"),
+        c3 = mk_C_INV'(3,"ABC"),
+        d1 = mk_C_INV2'(4,"ABCD"),
+        d2 = mk_C_INV2'(4,"abcd"),
+        d3 = mk_C_INV2'(3,"ABC"),
+        r1 = mk_R_INV(4,"ABCD"),
+        r2 = mk_R_INV(3,"ABC")
+    in (test(c1 = mk_C_INV'(4,"ABCD"));
+        test(c1 <> c2);
+        test(c1 <> c3);
+        test(inv_C_INV(mk_C_INV'(4,"ABCD")));
+        test(not inv_C_INV(mk_C_INV'(3,"ABCD")));
+        test(d1 = mk_C_INV2'(4,"ABCD"));
+        test(d1 = d2);
+        test(d1 <> d3);
+        test(inv_C_INV2(mk_C_INV2'(4,"ABCD")));
+        test(not inv_C_INV2(mk_C_INV2'(3,"ABCD")));
+        test(r1 = mk_R_INV(4,"ABCD"));
+        test(r1 <> r2);
+        test(inv_R_INV(mk_R_INV(4,"ABCD")))
+       )
+
+  -- Equality on composite definition with eq but no inv or ord
+  t_comp_eq:
+    let c1:C_EQ = mk_C_EQ'(4,"ABCD"),
+        c1':C_EQ' = mk_C_EQ'(4,"ABCD"),
+        c2:C_EQ = mk_C_EQ'(4,"abc"),
+        c2':C_EQ' = mk_C_EQ'(4,"abc"),
+        c3:C_EQ = mk_C_EQ'(3,"ABCD"),
+        c3':C_EQ' = mk_C_EQ'(3,"ABCD"),
+        d1:C_EQ2 = mk_C_EQ2'(4,"ABCD"),
+        d1':C_EQ2' = mk_C_EQ2'(4,"ABCD"),
+        d2:C_EQ2 = mk_C_EQ2'(4,"abc"),
+        d2':C_EQ2' = mk_C_EQ2'(4,"abc"),
+        d3:C_EQ2 = mk_C_EQ2'(3,"ABCD"),
+        d3':C_EQ2' = mk_C_EQ2'(3,"ABCD"),
+        r1:R_EQ = mk_R_EQ(4,"ABCD"),
+        r2:R_EQ = mk_R_EQ(4,"abc"),
+        r3:R_EQ = mk_R_EQ(3,"ABCD")
+    in (test(c1 = mk_C_EQ'(4,"ABCD"));
+        test(c1 <> c2);
+        test(c1 = c3);
+        test(c1' <> c2');
+        test(c1' <> c3');
+        test(eq_C_EQ(c1, c3));
+        test(not eq_C_EQ(c1, mk_C_EQ'(3,"ABC")));
+        test(d1 = mk_C_EQ2'(4,"ABCD"));
+        test(d1 <> d2);
+        test(d1 = d3);
+        test(d1' = d2');
+        test(d1' <> d3');
+        test(eq_C_EQ2(d1, d3));
+        test(not eq_C_EQ2(d1, mk_C_EQ2'(3,"ABC")));
+        test(r1 = mk_R_EQ(4,"ABCD"));
+        test(r1 <> r2);
+        test(r1 = r3);
+        test(eq_R_EQ(r1, r3));
+        test(not eq_R_EQ(r1, mk_R_EQ(3,"ABC")))
+       )
+
+  -- Equality on composite definition with ord but no inv or eq
+  t_comp_ord:
+    let c1:C_ORD = mk_C_ORD'(3,"ABC"),
+        c2:C_ORD = mk_C_ORD'(4,"abcd"),
+        c3:C_ORD = mk_C_ORD'(7,"a"),
+        c4:C_ORD = mk_C_ORD'(4,"abcd"),
+        d1:C_ORD2 = mk_C_ORD2'(4,"ABC"),
+        d2:C_ORD2 = mk_C_ORD2'(4,"abcd"),
+        d3:C_ORD2 = mk_C_ORD2'(7,"a"),
+        d4:C_ORD2 = mk_C_ORD2'(4,"abcd"),
+        r1:R_ORD = mk_R_ORD(4,"ABC"),
+        r2:R_ORD = mk_R_ORD(4,"abcd"),
+        r3:R_ORD = mk_R_ORD(7,"a"),
+        r4:R_ORD = mk_R_ORD(4,"abcd")
+    in (test(c1 < c2);
+        test(c3 > c1);
+        test(not c2 <= c1);
+        test(c2 <= c4);
+        test(c2 >= c4);
+        test(not ord_C_ORD(c2, c3));
+        test(d1 < d2);
+        test(d3 > d1);
+        test(d2 <= d1);
+        test(d2 <= d4);
+        test(d2 >= d4);
+        test(d2 <= d1);
+        test(not ord_C_ORD2(d2, d3));
+        test(r1 < r2);
+        test(r3 > r1);
+        test(not r2 <= r1);
+        test(r2 <= r4);
+        test(r2 >= r4);
+        test(not ord_R_ORD(r2, r3))
+       )
+
+  -- Equality on composite definition with inv and eq but no ord
+  t_comp_inv_eq:
+    let c1:C_INV_EQ = mk_C_INV_EQ'(0,"A"),
+        c2:C_INV_EQ = mk_C_INV_EQ'(0,"ABCDEF"),
+        c3:C_INV_EQ = mk_C_INV_EQ'(5,"ABCDEF"),
+        c1' = mk_C_INV_EQ'(0, "A"),
+        c2' = mk_C_INV_EQ'(0, "ABCDEF"),
+        c3' = mk_C_INV_EQ'(0, ""),
+        d1:C_INV_EQ2 = mk_C_INV_EQ2'(0,"A"),
+        d2:C_INV_EQ2 = mk_C_INV_EQ2'(0,"ABCDEF"),
+        d3:C_INV_EQ2 = mk_C_INV_EQ2'(5,"ABCDEF"),
+        d1' = mk_C_INV_EQ2'(0, "A"),
+        d2' = mk_C_INV_EQ2'(0, "ABCDEF"),
+        d3' = mk_C_INV_EQ2'(0, ""),
+        r1 = mk_R_INV_EQ(0,"A"),
+        r2 = mk_R_INV_EQ(0,"ABCDEF"),
+        r3 = mk_R_INV_EQ(5,"ABCDEF")
+    in (test(c1 = c2);
+        test(c1 <> c3);
+        test(c2 = c3);
+        test(eq_C_INV_EQ(c1, c2));
+        test(not eq_C_INV_EQ(c1, c3));
+        test(c1' <> c2');
+        test(inv_C_INV_EQ(c1));
+        test(not inv_C_INV_EQ(c3'));
+        test(d1 = d2);
+        test(d1 <> d3);
+        test(d2 = d3);
+        test(eq_C_INV_EQ2(d1, d2));
+        test(not eq_C_INV_EQ2(d1, d3));
+        test(d1' = d2');
+        test(inv_C_INV_EQ2(d1));
+        test(not inv_C_INV_EQ2(d3'));
+        test(r1 = r2);
+        test(r1 <> r3);
+        test(r2 = r3);
+        test(eq_R_INV_EQ(r1, r2));
+        test(not eq_R_INV_EQ(r1, r3));
+        test(inv_R_INV_EQ(r1))
+       )
+
+  -- Equality on composite definition with inv and ord but no eq
+  t_comp_inv_ord:
+    let c1:C_INV_ORD = mk_C_INV_ORD'(0,"ABCD"),
+        c2:C_INV_ORD = mk_C_INV_ORD'(4,""),
+        c3:C_INV_ORD = mk_C_INV_ORD'(0,"A"),
+        r1 = mk_R_INV_ORD(0,"ABCD"),
+        r2 = mk_R_INV_ORD(4,""),
+        r3 = mk_R_INV_ORD(0,"A")
+    in(test(c1 < c2);
+       test(c2 < c1);
+       test(c1 <= c1);
+       test(c1 > c3);
+       test(c3 < c2);
+--       test(c2 > c3);
+       test(ord_C_INV_ORD(c3, c2));
+       test(not ord_C_INV_ORD(c1, c3));
+       test(inv_C_INV_ORD(c1));
+       test(not inv_C_INV_ORD(mk_C_INV_ORD'(0,"")));
+       test(r1 < r2);
+       test(r2 < r1);
+       test(r1 <= r1);
+       test(r1 > r3);
+       test(r3 < r2);
+--       test(r2 > r3);
+       test(ord_R_INV_ORD(r3, r2));
+       test(not ord_R_INV_ORD(r1, r3));
+       test(inv_R_INV_ORD(r2))
+      )
+
+  -- Equality on composite definition with eq and ord but no inv
+  t_comp_eq_ord:
+    let c1:C_EQ_ORD = mk_C_EQ_ORD'(4,"A"),
+        c2:C_EQ_ORD = mk_C_EQ_ORD'(4,"xyz123"),
+        c3:C_EQ_ORD = mk_C_EQ_ORD'(3,"A"),
+        c1' = mk_C_EQ_ORD'(4,"A"),
+        c2' = mk_C_EQ_ORD'(4,"xyz123"),
+        c3' = mk_C_EQ_ORD'(3,"A"),
+        d1:C_EQ_ORD2 = mk_C_EQ_ORD2'(4,"A"),
+        d2:C_EQ_ORD2 = mk_C_EQ_ORD2'(4,"xyz123"),
+        d3:C_EQ_ORD2 = mk_C_EQ_ORD2'(3,"A"),
+        d1' = mk_C_EQ_ORD2'(4,"A"),
+        d2' = mk_C_EQ_ORD2'(4,"xyz123"),
+        d3' = mk_C_EQ_ORD2'(3,"A"),
+        r1 = mk_R_EQ_ORD(4,"A"),
+        r2 = mk_R_EQ_ORD(4,"xyz123"),
+        r3 = mk_R_EQ_ORD(3,"A")
+    in (test(c1 = c2);
+        test(c1 <> c3);
+        test(c1' <> c2');
+        test(c1' <> c3');
+        test(c2' = mk_C_EQ_ORD'(4,"xyz123"));
+        test(eq_C_EQ_ORD(c1, c2));
+        test(not eq_C_EQ_ORD(c1, c3));
+        test(c1 < c2);
+        test(not c1 <= c3);
+        test(d1 = d2);
+        test(d1 <> d3);
+        test(d1' = d2');
+        test(d1' <> d3');
+        test(d2' = mk_C_EQ_ORD2'(4,"xyz123"));
+        test(eq_C_EQ_ORD2(d1, d2));
+        test(not eq_C_EQ_ORD2(d1, d3));
+        test(d1 < d2);
+        test(not d1 <= d3);
+        test(not d2 < d1);
+        test(d2 <= d1);
+        test(r1 = r2);
+        test(r1 <> r3);
+        test(eq_R_EQ_ORD(r1, r2));
+        test(not eq_R_EQ_ORD(r1, r3));
+        test(r1 < r2);
+        test(not r1 <= r3);
+        test(r1 >= r3)
+       )
+
+  -- Equality on composite definition with inv, eq and ord
+  t_comp_inv_eq_ord:
+    let d1 = mk_Date(2000,363),
+        d2 = mk_Date(2001, 0),
+        d3 = mk_Date(2001, 100),
+        rd1 = mk_RelDate(d1, 0),
+        rd2 = mk_RelDate(d1, 1),
+        rd2' = mk_RelDate(d2, -1),
+        rd3 = mk_RelDate(d2, 100)
+    in (test(d1 = mk_Date(2000,363));
+        test(d1 <> d2);
+        test(d2 <> d3);
+        test(d1 < d2);
+        test(d2 < d3);
+        test(d1 < d2);
+        test(d1 <= d1);
+        test(d2 > d1);
+        test(d2 >= d2);
+        test(d3 > d1);
+        test(d1 = normalise(rd1));
+        test(d1 <> normalise(rd2));
+        test(d2 = normalise(rd2));
+        test(rd1 = rd2');
+        test(rd2 <> rd2');
+        test(eq_RelDate(mk_RelDate(mk_Date(0,0),0), mk_RelDate(mk_Date(1,0),-364)));
+        test(not eq_RelDate(rd1, rd2));
+        test(rd1 < rd2);
+        test(rd2' < rd2);
+        test(rd2 > rd1);
+        test(rd1 <= rd2);
+        test(rd1 <= rd2');
+        test(rd2 >= rd1);
+        test(rd2' >= rd1);
+        test(ord_RelDate(rd1, rd2));
+        test(ord_RelDate(rd2', rd3));
+        test(not ord_RelDate(rd2, rd2'))
+       )
+
+  -- Equality and static type
+  t_static_type:
+    let x:T_EQ = mk_(true,[1]),
+        y = mk_(true,[1])
+    in (test(x = mk_(true,[1]));
+        test(x = mk_(true,[]));
+        test(x = mk_(false,[4]));
+        test(x <> mk_(false,[]));
+        test(y = mk_(true,[1]));
+        test(mk_(true,[]) <> y);
+        test(y <> mk_(false,[4]));
+        test(mk_(false,[]) <> y)
+       )
+
+  -- Polymorphic functions and order relations
+  -- Can't test with a type that does not admit an order relation; the test throws a runtime error
+  t_polymorphic:
+    test(ascending[nat]([1,1,2,3,4]));
+    test(not ascending[nat]([1,1,2,5,4]));
+    test(ascending[T_ORD]([mk_(1,2), mk_(2,1), mk_(2,2), mk_(4,5), mk_(4,5)]));
+    test(not ascending[T_ORD]([mk_(1,2),mk_(1,1)]))
+
+  -- Sequence comprehension with set binding
+  t_seq_set_bind:
+    let o1:T_ORD = mk_(1,2),
+        o2:T_ORD = mk_(2,1),
+        o3:T_ORD = mk_(1,3),
+        o4:T_ORD = mk_(1,1)
+    in (test([x | x in set {1,...,10} & x mod 2 = 0] = [2,4,6,8,10]);
+        test([x | x in set {10,9,8,7,6,5,4,3,2,1,0} & x mod 2 = 0] = [0,2,4,6,8,10]);
+        test([-x | x in set {10,9,8,7,6,5,4,3,2,1,0} & x mod 2 = 0] = [0,-2,-4,-6,-8,-10]);
+        test([x | x in set {o1,o2,o3}] = [o1,o3,o2]);
+        test([x | x in set {o3,o2,o1}] = [o1,o3,o2]);
+        test([x.#2 | x in set {o3,o2,o1}] = [2,3,1]);
+        test([x | x in set {o1,o2,o3,o4} & x <> o2] = [o4,o1,o3]);
+        test([x | x in set {o1,o1,o1,o1}] = [o1])
+       )
+
+end RM39

@@ -81,6 +81,7 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.BreakpointManager;
+import org.overture.interpreter.runtime.Breakpoint;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -126,9 +127,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		Breakpoint breakpoint = BreakpointManager.getBreakpoint(node);
+		breakpoint.check(node.getLocation(), ctxt);
 		node.getLocation().setHits(node.getLocation().getHits() / 1); // This is counted below when root is evaluated
-
+		boolean endstop = breakpoint.catchReturn(ctxt);
+		
 		try
 		{
 			Value object = node.getRoot().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
@@ -143,7 +146,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				FunctionValue fv = object.functionValue(ctxt);
-				return fv.eval(node.getLocation(), argvals, ctxt);
+				Value rv = fv.eval(node.getLocation(), argvals, ctxt);
+           		
+				if (endstop && !breakpoint.isContinue(ctxt))
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
 			} else if (object instanceof OperationValue)
 			{
 				ValueList argvals = new ValueList();
@@ -154,7 +164,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				OperationValue ov = object.operationValue(ctxt);
-				return ov.eval(node.getLocation(), argvals, ctxt);
+				Value rv = ov.eval(node.getLocation(), argvals, ctxt);
+           		
+				if (endstop && !breakpoint.isContinue(ctxt))
+				{
+					breakpoint.enterDebugger(ctxt);
+				}
+				
+				return rv;
 			} else if (object instanceof SeqValue)
 			{
 				Value arg = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(), ctxt);
@@ -1557,9 +1574,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				if (map.get(sortOn) == null)
 				{
-					if (nvpl.size() != 1 || !sortOn.isNumeric())
+					if (nvpl.size() != 1 || !sortOn.isOrdered())
 					{
-						VdmRuntimeError.abort(node.getLocation(), 4029, "Sequence comprehension bindings must be one numeric value", ctxt);
+						VdmRuntimeError.abort(node.getLocation(), 4029, "Sequence comprehension bindings must be one ordered value", ctxt);
 					}
 
 					evalContext.putList(nvpl);
@@ -1689,12 +1706,13 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					set.add(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), evalContext));
 				}
 			}
-		} catch (ValueException e)
+
+			return new SetValue(set);
+		}
+		catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-
-		return new SetValue(set);
 	}
 
 	@Override

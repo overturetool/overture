@@ -1,8 +1,5 @@
 types
   A = nat
-  inv a == true;
+  ord a<b == a<b
 
-values
-  a : nat = 1;
-  b : A =a+1.5;
-  
+

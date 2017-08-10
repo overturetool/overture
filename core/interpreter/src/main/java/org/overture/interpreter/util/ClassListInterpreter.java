@@ -80,19 +80,25 @@ public class ClassListInterpreter extends ClassList
 		}
 	}
 
-	public RootContext initialize(IInterpreterAssistantFactory af,
-			DBGPReader dbgp)
+	public RootContext createInitialContext(IInterpreterAssistantFactory af)
 	{
 		StateContext globalContext = null;
 
 		if (isEmpty())
 		{
 			globalContext = new StateContext(af, new LexLocation(), "global environment");
-		} else
+		}
+		else
 		{
 			globalContext = new StateContext(af, this.get(0).getLocation(), "public static environment");
 		}
 
+		return globalContext;
+	}
+
+	public void initialize(RootContext ctxt, IInterpreterAssistantFactory af, DBGPReader dbgp)
+	{
+		StateContext globalContext = (StateContext) ctxt;
 		globalContext.setThreadState(dbgp, CPUValue.vCPU);
 
 		// Initialize all the functions/operations first because the values
@@ -154,8 +160,6 @@ public class ClassListInterpreter extends ClassList
 
 			throw toThrow;
 		}
-
-		return globalContext;
 	}
 
 	public ProofObligationList getProofObligations(

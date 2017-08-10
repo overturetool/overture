@@ -206,11 +206,48 @@ public class DeclAssistantIR extends AssistantBase
 		
 		return true;
 	}
-	
-	public boolean isTest(ADefaultClassDeclIR node)
+
+	public boolean parentIsTest(ADefaultClassDeclIR node)
 	{
-		return node != null && !node.getSuperNames().isEmpty()
-				&& node.getSuperNames().get(0).getName().equals(IRConstants.TEST_CASE);
+		if (node != null && node.getSuperNames().isEmpty())
+		{
+			return false;
+		}
+
+		for(ATokenNameIR t : node.getSuperNames())
+		{
+			if(t.getName().equals(IRConstants.TEST_CASE))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean isTest(ADefaultClassDeclIR node, List<SClassDeclIR> classes)
+	{
+		if(node == null || node.getSuperNames().isEmpty())
+		{
+			return false;
+		}
+
+		for(ATokenNameIR n : node.getSuperNames())
+		{
+			if(n.getName().equals(IRConstants.TEST_CASE))
+			{
+				return true;
+			}
+
+			SClassDeclIR clazz = findClass(classes, n.getName());
+
+			if(clazz instanceof ADefaultClassDeclIR && isTest((ADefaultClassDeclIR) clazz, classes))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public <T extends SClassDeclIR> T buildClass(SClassDefinition node,

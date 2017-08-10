@@ -5,6 +5,6 @@
 <message column="13" line="28" message="Definition 'h' not used" messageType="warning" number="5000" resource="letexpr-22.vdm"/>
 <message column="13" line="24" message="Definition 'g' not used" messageType="warning" number="5000" resource="letexpr-22.vdm"/>
 <message column="15" line="20" message="Definition 'f' not used" messageType="warning" number="5000" resource="letexpr-22.vdm"/>
-<message column="14" line="11" message="Left hand of &lt; is not numeric" messageType="error" number="3139" resource="letexpr-22.vdm"/>
+<message column="14" line="11" message="Left hand of &lt; is not ordered" messageType="error" number="3139" resource="letexpr-22.vdm"/>
 <result/>
 </testResult>

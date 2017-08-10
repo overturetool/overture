@@ -15,5 +15,7 @@
 <message column="11" line="31" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="instvar.vpp"/>
 <message column="35" line="41" message="Right hand of and is not bool" messageType="error" number="3066" resource="instvar.vpp"/>
 <message column="11" line="42" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="instvar.vpp"/>
+<message column="5" line="27" message="Cyclic dependency detected for InstVarTest2`a" messageType="error" number="3355" resource="instvar.vpp"/>
+<message column="5" line="28" message="Cyclic dependency detected for InstVarTest2`b" messageType="error" number="3355" resource="instvar.vpp"/>
 <result/>
 </testResult>

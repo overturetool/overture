@@ -308,5 +308,8 @@ public class ModuleTypeChecker extends TypeChecker
 				assistantFactory.createPDefinitionListAssistant().unusedCheck(m.getDefs());
 			}
 		}
+
+		// Check for inter-definition cyclic dependencies before initialization
+    	cyclicDependencyCheck(checkDefs);
 	}
 }

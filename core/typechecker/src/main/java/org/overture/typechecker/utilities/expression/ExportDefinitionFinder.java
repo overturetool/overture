@@ -135,6 +135,8 @@ public class ExportDefinitionFinder
 					// ntype.getName().clone(), ntype.getType());
 					copy.setOpaque(true);
 					copy.setInvDef(ntype.getInvDef());
+					copy.setEqDef(ntype.getEqDef());
+					copy.setOrdDef(ntype.getOrdDef());
 					list.add(AstFactory.newATypeDefinition(def.getName(), copy, null, null));
 					// list.add(new ATypeDefinition(def.getName().location,
 					// NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy,
@@ -149,6 +151,8 @@ public class ExportDefinitionFinder
 					// extends AFieldField>) rtype.getFields().clone());
 					copy.setOpaque(true);
 					copy.setInvDef(rtype.getInvDef());
+					copy.setEqDef(rtype.getEqDef());
+					copy.setOrdDef(rtype.getOrdDef());
 					list.add(AstFactory.newATypeDefinition(def.getName(), copy, null, null));
 					// new ATypeDefinition(def.getName().location,
 					// NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null,

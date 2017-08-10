@@ -31,13 +31,16 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ValueException;
 
 public class InvariantValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
 	public final ANamedInvariantType type;
-	private FunctionValue invariant;
+	private final FunctionValue invariant;
+	private final FunctionValue equality;
+	private final FunctionValue ordering;
 
 	public InvariantValue(ANamedInvariantType type, Value value, Context ctxt)
 			throws AnalysisException
@@ -46,6 +49,8 @@ public class InvariantValue extends ReferenceValue
 		this.type = type;
 
 		invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type, ctxt);
+		equality = ctxt.assistantFactory.createSInvariantTypeAssistant().getEquality(type, ctxt);
+		ordering = ctxt.assistantFactory.createSInvariantTypeAssistant().getOrder(type, ctxt);
 		checkInvariant(ctxt);
 	}
 
@@ -83,11 +88,13 @@ public class InvariantValue extends ReferenceValue
 
 	// For clone only
 	private InvariantValue(ANamedInvariantType type, Value value,
-			FunctionValue invariant)
+						   FunctionValue invariant, FunctionValue equality, FunctionValue ordering)
 	{
 		super(value);
 		this.type = type;
 		this.invariant = invariant;
+		this.equality = equality;
+		this.ordering = ordering;
 	}
 
 	@Override
@@ -124,7 +131,7 @@ public class InvariantValue extends ReferenceValue
 			listeners = list;
 		}
 
-		InvariantValue ival = new InvariantValue(type, value.getUpdatable(listeners), invariant);
+		InvariantValue ival = new InvariantValue(type, value.getUpdatable(listeners), invariant, equality, ordering);
 		UpdatableValue uval = UpdatableValue.factory(ival, listeners);
 
 		if (invl != null)
@@ -139,12 +146,105 @@ public class InvariantValue extends ReferenceValue
 	@Override
 	public Value getConstant()
 	{
-		return new InvariantValue(type, value.getConstant(), invariant);
+		return new InvariantValue(type, value.getConstant(), invariant, equality, ordering);
 	}
 
 	@Override
 	public Object clone()
 	{
-		return new InvariantValue(type, (Value) value.clone(), invariant);
+		return new InvariantValue(type, (Value) value.clone(), invariant, equality, ordering);
+	}
+
+	@Override
+	public int compareTo(Value other)
+	{
+		if (ordering != null)
+		{
+			Context ctxt = Interpreter.getInstance().initialContext;
+			ctxt.setThreadState(null, null);
+			ctxt.threadState.setAtomic(true);
+
+			try
+			{
+				ValueList args = new ValueList();
+				args.add(this);
+				args.add(other);
+
+				if (ordering.eval(ordering.location, args, ctxt).boolValue(ctxt))
+				{
+					return -1;	// Less
+				}
+				else if (equals(other))
+				{
+					return 0;	// Equal
+				}
+				else
+				{
+					return 1;	// More
+				}
+			}
+			catch (ValueException e)
+			{
+				throw new RuntimeException(e);
+			}
+			catch (AnalysisException e)
+			{
+				throw new RuntimeException(e);
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
+			}
+		}
+		else
+		{
+			return super.compareTo(other);
+		}
+	}
+
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof Value)
+		{
+			if (equality != null)
+			{
+				Context ctxt = Interpreter.getInstance().initialContext;
+				ctxt.setThreadState(null, null);
+				ctxt.threadState.setAtomic(true);
+
+				try
+				{
+					ValueList args = new ValueList();
+					args.add(this);
+					args.add((Value)other);
+					return equality.eval(equality.location, args, ctxt).boolValue(ctxt);
+				}
+				catch (ValueException e)
+				{
+					throw new RuntimeException(e);
+				}
+				catch (AnalysisException e)
+				{
+					throw new RuntimeException(e);
+				}
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
+			}
+			else
+			{
+				return super.equals(other);
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isOrdered()
+	{
+		return (ordering != null) ? true : value.isOrdered();
 	}
 }

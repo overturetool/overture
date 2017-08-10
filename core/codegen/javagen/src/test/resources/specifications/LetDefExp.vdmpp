@@ -8,12 +8,15 @@ op () ==
 
 functions
 
+g :  nat -> nat
+g (-) == 1;
+
 public static f: nat -> nat
 f(x) ==
-	let x1 = f(1),
-			x2 = f(2),
-			x3 = f(3)
+	let x1 = g(1),
+			x2 = g(2),
+			x3 = g(3)
 	in
-		x
+		x + x1 + x2 + x3;
 
 end A

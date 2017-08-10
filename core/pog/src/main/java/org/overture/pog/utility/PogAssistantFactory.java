@@ -1,13 +1,7 @@
 package org.overture.pog.utility;
 
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.visitors.IInvExpGetVisitor;
-import org.overture.pog.visitors.ILocaleExtractVisitor;
-import org.overture.pog.visitors.IVariableSubVisitor;
-import org.overture.pog.visitors.StateDesignatorNameGetter;
-import org.overture.pog.visitors.VariableSubVisitor;
-import org.overture.pog.visitors.VdmInvExpGetVisitor;
-import org.overture.pog.visitors.VdmLocaleExtractor;
+import org.overture.pog.visitors.*;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 /**
@@ -47,6 +41,12 @@ public class PogAssistantFactory extends TypeCheckerAssistantFactory implements
 	public IInvExpGetVisitor getInvExpGetVisitor()
 	{
 		return new VdmInvExpGetVisitor();
+	}
+
+	@Override public PatternToExpVisitor getPatternToExpVisitor(
+			UniqueNameGenerator uniqueNameGen)
+	{
+		return new PatternToExpVisitor(uniqueNameGen,this);
 	}
 
 }

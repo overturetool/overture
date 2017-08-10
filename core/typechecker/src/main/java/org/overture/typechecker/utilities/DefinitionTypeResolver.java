@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
@@ -288,7 +289,6 @@ public class DefinitionTypeResolver extends
 		{
 			node.setType(af.createPTypeAssistant().typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
 		}
-
 	}
 
 	@Override
@@ -355,6 +355,30 @@ public class DefinitionTypeResolver extends
 				af.createPPatternAssistant().typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
 			}
 
+			if (node.getEqRelation() != null)
+			{
+				node.getEqRelation().getRelDef().apply(this, question);
+				af.createPPatternAssistant().typeResolve(node.getEqRelation().getLhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant().typeResolve(node.getEqRelation().getRhsPattern(), question.rootVisitor, question.question);
+			}
+			
+			if (node.getOrdRelation() != null)
+			{
+				node.getOrdRelation().getRelDef().apply(this, question);
+				af.createPPatternAssistant().typeResolve(node.getOrdRelation().getLhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant().typeResolve(node.getOrdRelation().getRhsPattern(), question.rootVisitor, question.question);
+
+				if (node.getOrdRelation().getMinDef() != null)
+				{
+					node.getOrdRelation().getMinDef().apply(this, question);
+				}
+				
+				if (node.getOrdRelation().getMaxDef() != null)
+				{
+					node.getOrdRelation().getMaxDef().apply(this, question);
+				}
+			}
+
 			node.setType(node.getInvType());
 
 			if (!node.getComposeDefinitions().isEmpty())
@@ -383,6 +407,12 @@ public class DefinitionTypeResolver extends
 			// af.createAValueDefinitionAssistant().updateDefs(node, question.question);
 			updateDefs(node, question.question);
 		}
+	}
+	
+	public void caseAImportedDefinition(AImportedDefinition node, NewQuestion question)
+		throws AnalysisException
+	{
+		node.getDef().apply(this, question);
 	}
 
 	public void updateDefs(AValueDefinition node, TypeCheckInfo question)
@@ -413,7 +443,7 @@ public class DefinitionTypeResolver extends
 			}
 
 			ALocalDefinition ld = (ALocalDefinition) d;
-			setValueDefinition(ld);
+			ld.setValueDefinition(node.clone());
 		}
 
 		node.setDefs(newdefs);
@@ -437,12 +467,4 @@ public class DefinitionTypeResolver extends
 	{
 		return;
 	}
-	
-	public void setValueDefinition(ALocalDefinition ld)
-	{
-		ld.setValueDefinition(true);
-
-	}
-
-
 }

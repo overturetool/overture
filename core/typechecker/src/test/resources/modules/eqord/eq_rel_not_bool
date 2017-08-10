@@ -1,0 +1,4 @@
+types
+
+A = nat
+eq a = b == a + b

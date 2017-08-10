@@ -208,7 +208,7 @@ public abstract class AbsResultTest<R> {
      * @param expected the stored result
      */
     public void compareResults(R actual, R expected){
-        Assert.assertEquals(this.testInfo(),actual,expected);
+        Assert.assertEquals(this.testInfo(),expected,actual);
     }
 
 }

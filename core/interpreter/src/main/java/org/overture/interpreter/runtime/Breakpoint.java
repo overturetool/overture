@@ -33,8 +33,10 @@ import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.config.Settings;
 import org.overture.interpreter.ast.expressions.BreakpointExpression;
+import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ExpressionReader;
@@ -203,21 +205,67 @@ public class Breakpoint implements Serializable
 				{
 					try
 					{
-						new Stoppoint(location, 0, null).check(location, ctxt);
-					} catch (DebuggerException e)
+						enterDebugger(ctxt);
+					}
+					catch (DebuggerException e)
 					{
 						throw e;
-					} catch (Exception e)
-					{
-						// This happens when the Stoppoint throws an error, which
-						// can't happen. But we need a catch clause for it anyway.
-
-						throw new DebuggerException("Breakpoint [" + number
-								+ "]: " + e.getMessage());
 					}
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Actually stop and enter the debugger. The method returns when the user asks to
+	 * continue or step the specification.
+	 * 
+	 * @param ctxt
+	 */
+	public void enterDebugger(Context ctxt)
+	{
+		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
+
+		if (th != null)
+		{
+			th.suspendOthers();
+		}
+
+		if (Settings.usingDBGP)
+		{
+			ctxt.threadState.dbgp.stopped(ctxt, this);
+		}
+		else
+		{
+			new DebuggerReader(Interpreter.getInstance(), this, ctxt).run();
+		}
+	}
+	
+	/**
+	 * Test for whether an apply expression or operation call ought to catch a breakpoint
+	 * after the return from the call. This only happens if we step into the call, so that
+	 * when we step out it is clear where we're unwinding too, rather than jumping down
+	 * the stack some considerable distance.
+	 * 
+	 * @param ctxt
+	 * @return
+	 */
+	public boolean catchReturn(Context ctxt)
+	{
+		ThreadState state = ctxt.threadState;
+		return state.stepline != null && state.nextctxt == null && state.outctxt == null;
+	}
+
+	/**
+	 * True if the current context is in a "continue" state.
+	 * 
+	 * @param ctxt
+	 * @return
+	 */
+	public boolean isContinue(Context ctxt)
+	{
+		ThreadState state = ctxt.threadState;
+		return state.stepline == null && state.nextctxt == null && state.outctxt == null;
 	}
 
 	/**
