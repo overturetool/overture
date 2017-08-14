@@ -56,6 +56,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.CoverageUtil;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexLocationUtils;
@@ -2594,7 +2595,8 @@ public class DBGPReader
 			File tex = new File(dir.getPath() + File.separator + file.getName()
 					+ ".tex");
 			PrintWriter pw = new PrintWriter(tex);
-			new LatexSourceFile(source).printCoverage(pw, headers);
+			CoverageUtil coverageUtil  = new CoverageUtil(LexLocation.getAllLocations(),LexLocation.getNameSpans());
+			new LatexSourceFile(source).printCoverage(pw, headers, coverageUtil);
 			pw.close();
 			cdataResponse("Latex coverage written to " + tex);
 		}

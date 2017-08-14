@@ -26,6 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,11 +40,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.lex.CoverageUtil;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.util.definitions.ClassList;
-import org.overture.ast.util.modules.ModuleList;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
@@ -79,6 +81,7 @@ public class LatexUtils extends LatexUtilsBase
 
 					File projectRoot = project.getLocation().toFile();
 					File outputFolder = LatexBuilder.makeOutputFolder(project);
+					
 					PdfBuilder latexBuilder = null;
 					if (LatexPlugin.usePdfLatex())
 					{
@@ -110,46 +113,82 @@ public class LatexUtils extends LatexUtilsBase
 						});
 
 					}
+					// TODO: Check whether this must be the else case of (model == null || !model.isTypeCorrect())
 					// if ()
 					{
+						// Set the dialect to be used in the objects generating the TeX files
+						Settings.dialect = dialect;
 
-						boolean modelOnly = modelOnly(vdmProject);
-						boolean includeCoverageTable = insertCoverageTable(vdmProject);
-						boolean markCoverage = markCoverage(vdmProject);
-						LexLocation.resetLocations();
+						// Obtain user settings for TeX generation options 
+						boolean modelOnly            = modelOnly(vdmProject);
+						boolean coverageTable        = insertCoverageTable(vdmProject);
+						boolean markCoverage         = markCoverage(vdmProject);
+
+						// Compute the model files (either VDM module or class containing files)
+						List<File> modelFiles = new Vector<File>();
+
 						if (selectedProject.getDialect() == Dialect.VDM_PP
 								|| selectedProject.getDialect() == Dialect.VDM_RT)
+							modelFiles = parseClasses(selectedProject)
+									.stream()
+									.map((SClassDefinition::getLocation))
+									.map(ILexLocation::getFile)
+									.collect(Collectors.toList());
+						
+					    if (selectedProject.getDialect() == Dialect.VDM_SL)			
+					    	modelFiles = parseModules(selectedProject)
+					    			.stream()
+					    			.map(AModuleModules::getFiles)
+					    			.flatMap(List::stream)
+					    			.collect(Collectors.toList());
+
+						// Prepare coverage highlighting
+						LexLocation.resetLocations();
+						
+						if (markCoverage || coverageTable)
 						{
-
-							ClassList classes = parseClasses(selectedProject);
-
 							List<File> outputFiles = getFileChildern(vdmProject.getModelBuildPath().getOutput().getLocation().toFile());
 
-							for (SClassDefinition classDefinition : classes)
+							for (File modelFile : modelFiles)
 							{
-								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.getLocation().getFile(), modelOnly,markCoverage,includeCoverageTable);
-
-							}
-						} else if (selectedProject.getDialect() == Dialect.VDM_SL)
-						{
-							List<File> outputFiles = getFileChildern(vdmProject.getModelBuildPath().getOutput().getLocation().toFile());
-
-							ModuleList modules = parseModules(selectedProject);
-
-							for (AModuleModules classDefinition : modules)
-							{
-								for (File moduleFile : classDefinition.getFiles())
+								for (int i = 0; i < outputFiles.size(); i++)
 								{
-									createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, moduleFile, modelOnly,markCoverage,includeCoverageTable);
+									File file = outputFiles.get(i);
+										
+									if (file.getName().toLowerCase().endsWith(".covtbl")
+											&& modelFile.getName().equals(getFileName(file)))
+									{
+										LexLocation.mergeHits(modelFile, file);
+										outputFiles.remove(i);
+
+									}
 								}
-							}
+							}		
 						}
+							
+						CoverageUtil coverageUtil = new CoverageUtil(LexLocation.getAllLocations(), LexLocation.getNameSpans());
+						
+						// Create TeX files for each model file
+						for (File modelFile : modelFiles)
+						{
+								createTeXFile(latexBuilder, 
+										outputFolderForGeneratedModelFiles, 
+										modelFile, 
+										modelOnly,
+										markCoverage,
+										coverageTable, 
+										coverageUtil);
+						}
+						
+							
 					}
 
-					String documentFileName = selectedProject.getName()
-							+ ".tex";
+					// Create main TeX file
+					String documentFileName = selectedProject.getName() + ".tex";
 
 					latexBuilder.saveDocument(project, projectRoot, documentFileName);
+					
+					// Build the Pdf
 					if (hasGenerateMainDocument(vdmProject))
 					{
 						buildPdf(project, monitor, outputFolder, documentFileName);
@@ -172,7 +211,6 @@ public class LatexUtils extends LatexUtilsBase
 				}
 
 				monitor.done();
-				// expandCompleted = true;
 
 				return new Status(IStatus.OK, LatexPlugin.PLUGIN_ID, IStatus.OK, "Translation completed", null);
 
@@ -238,83 +276,50 @@ public class LatexUtils extends LatexUtilsBase
 				selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			}
 
-			private void createCoverage(PdfBuilder latexBuilder,
-					File outputFolderForGeneratedModelFiles,
-					List<File> outputFiles, File moduleFile, boolean modelOnly,boolean markCoverage, boolean includeCoverageTable)
+			private void createTeXFile(PdfBuilder latexBuilder,
+					File outputFolder,
+				    File modelFile, boolean modelOnly,boolean markCoverage, boolean includeCoverageTable, CoverageUtil coverageUtil)
 					throws IOException, FileNotFoundException, CoreException
 			{
-				if (isStandardLibarary(moduleFile))
+				// Standard library files not generated
+				if (modelFile.getParentFile().getName().equalsIgnoreCase("lib"))
 				{
 					return;
 				}
 
-				if (!outputFolderForGeneratedModelFiles.exists())
+				// Prepare output folder
+				if (!outputFolder.exists())
 				{
-					outputFolderForGeneratedModelFiles.mkdirs();
+					outputFolder.mkdirs();
 				}
 
-				File texFile = new File(outputFolderForGeneratedModelFiles, moduleFile.getName().replace(" ", "")
-						+ ".tex");
+
+				// Prepare the TeX file for this module deleting previous version
+				File texFile = new File(outputFolder, modelFile.getName().replace(" ", "") + ".tex");
 				if (texFile.exists())
 				{
 					texFile.delete();
 				}
 
-				if (markCoverage || includeCoverageTable)
-				{
-					for (int i = 0; i < outputFiles.size(); i++)
-					{
-						File file = outputFiles.get(i);
-						// System.out.println("Compare with file: "
-						// + file.getName());
-						if (file.getName().toLowerCase().endsWith(".covtbl")
-								&& moduleFile.getName().equals(getFileName(file)))
-						{
-							// System.out.println("Match");
-							LexLocation.mergeHits(moduleFile, file);
-							outputFiles.remove(i);
-
-						}
-					}
-				}
-
-				IFile selectedModelFile = selectedProject.findIFile(moduleFile);
+				// Compute file encoding
+				IFile selectedModelFile = selectedProject.findIFile(modelFile);
 				String charset = selectedModelFile.getCharset();
-				latexBuilder.addInclude(texFile.getAbsolutePath());
-				// VDMJ.filecharset = "utf-8";
-
+				
+				// Generate the TeX file
 				PrintWriter pw = new PrintWriter(texFile, charset);
-				IProject project = (IProject) selectedProject.getAdapter(IProject.class);
-				Assert.isNotNull(project, "Project could not be adapted");
-				IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
-				Settings.dialect = vdmProject.getDialect();
-				if (markCoverage(vdmProject))
+				
+				if (LatexPlugin.usePdfLatex())
 				{
-					if (LatexPlugin.usePdfLatex())
-					{
-						new LatexSourceFile(moduleFile, charset).printCoverage(pw, false, modelOnly, insertCoverageTable(vdmProject));
-					} else
-					{
-						new XetexSourceFile(moduleFile, charset).printCoverage(pw, false, modelOnly, insertCoverageTable(vdmProject));
-					}
+					new LatexSourceFile(modelFile, charset).print(pw, false, modelOnly, includeCoverageTable, markCoverage, coverageUtil);
 				} else
 				{
-					if (LatexPlugin.usePdfLatex())
-					{
-						new LatexSourceFile(moduleFile, charset).print(pw, false, modelOnly, insertCoverageTable(vdmProject), false);
-					} else
-					{
-						new XetexSourceFile(moduleFile, charset).print(pw, false, modelOnly, insertCoverageTable(vdmProject), false);
-					}
+					new XetexSourceFile(modelFile, charset).print(pw, false, modelOnly, includeCoverageTable, markCoverage, coverageUtil);
 				}
-				// ConsoleWriter cw = new ConsoleWriter("LATEX");
-				// f.printCoverage(cw);
 				pw.close();
-			}
+				
+				// Add the current successfully generated TeX file to the main file include list 
+				latexBuilder.addInclude(texFile.getAbsolutePath());
 
-			private boolean isStandardLibarary(File moduleFile)
-			{
-				return moduleFile.getParentFile().getName().equalsIgnoreCase("lib");
 			}
 
 		};
