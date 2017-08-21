@@ -717,10 +717,19 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			invocationError(e);
 		} catch (Throwable e)
 		{
-			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+			String msg = e.getMessage();
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, msg != null ? msg : throwableToString(e));
 		}
 
 		return carryOn;
+	}
+	
+	public static String throwableToString(Throwable e)
+	{
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		return sw.toString(); // stack trace as a string
 	}
 
 	private void propertySet(DBGPCommand c) throws DBGPException, IOException
