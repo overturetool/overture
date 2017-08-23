@@ -34,7 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.CoverageUtil;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.config.Settings;
@@ -89,22 +91,22 @@ public class XetexSourceFile extends SourceFile
 		br.close();
 	}
 
-	public void printCoverage(PrintWriter out, boolean headers)
+	public void printCoverage(PrintWriter out, boolean headers, CoverageUtil coverageUtil)
 	{
-		printCoverage(out, headers, false, true);
+		printCoverage(out, headers, false, true, coverageUtil);
 	}
 
 	public void printCoverage(PrintWriter out, boolean headers,
-			boolean modelOnly, boolean includeCoverageTable)
+			boolean modelOnly, boolean includeCoverageTable, CoverageUtil coverageUtil)
 	{
-		print(out, headers, modelOnly, includeCoverageTable, true);
+		print(out, headers, modelOnly, includeCoverageTable, true, coverageUtil);
 	}
 
 	public void print(PrintWriter out, boolean headers, boolean modelOnly,
-			boolean includeCoverageTable, boolean markCoverage)
+			boolean includeCoverageTable, boolean markCoverage, CoverageUtil coverageUtil)
 	{
-		Map<Integer, List<LexLocation>> hits = LexLocation.getMissLocations(filename);
-
+		Map<Integer, List<ILexLocation>> hits = coverageUtil.getMissLocations(filename);
+		
 		if (headers)
 		{
 			out.println("\\documentclass[a4paper]{article}");
@@ -138,7 +140,7 @@ public class XetexSourceFile extends SourceFile
 		// boolean endDocFound = false;
 		// boolean inVdmAlModelTag = false;
 		// useJPNFont = checkFont("MS Gothic");
-		LexNameList spans = LexLocation.getSpanNames(filename);
+		LexNameList spans = coverageUtil.getSpanNames(filename);
 
 		for (int lnum = 1; lnum <= rawLines.size(); lnum++)
 		{
@@ -186,7 +188,7 @@ public class XetexSourceFile extends SourceFile
 				// out.println(markup(spaced, list));
 				if (inVdmAlModelTag)
 				{
-					List<LexLocation> list = hits.get(lnum);
+					List<ILexLocation> list = hits.get(lnum);
 					out.println(markup(spaced, list));
 				} else
 				{
@@ -226,7 +228,7 @@ public class XetexSourceFile extends SourceFile
 		if (includeCoverageTable)
 		{
 			out.println("\\bigskip");
-			out.println(createCoverageTable());
+			out.println(createCoverageTable(coverageUtil));
 		}
 		if (headers || endDocFound)
 		{
@@ -250,7 +252,7 @@ public class XetexSourceFile extends SourceFile
 		}
 	}
 
-	private String createCoverageTable()
+	private String createCoverageTable(CoverageUtil coverageUtil)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("\\begin{longtable}{|l|r|r|r|}" + "\n");
@@ -261,26 +263,26 @@ public class XetexSourceFile extends SourceFile
 
 		long total = 0;
 
-		LexNameList spans = LexLocation.getSpanNames(filename);
+		LexNameList spans = coverageUtil.getSpanNames(filename);
 		Collections.sort(spans);
 
 		for (ILexNameToken name : spans)
 		{
-			long calls = LexLocation.getSpanCalls(name);
+			long calls = coverageUtil.getSpanCalls(name);
 			total += calls;
 
 			sb.append("\\hyperref[" + latexLabel(name.getName()) + ":"
 					+ name.getLocation().getStartLine() + "]{"
 					+ utfIncludeCheck(latexQuote(name.toString()), false)
 					+ "}" + " & " + name.getLocation().getStartLine() + " & "
-					+ LexLocation.getSpanPercent(name) + "\\% & " + calls
+					+ coverageUtil.getSpanPercent(name) + "\\% & " + calls
 					+ " \\\\" + "\n");
 			sb.append("\\hline" + "\n");
 		}
 
 		sb.append("\\hline" + "\n");
 		sb.append(latexQuote(filename.getName()) + " & & "
-				+ LexLocation.getHitPercent(filename) + "\\% & " + total
+				+ coverageUtil.getHitPercent(filename) + "\\% & " + total
 				+ " \\\\" + "\n");
 
 		sb.append("\\hline" + "\n");
@@ -288,7 +290,7 @@ public class XetexSourceFile extends SourceFile
 		return sb.toString();
 	}
 
-	private String markup(String line, List<LexLocation> list)
+	private String markup(String line, List<ILexLocation> list)
 	{
 		if (list == null)
 		{
@@ -299,10 +301,10 @@ public class XetexSourceFile extends SourceFile
 			StringBuilder sb = new StringBuilder();
 			int p = 0;
 
-			for (LexLocation m : list)
+			for (ILexLocation m : list)
 			{
-				int start = m.startPos - 1;
-				int end = m.startLine == m.endLine ? m.endPos - 1
+				int start = m.getStartPos() - 1;
+				int end = m.getStartLine() == m.getEndLine() ? m.getEndPos() - 1
 						: line.length();
 
 				if (start >= p) // Backtracker produces duplicate tokens
