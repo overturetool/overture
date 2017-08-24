@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.CoverageUtil;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexLocation;
@@ -967,7 +968,8 @@ abstract public class CommandReader
 			{
 				File tex = new File(source.filename.getPath() + ".tex");
 				PrintWriter pw = new PrintWriter(tex, "UTF-8");
-				new LatexSourceFile(source).printCoverage(pw, headers);
+				CoverageUtil coverageUtil  = new CoverageUtil(LexLocation.getAllLocations(),LexLocation.getNameSpans());
+				new LatexSourceFile(source).printCoverage(pw, headers, coverageUtil);
 				pw.close();
 				println("Latex coverage written to " + tex);
 			}

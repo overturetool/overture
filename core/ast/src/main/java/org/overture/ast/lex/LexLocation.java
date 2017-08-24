@@ -33,10 +33,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.ExternalNode;
 
 /**
@@ -64,8 +64,9 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	/** A unique map of LexLocation objects, for rapid searching. */
 	private static Map<LexLocation, LexLocation> uniqueLocations = new HashMap<LexLocation, LexLocation>();
 
-	/** A map of f/op/class names to their lexical span, for coverage. */
+	/** A map of class names to their lexical span, for coverage. */
 	private static Map<LexNameToken, LexLocation> nameSpans = new HashMap<LexNameToken, LexLocation>();// TODO
+
 
 	/** True if the location is executable. */
 	private boolean executable = false;
@@ -374,119 +375,6 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 		nameSpans.put(name, span);
 	}
 
-	public static LexNameList getSpanNames(File filename)
-	{
-		LexNameList list = new LexNameList();
-
-		for (LexNameToken name : nameSpans.keySet())
-		{
-			LexLocation span = nameSpans.get(name);
-
-			if (span.file.equals(filename))
-			{
-				list.add(name);
-			}
-		}
-
-		return list;
-	}
-
-	public static float getSpanPercent(ILexNameToken name)
-	{
-		int hits = 0;
-		int misses = 0;
-		LexLocation span = null;
-
-		synchronized (nameSpans)
-		{
-			span = nameSpans.get(name);
-		}
-
-		synchronized (allLocations)
-		{
-			for (LexLocation l : removeDuplicates(allLocations))
-			{
-				if (l.executable && l.within(span))
-				{
-					if (l.hits > 0)
-					{
-						hits++;
-					} else
-					{
-						misses++;
-					}
-				}
-			}
-		}
-
-		int sum = hits + misses;
-		return sum == 0 ? 0 : (float) (1000 * hits / sum) / 10; // NN.N%
-	}
-
-	public static long getSpanCalls(ILexNameToken name)
-	{
-		// The assumption is that the first executable location in
-		// the span for the name is hit as many time as the span is called.
-
-		LexLocation span = null;
-
-		synchronized (nameSpans)
-		{
-			span = nameSpans.get(name);
-		}
-
-		synchronized (allLocations)
-		{
-			for (LexLocation l : removeDuplicates(allLocations))
-			{
-				if (l.executable && l.within(span))
-				{
-					return l.hits;
-				}
-			}
-		}
-
-		return 0;
-	}
-
-	public static List<Integer> getHitList(File file)
-	{
-		//FIXME skip lex location in other files
-		// idea: if !lextLocation.getFile().equals(file) then continue; 
-		List<Integer> hits = new Vector<Integer>();
-
-		synchronized (allLocations)
-		{
-			for (LexLocation l : removeDuplicates(allLocations))
-			{
-				if (l.hits > 0 && l.file.equals(file))
-				{
-					hits.add(l.startLine);
-				}
-			}
-		}
-
-		return hits;
-	}
-
-	public static List<Integer> getMissList(File file)
-	{
-		List<Integer> misses = new Vector<Integer>();
-
-		synchronized (allLocations)
-		{
-			for (LexLocation l : removeDuplicates(allLocations))
-			{
-				if (l.hits == 0 && l.file.equals(file))
-				{
-					misses.add(l.startLine);
-				}
-			}
-		}
-
-		return misses;
-	}
-
 	public static List<Integer> getSourceList(File file)
 	{
 		List<Integer> lines = new Vector<Integer>();
@@ -505,84 +393,6 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 		}
 
 		return lines;
-	}
-
-	public static Map<Integer, List<LexLocation>> getHitLocations(File file)
-	{
-		Map<Integer, List<LexLocation>> map = new HashMap<Integer, List<LexLocation>>();
-
-		synchronized (allLocations)
-		{
-			for (LexLocation l : removeDuplicates(allLocations))
-			{
-				if (l.executable && l.hits > 0 && l.file.equals(file))
-				{
-					List<LexLocation> list = map.get(l.startLine);
-
-					if (list == null)
-					{
-						list = new Vector<LexLocation>();
-						map.put(l.startLine, list);
-					}
-
-					list.add(l);
-				}
-			}
-		}
-
-		return map;
-	}
-
-	public static float getHitPercent(File file)
-	{
-		int hits = 0;
-		int misses = 0;
-
-		synchronized (allLocations)
-		{
-			for (LexLocation l : removeDuplicates(allLocations))
-			{
-				if (l.file.equals(file) && l.executable)
-				{
-					if (l.hits > 0)
-					{
-						hits++;
-					} else
-					{
-						misses++;
-					}
-				}
-			}
-		}
-
-		int sum = hits + misses;
-		return sum == 0 ? 0 : (float) (1000 * hits / sum) / 10; // NN.N%
-	}
-
-	public static Map<Integer, List<LexLocation>> getMissLocations(File file)
-	{
-		Map<Integer, List<LexLocation>> map = new HashMap<Integer, List<LexLocation>>();
-
-		synchronized (allLocations)
-		{
-			for (LexLocation l : removeDuplicates(allLocations))
-			{
-				if (l.executable && l.hits == 0 && l.file.equals(file))
-				{
-					List<LexLocation> list = map.get(l.startLine);
-
-					if (list == null)
-					{
-						list = new Vector<LexLocation>();
-						map.put(l.startLine, list);
-					}
-
-					list.add(l);
-				}
-			}
-		}
-
-		return map;
 	}
 
 	public static List<LexLocation> getSourceLocations(File file)
@@ -641,38 +451,24 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 		br.close();
 	}
 
-	/**
-	 * This method handles the case where a location exist both with hits>0 and hits==0. It will remove the location
-	 * with hits==0 when another location hits>0 exists
-	 * 
-	 * @param locations
-	 * @return the list of locations where the unwanted locations have been removed
-	 */
-	public static List<LexLocation> removeDuplicates(List<LexLocation> locations)
+	public static List<ILexLocation> getAllLocations()
 	{
-		List<LexLocation> tmp = new Vector<LexLocation>();
-		c: for (LexLocation l1 : locations)
-		{
-			if (l1.hits == 0)
-			{
-				for (LexLocation l2 : locations)
-				{
-					if (l1.equals(l2) && l2.hits > 0)
-					{
-						continue c;
-					}
-				}
-				tmp.add(l1);
-			} else
-			{
-				tmp.add(l1);
-			}
+		Vector<ILexLocation> tmp = new Vector<ILexLocation>();
+		synchronized (allLocations) {
+			tmp.addAll(allLocations);
 		}
 		return tmp;
 	}
-
-	public static List<LexLocation> getAllLocations()
+	
+	public static Map<LexNameToken, ILexLocation> getNameSpans()
 	{
-		return allLocations;
+		Map<LexNameToken, ILexLocation> tmp = new HashMap<>();
+		synchronized (nameSpans) {
+		for (Entry<LexNameToken, LexLocation> entry : nameSpans.entrySet()) {
+			tmp.put(entry.getKey(), entry.getValue());
+		}	
+		}
+		return tmp;
+		
 	}
 }
