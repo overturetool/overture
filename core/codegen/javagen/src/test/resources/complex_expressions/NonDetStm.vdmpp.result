@@ -1,0 +1,47 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class A {
+  private Number x = 1L;
+
+  public Number incNonDet() {
+
+    x = x.longValue() + 1L;
+    x = x.longValue() + 1L;
+    x = x.longValue() + 1L;
+
+    return x;
+  }
+
+  public A() {}
+
+  public String toString() {
+
+    return "A{" + "x := " + Utils.toString(x) + "}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    final A a = new A();
+    return a.incNonDet();
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
