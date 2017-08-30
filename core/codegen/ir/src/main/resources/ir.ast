@@ -280,6 +280,7 @@ IR {-> package='org.overture.codegen.ir'
            |	{assignToExp} [target]:IR.#exp [exp]:IR.#exp
            |	{localPatternAssignment} [target]:IR.#pattern [exp]:IR.#exp (nextElementDecl):IR.#decl.var
            |	{block}	[scoped]:java_Boolean [localDefs]:IR.#decl.var* [statements]:IR.#stm*
+           |	{nonDeterministicBlock} [statements]:IR.#stm*
            |	{callObject} [type]:IR.#type [designator]:IR.#objectDesignator /*[className]:java_String*/ [fieldName]:java_String 
            					 [args]:IR.#exp*
            |	{callObjectExp} [type]:IR.#type [obj]:IR.#exp /*[className]:java_String*/ [fieldName]:java_String 
