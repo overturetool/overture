@@ -41,6 +41,7 @@ import org.overture.codegen.trans.letexps.IfExpTrans;
 import org.overture.codegen.trans.patterns.PatternTrans;
 import org.overture.codegen.trans.patterns.PatternVarPrefixes;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
+import org.overture.codegen.trans.uniontypes.NonDetStmTrans;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
 import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
 
@@ -88,6 +89,7 @@ public class JavaTransSeries
 
 		// Construct the transformations
 		AtomicStmTrans atomicTr = new AtomicStmTrans(transAssist, varMan.atomicTmpVar());
+		NonDetStmTrans nonDetTr = new NonDetStmTrans(transAssist);
 		FuncTrans funcTr = new FuncTrans(transAssist);
 		DivideTrans divideTr = new DivideTrans(info);
 		CallObjStmTrans callObjTr = new CallObjStmTrans(info);
@@ -121,6 +123,7 @@ public class JavaTransSeries
 
 		// Set up order of transformations
 		series.add(atomicTr);
+		series.add(nonDetTr);
 		series.add(divideTr);
 		series.add(assignTr);
 		series.add(callObjTr);
