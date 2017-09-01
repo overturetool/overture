@@ -368,6 +368,17 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 		}
 	}
 
+	public boolean isValueDefinition(PDefinition d)
+	{
+		try
+		{
+			return d.apply(af.getValueDefinitionChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
+		}
+	}
+
 	public boolean isOperation(PDefinition d)
 	{
 		try

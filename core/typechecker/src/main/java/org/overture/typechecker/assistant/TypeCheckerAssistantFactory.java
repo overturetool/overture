@@ -106,6 +106,7 @@ import org.overture.typechecker.utilities.UnusedChecker;
 import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
+import org.overture.typechecker.utilities.ValueDefinitionChecker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.expression.ExportDefinitionFinder;
 import org.overture.typechecker.utilities.expression.ExportDefinitionListFinder;
@@ -998,6 +999,12 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 	public IAnswer<Boolean> getTypeDefinitionChecker()
 	{
 		return new TypeDefinitionChecker(this);
+	}
+
+	@Override
+	public IAnswer<Boolean> getValueDefinitionChecker()
+	{
+		return new ValueDefinitionChecker(this);
 	}
 
 	@Override

@@ -55,6 +55,8 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 	{
 		if (m.getExports() != null)
 		{
+			m.getExportdefs().clear();
+			
 			if (!m.getIsDLModule())
 			{
 				m.getExportdefs().addAll(getDefinitions(m.getExports(), m.getDefs()));

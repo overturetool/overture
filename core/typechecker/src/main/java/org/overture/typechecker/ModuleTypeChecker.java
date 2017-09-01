@@ -265,7 +265,17 @@ public class ModuleTypeChecker extends TypeChecker
 		}
 
 		// Report any discrepancies between the final checked types of
-		// definitions and their explicit imported types.
+		// definitions and their explicit imported types. Rebuild the import/export lists first.
+
+		for (AModuleModules m : modules)
+		{
+			assistantFactory.createAModuleModulesAssistant().processExports(m);
+		}
+
+		for (AModuleModules m : modules)
+		{
+			assistantFactory.createAModuleModulesAssistant().processImports(m, modules);
+		}
 
 		for (AModuleModules m : modules)
 		{
