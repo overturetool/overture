@@ -115,7 +115,7 @@ public class LatexUtils extends LatexUtilsBase
 					}
 					// TODO: Check whether this must be the else case of (model == null || !model.isTypeCorrect())
 					// if ()
-					{
+					// {
 						// Set the dialect to be used in the objects generating the TeX files
 						Settings.dialect = dialect;
 
@@ -191,12 +191,12 @@ public class LatexUtils extends LatexUtilsBase
 						}
 						
 							
-					}
+					//}
 
 					// Create main TeX file
 					String documentFileName = selectedProject.getName() + ".tex";
 
-					latexBuilder.saveDocument(project, projectRoot, documentFileName);
+					latexBuilder.saveDocument(project, projectRoot, documentFileName, modelOnly);
 					
 					// Build the Pdf
 					if (hasGenerateMainDocument(vdmProject))

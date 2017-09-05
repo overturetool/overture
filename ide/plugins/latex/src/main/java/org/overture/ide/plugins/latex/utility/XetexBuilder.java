@@ -62,7 +62,7 @@ public class XetexBuilder implements PdfBuilder
 
 	}
 
-	public void saveDocument(IProject project, File projectRoot, String name)
+	public void saveDocument(IProject project, File projectRoot, String name, boolean modelOnly)
 			throws IOException
 	{
 		String document = readFile("xetex/document.tex");
@@ -81,7 +81,9 @@ public class XetexBuilder implements PdfBuilder
 			String tmp = includeName.replace('\\', '/');
 			includeName = tmp.substring(tmp.lastIndexOf('/') + 1);
 
+			if(modelOnly){
 			sb.append("\n" + "\\section{" + latexQuote(includeName) + "}");
+			}
 
 			if (path.contains(latexRoot.getAbsolutePath()))
 			{

@@ -74,7 +74,7 @@ public class LatexBuilder implements PdfBuilder
 	 * java.io.File, java.lang.String)
 	 */
 	@Override
-	public void saveDocument(IProject project, File projectRoot, String name)
+	public void saveDocument(IProject project, File projectRoot, String name, boolean modelOnly)
 			throws IOException
 	{
 		String document = readFile("latex/document.tex");
@@ -93,7 +93,9 @@ public class LatexBuilder implements PdfBuilder
 			String tmp = includeName.replace('\\', '/');
 			includeName = tmp.substring(tmp.lastIndexOf('/') + 1);
 
+			if(modelOnly){
 			sb.append("\n" + "\\section{" + latexQuote(includeName) + "}");
+			}
 
 			if (path.contains(latexRoot.getAbsolutePath()))
 			{
