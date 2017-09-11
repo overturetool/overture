@@ -240,7 +240,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SSetTypeIR setType = transAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 
-		LetBeStStrategy strategy = new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, iteVarPrefixes);
+		LetBeStStrategy strategy = consLetBeStStrategy(suchThat, setType, tempVarNameGen);
 
 		ABlockStmIR outerBlock = new ABlockStmIR();
 
@@ -285,6 +285,10 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		outerBlock.apply(this);
 
 		outerBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(outerBlock));
+	}
+
+	public LetBeStStrategy consLetBeStStrategy(SExpIR suchThat, SSetTypeIR setType, ITempVarGen tempVarNameGen) {
+		return new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, iteVarPrefixes);
 	}
 
 	@Override
@@ -339,7 +343,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(prefixes.mapComp());
 
-		ComplexCompStrategy strategy = new MapCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
+		ComplexCompStrategy strategy = consMapCompStrategy(first, predicate, type, tempVarNameGen, var);
 
 		List<SMultipleBindIR> bindings = filterBindList(node, node.getBindings());
 
@@ -361,6 +365,10 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		block.apply(this);
 	}
 
+	public MapCompStrategy consMapCompStrategy(AMapletExpIR first, SExpIR predicate, STypeIR type, ITempVarGen tempVarNameGen, String var) {
+		return new MapCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
+	}
+
 	@Override
 	public void caseACompSetExpIR(ACompSetExpIR node) throws AnalysisException
 	{
@@ -372,7 +380,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(prefixes.setComp());
 
-		ComplexCompStrategy strategy = new SetCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
+		ComplexCompStrategy strategy = consSetCompStrategy(first, predicate, type, tempVarNameGen, var);
 
 		List<SMultipleBindIR> bindings = filterBindList(node, node.getBindings());
 		ABlockStmIR block = transAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy, iteVarPrefixes);
@@ -393,6 +401,10 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		block.apply(this);
 	}
 
+	public SetCompStrategy consSetCompStrategy(SExpIR first, SExpIR predicate, STypeIR type, ITempVarGen tempVarNameGen, String var) {
+		return new SetCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
+	}
+
 	@Override
 	public void caseACompSeqExpIR(ACompSeqExpIR node) throws AnalysisException
 	{
@@ -404,7 +416,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(prefixes.seqComp());
 
-		SeqCompStrategy strategy = new SeqCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
+		SeqCompStrategy strategy = consSeqCompStrategy(first, predicate, type, tempVarNameGen, var);
 
 		if (transAssistant.isEmptySetSeq(node.getSetSeq()))
 		{
@@ -434,6 +446,10 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
+	public SeqCompStrategy consSeqCompStrategy(SExpIR first, SExpIR predicate, STypeIR type, ITempVarGen tempVarNameGen, String var) {
+		return new SeqCompStrategy(transAssistant, first, predicate, var, type, langIterator, tempVarNameGen, iteVarPrefixes);
+	}
+
 	@Override
 	public void caseAForAllQuantifierExpIR(AForAllQuantifierExpIR node)
 			throws AnalysisException
@@ -444,7 +460,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(prefixes.forAll());
 
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, iteVarPrefixes);
+		OrdinaryQuantifierStrategy strategy = consOrdinaryQuantifierStrategy(predicate, tempVarNameGen, var, transAssistant, OrdinaryQuantifier.FORALL, langIterator, iteVarPrefixes);
 
 		List<SMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
 
@@ -476,7 +492,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(prefixes.exists());
 
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, iteVarPrefixes);
+		OrdinaryQuantifierStrategy strategy = consOrdinaryQuantifierStrategy(predicate, tempVarNameGen, var, transAssistant, OrdinaryQuantifier.EXISTS, langIterator, iteVarPrefixes);
 
 		List<SMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
 
@@ -498,6 +514,10 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
+	public OrdinaryQuantifierStrategy consOrdinaryQuantifierStrategy(SExpIR predicate, ITempVarGen tempVarNameGen, String var, TransAssistantIR transAssistant, OrdinaryQuantifier exists, ILanguageIterator langIterator, IterationVarPrefixes iteVarPrefixes) {
+		return new OrdinaryQuantifierStrategy(transAssistant, predicate, var, exists, langIterator, tempVarNameGen, iteVarPrefixes);
+	}
+
 	@Override
 	public void caseAExists1QuantifierExpIR(AExists1QuantifierExpIR node)
 			throws AnalysisException
@@ -508,7 +528,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(prefixes.exists1());
 
-		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transAssistant, predicate, var, langIterator, tempVarNameGen, iteVarPrefixes, counterData);
+		Exists1QuantifierStrategy strategy = consExists1QuantifierStrategy(predicate, tempVarNameGen, var);
 
 		List<SMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
 
@@ -533,6 +553,10 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 			transform(enclosingStm, block, exists1Result, node);
 			block.apply(this);
 		}
+	}
+
+	public Exists1QuantifierStrategy consExists1QuantifierStrategy(SExpIR predicate, ITempVarGen tempVarNameGen, String var) {
+		return new Exists1QuantifierStrategy(transAssistant, predicate, var, langIterator, tempVarNameGen, iteVarPrefixes, counterData);
 	}
 
 	public void caseALetDefExpIR(ALetDefExpIR node) throws AnalysisException

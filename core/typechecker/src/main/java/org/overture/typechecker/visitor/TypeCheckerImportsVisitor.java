@@ -24,6 +24,7 @@ package org.overture.typechecker.visitor;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -35,6 +36,7 @@ import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.AOperationValueImport;
 import org.overture.ast.modules.ATypeImport;
+import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -42,6 +44,7 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 {
@@ -59,18 +62,32 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 	}
 
 	@Override
-	public PType caseATypeImport(ATypeImport node, TypeCheckInfo question)
+	public PType caseATypeImport(ATypeImport node, TypeCheckInfo question) throws AnalysisException
 	{
+		PDefinition expdef = null; 
+		
+		if (node.getFrom() != null)
+		{
+			expdef = question.assistantFactory.createPDefinitionListAssistant().findType(node.getFrom().getExportdefs(), node.getName(), null);
+			
+			if (expdef != null)
+			{
+				boolean istype = question.assistantFactory.createPDefinitionAssistant().isTypeDefinition(expdef);
+				checkKind(question.assistantFactory, expdef, istype, "type", node);
+			}
+		}
+
 		if (node.getDef() != null && node.getFrom() != null)
 		{
 			PDefinition def = node.getDef();
 			ILexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
 			def.setType((SInvariantType) question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(def), null, THIS, question));
-			PDefinition expdef = question.assistantFactory.createPDefinitionListAssistant().findType(from.getExportdefs(), name, null);
 
 			if (expdef != null)
 			{
+				boolean istype = question.assistantFactory.createPDefinitionAssistant().isTypeDefinition(expdef);
+				checkKind(question.assistantFactory, expdef, istype, "type", node);
 				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
 
 				if (!question.assistantFactory.getTypeComparator().compatible(def.getType(), exptype))
@@ -87,40 +104,78 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 	}
 
 	@Override
-	public PType defaultSValueImport(SValueImport node, TypeCheckInfo question)
+	public PType defaultSValueImport(SValueImport node, TypeCheckInfo question) throws AnalysisException
 	{
+		PDefinition expdef = null;
+		
+		if (node.getFrom() != null)
+		{
+			expdef = question.assistantFactory.createPDefinitionListAssistant().findName(node.getFrom().getExportdefs(), node.getName(), NameScope.NAMES);
+    
+    		if (expdef != null)
+    		{
+    			boolean expected = false;
+    			String expkind = ""; 
+    			
+    			if (node instanceof SValueImport)
+    			{
+    				expected = question.assistantFactory.createPDefinitionAssistant().isValueDefinition(expdef);
+    				expkind = "value";
+    			}
+    			if (node instanceof AFunctionValueImport)
+    			{
+    				expected = question.assistantFactory.createPTypeAssistant().isFunction(expdef.getType());
+    				expkind = "function";
+    			}
+    			else if (node instanceof AOperationValueImport)
+    			{
+    				expected = question.assistantFactory.createPTypeAssistant().isOperation(expdef.getType());
+    				expkind = "operation";
+    			}
+    			
+    			checkKind(question.assistantFactory, expdef, expected, expkind, node);
+    		}
+		}
+		
 		PType type = node.getImportType();
 		AModuleModules from = node.getFrom();
 		ILexNameToken name = node.getName();
 
-		if (type != null && from != null)
+		if (type != null && from != null && expdef != null)
 		{
 			type = question.assistantFactory.createPTypeAssistant().typeResolve(type, null, THIS, question);
-			PDefinition expdef = question.assistantFactory.createPDefinitionListAssistant().findName(from.getExportdefs(), name, NameScope.NAMES);
+				
+			PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
 
-			if (expdef != null)
+			if (!question.assistantFactory.getTypeComparator().compatible(type, exptype))
 			{
-				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
-
-				if (!question.assistantFactory.getTypeComparator().compatible(type, exptype))
-				{
-					TypeCheckerErrors.report(3194, "Type of value import "
-							+ name + " does not match export from "
-							+ from.getName(), node.getLocation(), node);
-					TypeCheckerErrors.detail2("Import", type.toString(), // TODO:
-																			// .toDetailedString(),
-							"Export", exptype.toString()); // TODO:
-															// .toDetailedString());
-				}
+				TypeCheckerErrors.report(3194, "Type of import "
+						+ name + " does not match export from "
+						+ from.getName(), node.getLocation(), node);
+				TypeCheckerErrors.detail2("Import", type.toString(), "Export", exptype.toString());
 			}
 		}
+	
 		return null;
 	}
 
 	@Override
 	public PType caseAFunctionValueImport(AFunctionValueImport node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws AnalysisException
 	{
+		PDefinition expdef = null;
+		
+		if (node.getFrom() != null)
+		{
+			expdef = question.assistantFactory.createPDefinitionListAssistant().findName(node.getFrom().getExportdefs(), node.getName(), NameScope.NAMES);
+			
+			if (expdef != null)
+			{
+				boolean isfunc = question.assistantFactory.createPDefinitionAssistant().isFunction(expdef);
+				checkKind(question.assistantFactory, expdef, isfunc, "function", node);
+			}
+		}
+
 		if (node.getTypeParams().size() == 0)
 		{
 			return defaultSValueImport(node, question);
@@ -141,11 +196,10 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, NameScope.NAMES);
 			PType rtype = question.assistantFactory.createPTypeAssistant().typeResolve(node.getImportType(), null, THIS, question.newInfo(params));
 			node.setImportType(rtype);
-			PDefinition def = question.assistantFactory.createPDefinitionListAssistant().findName(node.getFrom().getExportdefs(), node.getName(), NameScope.NAMES);
 			
-			if (def instanceof AExplicitFunctionDefinition)
+			if (expdef instanceof AExplicitFunctionDefinition)
 			{
-				AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition)def;
+				AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition)expdef;
 				
 				if (efd.getTypeParams() == null || efd.getTypeParams().isEmpty())
 				{
@@ -165,9 +219,9 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 				
 				node.setImportType(efd.getType().clone());
 			}
-			else if (def instanceof AImplicitFunctionDefinition)
+			else if (expdef instanceof AImplicitFunctionDefinition)
 			{
-				AImplicitFunctionDefinition ifd = (AImplicitFunctionDefinition)def;
+				AImplicitFunctionDefinition ifd = (AImplicitFunctionDefinition)expdef;
 				
 				if (ifd.getTypeParams() == null || ifd.getTypeParams().isEmpty())
 				{
@@ -194,8 +248,17 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 
 	@Override
 	public PType caseAOperationValueImport(AOperationValueImport node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws AnalysisException
 	{
 		return defaultSValueImport(node, question);
+	}
+	
+	private void checkKind(ITypeCheckerAssistantFactory af, PDefinition actual, boolean expected, String expkind, PImport node) throws AnalysisException
+	{
+		if (actual != null && !expected)
+		{
+    		String actkind = actual.apply(af.getKindFinder());
+   			TypeCheckerErrors.report(3356, "Import of " + expkind + " " + actual.getName() + " is " + actkind, node.getLocation(), node);
+		}
 	}
 }

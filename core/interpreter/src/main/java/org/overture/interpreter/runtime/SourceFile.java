@@ -32,7 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.CoverageUtil;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.VDMJ;
@@ -99,7 +101,7 @@ public class SourceFile
 
 	public void printCoverage(PrintWriter out)
 	{
-		List<Integer> hitlist = LexLocation.getHitList(filename);
+		List<Integer> hitlist = new CoverageUtil(LexLocation.getAllLocations(),LexLocation.getNameSpans()).getHitList(filename);
 		List<Integer> srclist = LexLocation.getSourceList(filename);
 
 		int hitcount = 0;
@@ -154,7 +156,8 @@ public class SourceFile
 
 	public void printWordCoverage(PrintWriter out)
 	{
-		Map<Integer, List<LexLocation>> hits = LexLocation.getMissLocations(filename);
+		CoverageUtil coverageUtil = new CoverageUtil(LexLocation.getAllLocations(),LexLocation.getNameSpans());
+		Map<Integer, List<ILexLocation>> hits = coverageUtil.getMissLocations(filename);
 
 		out.println("<html>");
 		out.println("<head>");
@@ -183,7 +186,7 @@ public class SourceFile
 		out.println(htmlLine());
 		out.println(htmlLine());
 
-		LexNameList spans = LexLocation.getSpanNames(filename);
+		LexNameList spans = coverageUtil.getSpanNames(filename);
 
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
 		{
@@ -199,7 +202,7 @@ public class SourceFile
 
 			String line = lines.get(lnum - 1);
 			String spaced = detab(line, Properties.parser_tabstop);
-			List<LexLocation> list = hits.get(lnum);
+			List<ILexLocation> list = hits.get(lnum);
 			out.println(markupHTML(spaced, list));
 		}
 
@@ -217,17 +220,17 @@ public class SourceFile
 
 		for (ILexNameToken name : spans)
 		{
-			long calls = LexLocation.getSpanCalls(name);
+			long calls = coverageUtil.getSpanCalls(name);
 			total += calls;
 
 			out.println(rowHTML(false, "<a href=\"#" + name.getName() + ":"
 					+ name.getLocation().getStartLine() + "\">"
 					+ htmlQuote(name.toString()) + "</a>", name.getLocation().getStartLine()
-					+ "", Float.toString(LexLocation.getSpanPercent(name))
+					+ "", Float.toString(coverageUtil.getSpanPercent(name))
 					+ "%", Long.toString(calls)));
 		}
 
-		out.println(rowHTML(true, htmlQuote(filename.getName()), "", Float.toString(LexLocation.getHitPercent(filename))
+		out.println(rowHTML(true, htmlQuote(filename.getName()), "", Float.toString(coverageUtil.getHitPercent(filename))
 				+ "%", Long.toString(total)));
 
 		out.println("</table>");
@@ -280,7 +283,7 @@ public class SourceFile
 		return sb.toString();
 	}
 
-	private String markupHTML(String line, List<LexLocation> list)
+	private String markupHTML(String line, List<ILexLocation> list)
 	{
 		if (line.isEmpty())
 		{
@@ -292,10 +295,10 @@ public class SourceFile
 
 		if (list != null)
 		{
-			for (LexLocation m : list)
+			for (ILexLocation m : list)
 			{
-				int start = m.startPos - 1;
-				int end = m.startLine == m.endLine ? m.endPos - 1
+				int start = m.getStartPos() - 1;
+				int end = m.getStartLine() == m.getEndLine() ? m.getEndPos() - 1
 						: line.length();
 
 				if (start >= p) // Backtracker produces duplicate tokens

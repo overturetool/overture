@@ -22,6 +22,7 @@
 package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AUnionType;
@@ -68,6 +69,14 @@ public class OperationBasisChecker extends TypeUnwrapper<Boolean>
 			throws AnalysisException
 	{
 		return true;
+	}
+	
+	@Override
+	public Boolean caseALocalDefinition(ALocalDefinition node)
+		throws AnalysisException
+	{
+		return !af.createPTypeAssistant().isUnknown(af.createPDefinitionAssistant().getType(node)) &&
+			  af.createPTypeAssistant().isOperation(af.createPDefinitionAssistant().getType(node));
 	}
 
 	@Override

@@ -51,7 +51,6 @@ import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableFile;
 import org.overture.ast.util.modules.ModuleList;
@@ -395,14 +394,7 @@ public class ModuleReader extends SyntaxReader
 		List<ILexNameToken> nameList = readIdList();
 		List<ILexNameToken> typeParams = ignoreTypeParams();
 		checkFor(VDMToken.COLON, 2176, "Expecting ':' after export name");
-		LexToken tloc = lastToken();
 		PType type = getTypeReader().readType();
-
-		if (!(type instanceof AFunctionType))
-		{
-			throwMessage(2053, "Exported function is not a function type", tloc);
-		}
-
 		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAFunctionExport(token.location, nameList, type, typeParams);
 	}
@@ -644,13 +636,7 @@ public class ModuleReader extends SyntaxReader
 		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
-			LexToken tloc = lastToken();
 			type = getTypeReader().readType();
-
-			if (!(type instanceof AFunctionType))
-			{
-				throwMessage(2055, "Imported function is not a function type", tloc);
-			}
 		}
 
 		LexNameToken renamed = null;

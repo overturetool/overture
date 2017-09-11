@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.javagen"
       label="Java Code Generator"
-      version="2.5.0">
+      version="2.5.2">
 
    <description>
       %description

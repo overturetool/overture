@@ -250,7 +250,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
-		if (def.getEqRelation().getRelDef() != null)
+		if (def.getEqRelation() != null && def.getEqRelation().getRelDef() != null)
 		{
 			PExp found = def.getEqRelation().getRelDef().apply(THIS, lineno);
 			if (found != null)
@@ -259,7 +259,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
-		if (def.getOrdRelation().getRelDef() != null)
+		if (def.getOrdRelation() != null && def.getOrdRelation().getRelDef() != null)
 		{
 			PExp found = def.getOrdRelation().getRelDef().apply(THIS, lineno);
 			if (found != null)
@@ -268,7 +268,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
-		if (def.getOrdRelation().getMinDef() != null)
+		if (def.getOrdRelation() != null && def.getOrdRelation().getMinDef() != null)
 		{
 			PExp found = def.getOrdRelation().getMinDef().apply(THIS, lineno);
 			if (found != null)
@@ -277,7 +277,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
-		if (def.getOrdRelation().getMaxDef() != null)
+		if (def.getOrdRelation() != null && def.getOrdRelation().getMaxDef() != null)
 		{
 			PExp found = def.getOrdRelation().getMaxDef().apply(THIS, lineno);
 			if (found != null)

@@ -717,7 +717,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			invocationError(e);
 		} catch (Throwable e)
 		{
-			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+			e.printStackTrace();
+			String msg = e.getMessage();
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, msg != null ? msg : e.toString());
 		}
 
 		return carryOn;

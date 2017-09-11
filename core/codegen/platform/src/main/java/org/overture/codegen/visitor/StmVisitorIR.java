@@ -37,35 +37,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.AAssignmentStm;
-import org.overture.ast.statements.AAtomicStm;
-import org.overture.ast.statements.ABlockSimpleBlockStm;
-import org.overture.ast.statements.ACallObjectStm;
-import org.overture.ast.statements.ACallStm;
-import org.overture.ast.statements.ACaseAlternativeStm;
-import org.overture.ast.statements.ACasesStm;
-import org.overture.ast.statements.AClassInvariantStm;
-import org.overture.ast.statements.ACyclesStm;
-import org.overture.ast.statements.ADurationStm;
-import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.AErrorStm;
-import org.overture.ast.statements.AExitStm;
-import org.overture.ast.statements.AForAllStm;
-import org.overture.ast.statements.AForIndexStm;
-import org.overture.ast.statements.AForPatternBindStm;
-import org.overture.ast.statements.AIfStm;
-import org.overture.ast.statements.ALetBeStStm;
-import org.overture.ast.statements.ALetStm;
-import org.overture.ast.statements.ANotYetSpecifiedStm;
-import org.overture.ast.statements.APeriodicStm;
-import org.overture.ast.statements.AReturnStm;
-import org.overture.ast.statements.ASkipStm;
-import org.overture.ast.statements.AStartStm;
-import org.overture.ast.statements.ASubclassResponsibilityStm;
-import org.overture.ast.statements.AWhileStm;
-import org.overture.ast.statements.PObjectDesignator;
-import org.overture.ast.statements.PStateDesignator;
-import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.*;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSetType;
 import org.overture.codegen.ir.IRInfo;
@@ -81,30 +53,7 @@ import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
 import org.overture.codegen.ir.expressions.AReverseUnaryExpIR;
 import org.overture.codegen.ir.expressions.AUndefinedExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
-import org.overture.codegen.ir.statements.AAssignmentStmIR;
-import org.overture.codegen.ir.statements.AAtomicStmIR;
-import org.overture.codegen.ir.statements.ABlockStmIR;
-import org.overture.codegen.ir.statements.ACallObjectStmIR;
-import org.overture.codegen.ir.statements.ACaseAltStmStmIR;
-import org.overture.codegen.ir.statements.ACasesStmIR;
-import org.overture.codegen.ir.statements.ACyclesStmIR;
-import org.overture.codegen.ir.statements.ADurationStmIR;
-import org.overture.codegen.ir.statements.AElseIfStmIR;
-import org.overture.codegen.ir.statements.AErrorStmIR;
-import org.overture.codegen.ir.statements.AExitStmIR;
-import org.overture.codegen.ir.statements.AForAllStmIR;
-import org.overture.codegen.ir.statements.AForIndexStmIR;
-import org.overture.codegen.ir.statements.AIfStmIR;
-import org.overture.codegen.ir.statements.ALetBeStStmIR;
-import org.overture.codegen.ir.statements.ANotImplementedStmIR;
-import org.overture.codegen.ir.statements.APeriodicStmIR;
-import org.overture.codegen.ir.statements.APlainCallStmIR;
-import org.overture.codegen.ir.statements.AReturnStmIR;
-import org.overture.codegen.ir.statements.ASkipStmIR;
-import org.overture.codegen.ir.statements.AStartStmIR;
-import org.overture.codegen.ir.statements.AStartlistStmIR;
-import org.overture.codegen.ir.statements.ASuperCallStmIR;
-import org.overture.codegen.ir.statements.AWhileStmIR;
+import org.overture.codegen.ir.statements.*;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
@@ -114,6 +63,28 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 {
 	public StmVisitorIR()
 	{
+	}
+
+	@Override
+	public SStmIR caseANonDeterministicSimpleBlockStm(ANonDeterministicSimpleBlockStm node, IRInfo question) throws AnalysisException {
+
+		ANonDeterministicBlockStmIR nonDetStmCg = new ANonDeterministicBlockStmIR();
+
+		for(PStm stm : node.getStatements())
+		{
+			SStmIR stmCg = stm.apply(question.getStmVisitor(), question);
+
+			if(stmCg != null)
+			{
+				nonDetStmCg.getStatements().add(stmCg);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		return nonDetStmCg;
 	}
 
 	@Override
