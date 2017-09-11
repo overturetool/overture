@@ -2097,7 +2097,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		PType rtype = node.getRecord().apply(THIS, question.newConstraint(null));
 
-		if (question.assistantFactory.createPTypeAssistant().isUnknown(rtype))
+		if (rtype instanceof AUnknownType)
 		{
 			node.setType(rtype);
 			return rtype;
