@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+return (iota x in set {5,2,11} & x mod 2 = 0) + (iota x in set {10,20,30} & x = 10);
+
+end Entry
