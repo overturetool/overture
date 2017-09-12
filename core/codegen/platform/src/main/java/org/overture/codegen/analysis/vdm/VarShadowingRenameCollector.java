@@ -1,12 +1,6 @@
 package org.overture.codegen.analysis.vdm;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
@@ -25,23 +19,14 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.expressions.ACaseAlternative;
-import org.overture.ast.expressions.ACasesExp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.ALambdaExp;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapCompMapExp;
-import org.overture.ast.expressions.ASetCompSetExp;
-import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -277,6 +262,19 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		handleMultipleBindConstruct(node, node.getBindList(), null, node.getPredicate());
+	}
+
+	@Override
+	public void caseAIotaExp(AIotaExp node) throws AnalysisException {
+
+		if(!proceed(node))
+		{
+			return;
+		}
+
+		PBind bind = node.getBind();
+
+		handleBindConstruct(node, node.getBind(), null, node.getPredicate());
 	}
 
 	@Override
@@ -648,12 +646,24 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 	}
 
+	private void handleBindConstruct(INode node, PBind bind, PExp first, PExp pred) throws AnalysisException
+	{
+		List<PDefinition> defs = getBindDefinitions(bind);
+
+		handleBinds(node, first, pred, defs);
+	}
+
 	private void handleMultipleBindConstruct(INode node,
 			LinkedList<PMultipleBind> bindings, PExp first, PExp pred)
 			throws AnalysisException
 	{
+		List<PDefinition> multipleBindDefs = getMultipleBindDefs(bindings);
 
-		DefinitionInfo defInfo = new DefinitionInfo(getMultipleBindDefs(bindings), af);
+		handleBinds(node, first, pred, multipleBindDefs);
+	}
+
+	private void handleBinds(INode node, PExp first, PExp pred, List<PDefinition> multipleBindDefs) throws AnalysisException {
+		DefinitionInfo defInfo = new DefinitionInfo(multipleBindDefs, af);
 
 		openScope(defInfo, node);
 
@@ -683,6 +693,12 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		return defs;
+	}
+
+	private List<PDefinition> getBindDefinitions(PBind bind)
+	{
+		List<PMultipleBind> binds = af.createPBindAssistant().getMultipleBindList(bind);
+		return getMultipleBindDefs(binds);
 	}
 
 	public String computeNewName(String original)
