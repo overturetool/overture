@@ -1,0 +1,38 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    Number iotaExp_1 = null;
+    Long iotaCounter_1 = 0L;
+    VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
+      Number x = ((Number) iterator_1.next());
+      if (x.longValue() > 2L) {
+        iotaCounter_1++;
+        if (iotaCounter_1.longValue() > 1L) {
+          throw new RuntimeException("Iota selects more than one result");
+        } else {
+          iotaExp_1 = x;
+        }
+      }
+    }
+    if (Utils.equals(iotaCounter_1, 0L)) {
+      throw new RuntimeException("Iota selects more than one result");
+    }
+
+    return iotaExp_1;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
