@@ -3,12 +3,12 @@ package org.overture.codegen.trans.quantifier;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.STypeIR;
 
-public class Exists1CounterData
+public class CounterData
 {
 	private STypeIR type;
 	private SExpIR exp;
 
-	public Exists1CounterData(STypeIR type, SExpIR exp)
+	public CounterData(STypeIR type, SExpIR exp)
 	{
 		super();
 		this.type = type;

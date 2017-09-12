@@ -37,12 +37,12 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 {
-	protected Exists1CounterData counterData;
+	protected CounterData counterData;
 
 	public Exists1QuantifierStrategy(TransAssistantIR transformationAssistant,
 			SExpIR predicate, String resultVarName,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			IterationVarPrefixes iteVarPrefixes, Exists1CounterData counterData)
+			IterationVarPrefixes iteVarPrefixes, CounterData counterData)
 	{
 		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, iteVarPrefixes);
 

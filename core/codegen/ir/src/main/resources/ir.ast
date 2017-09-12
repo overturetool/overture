@@ -361,6 +361,7 @@ IR {-> package='org.overture.codegen.ir'
     |	{ternaryIf} [condition]:IR.#exp [trueValue]:IR.#exp [falseValue]:IR.#exp
     |   {maplet}  [left]:IR.#exp [right]:IR.#exp
     |	{letBeSt} [header]:IR.#letBeSt.header [value]:IR.#exp
+    |	{iota} [bindList]:IR.#multipleBind* [predicate]:IR.#exp
     |	#Seq
     |	#Set
     |	#Map
@@ -417,6 +418,7 @@ IR {-> package='org.overture.codegen.ir'
 
 #RuntimeError {-> package='org.overture.codegen.ir.expressions'}
     =   {LetBeStNoBinding}
+    |	{iota} [message]:java_String
     |	{patternMatch} [message]:java_String
     |	{missingMember} [message]:java_String
     	//Raised at runtime when an attemp is made 
