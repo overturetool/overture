@@ -1,8 +1,8 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2010 Overture.
+ *	Copyright (c) 2017 Fujitsu Services Ltd.
  *
- *	Author: Kenneth Lausdahl
+ *	Author: Nick Battle
  *
  *	This file is part of VDMJ.
  *
@@ -23,195 +23,141 @@
 
 package org.overture.interpreter.values;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Vector;
-
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
-import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ValueException;
 
+/**
+ * Create Values from the arguments passed, which is useful from native Java implementations.
+ */
 public class ValueFactory
 {
-	public static class ValueFactoryException extends Exception
-	{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public ValueFactoryException(String message)
-		{
-			super(message);
-		}
-
-		public ValueFactoryException(String message, Exception e)
-		{
-			super(message, e);
-		}
-
-	}
-
-	/**
-	 * Interpreter used to look up types
-	 */
-	private Interpreter interpreter;
-	public final Context context;
-
-	/**
-	 * Default constructor which sets the interpreter used to look up types
-	 */
-	public ValueFactory()
-	{
-		this.interpreter = Interpreter.getInstance();
-		// This is how I got the assistantFactory for this class.
-		this.context = (Context) Interpreter.getInstance().getAssistantFactory();
-	}
-
-	public static BooleanValue create(boolean b) throws ValueFactoryException
+	public static BooleanValue mkBool(boolean b)
 	{
 		return new BooleanValue(b);
 	}
-
-	public static CharacterValue create(char c) throws ValueFactoryException
+	
+	public static CharacterValue mkChar(char c)
 	{
 		return new CharacterValue(c);
 	}
-
-	public static IntegerValue create(int c) throws ValueFactoryException
+	
+	public static IntegerValue mkInt(long i)
 	{
-		return new IntegerValue(c);
+		return new IntegerValue(i);
+	}
+	
+	public static NaturalValue mkNat(long n) throws Exception
+	{
+		return new NaturalValue(n);
+	}
+	
+	public static NaturalOneValue mkNat1(long n) throws Exception
+	{
+		return new NaturalOneValue(n);
+	}
+	
+	public static RationalValue mkRat(long p, long q) throws Exception
+	{
+		return new RationalValue((double)p/q);
 	}
 
-	public static SeqValue create(String string) throws ValueFactoryException
+	public static RationalValue mkRat(double d) throws Exception
 	{
-		return new SeqValue(string);
+		return new RationalValue(d);
 	}
 
-	public static NilValue createNil()
+	public static RealValue mkReal(double d) throws Exception
+	{
+		return new RealValue(d);
+	}
+
+	public static NilValue mkNil()
 	{
 		return new NilValue();
 	}
-
-	public static VoidValue createVoid()
+	
+	public static QuoteValue mkQuote(String q)
 	{
-		return new VoidValue();
+		return new QuoteValue(q);
 	}
-
-	public static RealValue create(double c) throws ValueFactoryException
+	
+	public static SeqValue mkSeq(Value ...args)
 	{
-		try
-		{
-			return new RealValue(c);
-		} catch (Exception e)
-		{
-			throw new ValueFactoryException(e.getMessage(), e);
-		}
+		return new SeqValue(new ValueList(args));
 	}
-
-	public static QuoteValue createQuote(String quote)
+	
+	public static SetValue mkSet(Value ...args) throws ValueException
 	{
-		return new QuoteValue(quote);
+		return new SetValue(new ValueSet(args));
 	}
-
-	public static TokenValue createToken(Value token)
+	
+	public static TupleValue mkTuple(Value ...args)
 	{
-		return new TokenValue(token);
+		return new TupleValue(new ValueList(args));
 	}
-
-	public SetValue createSet(Collection<Value> collection)
+	
+	public static TokenValue mkToken(Value arg)
 	{
-		ValueSet vList = new ValueSet();
-		vList.addAll(collection);
-		try
-		{
-			return new SetValue(vList);
-		}
-		catch (ValueException e)
-		{
-			return null;	// Not reached
-		}
+		return new TokenValue(arg);
 	}
-
-	public SeqValue createSeq(Collection<Value> collection)
+	
+	public static RecordValue mkRecord(String module, String name, Value ...args) throws AnalysisException
 	{
-		ValueList vList = new ValueList();
-		vList.addAll(collection);
-		return new SeqValue(vList);
-	}
-
-	public RecordValue createRecord(String recordName, Object... fields)
-			throws ValueFactoryException
-	{
-		List<Value> values = new Vector<Value>();
-		for (Object object : fields)
-		{
-			if (object instanceof Boolean)
-			{
-				values.add(create((Boolean) object));
-			} else if (object instanceof Character)
-			{
-				values.add(create((Character) object));
-			} else if (object instanceof Integer)
-			{
-				values.add(create((Integer) object));
-			} else if (object instanceof Double)
-			{
-				values.add(create((Double) object));
-			} else if (object instanceof String)
-			{
-				values.add(create((String) object));
-			} else if (object instanceof Value)
-			{
-				values.add((Value) object);
-			} else
-			{
-				throw new ValueFactoryException("The type of field "
-						+ object
-						+ " is not supported. Only basic types and Value are allowed.");
-			}
-		}
-
-		return createRecord(recordName, values);
-	}
-
-	public RecordValue createRecord(String recordName, Value... fields)
-			throws ValueFactoryException
-	{
-
-		PType type = interpreter.findType(recordName);
+		PType type = getType(module, name);
+		
 		if (type instanceof ARecordInvariantType)
 		{
-			ARecordInvariantType rType = (ARecordInvariantType) type;
-			if (fields.length != rType.getFields().size())
-			{
-				throw new ValueFactoryException("Fileds count do not match record field count");
-			}
-			NameValuePairList list = new NameValuePairList();
-			for (int i = 0; i < rType.getFields().size(); i++)
-			{
-				list.add(rType.getFields().get(i).getTagname(), fields[i]);
-			}
-			return new RecordValue(rType, list, context); // add the context here as argument.
+			ARecordInvariantType r = (ARecordInvariantType)type;
+    		ValueList l = new ValueList();
+    		
+    		for (int a=0; a<args.length; a++)
+    		{
+    			l.add(args[a]);
+    		}
+    		
+    		return new RecordValue(r, l, Interpreter.getInstance().initialContext);
 		}
-		throw new ValueFactoryException("Record " + recordName + " not found");
-	}
-
-	public MapValue createMap(ValueMap map)
-	{
-		return new MapValue(map);
-	}
-
-	public TupleValue createTuple(Value... fields)
-	{
-		ValueList list = new ValueList();
-		for (Value value : fields)
+		else
 		{
-			list.add(value);
+			throw new ValueException(69, "Definition " + module + "`" + name +
+				" is " + type.getClass().getSimpleName() + " not TCRecordType", null);
 		}
-		return new TupleValue(list);
+	}
+
+	public static InvariantValue mkInvariant(String module, String name, Value x) throws AnalysisException
+	{
+		PType type = getType(module, name);
+		
+		if (type instanceof ANamedInvariantType)
+		{
+			ANamedInvariantType r = (ANamedInvariantType)type;
+			return new InvariantValue(r, x, Interpreter.getInstance().initialContext);
+		}
+		else
+		{
+			throw new ValueException(69, "Definition " + module + "`" + name +
+				" is " + type.getClass().getSimpleName() + " not TCNamedType", null);
+		}
+	}
+	
+	private static PType getType(String module, String name) throws ValueException
+	{
+		Interpreter i = Interpreter.getInstance();
+		LexNameToken tcname = new LexNameToken(module, name,new LexLocation());
+		PDefinition def = i.getGlobalEnvironment().findType(tcname, i.getDefaultName());
+		
+		if (def == null)
+		{
+			throw new ValueException(70, "Definition " + tcname.getExplicit(true) + " not found", null);
+		}
+		
+		return def.getType();
 	}
 }

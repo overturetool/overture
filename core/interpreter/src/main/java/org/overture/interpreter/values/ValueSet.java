@@ -39,9 +39,6 @@ import org.overture.interpreter.traces.PermuteArray;
 
 public class ValueSet extends Vector<Value> // NB based on Vector
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1364718882230227399L;
 	private boolean isSorted;
 
@@ -67,6 +64,14 @@ public class ValueSet extends Vector<Value> // NB based on Vector
 	{
 		add(v);
 		isSorted = true;
+	}
+
+	public ValueSet(Value[] from)
+	{
+		for (Value value: from)
+		{
+			add(value);
+		}
 	}
 
 	@Override
