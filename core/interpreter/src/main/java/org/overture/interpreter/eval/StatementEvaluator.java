@@ -9,6 +9,7 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
@@ -322,18 +323,15 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
 				VdmRuntimeError.abort(node.getField().getLocation(), 4168, "Arguments do not match parameters: " + node.getField(), ctxt);
 			}
-			else
-			{
-				node.setField(node.getField().getModifiedName(argTypes));
-			}
 
+			ILexNameToken adjfield = node.getField().getModifiedName(argTypes);
 			ObjectValue obj = node.getDesignator().apply(VdmRuntime.getStatementEvaluator(), ctxt).objectValue(ctxt);
-			Value v = obj.get(node.getField(), node.getExplicit());
+			Value v = obj.get(adjfield, node.getExplicit());
 
 			if (v == null)
 			{
 				VdmRuntimeError.abort(node.getField().getLocation(), 4035, "Object has no field: "
-						+ node.getField().getName(), ctxt);
+						+ adjfield.getName(), ctxt);
 			}
 
 			v = v.deref();
