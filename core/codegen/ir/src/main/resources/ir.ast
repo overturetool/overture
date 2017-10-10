@@ -348,7 +348,6 @@ IR {-> package='org.overture.codegen.ir'
     |	{apply} [root]:IR.#exp [args]:IR.#exp*
 	|	{new} [name]:IR.#name.type [args]:IR.#exp*
 	|	#Var
-	|	{instanceof} [checkedType]:IR.#type [exp]:IR.#exp
 	|	#Is
     |	#Literal
     |	{self}
@@ -392,6 +391,10 @@ IR {-> package='org.overture.codegen.ir'
     |	{time}
     |	{assignExp} [target]:IR.#exp [value]:IR.#exp
     |	{mapSeqGet} [col]:IR.#exp [index]:IR.#exp
+    |	{isOfBaseClass} [baseClass]:java_String [exp]:IR.#exp
+    |	{instanceof} [checkedType]:IR.#type [exp]:IR.#exp
+    |	{sameBaseClass} [left]:IR.#exp [right]:IR.#exp
+    |	{sameClass} [left]:IR.#exp [right]:IR.#exp
     ;
 
 #modifier {-> package='org.overture.codegen.ir.expressions'}

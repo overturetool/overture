@@ -260,36 +260,6 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	}
 
 	@Override
-	public SExpIR caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
-			throws AnalysisException
-	{
-		PType type = node.getType();
-		AClassType classType = node.getClassType();
-		PExp objRef = node.getExp();
-
-		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		STypeIR classTypeCg = classType.apply(question.getTypeVisitor(), question);
-
-		if (!(classTypeCg instanceof AClassTypeIR))
-		{
-			log.error("Unexpected class type encountered for "
-					+ AIsOfClassExp.class.getName() + ". Expected class type: "
-					+ AClassTypeIR.class.getName() + ". Got: "
-					+ typeCg.getClass().getName() + " at "
-					+ node.getLocation());
-		}
-
-		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
-
-		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
-		instanceOfExp.setType(typeCg);
-		instanceOfExp.setCheckedType(classTypeCg);
-		instanceOfExp.setExp(objRefCg);
-
-		return instanceOfExp;
-	}
-
-	@Override
 	public SExpIR caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
@@ -1917,5 +1887,80 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 			return historyCounterSum;
 		}
+	}
+
+	@Override
+	public SExpIR caseAIsOfBaseClassExp(AIsOfBaseClassExp node, IRInfo question) throws AnalysisException {
+
+		String baseClass = node.getBaseClass().getName();
+		PExp exp = node.getExp();
+
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
+
+		AIsOfBaseClassExpIR isOfBaseClassExp = new AIsOfBaseClassExpIR();
+		isOfBaseClassExp.setBaseClass(baseClass);
+		isOfBaseClassExp.setExp(expCg);
+
+		return isOfBaseClassExp;
+	}
+
+	@Override
+	public SExpIR caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
+			throws AnalysisException {
+		PType type = node.getType();
+		AClassType classType = node.getClassType();
+		PExp objRef = node.getExp();
+
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR classTypeCg = classType.apply(question.getTypeVisitor(), question);
+
+		if (!(classTypeCg instanceof AClassTypeIR)) {
+			log.error("Unexpected class type encountered for "
+					+ AIsOfClassExp.class.getName() + ". Expected class type: "
+					+ AClassTypeIR.class.getName() + ". Got: "
+					+ typeCg.getClass().getName() + " at "
+					+ node.getLocation());
+		}
+
+		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
+
+		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
+		instanceOfExp.setType(typeCg);
+		instanceOfExp.setCheckedType(classTypeCg);
+		instanceOfExp.setExp(objRefCg);
+
+		return instanceOfExp;
+	}
+
+	@Override
+	public SExpIR caseASameBaseClassExp(ASameBaseClassExp node, IRInfo question) throws AnalysisException {
+
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+
+		SExpIR leftCg = left.apply(question.getExpVisitor(), question);
+		SExpIR rightCg = right.apply(question.getExpVisitor(), question);
+
+		ASameBaseClassExpIR sameBaseClassExp = new ASameBaseClassExpIR();
+		sameBaseClassExp.setLeft(leftCg);
+		sameBaseClassExp.setRight(rightCg);
+
+		return sameBaseClassExp;
+	}
+
+	@Override
+	public SExpIR caseASameClassExp(ASameClassExp node, IRInfo question) throws AnalysisException {
+
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+
+		SExpIR leftCg = left.apply(question.getExpVisitor(), question);
+		SExpIR rightCg = right.apply(question.getExpVisitor(), question);
+
+		ASameClassExpIR sameBaseClassExp = new ASameClassExpIR();
+		sameBaseClassExp.setLeft(leftCg);
+		sameBaseClassExp.setRight(rightCg);
+
+		return sameBaseClassExp;
 	}
 }
