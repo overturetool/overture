@@ -958,6 +958,22 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	}
 
 	@Override
+	public SExpIR caseACompBinaryExp(ACompBinaryExp node, IRInfo question) throws AnalysisException {
+
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+
+		SExpIR leftCg = left.apply(question.getExpVisitor(), question);
+		SExpIR rightCg = right.apply(question.getExpVisitor(), question);
+
+		ACompBinaryExpIR compExp = new ACompBinaryExpIR();
+		compExp.setLeft(leftCg);
+		compExp.setRight(rightCg);
+
+		return compExp;
+	}
+
+	@Override
 	public SExpIR caseAMapEnumMapExp(AMapEnumMapExp node, IRInfo question)
 			throws AnalysisException
 	{

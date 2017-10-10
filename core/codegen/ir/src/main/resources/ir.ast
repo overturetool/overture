@@ -460,6 +460,7 @@ IR {-> package='org.overture.codegen.ir'
 	| [right]:IR.#exp}
     =   #Numeric
     |	#Bool
+    |	{comp}
     //Special tree construct NOT used when constructing the OO AST from 
     //the VDM model. The addr comparison constructs can, however, be convenient 
     //when generating real code (e.g., Java) that is first described using 
