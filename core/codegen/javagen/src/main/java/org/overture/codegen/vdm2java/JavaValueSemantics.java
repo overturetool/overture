@@ -32,28 +32,8 @@ import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.ir.expressions.AAddrEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.AAddrNotEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
-import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
-import org.overture.codegen.ir.expressions.AFieldExpIR;
-import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
-import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
-import org.overture.codegen.ir.expressions.AInSetBinaryExpIR;
-import org.overture.codegen.ir.expressions.AIndicesUnaryExpIR;
-import org.overture.codegen.ir.expressions.AInstanceofExpIR;
-import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMapSeqGetExpIR;
-import org.overture.codegen.ir.expressions.ANewExpIR;
-import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASetProperSubsetBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASetSubsetBinaryExpIR;
-import org.overture.codegen.ir.expressions.ATupleCompatibilityExpIR;
-import org.overture.codegen.ir.expressions.ATupleSizeExpIR;
-import org.overture.codegen.ir.expressions.SIsExpIR;
+import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
 import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
 import org.overture.codegen.ir.statements.AForAllStmIR;
@@ -419,7 +399,7 @@ public class JavaValueSemantics
 				|| parent instanceof AAddrEqualsBinaryExpIR
 				|| parent instanceof AAddrNotEqualsBinaryExpIR
 				|| parent instanceof AForAllStmIR
-				|| parent instanceof AInstanceofExpIR
+				|| parent instanceof AIsOfClassExpIR
 				|| parent instanceof SIsExpIR
 				|| cloneNotNeededCollectionOperator(parent)
 				|| cloneNotNeededUtilCall(parent);

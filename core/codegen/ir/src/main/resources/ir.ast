@@ -392,7 +392,7 @@ IR {-> package='org.overture.codegen.ir'
     |	{assignExp} [target]:IR.#exp [value]:IR.#exp
     |	{mapSeqGet} [col]:IR.#exp [index]:IR.#exp
     |	{isOfBaseClass} [baseClass]:java_String [exp]:IR.#exp
-    |	{instanceof} [checkedType]:IR.#type [exp]:IR.#exp
+    |	{isOfClass} [checkedType]:IR.#type [exp]:IR.#exp
     |	{sameBaseClass} [left]:IR.#exp [right]:IR.#exp
     |	{sameClass} [left]:IR.#exp [right]:IR.#exp
     ;

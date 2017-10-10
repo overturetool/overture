@@ -1924,7 +1924,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
 
-		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
+		AIsOfClassExpIR instanceOfExp = new AIsOfClassExpIR();
 		instanceOfExp.setType(typeCg);
 		instanceOfExp.setCheckedType(classTypeCg);
 		instanceOfExp.setExp(objRefCg);

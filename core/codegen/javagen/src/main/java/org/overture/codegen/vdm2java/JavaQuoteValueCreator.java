@@ -14,7 +14,7 @@ import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
 import org.overture.codegen.ir.expressions.AExternalExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
 import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.expressions.ASuperVarExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
@@ -264,7 +264,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		AClassTypeIR quoteClass = new AClassTypeIR();
 		quoteClass.setName(name);
 
-		AInstanceofExpIR instanceCheck = new AInstanceofExpIR();
+		AIsOfClassExpIR instanceCheck = new AIsOfClassExpIR();
 		instanceCheck.setType(new ABoolBasicTypeIR());
 		instanceCheck.setExp(paramVar);
 		instanceCheck.setCheckedType(quoteClass);
