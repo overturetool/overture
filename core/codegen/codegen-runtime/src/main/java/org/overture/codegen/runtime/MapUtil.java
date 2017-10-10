@@ -322,6 +322,32 @@ public class MapUtil
 		return result;
 	}
 
+	public static VDMMap comp(Object left, Object right)
+	{
+		validateMaps(left, right, "map composition");
+
+		VDMMap mapLeft = (VDMMap) left;
+		VDMMap mapRight = (VDMMap) right;
+
+		if(!SetUtil.subset(MapUtil.rng(mapRight), MapUtil.dom(mapLeft)))
+		{
+			throw new IllegalArgumentException("The RHS range is not a subset of the LHS domain");
+		}
+
+
+		VDMMap res = MapUtil.map();
+
+		for(Object key : mapRight.keySet())
+		{
+			Object nextKey = mapRight.get(key);
+			Object value = mapLeft.get(nextKey);
+
+			res.put(key, value);
+		}
+
+		return res;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static VDMMap map(Maplet... elements)
 	{
