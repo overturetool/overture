@@ -7,8 +7,11 @@ import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.ANonDeterministicBlockStmIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+import org.apache.log4j.Logger;
 
 public class NonDetStmTrans extends DepthFirstAnalysisAdaptor {
+
+    protected Logger log = Logger.getLogger(this.getClass().getName());
 
     private final TransAssistantIR assist;
 
@@ -26,9 +29,14 @@ public class NonDetStmTrans extends DepthFirstAnalysisAdaptor {
         block.setTag(node.getTag());
         block.setSourceNode(node.getSourceNode());
 
-        for(SStmIR s : node.getStatements())
+        if(!node.getStatements().isEmpty())
         {
-            block.getStatements().add(s.clone());
+            // Just use the first statement
+            block.getStatements().add(node.getStatements().getFirst().clone());
+        }
+        else
+        {
+            log.error("nondeterministic statement block did not contain any statements: " + node);
         }
 
         assist.replaceNodeWith(node, block);
