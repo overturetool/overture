@@ -75,6 +75,7 @@ import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
 import org.overture.config.Settings;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 {
@@ -1467,7 +1468,23 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseAStarStarBinaryExp(AStarStarBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new APowerNumericBinaryExpIR(), question);
+		PTypeAssistantTC assist = question.getTcFactory().createPTypeAssistant();
+
+		PType lType = node.getLeft().getType();
+
+		if(assist.isMap(lType))
+		{
+			return question.getExpAssistant().handleBinaryExp(node, new AMapIterationBinaryExpIR(), question);
+		}
+		else if(assist.isFunction(lType))
+		{
+			return question.getExpAssistant().handleBinaryExp(node, new AFuncIterationBinaryExpIR(), question);
+		}
+		else
+		{
+			// So it must be numeric
+			return question.getExpAssistant().handleBinaryExp(node, new APowerNumericBinaryExpIR(), question);
+		}
 	}
 
 	@Override

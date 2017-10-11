@@ -13,6 +13,7 @@ import org.overture.ast.expressions.*;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.PType;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -64,6 +65,25 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		{
 			info.addUnsupportedNode(node, "Function composition is not supported");
 		}
+	}
+
+	@Override
+	public void caseAStarStarBinaryExp(AStarStarBinaryExp node) throws AnalysisException {
+
+		PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
+
+		PType lType = node.getLeft().getType();
+
+		if(typeAssistant.isMap(lType))
+		{
+			// Supported
+		}
+		else if(typeAssistant.isFunction(lType)){
+
+			info.addUnsupportedNode(node, "Function composition not supported");
+		}
+
+		// else it's numeric (the power operator), which is supported.
 	}
 
 	@Override

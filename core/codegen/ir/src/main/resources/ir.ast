@@ -478,6 +478,8 @@ IR {-> package='org.overture.codegen.ir'
     |	{setSubset}
     |	{setProperSubset}
     |	{mapUnion}
+    |	{mapIteration} // ** in VDM
+    |	{funcIteration} // ** in VDM
     |	{mapOverride}
     |	{domainResTo} //Syntax: '<:'
     |	{domainResBy} //Syntax: '<-:'
@@ -497,7 +499,7 @@ IR {-> package='org.overture.codegen.ir'
     |   {subtract}
     |	{rem}
     |	{times}
-    |	{power}       
+    |	{power} // ** in VDM
     ;   
 
 #Bool {-> package='org.overture.codegen.ir.expressions'}
