@@ -61,7 +61,11 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 
 		PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
 
-		if(typeAssistant.isFunction(node.getLeft().getType()) || typeAssistant.isFunction(node.getRight().getType()))
+		if(typeAssistant.isMap(node.getLeft().getType()))
+		{
+			// Supported
+		}
+		else if(typeAssistant.isFunction(node.getLeft().getType()))
 		{
 			info.addUnsupportedNode(node, "Function composition is not supported");
 		}
