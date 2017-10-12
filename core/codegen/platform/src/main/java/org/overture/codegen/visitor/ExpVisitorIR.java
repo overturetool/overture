@@ -222,10 +222,6 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseAIsExp(AIsExp node, IRInfo question)
 			throws AnalysisException
 	{
-		// TODO: Optional types and collection types are not yet supported.
-		// Also tuple types are poorly supported
-		// Also check the IsExpTransformation
-
 		PType checkedType = node.getBasicType();
 
 		if (checkedType == null)
@@ -248,16 +244,12 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			return null;
 		}
 
-		SExpIR isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
+		AGeneralIsExpIR generalIsExp = new AGeneralIsExpIR();
+		generalIsExp.setType(new ABoolBasicTypeIR());
+		generalIsExp.setExp(expCg);
+		generalIsExp.setCheckedType(checkedTypeCg);
 
-		if (isExp == null)
-		{
-			question.addUnsupportedNode(node, "The 'is' expression is not supported for type: "
-					+ checkedType.getClass().getName());
-			return null;
-		}
-
-		return isExp;
+		return generalIsExp;
 	}
 
 	@Override
