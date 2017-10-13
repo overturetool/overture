@@ -1116,14 +1116,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				// rtype.report(3170,
 				// "Map iterator expects nat as right hand arg");
-				TypeCheckerErrors.report(3170, "Map iterator expects nat as right hand arg", rtype.getLocation(), rtype);
+				TypeCheckerErrors.report(3170, "Map iterator expects nat as right hand arg", node.getRight().getLocation(), rtype);
 			}
 		} else if (question.assistantFactory.createPTypeAssistant().isFunction(ltype))
 		{
 			question.assistantFactory.createPTypeAssistant();
 			if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 			{
-				TypeCheckerErrors.report(3171, "Function iterator expects nat as right hand arg", rtype.getLocation(), rtype);
+				TypeCheckerErrors.report(3171, "Function iterator expects nat as right hand arg", node.getRight().getLocation(), rtype);
 			}
 		} else
 		{
@@ -1133,7 +1133,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				question.assistantFactory.createPTypeAssistant();
 				if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 				{
-					TypeCheckerErrors.report(3172, "'**' expects number as right hand arg", rtype.getLocation(), rtype);
+					TypeCheckerErrors.report(3172, "'**' expects number as right hand arg", node.getRight().getLocation(), rtype);
 				}
 			} else
 			{
