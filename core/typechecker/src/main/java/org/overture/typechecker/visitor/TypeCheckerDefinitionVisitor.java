@@ -978,6 +978,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 						} else
 						{
 							defs.add(AstFactory.newAExternalDefinition(sdef, clause.getMode()));
+							argdefs.add(AstFactory.newAExternalDefinition(sdef, clause.getMode()));
 
 							// VDM++ "ext wr" clauses in a constructor
 							// effectively
@@ -1042,7 +1043,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getPredef() != null)
 		{
-			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, argdefs, question.env);
+			pre.setLimitStateScope(limitStateScope);
 			pre.setEnclosingDefinition(node.getPredef());
 			pre.setFunctional(true);
 			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
