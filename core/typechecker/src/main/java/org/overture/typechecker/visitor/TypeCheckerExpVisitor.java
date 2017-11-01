@@ -1812,6 +1812,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseALambdaExp(ALambdaExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question = question.newScope(NameScope.NAMES);	// Lambdas are always functions
+		
 		List<PMultipleBind> mbinds = new Vector<PMultipleBind>();
 		List<PType> ptypes = new Vector<PType>();
 
