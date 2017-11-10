@@ -62,103 +62,7 @@ import org.overture.codegen.ir.SPatternIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
-import org.overture.codegen.ir.expressions.AAbsUnaryExpIR;
-import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
-import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
-import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
-import org.overture.codegen.ir.expressions.ACaseAltExpExpIR;
-import org.overture.codegen.ir.expressions.ACasesExpIR;
-import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
-import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
-import org.overture.codegen.ir.expressions.ACompMapExpIR;
-import org.overture.codegen.ir.expressions.ACompSeqExpIR;
-import org.overture.codegen.ir.expressions.ACompSetExpIR;
-import org.overture.codegen.ir.expressions.ADistConcatUnaryExpIR;
-import org.overture.codegen.ir.expressions.ADistIntersectUnaryExpIR;
-import org.overture.codegen.ir.expressions.ADistMergeUnaryExpIR;
-import org.overture.codegen.ir.expressions.ADistUnionUnaryExpIR;
-import org.overture.codegen.ir.expressions.ADivideNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ADomainResByBinaryExpIR;
-import org.overture.codegen.ir.expressions.ADomainResToBinaryExpIR;
-import org.overture.codegen.ir.expressions.AElemsUnaryExpIR;
-import org.overture.codegen.ir.expressions.AEnumMapExpIR;
-import org.overture.codegen.ir.expressions.AEnumSeqExpIR;
-import org.overture.codegen.ir.expressions.AEnumSetExpIR;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.AExists1QuantifierExpIR;
-import org.overture.codegen.ir.expressions.AExistsQuantifierExpIR;
-import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
-import org.overture.codegen.ir.expressions.AFieldExpIR;
-import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
-import org.overture.codegen.ir.expressions.AFloorUnaryExpIR;
-import org.overture.codegen.ir.expressions.AForAllQuantifierExpIR;
-import org.overture.codegen.ir.expressions.AGreaterEqualNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.AGreaterNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
-import org.overture.codegen.ir.expressions.AHistoryExpIR;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.AInSetBinaryExpIR;
-import org.overture.codegen.ir.expressions.AIndicesUnaryExpIR;
-import org.overture.codegen.ir.expressions.AInstanceofExpIR;
-import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
-import org.overture.codegen.ir.expressions.ALambdaExpIR;
-import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
-import org.overture.codegen.ir.expressions.ALessEqualNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ALessNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ALetBeStExpIR;
-import org.overture.codegen.ir.expressions.ALetDefExpIR;
-import org.overture.codegen.ir.expressions.AMapDomainUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMapInverseUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMapOverrideBinaryExpIR;
-import org.overture.codegen.ir.expressions.AMapRangeUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMapUnionBinaryExpIR;
-import org.overture.codegen.ir.expressions.AMapletExpIR;
-import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
-import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMkBasicExpIR;
-import org.overture.codegen.ir.expressions.AModNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ANewExpIR;
-import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
-import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
-import org.overture.codegen.ir.expressions.ANullExpIR;
-import org.overture.codegen.ir.expressions.AOrBoolBinaryExpIR;
-import org.overture.codegen.ir.expressions.APlusNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
-import org.overture.codegen.ir.expressions.APowerNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.APowerSetUnaryExpIR;
-import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
-import org.overture.codegen.ir.expressions.ARangeResByBinaryExpIR;
-import org.overture.codegen.ir.expressions.ARangeResToBinaryExpIR;
-import org.overture.codegen.ir.expressions.ARangeSetExpIR;
-import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
-import org.overture.codegen.ir.expressions.ARecordModExpIR;
-import org.overture.codegen.ir.expressions.ARecordModifierIR;
-import org.overture.codegen.ir.expressions.ARemNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.AReverseUnaryExpIR;
-import org.overture.codegen.ir.expressions.ASelfExpIR;
-import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASeqModificationBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASetDifferenceBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASetIntersectBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASetProperSubsetBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASetSubsetBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASetUnionBinaryExpIR;
-import org.overture.codegen.ir.expressions.AStringLiteralExpIR;
-import org.overture.codegen.ir.expressions.ASubSeqExpIR;
-import org.overture.codegen.ir.expressions.ASubtractNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASuperVarExpIR;
-import org.overture.codegen.ir.expressions.ATailUnaryExpIR;
-import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
-import org.overture.codegen.ir.expressions.AThreadIdExpIR;
-import org.overture.codegen.ir.expressions.ATimeExpIR;
-import org.overture.codegen.ir.expressions.ATimesNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ATupleExpIR;
-import org.overture.codegen.ir.expressions.AUndefinedExpIR;
-import org.overture.codegen.ir.expressions.AXorBoolBinaryExpIR;
-import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.expressions.*;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.ASeqBindIR;
 import org.overture.codegen.ir.patterns.ASetBindIR;
@@ -171,6 +75,7 @@ import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
 import org.overture.config.Settings;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 {
@@ -317,10 +222,6 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseAIsExp(AIsExp node, IRInfo question)
 			throws AnalysisException
 	{
-		// TODO: Optional types and collection types are not yet supported.
-		// Also tuple types are poorly supported
-		// Also check the IsExpTransformation
-
 		PType checkedType = node.getBasicType();
 
 		if (checkedType == null)
@@ -343,46 +244,12 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			return null;
 		}
 
-		SExpIR isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
+		AGeneralIsExpIR generalIsExp = new AGeneralIsExpIR();
+		generalIsExp.setType(new ABoolBasicTypeIR());
+		generalIsExp.setExp(expCg);
+		generalIsExp.setCheckedType(checkedTypeCg);
 
-		if (isExp == null)
-		{
-			question.addUnsupportedNode(node, "The 'is' expression is not supported for type: "
-					+ checkedType.getClass().getName());
-			return null;
-		}
-
-		return isExp;
-	}
-
-	@Override
-	public SExpIR caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
-			throws AnalysisException
-	{
-		PType type = node.getType();
-		AClassType classType = node.getClassType();
-		PExp objRef = node.getExp();
-
-		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
-		STypeIR classTypeCg = classType.apply(question.getTypeVisitor(), question);
-
-		if (!(classTypeCg instanceof AClassTypeIR))
-		{
-			log.error("Unexpected class type encountered for "
-					+ AIsOfClassExp.class.getName() + ". Expected class type: "
-					+ AClassTypeIR.class.getName() + ". Got: "
-					+ typeCg.getClass().getName() + " at "
-					+ node.getLocation());
-		}
-
-		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
-
-		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
-		instanceOfExp.setType(typeCg);
-		instanceOfExp.setCheckedType(classTypeCg);
-		instanceOfExp.setExp(objRefCg);
-
-		return instanceOfExp;
+		return generalIsExp;
 	}
 
 	@Override
@@ -511,6 +378,28 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsQuantifierExpIR(), question, "exists expression");
+	}
+
+	@Override
+	public SExpIR caseAIotaExp(AIotaExp node, IRInfo question) throws AnalysisException {
+
+		PBind bind = node.getBind();
+		SBindIR bindCg = bind.apply(question.getBindVisitor(), question);
+
+		PType type = node.getType();
+		PExp predicate = node.getPredicate();
+
+		SMultipleBindIR multipleBind = question.getBindAssistant().convertToMultipleBind(bindCg);
+
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpIR predicateCg = predicate.apply(question.getExpVisitor(), question);
+
+		AIotaExpIR exists1Exp = new AIotaExpIR();
+		exists1Exp.getBindList().add(multipleBind);
+		exists1Exp.setType(typeCg);
+		exists1Exp.setPredicate(predicateCg);
+
+		return exists1Exp;
 	}
 
 	@Override
@@ -1062,6 +951,22 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	}
 
 	@Override
+	public SExpIR caseACompBinaryExp(ACompBinaryExp node, IRInfo question) throws AnalysisException {
+
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+
+		SExpIR leftCg = left.apply(question.getExpVisitor(), question);
+		SExpIR rightCg = right.apply(question.getExpVisitor(), question);
+
+		ACompBinaryExpIR compExp = new ACompBinaryExpIR();
+		compExp.setLeft(leftCg);
+		compExp.setRight(rightCg);
+
+		return compExp;
+	}
+
+	@Override
 	public SExpIR caseAMapEnumMapExp(AMapEnumMapExp node, IRInfo question)
 			throws AnalysisException
 	{
@@ -1555,7 +1460,23 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseAStarStarBinaryExp(AStarStarBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new APowerNumericBinaryExpIR(), question);
+		PTypeAssistantTC assist = question.getTcFactory().createPTypeAssistant();
+
+		PType lType = node.getLeft().getType();
+
+		if(assist.isMap(lType))
+		{
+			return question.getExpAssistant().handleBinaryExp(node, new AMapIterationBinaryExpIR(), question);
+		}
+		else if(assist.isFunction(lType))
+		{
+			return question.getExpAssistant().handleBinaryExp(node, new AFuncIterationBinaryExpIR(), question);
+		}
+		else
+		{
+			// So it must be numeric
+			return question.getExpAssistant().handleBinaryExp(node, new APowerNumericBinaryExpIR(), question);
+		}
 	}
 
 	@Override
@@ -1991,5 +1912,80 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 			return historyCounterSum;
 		}
+	}
+
+	@Override
+	public SExpIR caseAIsOfBaseClassExp(AIsOfBaseClassExp node, IRInfo question) throws AnalysisException {
+
+		String baseClass = node.getBaseClass().getName();
+		PExp exp = node.getExp();
+
+		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
+
+		AIsOfBaseClassExpIR isOfBaseClassExp = new AIsOfBaseClassExpIR();
+		isOfBaseClassExp.setBaseClass(baseClass);
+		isOfBaseClassExp.setExp(expCg);
+
+		return isOfBaseClassExp;
+	}
+
+	@Override
+	public SExpIR caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
+			throws AnalysisException {
+		PType type = node.getType();
+		AClassType classType = node.getClassType();
+		PExp objRef = node.getExp();
+
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeIR classTypeCg = classType.apply(question.getTypeVisitor(), question);
+
+		if (!(classTypeCg instanceof AClassTypeIR)) {
+			log.error("Unexpected class type encountered for "
+					+ AIsOfClassExp.class.getName() + ". Expected class type: "
+					+ AClassTypeIR.class.getName() + ". Got: "
+					+ typeCg.getClass().getName() + " at "
+					+ node.getLocation());
+		}
+
+		SExpIR objRefCg = objRef.apply(question.getExpVisitor(), question);
+
+		AIsOfClassExpIR instanceOfExp = new AIsOfClassExpIR();
+		instanceOfExp.setType(typeCg);
+		instanceOfExp.setCheckedType(classTypeCg);
+		instanceOfExp.setExp(objRefCg);
+
+		return instanceOfExp;
+	}
+
+	@Override
+	public SExpIR caseASameBaseClassExp(ASameBaseClassExp node, IRInfo question) throws AnalysisException {
+
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+
+		SExpIR leftCg = left.apply(question.getExpVisitor(), question);
+		SExpIR rightCg = right.apply(question.getExpVisitor(), question);
+
+		ASameBaseClassExpIR sameBaseClassExp = new ASameBaseClassExpIR();
+		sameBaseClassExp.setLeft(leftCg);
+		sameBaseClassExp.setRight(rightCg);
+
+		return sameBaseClassExp;
+	}
+
+	@Override
+	public SExpIR caseASameClassExp(ASameClassExp node, IRInfo question) throws AnalysisException {
+
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+
+		SExpIR leftCg = left.apply(question.getExpVisitor(), question);
+		SExpIR rightCg = right.apply(question.getExpVisitor(), question);
+
+		ASameClassExpIR sameBaseClassExp = new ASameClassExpIR();
+		sameBaseClassExp.setLeft(leftCg);
+		sameBaseClassExp.setRight(rightCg);
+
+		return sameBaseClassExp;
 	}
 }

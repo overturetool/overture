@@ -24,61 +24,28 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.SMultipleBindIR;
-import org.overture.codegen.ir.SPatternIR;
-import org.overture.codegen.ir.SStmIR;
-import org.overture.codegen.ir.STypeIR;
+import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
-import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
-import org.overture.codegen.ir.expressions.ACaseAltExpExpIR;
-import org.overture.codegen.ir.expressions.ACasesExpIR;
-import org.overture.codegen.ir.expressions.ACompMapExpIR;
-import org.overture.codegen.ir.expressions.ACompSeqExpIR;
-import org.overture.codegen.ir.expressions.ACompSetExpIR;
-import org.overture.codegen.ir.expressions.AEnumMapExpIR;
-import org.overture.codegen.ir.expressions.AEnumSeqExpIR;
-import org.overture.codegen.ir.expressions.AEnumSetExpIR;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.AExists1QuantifierExpIR;
-import org.overture.codegen.ir.expressions.AExistsQuantifierExpIR;
-import org.overture.codegen.ir.expressions.AFieldExpIR;
-import org.overture.codegen.ir.expressions.AForAllQuantifierExpIR;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.ALetBeStExpIR;
-import org.overture.codegen.ir.expressions.ALetDefExpIR;
-import org.overture.codegen.ir.expressions.AMapletExpIR;
-import org.overture.codegen.ir.expressions.AOrBoolBinaryExpIR;
-import org.overture.codegen.ir.expressions.ARecordModExpIR;
-import org.overture.codegen.ir.expressions.ARecordModifierIR;
-import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
-import org.overture.codegen.ir.expressions.SBoolBinaryExpIR;
-import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
-import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
-import org.overture.codegen.ir.patterns.ATypeMultipleBindIR;
+import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.patterns.*;
 import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.ACaseAltStmStmIR;
 import org.overture.codegen.ir.statements.ACasesStmIR;
 import org.overture.codegen.ir.statements.AIfStmIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.types.SSetTypeIR;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.ir.utils.AHeaderLetBeStIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
 import org.overture.codegen.trans.comp.MapCompStrategy;
 import org.overture.codegen.trans.comp.SeqCompStrategy;
 import org.overture.codegen.trans.comp.SetCompStrategy;
+import org.overture.codegen.trans.iota.IotaStrategy;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.let.LetBeStStrategy;
-import org.overture.codegen.trans.quantifier.Exists1CounterData;
+import org.overture.codegen.trans.quantifier.CounterData;
 import org.overture.codegen.trans.quantifier.Exists1QuantifierStrategy;
 import org.overture.codegen.trans.quantifier.OrdinaryQuantifier;
 import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
@@ -88,12 +55,12 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	protected TransAssistantIR transAssistant;
 	protected ILanguageIterator langIterator;
 
-	protected Exists1CounterData counterData;
+	protected CounterData counterData;
 	protected Exp2StmVarPrefixes prefixes;
 	protected IterationVarPrefixes iteVarPrefixes;
 
 	public Exp2StmTrans(IterationVarPrefixes iteVarPrefixes,
-			TransAssistantIR transAssistant, Exists1CounterData counterData,
+			TransAssistantIR transAssistant, CounterData counterData,
 			ILanguageIterator langIterator, Exp2StmVarPrefixes prefixes)
 	{
 		this.transAssistant = transAssistant;
@@ -512,6 +479,42 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 			transform(enclosingStm, block, existsResult, node);
 			block.apply(this);
 		}
+	}
+
+	@Override
+	public void caseAIotaExpIR(AIotaExpIR node) throws AnalysisException {
+
+		SStmIR enclosingStm = transAssistant.getEnclosingStm(node, "iota expression");
+
+		SExpIR predicate = node.getPredicate();
+		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
+		String resVarName = tempVarNameGen.nextVarName(prefixes.iota());
+		String counterName = tempVarNameGen.nextVarName(prefixes.iotaCounter());
+
+		IotaStrategy strategy = consIotaStrategy(predicate, tempVarNameGen, resVarName, counterName, node.getPredicate());
+
+		List<SMultipleBindIR> multipleSetBinds = filterBindList(node, node.getBindList());
+
+		ABlockStmIR block = transAssistant.consComplexCompIterationBlock(multipleSetBinds, tempVarNameGen, strategy, iteVarPrefixes);
+
+		if (multipleSetBinds.isEmpty())
+		{
+			transAssistant.replaceNodeWith(node, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
+		} else
+		{
+			AIdentifierVarExpIR iotaResult = new AIdentifierVarExpIR();
+			iotaResult.setIsLocal(true);
+			iotaResult.setType(node.getType().clone());
+			iotaResult.setName(resVarName);
+
+			transform(enclosingStm, block, iotaResult, node);
+			block.apply(this);
+		}
+	}
+
+	public IotaStrategy consIotaStrategy(SExpIR pred, ITempVarGen tempVarNameGen, String resName, String counterName, SExpIR predicate) {
+
+		return new IotaStrategy(transAssistant, predicate, resName, counterName, langIterator, tempVarNameGen, iteVarPrefixes, counterData);
 	}
 
 	public OrdinaryQuantifierStrategy consOrdinaryQuantifierStrategy(SExpIR predicate, ITempVarGen tempVarNameGen, String var, TransAssistantIR transAssistant, OrdinaryQuantifier exists, ILanguageIterator langIterator, IterationVarPrefixes iteVarPrefixes) {

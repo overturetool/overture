@@ -38,22 +38,8 @@ import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
-import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
-import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.AFieldExpIR;
-import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.AInstanceofExpIR;
-import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
-import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
-import org.overture.codegen.ir.expressions.APatternMatchRuntimeErrorExpIR;
-import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
-import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
-import org.overture.codegen.ir.expressions.ATupleCompatibilityExpIR;
-import org.overture.codegen.ir.expressions.AUndefinedExpIR;
-import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
 import org.overture.codegen.ir.patterns.ABoolPatternIR;
 import org.overture.codegen.ir.patterns.ACharPatternIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
@@ -697,7 +683,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		ABlockStmIR tuplePatternCheck = consTuplePatternCheck(declarePatternVar, tuplePattern, resTupleType, patternData, actualValue, true);
 
-		AInstanceofExpIR instanceCheck = new AInstanceofExpIR();
+		AIsOfClassExpIR instanceCheck = new AIsOfClassExpIR();
 		instanceCheck.setType(new ABoolBasicTypeIR());
 		instanceCheck.setCheckedType(patternData.getRootPatternVar().getType().clone());
 		instanceCheck.setExp(patternData.getRootPatternVar().clone());
@@ -757,7 +743,7 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 
 		if (checkRecordType)
 		{
-			AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
+			AIsOfClassExpIR instanceOfExp = new AIsOfClassExpIR();
 			instanceOfExp.setType(new ABoolBasicTypeIR());
 			instanceOfExp.setExp(actualValue.clone());
 			instanceOfExp.setCheckedType(recordType.clone());

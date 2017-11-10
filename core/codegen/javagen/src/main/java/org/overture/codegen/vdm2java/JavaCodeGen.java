@@ -21,23 +21,9 @@
  */
 package org.overture.codegen.vdm2java;
 
-import java.io.File;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.ABusClassDefinition;
-import org.overture.ast.definitions.ACpuClassDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.*;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
@@ -47,20 +33,9 @@ import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarRenamer;
 import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
-import org.overture.codegen.analysis.violations.GeneratedVarComparison;
-import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.ReservedWordsComparison;
-import org.overture.codegen.analysis.violations.TypenameComparison;
-import org.overture.codegen.analysis.violations.VdmAstAnalysis;
-import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.analysis.violations.*;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.ir.PIR;
-import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.VdmNodeInfo;
+import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
@@ -74,6 +49,10 @@ import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
+
+import java.io.File;
+import java.io.StringWriter;
+import java.util.*;
 
 public class JavaCodeGen extends CodeGenBase
 		implements IJavaQouteEventCoordinator
@@ -659,6 +638,7 @@ public class JavaCodeGen extends CodeGenBase
 
 		if (expStatus.canBeGenerated())
 		{
+			// "expression" generator only supports a single transformation
 			generator.applyPartialTransformation(expStatus, new DivideTrans(getInfo()));
 		}
 

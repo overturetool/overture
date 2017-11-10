@@ -61,4 +61,8 @@ public class Exp2StmVarPrefixes
 	{
 		return "exists1Counter_";
 	}
+
+	public String iota() { return "iotaExp_"; }
+
+	public String iotaCounter() { return "iotaCounter_"; }
 }

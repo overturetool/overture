@@ -348,7 +348,6 @@ IR {-> package='org.overture.codegen.ir'
     |	{apply} [root]:IR.#exp [args]:IR.#exp*
 	|	{new} [name]:IR.#name.type [args]:IR.#exp*
 	|	#Var
-	|	{instanceof} [checkedType]:IR.#type [exp]:IR.#exp
 	|	#Is
     |	#Literal
     |	{self}
@@ -361,6 +360,7 @@ IR {-> package='org.overture.codegen.ir'
     |	{ternaryIf} [condition]:IR.#exp [trueValue]:IR.#exp [falseValue]:IR.#exp
     |   {maplet}  [left]:IR.#exp [right]:IR.#exp
     |	{letBeSt} [header]:IR.#letBeSt.header [value]:IR.#exp
+    |	{iota} [bindList]:IR.#multipleBind* [predicate]:IR.#exp
     |	#Seq
     |	#Set
     |	#Map
@@ -391,6 +391,10 @@ IR {-> package='org.overture.codegen.ir'
     |	{time}
     |	{assignExp} [target]:IR.#exp [value]:IR.#exp
     |	{mapSeqGet} [col]:IR.#exp [index]:IR.#exp
+    |	{isOfBaseClass} [baseClass]:java_String [exp]:IR.#exp
+    |	{isOfClass} [checkedType]:IR.#type [exp]:IR.#exp
+    |	{sameBaseClass} [left]:IR.#exp [right]:IR.#exp
+    |	{sameClass} [left]:IR.#exp [right]:IR.#exp
     ;
 
 #modifier {-> package='org.overture.codegen.ir.expressions'}
@@ -417,6 +421,7 @@ IR {-> package='org.overture.codegen.ir'
 
 #RuntimeError {-> package='org.overture.codegen.ir.expressions'}
     =   {LetBeStNoBinding}
+    |	{iota} [message]:java_String
     |	{patternMatch} [message]:java_String
     |	{missingMember} [message]:java_String
     	//Raised at runtime when an attemp is made 
@@ -455,6 +460,7 @@ IR {-> package='org.overture.codegen.ir'
 	| [right]:IR.#exp}
     =   #Numeric
     |	#Bool
+    |	{comp}
     //Special tree construct NOT used when constructing the OO AST from 
     //the VDM model. The addr comparison constructs can, however, be convenient 
     //when generating real code (e.g., Java) that is first described using 
@@ -472,6 +478,8 @@ IR {-> package='org.overture.codegen.ir'
     |	{setSubset}
     |	{setProperSubset}
     |	{mapUnion}
+    |	{mapIteration} // ** in VDM
+    |	{funcIteration} // ** in VDM
     |	{mapOverride}
     |	{domainResTo} //Syntax: '<:'
     |	{domainResBy} //Syntax: '<-:'
@@ -491,7 +499,7 @@ IR {-> package='org.overture.codegen.ir'
     |   {subtract}
     |	{rem}
     |	{times}
-    |	{power}       
+    |	{power} // ** in VDM
     ;   
 
 #Bool {-> package='org.overture.codegen.ir.expressions'}

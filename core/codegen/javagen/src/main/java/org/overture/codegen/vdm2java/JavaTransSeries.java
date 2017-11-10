@@ -10,22 +10,7 @@ import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
 import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.traces.TraceNames;
 import org.overture.codegen.traces.TracesTrans;
-import org.overture.codegen.trans.AssignStmTrans;
-import org.overture.codegen.trans.AtomicStmTrans;
-import org.overture.codegen.trans.CallObjStmTrans;
-import org.overture.codegen.trans.ConstructorTrans;
-import org.overture.codegen.trans.DivideTrans;
-import org.overture.codegen.trans.Exp2StmTrans;
-import org.overture.codegen.trans.Exp2StmVarPrefixes;
-import org.overture.codegen.trans.IPostCheckCreator;
-import org.overture.codegen.trans.IsExpTrans;
-import org.overture.codegen.trans.IterationVarPrefixes;
-import org.overture.codegen.trans.LetBeStTrans;
-import org.overture.codegen.trans.PostCheckTrans;
-import org.overture.codegen.trans.PreCheckTrans;
-import org.overture.codegen.trans.PrePostTrans;
-import org.overture.codegen.trans.SeqConvTrans;
-import org.overture.codegen.trans.WhileStmTrans;
+import org.overture.codegen.trans.*;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.codegen.trans.conc.EvalPermPredTrans;
 import org.overture.codegen.trans.conc.MainClassConcTrans;
@@ -40,7 +25,7 @@ import org.overture.codegen.trans.letexps.FuncTrans;
 import org.overture.codegen.trans.letexps.IfExpTrans;
 import org.overture.codegen.trans.patterns.PatternTrans;
 import org.overture.codegen.trans.patterns.PatternVarPrefixes;
-import org.overture.codegen.trans.quantifier.Exists1CounterData;
+import org.overture.codegen.trans.quantifier.CounterData;
 import org.overture.codegen.trans.uniontypes.NonDetStmTrans;
 import org.overture.codegen.trans.uniontypes.UnionTypeTrans;
 import org.overture.codegen.trans.uniontypes.UnionTypeVarPrefixes;
@@ -100,10 +85,11 @@ public class JavaTransSeries
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, iteVarPrefixes);
 		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, iteVarPrefixes);
 		WhileStmTrans whileTr = new WhileStmTrans(transAssist, varMan.whileCond());
-		Exp2StmTrans exp2stmTr = new Exp2StmTrans(iteVarPrefixes, transAssist, consExists1CounterData(), langIte, exp2stmPrefixes);
+		Exp2StmTrans exp2stmTr = new Exp2StmTrans(iteVarPrefixes, transAssist, consCounterData(), langIte, exp2stmPrefixes);
 		PatternTrans patternTr = new PatternTrans(iteVarPrefixes, transAssist, patternPrefixes, varMan.casesExp());
 		PreCheckTrans preCheckTr = new PreCheckTrans(transAssist, new JavaValueSemanticsTag(false));
 		PostCheckTrans postCheckTr = new PostCheckTrans(postCheckCreator, transAssist, varMan.funcRes(), new JavaValueSemanticsTag(false));
+		IsExpSimplifyTrans isExpSimplifyTr = new IsExpSimplifyTrans(transAssist);
 		IsExpTrans isExpTr = new IsExpTrans(transAssist, varMan.isExpSubject());
 		SeqConvTrans seqConvTr = new SeqConvTrans(transAssist);
 		TracesTrans tracesTr = new TracesTrans(transAssist, iteVarPrefixes, tracePrefixes, langIte, new JavaCallStmToStringBuilder(), cloneFreeNodes);
@@ -138,6 +124,7 @@ public class JavaTransSeries
 		series.add(patternTr);
 		series.add(preCheckTr);
 		series.add(postCheckTr);
+		series.add(isExpSimplifyTr);
 		series.add(isExpTr);
 		series.add(unionTypeTr);
 		series.add(javaToStringTr);
@@ -154,7 +141,7 @@ public class JavaTransSeries
 		return series;
 	}
 
-	private Exists1CounterData consExists1CounterData()
+	private CounterData consCounterData()
 	{
 		AExternalTypeIR type = new AExternalTypeIR();
 		type.setName("Long");
@@ -162,7 +149,7 @@ public class JavaTransSeries
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
 		AIntLiteralExpIR initExp = irInfo.getExpAssistant().consIntLiteral(0);
 
-		return new Exists1CounterData(type, initExp);
+		return new CounterData(type, initExp);
 	}
 
 	public void clear()

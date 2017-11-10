@@ -52,7 +52,7 @@ public class IsExpTrans extends DepthFirstAnalysisAdaptor
 
 		if (types.size() == 1)
 		{
-			SExpIR isExp = expAssistant.consIsExp(exp, types.get(0));
+			SExpIR isExp = IsExpSimplifyTrans.consIsExp(exp, types.get(0));
 			transAssistant.replaceNodeWith(node, isExp);
 
 			isExp.apply(this);
@@ -80,7 +80,7 @@ public class IsExpTrans extends DepthFirstAnalysisAdaptor
 
 			STypeIR firstType = types.get(0);
 
-			SExpIR nextIsExp = expAssistant.consIsExp(expVar, firstType);
+			SExpIR nextIsExp = IsExpSimplifyTrans.consIsExp(expVar, firstType);
 			topOrExp.setLeft(nextIsExp);
 
 			AOrBoolBinaryExpIR nextOrExp = topOrExp;
@@ -89,7 +89,7 @@ public class IsExpTrans extends DepthFirstAnalysisAdaptor
 			{
 				STypeIR currentType = types.get(i);
 
-				nextIsExp = expAssistant.consIsExp(expVar, currentType);
+				nextIsExp = IsExpSimplifyTrans.consIsExp(expVar, currentType);
 
 				AOrBoolBinaryExpIR tmp = new AOrBoolBinaryExpIR();
 				tmp.setType(new ABoolBasicTypeIR());
@@ -100,7 +100,7 @@ public class IsExpTrans extends DepthFirstAnalysisAdaptor
 
 			STypeIR lastType = types.get(types.size() - 1);
 
-			nextIsExp = expAssistant.consIsExp(expVar, lastType);
+			nextIsExp = IsExpSimplifyTrans.consIsExp(expVar, lastType);
 
 			nextOrExp.setRight(nextIsExp);
 

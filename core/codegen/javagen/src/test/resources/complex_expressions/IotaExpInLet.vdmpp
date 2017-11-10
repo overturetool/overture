@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let res = iota x in set {5,2,11} & x mod 2 = 0
+in
+  return res;
+
+end Entry

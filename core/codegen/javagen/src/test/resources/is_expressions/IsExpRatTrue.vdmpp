@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  return is_rat(1/4)
+
+end Entry

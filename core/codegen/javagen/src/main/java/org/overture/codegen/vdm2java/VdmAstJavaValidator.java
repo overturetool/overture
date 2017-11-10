@@ -9,22 +9,14 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.expressions.AExists1Exp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AFuncInstatiationExp;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapCompMapExp;
-import org.overture.ast.expressions.ASeqCompSeqExp;
-import org.overture.ast.expressions.ASetCompSetExp;
-import org.overture.ast.expressions.ATimeExp;
-import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.*;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.PType;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 {
@@ -62,6 +54,40 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 				}
 			}
 		}
+	}
+
+	@Override
+	public void caseACompBinaryExp(ACompBinaryExp node) throws AnalysisException {
+
+		PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
+
+		if(typeAssistant.isMap(node.getLeft().getType()))
+		{
+			// Supported
+		}
+		else if(typeAssistant.isFunction(node.getLeft().getType()))
+		{
+			info.addUnsupportedNode(node, "Function composition is not supported");
+		}
+	}
+
+	@Override
+	public void caseAStarStarBinaryExp(AStarStarBinaryExp node) throws AnalysisException {
+
+		PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
+
+		PType lType = node.getLeft().getType();
+
+		if(typeAssistant.isMap(lType))
+		{
+			// Supported
+		}
+		else if(typeAssistant.isFunction(lType)){
+
+			info.addUnsupportedNode(node, "Function composition not supported");
+		}
+
+		// else it's numeric (the power operator), which is supported.
 	}
 
 	@Override

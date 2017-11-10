@@ -41,29 +41,8 @@ import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
-import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
-import org.overture.codegen.ir.expressions.AElemsUnaryExpIR;
-import org.overture.codegen.ir.expressions.AFieldExpIR;
-import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.AInstanceofExpIR;
-import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMapDomainUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMissingMemberRuntimeErrorExpIR;
-import org.overture.codegen.ir.expressions.AModNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ANewExpIR;
-import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
-import org.overture.codegen.ir.expressions.ANullExpIR;
-import org.overture.codegen.ir.expressions.ARemNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
-import org.overture.codegen.ir.expressions.AUndefinedExpIR;
-import org.overture.codegen.ir.expressions.SNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.SUnaryExpIR;
-import org.overture.codegen.ir.expressions.SVarExpBase;
-import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
@@ -203,9 +182,9 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private AInstanceofExpIR consInstanceCheck(SExpIR copy, STypeIR type)
+	private AIsOfClassExpIR consInstanceCheck(SExpIR copy, STypeIR type)
 	{
-		AInstanceofExpIR check = new AInstanceofExpIR();
+		AIsOfClassExpIR check = new AIsOfClassExpIR();
 		check.setType(new ABoolBasicTypeIR());
 		check.setCheckedType(type.clone());
 		check.setExp(copy.clone());
@@ -901,7 +880,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				{
 					STypeIR currentType = types.get(i);
 
-					AInstanceofExpIR cond = consInstanceCheck(field.getObject(), currentType);
+					AIsOfClassExpIR cond = consInstanceCheck(field.getObject(), currentType);
 					AAssignToExpStmIR castFieldObj = castFieldObj(node, field, currentType);
 
 					if (i == 0)

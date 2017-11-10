@@ -38,7 +38,7 @@ import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
 import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
 import org.overture.codegen.ir.expressions.AFieldExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.AInstanceofExpIR;
+import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
@@ -119,8 +119,8 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		return nextAnd;
 	}
 
-	public AInstanceofExpIR consInstanceOf(ARecordDeclIR record,
-			String formalParamName)
+	public AIsOfClassExpIR consInstanceOf(ARecordDeclIR record,
+                                          String formalParamName)
 	{
 		// Example: objRef instanceof classType
 
@@ -138,7 +138,7 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		objRef.setIsLocal(true);
 		objRef.setName(formalParamName);
 
-		AInstanceofExpIR instanceOfExp = new AInstanceofExpIR();
+		AIsOfClassExpIR instanceOfExp = new AIsOfClassExpIR();
 		instanceOfExp.setType(new ABoolBasicTypeIR());
 		instanceOfExp.setExp(objRef);
 		instanceOfExp.setCheckedType(recordType);

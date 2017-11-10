@@ -1,0 +1,22 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    return MapUtil.comp(
+        MapUtil.map(new Maplet(2L, 20L), new Maplet(4L, 40L), new Maplet(6L, 60L)),
+        MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L), new Maplet(5L, 6L)));
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

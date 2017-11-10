@@ -1,0 +1,8 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == return {2 |-> 20, 4 |-> 40, 6 |-> 60} comp {1 |-> 2, 3 |-> 4, 5 |-> 6} 
+
+end Entry

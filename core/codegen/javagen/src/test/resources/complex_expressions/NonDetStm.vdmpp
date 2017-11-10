@@ -1,32 +1,9 @@
-class A
-
-instance variables
-x : int := 1;
-
-operations
-
-public incNonDet : () ==> int
-incNonDet () ==
-(
-  || (
-    x := x + 1,
-    x := x + 1,
-    x := x + 1
-  );
-  return x;
-);
-
-end A
-
-
 class Entry
 
 operations
 
 public static Run : () ==> ?
 Run () ==
-let a = new A()
-in
-  return a.incNonDet();
+  || (return true, return true);
 
 end Entry

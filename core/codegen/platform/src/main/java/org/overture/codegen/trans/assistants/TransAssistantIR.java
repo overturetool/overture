@@ -382,7 +382,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		return cast;
 	}
 
-	public SStmIR consConditionalIncrement(String counterName, SExpIR predicate)
+	public AIfStmIR consConditionalIncrement(String counterName, SExpIR predicate)
 	{
 		AIdentifierVarExpIR col = new AIdentifierVarExpIR();
 		col.setType(new AIntNumericBasicTypeIR());

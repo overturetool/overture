@@ -209,11 +209,7 @@ public class XetexSourceFile extends SourceFile
 				out.println(spaced);
 			}
 
-			// if (line.contains(END + getListingEnvironment()))
-			// {
-			// inVdmAlModelTag = false;
-			// }
-			if (spaced.contains(END + getListingEnvironment()))
+			if (line.contains(END + CURLY_BRACKET_VDM_AL))
 			{
 				inVdmAlModelTag = false;
 			}

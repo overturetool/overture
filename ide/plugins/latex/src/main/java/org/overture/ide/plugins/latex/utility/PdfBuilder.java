@@ -34,7 +34,7 @@ public interface PdfBuilder
 			throws IOException;
 
 	public abstract void saveDocument(IProject project, File projectRoot,
-			String name) throws IOException;
+			String name, boolean modelOnly) throws IOException;
 
 	public abstract void addInclude(String path);
 

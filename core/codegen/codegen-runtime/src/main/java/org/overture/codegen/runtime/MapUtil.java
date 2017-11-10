@@ -322,6 +322,93 @@ public class MapUtil
 		return result;
 	}
 
+	public static VDMMap comp(Object left, Object right)
+	{
+		validateMaps(left, right, "map composition");
+
+		VDMMap mapLeft = (VDMMap) left;
+		VDMMap mapRight = (VDMMap) right;
+
+		if(!SetUtil.subset(MapUtil.rng(mapRight), MapUtil.dom(mapLeft)))
+		{
+			throw new IllegalArgumentException("The RHS range is not a subset of the LHS domain");
+		}
+
+
+		VDMMap res = MapUtil.map();
+
+		for(Object key : mapRight.keySet())
+		{
+			Object nextKey = mapRight.get(key);
+			Object value = mapLeft.get(nextKey);
+
+			res.put(key, value);
+		}
+
+		return res;
+	}
+
+	public static VDMMap iteration(Object left, Object iterations)
+	{
+		validateMap(left, "map iteration");
+
+		if(!Utils.is_nat(iterations))
+		{
+			throw new IllegalArgumentException("Map iterator expects a nat as right hand arg");
+		}
+
+		VDMMap map = (VDMMap) left;
+
+		Number n = (Number) iterations;
+
+		int intVal = n.intValue();
+
+		if(intVal == 0)
+		{
+			VDMMap identityMap = MapUtil.map();
+
+			for(Object k : map.keySet())
+			{
+				identityMap.put(k, k);
+			}
+
+			return identityMap;
+		}
+		else if(intVal == 1)
+		{
+			return map;
+		}
+		else
+		{
+			// iterations > 0
+			VDMMap result = new VDMMap();
+
+			for (Object k : map.keySet())
+			{
+				Object r = k;
+
+				for (int i = 0; i < intVal; i++)
+				{
+					r = map.get(r);
+				}
+
+				if (r == null)
+				{
+					throw new IllegalArgumentException("Map range is not a subset of its domain: " + k);
+				}
+
+				Object old = result.put(k, r);
+
+				if (old != null && !Utils.equals(old, r))
+				{
+					throw new IllegalArgumentException("Duplicate map keys have different values: " + k);
+				}
+			}
+
+			return result;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public static VDMMap map(Maplet... elements)
 	{
