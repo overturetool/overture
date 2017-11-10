@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.developerutils"
       label="Overture Developer Utils"
-      version="2.5.3.qualifier">
+      version="2.5.4">
 
    <description>
       %description
