@@ -193,6 +193,13 @@ public class StatementReader extends SyntaxReader
 				stmt = readDurationStatement(location);
 				break;
 
+			// These are special error cases that can be caused by spurious semi-colons
+			// after a statement, such as "if test then skip; else skip;"
+			case ELSE:
+			case ELSEIF:
+			case IN:
+				throwMessage(2063, "Unexpected token in statement - spurious semi-colon?");
+
 			default:
 				throwMessage(2063, "Unexpected token in statement");
 		}
