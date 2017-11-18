@@ -331,15 +331,18 @@ public class StatementReader extends SyntaxReader
 		List<AAssignmentStm> assignments = new Vector<AAssignmentStm>();
 
 		assignments.add(readAssignmentStatement(lastToken().location));
-		ignore(VDMToken.SEMICOLON); // Every statement has an ignorable semicolon
 
 		while (lastToken().isNot(VDMToken.KET))
 		{
-			assignments.add(readAssignmentStatement(lastToken().location));
-			ignore(VDMToken.SEMICOLON);
+			checkFor(VDMToken.SEMICOLON, 2205, "Expecting ';' after atomic assignment");
+			
+			if (lastToken().isNot(VDMToken.KET))
+			{
+				assignments.add(readAssignmentStatement(lastToken().location));
+			}
 		}
 
-		checkFor(VDMToken.KET, 2205, "Expecting ')' after atomic assignments");
+		nextToken();
 		return AstFactory.newAAtomicStm(token, assignments);
 	}
 
