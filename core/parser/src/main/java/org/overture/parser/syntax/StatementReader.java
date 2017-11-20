@@ -331,6 +331,8 @@ public class StatementReader extends SyntaxReader
 		List<AAssignmentStm> assignments = new Vector<AAssignmentStm>();
 
 		assignments.add(readAssignmentStatement(lastToken().location));
+		checkFor(VDMToken.SEMICOLON, 2205, "Expecting ';' after atomic assignment");
+		assignments.add(readAssignmentStatement(lastToken().location));
 
 		while (lastToken().isNot(VDMToken.KET))
 		{
