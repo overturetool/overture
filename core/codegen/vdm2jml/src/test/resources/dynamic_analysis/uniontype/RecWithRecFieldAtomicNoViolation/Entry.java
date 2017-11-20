@@ -20,6 +20,9 @@ final public class Entry {
     Number atomicTmp_1 = 5L;
     //@ assert Utils.is_int(atomicTmp_1);
 
+    Number atomicTmp_2 = 5L;
+    //@ assert Utils.is_int(atomicTmp_2);
+
     {
         /* Start of atomic statement */
       //@ set invChecksOn = false;
@@ -48,6 +51,30 @@ final public class Entry {
         throw new RuntimeException("Missing member: x");
       }
 
+      Object apply_2 = null;
+      if (r instanceof project.Entrytypes.A1) {
+        apply_2 = ((project.Entrytypes.A1) r).get_f();
+      } else if (r instanceof project.Entrytypes.B1) {
+        apply_2 = ((project.Entrytypes.B1) r).get_f();
+      } else {
+        throw new RuntimeException("Missing member: f");
+      }
+
+      Object stateDes_2 = apply_2;
+      if (stateDes_2 instanceof project.Entrytypes.A2) {
+        //@ assert stateDes_2 != null;
+
+        ((project.Entrytypes.A2) stateDes_2).set_x(atomicTmp_2);
+
+      } else if (stateDes_2 instanceof project.Entrytypes.B2) {
+        //@ assert stateDes_2 != null;
+
+        ((project.Entrytypes.B2) stateDes_2).set_x(atomicTmp_2);
+
+      } else {
+        throw new RuntimeException("Missing member: x");
+      }
+
       //@ set invChecksOn = true;
 
       //@ assert stateDes_1 instanceof project.Entrytypes.A2 ==> ((project.Entrytypes.A2) stateDes_1).valid();
@@ -59,6 +86,10 @@ final public class Entry {
       //@ assert r instanceof project.Entrytypes.A1 ==> ((project.Entrytypes.A1) r).valid();
 
       //@ assert stateDes_1 instanceof project.Entrytypes.B2 ==> ((project.Entrytypes.B2) stateDes_1).valid();
+
+      //@ assert stateDes_2 instanceof project.Entrytypes.A2 ==> ((project.Entrytypes.A2) stateDes_2).valid();
+
+      //@ assert stateDes_2 instanceof project.Entrytypes.B2 ==> ((project.Entrytypes.B2) stateDes_2).valid();
 
     } /* End of atomic statement */
 

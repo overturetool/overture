@@ -69,6 +69,9 @@ final public class Entry {
     Number atomicTmp_3 = -5L;
     //@ assert Utils.is_int(atomicTmp_3);
 
+    Number atomicTmp_4 = -5L;
+    //@ assert Utils.is_int(atomicTmp_4);
+
     {
         /* Start of atomic statement */
       //@ set invChecksOn = false;
@@ -82,6 +85,20 @@ final public class Entry {
         //@ assert r != null;
 
         ((project.Entrytypes.R2) r).set_x(atomicTmp_3);
+
+      } else {
+        throw new RuntimeException("Missing member: x");
+      }
+
+      if (r instanceof project.Entrytypes.R1) {
+        //@ assert r != null;
+
+        ((project.Entrytypes.R1) r).set_x(atomicTmp_4);
+
+      } else if (r instanceof project.Entrytypes.R2) {
+        //@ assert r != null;
+
+        ((project.Entrytypes.R2) r).set_x(atomicTmp_4);
 
       } else {
         throw new RuntimeException("Missing member: x");

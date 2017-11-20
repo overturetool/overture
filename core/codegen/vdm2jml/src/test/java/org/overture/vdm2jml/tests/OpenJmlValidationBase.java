@@ -85,6 +85,7 @@ abstract public class OpenJmlValidationBase extends JmlGenTestBase
 
 	public ProcessResult runOpenJmlProcess()
 	{
+		validateModel();
 		beforeRunningOpenJmlProcess();
 
 		try

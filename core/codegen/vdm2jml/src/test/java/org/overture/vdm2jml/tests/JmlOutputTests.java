@@ -1,12 +1,5 @@
 package org.overture.vdm2jml.tests;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,6 +12,13 @@ import org.overture.test.framework.Properties;
 import org.overture.vdm2jml.tests.exec.JmlExecTestBase;
 import org.overture.vdm2jml.tests.exec.JmlInvariantForExecTests;
 import org.overture.vdm2jml.tests.util.TestUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class JmlOutputTests extends JmlGenTestBase
@@ -33,6 +33,8 @@ public class JmlOutputTests extends JmlGenTestBase
 	@Test
 	public void run()
 	{
+		validateModel();
+
 		JmlGenMain.main(getJmlGenMainProcessArgs(genJavaFolder));
 
 		try

@@ -5,9 +5,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.vdm2jml.JmlGenMain;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.test.framework.Properties;
+import org.overture.typechecker.util.TypeCheckerUtil;
 
 abstract public class JmlGenTestBase
 {
@@ -33,6 +38,24 @@ abstract public class JmlGenTestBase
 		super();
 		this.inputFile = inputFile;
 		this.genJavaFolder = new File(GEN_JAVA_FOLDER, getTestName());
+	}
+
+	public void validateModel() {
+
+		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
+
+		TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> result = TypeCheckerUtil.typeCheckSl(inputFile);
+
+		if(!result.parserResult.errors.isEmpty())
+		{
+			Assert.fail("Input model contains parse errors:\n" + result.parserResult.errors);
+		}
+
+		if(!result.parserResult.errors.isEmpty())
+		{
+			Assert.fail("Input model contains type errors:\n" + result.errors);
+		}
 	}
 
 	protected File getTestDataFolder()

@@ -27,6 +27,7 @@ Run () ==
  atomic
  (
    r.f.x := 5;
+   r.f.x := 5;
  );
  IO`println("Done! Expected no violations");
  return 0;
