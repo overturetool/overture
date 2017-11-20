@@ -15,6 +15,7 @@ Run () ==
  
  atomic
  (
+   r.x := 3;
    r.x := 4;
  );
  return r.x;

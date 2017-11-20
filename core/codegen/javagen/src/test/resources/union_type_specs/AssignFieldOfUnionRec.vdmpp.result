@@ -7,13 +7,22 @@ public class Entry {
   public static Object Run() {
 
     Object r = new R1(1L);
-    Number atomicTmp_1 = 4L;
+    Number atomicTmp_1 = 3L;
+    Number atomicTmp_2 = 4L;
     {
         /* Start of atomic statement */
       if (r instanceof R1) {
         ((R1) r).x = atomicTmp_1;
       } else if (r instanceof R2) {
         ((R2) r).x = atomicTmp_1;
+      } else {
+        throw new RuntimeException("Missing member: x");
+      }
+
+      if (r instanceof R1) {
+        ((R1) r).x = atomicTmp_2;
+      } else if (r instanceof R2) {
+        ((R2) r).x = atomicTmp_2;
       } else {
         throw new RuntimeException("Missing member: x");
       }
