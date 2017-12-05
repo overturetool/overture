@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.external.ExternalModulesSlTest">
-<message column="15" line="46" message="Error 4060: Type invariant violated for D2 in 'A' (types-02.vdm) at line 46:15" messageType="error" number="4060" resource="types-02.vdm"/>
+<message column="18" line="21" message="Error 4087: Cannot convert 10 (nat1) to (B`B' | B`B_) in 'A' (types-02.vdm) at line 21:18" messageType="error" number="4087" resource="types-02.vdm"/>
 <result>
 <output object="[]" resource="types-02.vdm" value="[]"/>
 </result>
