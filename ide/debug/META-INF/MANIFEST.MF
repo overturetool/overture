@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
-Bundle-Version: 2.5.5.qualifier
+Bundle-Version: 2.5.6
 Eclipse-BuddyPolicy: registered
 Eclipse-BundleShape: dir
 Bundle-Localization: plugin
