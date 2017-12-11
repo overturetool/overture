@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.rcp"
       label="Overture RCP"
-      version="2.5.6">
+      version="2.5.7.qualifier">
 
    <description>
       %description
