@@ -30,6 +30,7 @@ Run () ==
  atomic
  (
    r.x := -5;
+   r.x := -5;
  );
  IO`println("After illegal use");
  

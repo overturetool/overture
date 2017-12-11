@@ -116,6 +116,9 @@ final public class Entry {
     Number atomicTmp_3 = 10L;
     //@ assert Utils.is_int(atomicTmp_3);
 
+    Number atomicTmp_4 = 10L;
+    //@ assert Utils.is_int(atomicTmp_4);
+
     {
         /* Start of atomic statement */
       //@ set invChecksOn = false;
@@ -129,6 +132,16 @@ final public class Entry {
       //@ assert stateDes_9 != null;
 
       stateDes_9.set_x(atomicTmp_3);
+
+      project.Entrytypes.R2 stateDes_10 = r1.get_r2();
+
+      project.Entrytypes.R3 stateDes_11 = stateDes_10.get_t3();
+
+      project.Entrytypes.R4 stateDes_12 = stateDes_11.get_r4();
+
+      //@ assert stateDes_12 != null;
+
+      stateDes_12.set_x(atomicTmp_4);
 
       //@ set invChecksOn = true;
 
@@ -145,6 +158,16 @@ final public class Entry {
       //@ assert Utils.is_(r1,project.Entrytypes.R1.class);
 
       //@ assert r1.valid();
+
+      //@ assert stateDes_12.valid();
+
+      //@ assert (Utils.is_(stateDes_11,project.Entrytypes.R3.class) && inv_Entry_T3(stateDes_11));
+
+      //@ assert stateDes_11.valid();
+
+      //@ assert Utils.is_(stateDes_10,project.Entrytypes.R2.class);
+
+      //@ assert stateDes_10.valid();
 
     } /* End of atomic statement */
 

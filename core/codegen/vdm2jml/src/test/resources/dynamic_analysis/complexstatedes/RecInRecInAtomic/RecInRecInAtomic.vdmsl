@@ -51,6 +51,7 @@ useNotOk () ==
  atomic
  (
   r1.r2.r3.x := 1;
+  r1.r2.r3.x := 1;
  );
  
  return 0;

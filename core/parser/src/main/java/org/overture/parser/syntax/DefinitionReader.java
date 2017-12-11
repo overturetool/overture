@@ -117,6 +117,15 @@ public class DefinitionReader extends SyntaxReader
 	{
 		return sectionList.contains(tok.type);
 	}
+	
+	
+	private boolean accessSpecifier() throws LexException
+	{
+		LexToken tok = lastToken();
+		
+		return tok.is(VDMToken.PUBLIC) || tok.is(VDMToken.PRIVATE) || tok.is(VDMToken.PROTECTED) ||
+			   tok.is(VDMToken.PURE) || tok.is(VDMToken.STATIC)|| tok.is(VDMToken.ASYNC); 
+	}
 
 	public List<PDefinition> readDefinitions() throws ParserException,
 			LexException
@@ -612,7 +621,13 @@ public class DefinitionReader extends SyntaxReader
 
 				if (!newSection())
 				{
+					LexToken end = lastToken();
 					checkFor(VDMToken.SEMICOLON, 2082, "Missing ';' after operation definition");
+					
+					if (lastToken().isNot(VDMToken.IDENTIFIER) && !newSection() && !accessSpecifier())
+					{
+						throwMessage(2082, "Semi-colon is not allowed here", end);
+					}
 				}
 			} catch (LocatedException e)
 			{

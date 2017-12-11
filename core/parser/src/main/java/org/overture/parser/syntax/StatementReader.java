@@ -193,6 +193,13 @@ public class StatementReader extends SyntaxReader
 				stmt = readDurationStatement(location);
 				break;
 
+			// These are special error cases that can be caused by spurious semi-colons
+			// after a statement, such as "if test then skip; else skip;"
+			case ELSE:
+			case ELSEIF:
+			case IN:
+				throwMessage(2063, "Unexpected token in statement - spurious semi-colon?");
+
 			default:
 				throwMessage(2063, "Unexpected token in statement");
 		}
@@ -324,15 +331,20 @@ public class StatementReader extends SyntaxReader
 		List<AAssignmentStm> assignments = new Vector<AAssignmentStm>();
 
 		assignments.add(readAssignmentStatement(lastToken().location));
-		ignore(VDMToken.SEMICOLON); // Every statement has an ignorable semicolon
+		checkFor(VDMToken.SEMICOLON, 2205, "Expecting ';' after atomic assignment");
+		assignments.add(readAssignmentStatement(lastToken().location));
 
 		while (lastToken().isNot(VDMToken.KET))
 		{
-			assignments.add(readAssignmentStatement(lastToken().location));
-			ignore(VDMToken.SEMICOLON);
+			checkFor(VDMToken.SEMICOLON, 2205, "Expecting ';' after atomic assignment");
+			
+			if (lastToken().isNot(VDMToken.KET))
+			{
+				assignments.add(readAssignmentStatement(lastToken().location));
+			}
 		}
 
-		checkFor(VDMToken.KET, 2205, "Expecting ')' after atomic assignments");
+		nextToken();
 		return AstFactory.newAAtomicStm(token, assignments);
 	}
 

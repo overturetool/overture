@@ -210,7 +210,7 @@ public enum VDMToken implements Serializable
 			VDM_RT), SYSTEM("system", "system", VDM_RT),
 
 	// No more tokens
-	EOF(null, null, VDM_SL);
+	EOF(null, "EOF", VDM_SL);
 
 	/** The keyword associated with a token, if any. */
 	private String keyword = null;

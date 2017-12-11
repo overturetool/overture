@@ -18,11 +18,13 @@ Run () ==
   atomic
   (
     x := 2;
+    x := 2;
   );
   IO`println("After first atomic (expected violation before this print statement)");
   IO`println("Before second atomic");
   atomic
   (
+    x := 1;
     x := 1;
   );
   IO`println("After second atomic");

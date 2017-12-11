@@ -333,7 +333,12 @@ public class FunctionValue extends Value
 		{
 			Value pv = valIter.next();
 
-			if (checkInvariants) // Don't even convert invariant arg values
+			// The "old" signature of type invariant functions was inv_T: T +> bool. That means that
+			// you are passing an object of type T to the invariant, rather than the RHS of the type.
+			// This was subsequently changed, so that the signature is inv_T: nat +> bool (for T=nat).
+			// So we can always check the types of the arguments here...
+			//
+			// Was if (checkInvariants)	// Don't even convert invariant arg values
 			{
 				pv = pv.convertTo(typeIter.next(), ctxt);
 			}

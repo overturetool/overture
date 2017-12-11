@@ -434,6 +434,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		AFunctionType ftype = AstFactory.newAFunctionType(loc.clone(), false, ptypes, typeDef.getInvType().clone());
 		AExplicitFunctionDefinition maxD = AstFactory.newAExplicitFunctionDefinition(typeDef.getName().getMaxName(loc), NameScope.GLOBAL, null, ftype, parameters,
 				maxBody, null, null, true, null);
+		maxD.setAccess(typeDef.getAccess().clone()); // Same as type's
+		maxD.setClassDefinition(typeDef.getClassDefinition());
 		ordRelation.setMaxDef(maxD);
 
 		AIfExp minBody = maxBody.clone();
@@ -452,6 +454,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		AExplicitFunctionDefinition minD = AstFactory.newAExplicitFunctionDefinition(typeDef.getName().getMinName(loc), NameScope.GLOBAL, null, ftype, parameters2,
 				minBody, null, null, true, null);
+		minD.setAccess(typeDef.getAccess().clone()); // Same as type's
+		minD.setClassDefinition(typeDef.getClassDefinition());
 		ordRelation.setMinDef(minD);
 	}
 

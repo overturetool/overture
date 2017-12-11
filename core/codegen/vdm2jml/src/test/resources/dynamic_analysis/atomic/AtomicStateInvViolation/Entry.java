@@ -21,6 +21,9 @@ final public class Entry {
     Number atomicTmp_1 = 2L;
     //@ assert Utils.is_nat(atomicTmp_1);
 
+    Number atomicTmp_2 = 2L;
+    //@ assert Utils.is_nat(atomicTmp_2);
+
     {
         /* Start of atomic statement */
       //@ set invChecksOn = false;
@@ -28,6 +31,10 @@ final public class Entry {
       //@ assert St != null;
 
       St.set_x(atomicTmp_1);
+
+      //@ assert St != null;
+
+      St.set_x(atomicTmp_2);
 
       //@ set invChecksOn = true;
 
@@ -37,8 +44,11 @@ final public class Entry {
 
     IO.println("After first atomic (expected violation before this print statement)");
     IO.println("Before second atomic");
-    Number atomicTmp_2 = 1L;
-    //@ assert Utils.is_nat(atomicTmp_2);
+    Number atomicTmp_3 = 1L;
+    //@ assert Utils.is_nat(atomicTmp_3);
+
+    Number atomicTmp_4 = 1L;
+    //@ assert Utils.is_nat(atomicTmp_4);
 
     {
         /* Start of atomic statement */
@@ -46,7 +56,11 @@ final public class Entry {
 
       //@ assert St != null;
 
-      St.set_x(atomicTmp_2);
+      St.set_x(atomicTmp_3);
+
+      //@ assert St != null;
+
+      St.set_x(atomicTmp_4);
 
       //@ set invChecksOn = true;
 
