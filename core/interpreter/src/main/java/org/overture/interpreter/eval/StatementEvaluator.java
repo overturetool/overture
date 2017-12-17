@@ -1064,8 +1064,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					}
 					else
 					{
-						VdmRuntimeError.abort(node.getLocation(), 4050, "Value "
-								+ exval + " is not in set bind", ctxt);
+						throw e;	// Propagate exception
 					}
 				}
 				else if (node.getPatternBind().getBind() instanceof ASeqBind)
@@ -1081,8 +1080,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					}
 					else
 					{
-						VdmRuntimeError.abort(node.getLocation(), 4050, "Value "
-								+ exval + " is not in seq bind", ctxt);
+						throw e;	// Propagate exception
 					}
 				}
 				else
@@ -1569,8 +1567,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				}
 				else
 				{
-					VdmRuntimeError.abort(setbind.getLocation(), 4049, "Value "
-							+ exval + " is not in set bind", ctxt);
+					evalContext = null;
 				}
 			}
 			else if (node.getPatternBind().getBind() instanceof ASeqBind)
@@ -1585,8 +1582,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				}
 				else
 				{
-					VdmRuntimeError.abort(seqbind.getLocation(), 4049, "Value "
-							+ exval + " is not in seq bind", ctxt);
+					evalContext = null;
 				}
 			}
 			else
