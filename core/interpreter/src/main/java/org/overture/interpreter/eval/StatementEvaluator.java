@@ -1094,7 +1094,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			}
 			catch (ValueException ve)
 			{
-				VdmRuntimeError.abort(node.getLocation(), ve);
+				throw e;
 			}
 			catch (PatternMatchException pe)
 			{
