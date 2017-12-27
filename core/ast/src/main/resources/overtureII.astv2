@@ -407,13 +407,13 @@ definition {-> package='org.overture.ast.definitions'
 	|  	(body):exp
     |   [precondition]:exp 
     |   [postcondition]:exp 
-    |   [measure]:LexNameToken
+    |   [measure]:exp
+    |   (measureDef):definition.#Function.explicit
+	|	(measureName):LexNameToken
     |	(predef):definition.#Function.explicit 
     |   (postdef):definition.#Function.explicit
-    |   (measureDef):definition
     |	(recursive):java_Boolean
 	|	(isUndefined):java_Boolean
-	|	(measureLexical):java_Integer
 	|	(expectedResult):type
 	|	(actualResult):type
 	//|	 (type):type.function ASTCreater todo

@@ -53,6 +53,7 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.SFunctionDefinitionBase;
 import org.overture.ast.definitions.relations.AEqRelation;
 import org.overture.ast.definitions.relations.AOrdRelation;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
@@ -66,6 +67,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -86,7 +88,6 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -103,6 +104,7 @@ import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
@@ -427,88 +429,37 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getMeasure() == null && node.getRecursive())
 		{
 			TypeCheckerErrors.warning(5012, "Recursive function has no measure", node.getLocation(), node);
-		} else if (node.getMeasure() != null)
+		}
+		else if (node.getMeasure() instanceof AVariableExp)
 		{
-			if (question.env.isVDMPP())
+			AVariableExp exp = (AVariableExp)node.getMeasure();
+			List<PType> params = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node);
+			if (question.env.isVDMPP()) exp.getName().setTypeQualifier(params);
+			PDefinition def = question.env.findName(exp.getName(), question.scope);
+			
+			if (def instanceof AExplicitFunctionDefinition)
 			{
-				node.getMeasure().setTypeQualifier(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));
+				setMeasureDef(question, node, exp.getName(), question.env, question.scope);
 			}
-			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
-
-			if (node.getMeasureDef() == null)
+			else
 			{
-				TypeCheckerErrors.report(3270, "Measure " + node.getMeasure()
-						+ " is not in scope", node.getMeasure().getLocation(), node.getMeasure());
-			} else if (!(node.getMeasureDef() instanceof AExplicitFunctionDefinition))
-			{
-				TypeCheckerErrors.report(3271, "Measure " + node.getMeasure()
-						+ " is not an explicit function", node.getMeasure().getLocation(), node.getMeasure());
-			} else if (node.getMeasureDef() == node)
-			{
-				TypeCheckerErrors.report(3304, "Recursive function cannot be its own measure", node.getMeasure().getLocation(), node.getMeasure());
-			} else
-			{
-				AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition) node.getMeasureDef();
-
-				if (node.getTypeParams() == null && efd.getTypeParams() != null)
-				{
-					TypeCheckerErrors.report(3309, "Measure must not be polymorphic", node.getMeasure().getLocation(), node.getMeasure());
-				} else if (node.getTypeParams() != null
-						&& efd.getTypeParams() == null)
-				{
-					TypeCheckerErrors.report(3310, "Measure must also be polymorphic", node.getMeasure().getLocation(), node.getMeasure());
-				} else if (node.getTypeParams() != null
-						&& efd.getTypeParams() != null
-						&& !node.getTypeParams().equals(efd.getTypeParams()))
-				{
-					TypeCheckerErrors.report(3318, "Measure's type parameters must match function's", node.getMeasure().getLocation(), node.getMeasure());
-					TypeChecker.detail2("Actual", efd.getTypeParams(), "Expected", node.getTypeParams());
-				}
-
-				AFunctionType mtype = (AFunctionType) efd.getType();
-
-				if (node.getTypeParams() != null && !node.getTypeParams().isEmpty())
-				{
-					if (!mtype.getParameters().toString().equals(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node).toString()))
-					{
-						TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
-						TypeChecker.detail2(node.getMeasure().getFullName(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));
-					}
-				}
-				else if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node)))
-				{
-					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
-					TypeChecker.detail2(node.getMeasure().getFullName(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));
-				}
-
-				if (!(mtype.getResult() instanceof ANatNumericBasicType))
-				{
-					if (mtype.getResult() instanceof AProductType)
-					{
-						AProductType pt = question.assistantFactory.createPTypeAssistant().getProduct(mtype.getResult());
-
-						for (PType t : pt.getTypes())
-						{
-							if (!(t instanceof ANatNumericBasicType))
-							{
-								TypeCheckerErrors.report(3272, "Measure range is not a nat, or a nat tuple", node.getMeasure().getLocation(), node.getMeasure());
-								TypeCheckerErrors.detail("Actual", mtype.getResult());
-								break;
-							}
-						}
-
-						node.setMeasureLexical(pt.getTypes().size());
-					} else
-					{
-						TypeCheckerErrors.report(3272, "Measure range is not a nat, or a nat tuple", node.getMeasure().getLocation(), node.getMeasure());
-						TypeCheckerErrors.detail("Actual", mtype.getResult());
-					}
-				}
+				setMeasureExp(question, node, question.env, local, question.scope);
 			}
+		}
+		else if (node.getMeasure() instanceof ANotYetSpecifiedExp)
+		{
+			// Undefined measure, so ignore (without warning).
+			node.setMeasureDef(null);
+			node.setMeasureName(null);
+		}
+		else if (node.getMeasure() != null)
+		{
+			setMeasureExp(question, node, question.env, local, question.scope);
 		}
 
 		if (!(node.getBody() instanceof ANotYetSpecifiedExp)
-				&& !(node.getBody() instanceof ASubclassResponsibilityExp))
+				&& !(node.getBody() instanceof ASubclassResponsibilityExp)
+				&& !(node.getName().toString().startsWith("measure_")))
 		{
 			local.unusedCheck();
 		}
@@ -644,75 +595,32 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getMeasure() == null && node.getRecursive())
 		{
 			TypeCheckerErrors.warning(5012, "Recursive function has no measure", node.getLocation(), node);
-		} else if (node.getMeasure() != null)
+		}
+		else if (node.getMeasure() instanceof AVariableExp)
 		{
-			if (question.env.isVDMPP())
+			AVariableExp exp = (AVariableExp)node.getMeasure();
+			List<PType> params = node.getType().getParameters();
+			if (question.env.isVDMPP()) exp.getName().setTypeQualifier(params);
+			PDefinition def = question.env.findName(exp.getName(), question.scope);
+			
+			if (def instanceof AExplicitFunctionDefinition)
 			{
-				node.getMeasure().setTypeQualifier(((AFunctionType) node.getType()).getParameters());
+				setMeasureDef(question, node, exp.getName(), question.env, question.scope);
 			}
-			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
-
-			if (node.getBody() == null)
+			else
 			{
-				TypeCheckerErrors.report(3273, "Measure not allowed for an implicit function", node.getMeasure().getLocation(), node);
-			} else if (node.getMeasureDef() == null)
-			{
-				TypeCheckerErrors.report(3270, "Measure " + node.getMeasure()
-						+ " is not in scope", node.getMeasure().getLocation(), node.getMeasure());
-			} else if (!(node.getMeasureDef() instanceof AExplicitFunctionDefinition))
-			{
-				TypeCheckerErrors.report(3271, "Measure " + node.getMeasure()
-						+ " is not an explicit function", node.getMeasure().getLocation(), node.getMeasure());
-			} else
-			{
-				AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition) node.getMeasureDef();
-
-				if (node.getTypeParams() == null && efd.getTypeParams() != null)
-				{
-					TypeCheckerErrors.report(3309, "Measure must not be polymorphic", node.getMeasure().getLocation(), node.getMeasure());
-				} else if (node.getTypeParams() != null
-						&& efd.getTypeParams() == null)
-				{
-					TypeCheckerErrors.report(3310, "Measure must also be polymorphic", node.getMeasure().getLocation(), node.getMeasure());
-				} else if (node.getTypeParams() != null
-						&& efd.getTypeParams() != null
-						&& !node.getTypeParams().equals(efd.getTypeParams()))
-				{
-					TypeCheckerErrors.report(3318, "Measure's type parameters must match function's", node.getMeasure().getLocation(), node.getMeasure());
-					TypeCheckerErrors.detail2("Actual", efd.getTypeParams(), "Expected", node.getTypeParams());
-				}
-
-				AFunctionType mtype = (AFunctionType) node.getMeasureDef().getType();
-
-				if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters()))
-				{
-					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
-					TypeCheckerErrors.detail2(node.getMeasure().getName(), mtype.getParameters(), node.getName().getName(), ((AFunctionType) node.getType()).getParameters());
-				}
-
-				if (!(mtype.getResult() instanceof ANatNumericBasicType))
-				{
-					if (question.assistantFactory.createPTypeAssistant().isProduct(mtype.getResult()))
-					{
-						AProductType pt = question.assistantFactory.createPTypeAssistant().getProduct(mtype.getResult());
-
-						for (PType t : pt.getTypes())
-						{
-							if (!(t instanceof ANatNumericBasicType))
-							{
-								TypeCheckerErrors.report(3272, "Measure range is not a nat, or a nat tuple", node.getMeasure().getLocation(), node.getMeasure());
-								TypeCheckerErrors.detail("Actual", mtype.getResult());
-							}
-						}
-
-						node.setMeasureLexical(pt.getTypes().size());
-					} else
-					{
-						TypeCheckerErrors.report(3272, "Measure range is not a nat, or a nat tuple", node.getMeasure().getLocation(), node.getMeasure());
-						TypeCheckerErrors.detail("Actual", mtype.getResult());
-					}
-				}
+				setMeasureExp(question, node, question.env, local, question.scope);
 			}
+		}
+		else if (node.getMeasure() instanceof ANotYetSpecifiedExp)
+		{
+			// Undefined measure, so ignore (without warning).
+			node.setMeasureDef(null);
+			node.setMeasureName(null);
+		}
+		else if (node.getMeasure() != null)
+		{
+			setMeasureExp(question, node, question.env, local, question.scope);
 		}
 
 		if (!(node.getBody() instanceof ANotYetSpecifiedExp)
@@ -1776,4 +1684,178 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 	}
 
+	/**
+	 * Set measureDef to a newly created function, based on the measure expression. 
+	 * @throws AnalysisException 
+	 */
+	private void setMeasureExp(TypeCheckInfo question, SFunctionDefinitionBase node, Environment base, Environment local, NameScope scope) throws AnalysisException
+	{
+		PType actual = node.getMeasure().apply(THIS, question.newInfo(local));
+		node.setMeasureName(node.getName().getMeasureName(node.getName().getLocation()));
+		checkMeasure(question, node, node.getMeasureName(), actual);
+		
+		List<List<PPattern>> cpll = new Vector<List<PPattern>>();
+		boolean isCurried;
+		
+		if (node instanceof AExplicitFunctionDefinition)
+		{
+			// Concatenate the parameter patterns into one list for curried measures
+			List<PPattern> all = new Vector<PPattern>();
+			AExplicitFunctionDefinition ex = (AExplicitFunctionDefinition) node;
+			
+			for (List<PPattern> pl: ex.getParamPatternList())
+			{
+				for (PPattern p: pl)
+				{
+					all.add(p.clone());
+				}
+			}
+			
+			cpll.add(all);
+			isCurried = ex.getIsCurried();
+		}
+		else
+		{
+			List<PPattern> all = new Vector<PPattern>();
+			AImplicitFunctionDefinition imp = (AImplicitFunctionDefinition) node;
+			
+			for (APatternListTypePair p: imp.getParamPatterns())
+			{
+				all.addAll(p.getPatterns());
+			}
+
+			cpll.add(all);
+			isCurried = false;
+		}
+		
+		AFunctionType mtype = question.assistantFactory.createAFunctionTypeAssistant().getMeasureType((AFunctionType) node.getType(), isCurried, actual);
+		
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(node.getMeasureName(), scope,
+				node.getTypeParams(), mtype, cpll, node.getMeasure(), null, null, false, null);
+
+		def.setClassDefinition(node.getClassDefinition());
+		question.assistantFactory.createPDefinitionAssistant().typeResolve(def, THIS, question);
+		def.apply(THIS, question);
+		
+		node.setMeasureDef(def);
+	}
+
+	/**
+	 * Check that measure is an existing named explicit function definition.
+	 */
+	private void setMeasureDef(TypeCheckInfo question, SFunctionDefinitionBase node, ILexNameToken mname, Environment base, NameScope scope)
+	{
+		if (question.env.isVDMPP())
+		{
+			if (node instanceof AExplicitFunctionDefinition)
+			{
+				AExplicitFunctionDefinition ex = (AExplicitFunctionDefinition)node;
+				mname.setTypeQualifier(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex));
+			}
+			else
+			{
+				AImplicitFunctionDefinition imp = (AImplicitFunctionDefinition) node;
+				mname.setTypeQualifier(imp.getType().getParameters());
+			}
+		}
+		
+		PDefinition mdef = question.env.findName(mname, question.scope);
+
+		if (mdef == null)
+		{
+			TypeCheckerErrors.report(3270, "Measure " + node.getMeasure()
+					+ " is not in scope", node.getMeasure().getLocation(), node.getMeasure());
+		}
+		else if (!(mdef instanceof AExplicitFunctionDefinition))
+		{
+			TypeCheckerErrors.report(3271, "Measure " + node.getMeasure()
+					+ " is not an explicit function", node.getMeasure().getLocation(), node.getMeasure());
+		}
+		else if (mdef == node)
+		{
+			TypeCheckerErrors.report(3304, "Recursive function cannot be its own measure", node.getMeasure().getLocation(), node.getMeasure());
+		}
+		else
+		{
+			AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition) mdef;
+			node.setMeasureDef(efd);
+
+			if (node.getTypeParams() == null && efd.getTypeParams() != null)
+			{
+				TypeCheckerErrors.report(3309, "Measure must not be polymorphic", node.getMeasure().getLocation(), node.getMeasure());
+			}
+			else if (node.getTypeParams() != null && efd.getTypeParams() == null)
+			{
+				TypeCheckerErrors.report(3310, "Measure must also be polymorphic", node.getMeasure().getLocation(), node.getMeasure());
+			}
+			else if (node.getTypeParams() != null && efd.getTypeParams() != null
+					&& !node.getTypeParams().equals(efd.getTypeParams()))
+			{
+				TypeCheckerErrors.report(3318, "Measure's type parameters must match function's", node.getMeasure().getLocation(), node.getMeasure());
+				TypeChecker.detail2("Actual", efd.getTypeParams(), "Expected", node.getTypeParams());
+			}
+
+			AFunctionType mtype = (AFunctionType) efd.getType();
+
+			if (node.getTypeParams() != null && !node.getTypeParams().isEmpty() && node instanceof AExplicitFunctionDefinition)
+			{
+				AExplicitFunctionDefinition ex = (AExplicitFunctionDefinition) node;
+				if (!mtype.getParameters().toString().equals(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex).toString()))
+				{
+					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
+					TypeChecker.detail2(node.getMeasureName().toString(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex));
+				}
+			}
+			else if (node instanceof AExplicitFunctionDefinition)
+			{
+				AExplicitFunctionDefinition ex = (AExplicitFunctionDefinition) node;
+				if (!mtype.getParameters().toString().equals(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex).toString()))
+				{
+					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
+					TypeChecker.detail2(node.getMeasureName().toString(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex));
+				}
+			}
+			else	// AImplicitFunctionDefinition
+			{
+				if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters()))
+				{
+					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
+					TypeCheckerErrors.detail2(node.getMeasureName().toString(), mtype.getParameters(), node.getName().getName(), ((AFunctionType) node.getType()).getParameters());
+				}
+			}
+
+			checkMeasure(question, node, efd.getName(), mtype.getResult());
+		}
+	}
+
+	/**
+	 * A measure must return a nat or nat-tuple.
+	 */
+	private void checkMeasure(TypeCheckInfo question, SFunctionDefinitionBase node, ILexNameToken iLexNameToken, PType result)
+	{
+		PTypeAssistantTC assistant = question.assistantFactory.createPTypeAssistant();
+		
+		if (!assistant.isNumeric(result))
+		{
+			if (assistant.isProduct(result))
+			{
+				AProductType pt = assistant.getProduct(result);
+
+				for (PType t : pt.getTypes())
+				{
+					if (!assistant.isNumeric(t))
+					{
+						TypeCheckerErrors.report(3272, "Measure range is not a nat, or a nat tuple", node.getMeasure().getLocation(), node.getMeasure());
+						TypeCheckerErrors.detail("Actual", result);
+						break;
+					}
+				}
+			}
+			else
+			{
+				TypeCheckerErrors.report(3272, "Measure range is not a nat, or a nat tuple", node.getMeasure().getLocation(), node.getMeasure());
+				TypeCheckerErrors.detail("Actual", result);
+			}
+		}
+	}
 }

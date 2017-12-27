@@ -80,6 +80,8 @@ public interface ILexNameToken extends ILexIdentifierToken
 
 	ILexNameToken getPreName(ILexLocation l);
 
+	ILexNameToken getMeasureName(ILexLocation loc);
+
 	ILexNameToken getSelfName();
 
 	String getSimpleName();

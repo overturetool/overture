@@ -240,6 +240,12 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 		return new LexNameToken(module, "per_" + name, loc);
 	}
 
+	@Override
+	public ILexNameToken getMeasureName(ILexLocation loc)
+	{
+		return new LexNameToken(getModule(), "measure_" + name, loc);
+	}
+
 	public LexNameToken getClassName()
 	{
 		return new LexNameToken("CLASS", name, location);
