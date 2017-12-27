@@ -124,7 +124,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 			defs.add(node.getPostdef());
 		}
 		
-		if (node.getMeasureDef() != null && node.getMeasureName().getName().startsWith("measure_"))
+		if (node.getMeasureName() != null && node.getMeasureName().getName().startsWith("measure_"))
 		{
 			defs.add(node.getMeasureDef());
 		}

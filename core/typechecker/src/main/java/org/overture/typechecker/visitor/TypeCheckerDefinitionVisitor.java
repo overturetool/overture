@@ -1779,6 +1779,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition) mdef;
 			node.setMeasureDef(efd);
+			node.setMeasureName(efd.getName());
 
 			if (node.getTypeParams() == null && efd.getTypeParams() != null)
 			{
@@ -1806,22 +1807,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					TypeChecker.detail2(node.getMeasureName().toString(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex));
 				}
 			}
-			else if (node instanceof AExplicitFunctionDefinition)
+			else if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters()))
 			{
-				AExplicitFunctionDefinition ex = (AExplicitFunctionDefinition) node;
-				if (!mtype.getParameters().toString().equals(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex).toString()))
-				{
-					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
-					TypeChecker.detail2(node.getMeasureName().toString(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex));
-				}
-			}
-			else	// AImplicitFunctionDefinition
-			{
-				if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters()))
-				{
-					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
-					TypeCheckerErrors.detail2(node.getMeasureName().toString(), mtype.getParameters(), node.getName().getName(), ((AFunctionType) node.getType()).getParameters());
-				}
+				TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
+				TypeCheckerErrors.detail2(mname.toString(), mtype.getParameters(), node.getName().getName(), ((AFunctionType) node.getType()).getParameters());
 			}
 
 			checkMeasure(question, node, efd.getName(), mtype.getResult());
