@@ -1731,7 +1731,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		AFunctionType mtype = question.assistantFactory.createAFunctionTypeAssistant().getMeasureType((AFunctionType) node.getType(), isCurried, actual);
 		
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(node.getMeasureName(), scope,
-				node.getTypeParams(), mtype, cpll, node.getMeasure(), null, null, false, null);
+				(List<ILexNameToken>) node.getTypeParams().clone(), mtype, cpll, node.getMeasure(), null, null, false, null);
 
 		def.setClassDefinition(node.getClassDefinition());
 		question.assistantFactory.createPDefinitionAssistant().typeResolve(def, THIS, question);
