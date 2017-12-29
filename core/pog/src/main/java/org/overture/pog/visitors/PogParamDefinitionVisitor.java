@@ -178,6 +178,14 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				question.pop();
 			}
 
+			// do proof obligations for the measure clause
+			if (node.getMeasureDef() != null && node.getMeasureName() != null && node.getMeasureName().getName().startsWith("measure_"))
+			{
+				question.push(new PONameContext(new LexNameList(node.getMeasureName())));
+				obligations.addAll(node.getMeasureDef().apply(rootVisitor, question));
+				question.pop();
+			}
+
 			// do proof obligations for the function body
 
 			question.push(new POFunctionDefinitionContext(node, true));
@@ -386,6 +394,13 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 				question.push(new POFunctionResultContext(node));
 				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+				question.pop();
+			}
+
+			if (node.getMeasureDef() != null && node.getMeasureName() != null && node.getMeasureName().getName().startsWith("measure_"))
+			{
+				question.push(new PONameContext(new LexNameList(node.getMeasureName())));
+				obligations.addAll(node.getMeasureDef().apply(rootVisitor, question));
 				question.pop();
 			}
 
