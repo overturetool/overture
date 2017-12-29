@@ -1962,7 +1962,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 		node.setType(AstFactory.newAMapMapType(node.getLocation(), dom.getType(node.getLocation()), rng.getType(node.getLocation())));
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseAMapletExp(AMapletExp node,
@@ -2502,7 +2502,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				AstFactory.newASeqSeqType(node.getLocation()) :
 				AstFactory.newASeq1SeqType(node.getLocation(), ts.getType(node.getLocation())));
 
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseASetCompSetExp(ASetCompSetExp node,
@@ -2561,7 +2561,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				AstFactory.newASetSetType(node.getLocation()) :
 				AstFactory.newASet1SetType(node.getLocation(), ts.getType(node.getLocation())));
 
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseASetRangeSetExp(ASetRangeSetExp node,

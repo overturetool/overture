@@ -2,8 +2,10 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="21" line="42" message="Definition 's' not used" messageType="warning" number="5000" resource="ifexpr-91.vdm"/>
 <message column="20" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-91.vdm"/>
+<message column="19" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-91.vdm"/>
 <message column="24" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-91.vdm"/>
 <message column="28" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-91.vdm"/>
+<message column="23" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-91.vdm"/>
 <message column="16" line="42" message="Sequence pattern is matched against nat1" messageType="error" number="3203" resource="ifexpr-91.vdm"/>
 <message column="19" line="42" message="Pattern cannot match" messageType="error" number="3311" resource="ifexpr-91.vdm"/>
 <message column="26" line="43" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-91.vdm"/>

@@ -5,5 +5,6 @@
 <message column="30" line="10" message="Value is not of the right type" messageType="error" number="3327" resource="issue194"/>
 <message column="35" line="12" message="Value is not of the right type" messageType="error" number="3327" resource="issue194"/>
 <message column="66" line="14" message="Value is not of the right type" messageType="error" number="3327" resource="issue194"/>
+<message column="65" line="14" message="Value is not of the right type" messageType="error" number="3327" resource="issue194"/>
 <result/>
 </testResult>

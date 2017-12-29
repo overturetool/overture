@@ -4,15 +4,22 @@
 <message column="15" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="26" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="30" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="24" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="37" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="41" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="36" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="22" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="22" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="24" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="21" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="15" line="51" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="23" line="54" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="29" line="54" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="22" line="54" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="34" line="54" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="39" line="54" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="33" line="54" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="20" line="54" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="28" line="57" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="33" line="57" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="36" line="57" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
@@ -21,6 +28,8 @@
 <message column="32" line="75" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="39" line="75" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="47" line="75" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="23" line="75" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
+<message column="21" line="75" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <message column="20" line="80" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-53.vdm"/>
 <result/>
 </testResult>
