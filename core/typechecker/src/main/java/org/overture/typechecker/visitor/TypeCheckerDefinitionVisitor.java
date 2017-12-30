@@ -1719,9 +1719,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			List<PPattern> all = new Vector<PPattern>();
 			AImplicitFunctionDefinition imp = (AImplicitFunctionDefinition) node;
 			
-			for (APatternListTypePair p: imp.getParamPatterns())
+			for (APatternListTypePair ptp: imp.getParamPatterns())
 			{
-				all.addAll(p.getPatterns());
+				for (PPattern p: ptp.getPatterns())
+				{
+					all.add(p.clone());
+				}
 			}
 
 			cpll.add(all);
