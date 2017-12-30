@@ -1797,17 +1797,28 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 
 			AFunctionType mtype = (AFunctionType) efd.getType();
-
-			if (node.getTypeParams() != null && !node.getTypeParams().isEmpty() && node instanceof AExplicitFunctionDefinition)
+			List<PType> exParams = null;
+			
+			if (node instanceof AExplicitFunctionDefinition)
 			{
 				AExplicitFunctionDefinition ex = (AExplicitFunctionDefinition) node;
-				if (!mtype.getParameters().toString().equals(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex).toString()))
+				exParams = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex);
+			}
+
+			if (node.getTypeParams() != null && !node.getTypeParams().isEmpty() && exParams != null)
+			{
+				if (!mtype.getParameters().toString().equals(exParams.toString()))
 				{
 					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
-					TypeChecker.detail2(node.getMeasureName().toString(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(ex));
+					TypeChecker.detail2(node.getMeasureName().toString(), mtype.getParameters(), "Expected", exParams);
 				}
 			}
-			else if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters()))
+			else if (exParams != null && !question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), exParams))
+			{
+				TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
+				TypeCheckerErrors.detail2(mname.toString(), mtype.getParameters(), node.getName().getName(), exParams);
+			}
+			else if (exParams == null && !question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters()))
 			{
 				TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
 				TypeCheckerErrors.detail2(mname.toString(), mtype.getParameters(), node.getName().getName(), ((AFunctionType) node.getType()).getParameters());
