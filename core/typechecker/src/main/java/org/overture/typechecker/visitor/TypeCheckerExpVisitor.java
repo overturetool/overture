@@ -2448,7 +2448,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getSetBind() != null && (
 				question.assistantFactory.createPPatternAssistant().getVariableNames(node.getSetBind().getPattern()).size()
-						!= 1
+						> 1
 						|| !question.assistantFactory.createPTypeAssistant().isOrdered(question.assistantFactory.createPDefinitionAssistant().getType(def), node.getLocation())))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one ordered bind variable", node.getLocation(), node);

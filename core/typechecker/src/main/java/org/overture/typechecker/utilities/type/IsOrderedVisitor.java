@@ -36,7 +36,7 @@ public class IsOrderedVisitor
 				return true;
 			}
 		}
-		return false;
+		return node.getTypes().isEmpty();
 	}
 
 	@Override public Boolean caseAUnknownType(AUnknownType node, ILexLocation q)
