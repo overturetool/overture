@@ -3,6 +3,7 @@
 <message column="15" line="36" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-50.vdm"/>
 <message column="30" line="39" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-50.vdm"/>
 <message column="39" line="39" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-50.vdm"/>
+<message column="38" line="39" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-50.vdm"/>
 <message column="31" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-50.vdm"/>
 <message column="62" line="45" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-50.vdm"/>
 <message column="20" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-50.vdm"/>

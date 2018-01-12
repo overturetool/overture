@@ -1563,6 +1563,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSetBind(), ctxt, false);
 		ValueSet seq = new ValueSet(); // Bind variable values
 		ValueMap map = new ValueMap(); // Map bind values to output values
+		int count = 0;
 
 		for (Value val : allValues)
 		{
@@ -1570,11 +1571,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			{
 				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "seq comprehension", ctxt);
 				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getSetBind().getPattern(), val, ctxt);
-				Value sortOn = nvpl.get(0).value;
+				Value sortOn = nvpl.isEmpty() ? new NaturalValue(count++) : nvpl.get(0).value;
 
 				if (map.get(sortOn) == null)
 				{
-					if (nvpl.size() != 1 || !sortOn.isOrdered())
+					if (nvpl.size() > 1 || !sortOn.isOrdered())
 					{
 						VdmRuntimeError.abort(node.getLocation(), 4029, "Sequence comprehension bindings must be one ordered value", ctxt);
 					}
@@ -1597,6 +1598,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			catch (PatternMatchException e)
 			{
 				// Ignore mismatches
+			}
+			catch (ContextException e)
+			{
+				throw e;
+			}
+			catch (Exception e)
+			{
+				// Ignore NaturalValue exception
 			}
 		}
 

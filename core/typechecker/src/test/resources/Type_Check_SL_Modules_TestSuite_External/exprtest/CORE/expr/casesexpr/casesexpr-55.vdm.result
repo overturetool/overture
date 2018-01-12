@@ -2,7 +2,9 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="11" line="37" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="12" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="11" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="24" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="23" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="17" line="49" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="19" line="52" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="16" line="55" message="'in set' expression is always false" messageType="error" number="3319" resource="casesexpr-55.vdm"/>
@@ -11,18 +13,24 @@
 <message column="16" line="58" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="12" line="61" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="18" line="61" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="11" line="61" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="24" line="61" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="29" line="61" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="23" line="61" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="12" line="64" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="16" line="64" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="29" line="64" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="31" line="64" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="33" line="64" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="28" line="64" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="11" line="64" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="12" line="70" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="14" line="70" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="27" line="70" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="29" line="70" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="31" line="70" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="26" line="70" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
+<message column="11" line="70" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="20" line="75" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-55.vdm"/>
 <message column="15" line="34" message="Expression does not match declared type" messageType="error" number="3051" resource="casesexpr-55.vdm"/>
 <result/>

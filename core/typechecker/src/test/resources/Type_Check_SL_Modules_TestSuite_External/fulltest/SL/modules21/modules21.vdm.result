@@ -5,5 +5,6 @@
 <message column="10" line="44" message="Import all from module with no exports?" messageType="error" number="3190" resource="modules21.vdm"/>
 <message column="14" line="52" message="Name 'B`g' is not in scope" messageType="error" number="3182" resource="modules21.vdm"/>
 <message column="10" line="44" message="Import all from module with no exports?" messageType="error" number="3190" resource="modules21.vdm"/>
+<message column="10" line="44" message="Import all from module with no exports?" messageType="error" number="3190" resource="modules21.vdm"/>
 <result/>
 </testResult>

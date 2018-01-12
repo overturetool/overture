@@ -1962,7 +1962,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 		node.setType(AstFactory.newAMapMapType(node.getLocation(), dom.getType(node.getLocation()), rng.getType(node.getLocation())));
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseAMapletExp(AMapletExp node,
@@ -2448,7 +2448,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getSetBind() != null && (
 				question.assistantFactory.createPPatternAssistant().getVariableNames(node.getSetBind().getPattern()).size()
-						!= 1
+						> 1
 						|| !question.assistantFactory.createPTypeAssistant().isOrdered(question.assistantFactory.createPDefinitionAssistant().getType(def), node.getLocation())))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one ordered bind variable", node.getLocation(), node);
@@ -2502,7 +2502,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				AstFactory.newASeqSeqType(node.getLocation()) :
 				AstFactory.newASeq1SeqType(node.getLocation(), ts.getType(node.getLocation())));
 
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseASetCompSetExp(ASetCompSetExp node,
@@ -2561,7 +2561,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				AstFactory.newASetSetType(node.getLocation()) :
 				AstFactory.newASet1SetType(node.getLocation(), ts.getType(node.getLocation())));
 
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseASetRangeSetExp(ASetRangeSetExp node,
