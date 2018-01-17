@@ -36,6 +36,8 @@ public class IRConstants
 	public static final String TEST_CASE = "TestCase";
 	public static final String TEST_CASE_RUN_FULL_SUITE = "runFullSuite";
 
+	public static final String TEST_MODULE_NAME_POSTFIX = "Test";
+
 	public static final String[] CLASS_NAMES_USED_IN_SL = {"CSV", "IO",  "MATH", "VDMUtil"};
 
 	public static final String[] CLASS_NAMES_USED_IN_VDM_PP_RT =  (String[]) ArrayUtils.addAll(CLASS_NAMES_USED_IN_SL,

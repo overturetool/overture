@@ -2,6 +2,7 @@ package org.overture.codegen.vdm2java;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.NodeAssistantIR;
 import org.overture.codegen.ir.IRConstants;
@@ -12,6 +13,7 @@ import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+import org.overture.config.Settings;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 {
 	protected Logger log = Logger.getLogger(this.getClass().getName());
 
+	private static final String TEST_MODULE_NAME_PREFIX = "Test";
 	private static final String TEST_NAME_PREFIX = "test";
 	public static final String TEST_ANNOTATION = "@Test";
 	public static final String JUNI4_IMPORT = "org.junit.*";
@@ -78,9 +81,14 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 			log.error("Could not find copy of " + node.getName());
 		}
 
-		if (!assist.getInfo().getDeclAssistant().isTest(copy, classCopies))
+		if (!assist.getInfo().getDeclAssistant().isTest(copy, classCopies) && !followsSlTestConvention(copy))
 		{
 			return;
+		}
+
+		if(Settings.dialect == Dialect.VDM_SL)
+		{
+			adjustTestClass(node);
 		}
 
 		/**
@@ -104,6 +112,29 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 		 * with 'test'
 		 */
 		addTestAnnotations(node);
+	}
+
+	private void adjustTestClass(ADefaultClassDeclIR copy) {
+
+		for(AMethodDeclIR m : copy.getMethods())
+		{
+			m.setStatic(false);
+		}
+
+		for(int i = 0; i < copy.getMethods().size(); i++)
+		{
+			AMethodDeclIR m = copy.getMethods().get(i);
+			if(m.getIsConstructor())
+			{
+				copy.getMethods().remove(i);
+				break;
+			}
+		}
+	}
+
+	private boolean followsSlTestConvention(ADefaultClassDeclIR copy) {
+
+		return Settings.dialect == Dialect.VDM_SL && copy.getName().endsWith(TEST_MODULE_NAME_PREFIX);
 	}
 
 	public void addTestAnnotations(ADefaultClassDeclIR node)

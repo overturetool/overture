@@ -118,6 +118,13 @@ public class DeclAssistantIR extends AssistantBase
 
 	public boolean isTestCase(INode node)
 	{
+		// Treat SL modules that end with 'Test' as test cases (just a convention)
+		if(node instanceof AModuleModules)
+		{
+			AModuleModules module = (AModuleModules) node;
+			return module.getName().getName().endsWith(IRConstants.TEST_MODULE_NAME_POSTFIX);
+		}
+
 		if (!(node instanceof SClassDefinition))
 		{
 			return false;
