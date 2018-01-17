@@ -44,6 +44,7 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -93,6 +94,7 @@ import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
 import org.overture.codegen.utils.LexNameTokenWrapper;
+import org.overture.config.Settings;
 
 public class DeclAssistantIR extends AssistantBase
 {
@@ -425,9 +427,20 @@ public class DeclAssistantIR extends AssistantBase
 
 	public boolean isLibraryName(String className)
 	{
-		for (int i = 0; i < IRConstants.CLASS_NAMES_USED_IN_VDM.length; i++)
+		String[] classNames;
+
+		if(Settings.dialect == Dialect.VDM_SL)
 		{
-			if (IRConstants.CLASS_NAMES_USED_IN_VDM[i].equals(className))
+			classNames = IRConstants.CLASS_NAMES_USED_IN_SL;
+		}
+		else
+		{
+			classNames = IRConstants.CLASS_NAMES_USED_IN_VDM_PP_RT;
+		}
+
+		for (int i = 0; i < classNames.length; i++)
+		{
+			if (classNames[i].equals(className))
 			{
 				return true;
 			}

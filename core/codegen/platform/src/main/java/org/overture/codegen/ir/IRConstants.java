@@ -36,13 +36,15 @@ public class IRConstants
 	public static final String TEST_CASE = "TestCase";
 	public static final String TEST_CASE_RUN_FULL_SUITE = "runFullSuite";
 
-	public static final String[] CLASS_NAMES_USED_IN_VDM = { "CSV", "IO",
-			"MATH", "VDMUnit", "Throwable", "Error", "AssertionFailedError",
+	public static final String[] CLASS_NAMES_USED_IN_SL = {"CSV", "IO",  "MATH", "VDMUtil"};
+
+	public static final String[] CLASS_NAMES_USED_IN_VDM_PP_RT =  (String[]) ArrayUtils.addAll(CLASS_NAMES_USED_IN_SL,
+			new String[]{"VDMUnit", "Throwable", "Error", "AssertionFailedError",
 			"Assert", "Test", "TestCase", "TestSuite", "TestListener",
-			"TestResult", "TestRunner", "VDMUtil", "CPU", "BUS" };
+			"TestResult", "TestRunner", "CPU", "BUS" });
 
 	public static final String ILLEGAL_QUOTE_VALUE = "?";
 
-	public static final String[] RESERVED_CLASS_NAMES = (String[]) ArrayUtils.addAll(new String[] {
-			QUOTES_INTERFACE_NAME }, CLASS_NAMES_USED_IN_VDM);
+	public static final String[] RESERVED_CLASS_NAMES_PP_RT = (String[]) ArrayUtils.addAll(new String[] {
+			QUOTES_INTERFACE_NAME }, CLASS_NAMES_USED_IN_VDM_PP_RT);
 }
