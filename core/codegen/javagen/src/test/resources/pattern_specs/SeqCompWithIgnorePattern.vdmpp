@@ -1,0 +1,14 @@
+class Entry
+
+functions
+f: nat -> seq of nat
+f(a) ==
+[ 1 | - in set {1, ..., a} ];
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return len f(10) = 10;
+
+end Entry
