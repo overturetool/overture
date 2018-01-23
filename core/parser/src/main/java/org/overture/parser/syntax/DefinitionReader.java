@@ -818,7 +818,7 @@ public class DefinitionReader extends SyntaxReader
 		PExp body = readFunctionBody();
 		PExp precondition = null;
 		PExp postcondition = null;
-		LexNameToken measure = null;
+		PExp measure = null;
 
 		if (lastToken().is(VDMToken.PRE))
 		{
@@ -835,7 +835,19 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(VDMToken.MEASURE))
 		{
 			nextToken();
-			measure = readNameToken("Expecting name after 'measure'");
+
+			if (lastToken().is(VDMToken.IS))
+			{
+				nextToken();
+				checkFor(VDMToken.NOT, 2125, "Expecting 'is not yet specified'");
+				checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
+				checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
+				measure = AstFactory.newANotYetSpecifiedExp(lastToken().location);
+			}
+			else
+			{
+				measure = expr.readExpression();
+			}
 		}
 
 		return AstFactory.newAExplicitFunctionDefinition(idToName(funcName), scope, typeParams, type, parameters, body, precondition, postcondition, false, measure);
@@ -901,7 +913,7 @@ public class DefinitionReader extends SyntaxReader
 		PExp body = null;
 		PExp precondition = null;
 		PExp postcondition = null;
-		LexNameToken measure = null;
+		PExp measure = null;
 
 		if (lastToken().is(VDMToken.EQUALSEQUALS)) // extended implicit function
 		{
@@ -931,7 +943,18 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(VDMToken.MEASURE))
 		{
 			nextToken();
-			measure = readNameToken("Expecting name after 'measure'");
+			if (lastToken().is(VDMToken.IS))
+			{
+				nextToken();
+				checkFor(VDMToken.NOT, 2125, "Expecting 'is not yet specified'");
+				checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
+				checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
+				measure = AstFactory.newANotYetSpecifiedExp(lastToken().location);
+			}
+			else
+			{
+				measure = expr.readExpression();
+			}
 		}
 
 		return AstFactory.newAImplicitFunctionDefinition(idToName(funcName), scope, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure);

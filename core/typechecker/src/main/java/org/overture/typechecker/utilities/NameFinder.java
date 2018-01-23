@@ -200,6 +200,12 @@ public class NameFinder extends
 		{
 			return postdef;
 		}
+		
+		PDefinition measureDef = node.getMeasureDef();
+		if (measureDef != null && measureDef.apply(this, question) != null)
+		{
+			return measureDef;
+		}
 
 		return null;
 	}
@@ -266,6 +272,12 @@ public class NameFinder extends
 																		// sought, scope) != null)
 		{
 			return postdef;
+		}
+		
+		PDefinition measureDef = node.getMeasureDef();
+		if (measureDef != null && measureDef.apply(this, question) != null)
+		{
+			return measureDef;
 		}
 
 		return null;
