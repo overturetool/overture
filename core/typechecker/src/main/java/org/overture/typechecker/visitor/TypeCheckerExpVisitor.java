@@ -672,7 +672,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 			return node.getType();
-		} else
+		}
+		else if (question.assistantFactory.createPTypeAssistant().isType(node.getLeft().getType(), ARationalNumericBasicType.class) ||
+				 question.assistantFactory.createPTypeAssistant().isType(node.getRight().getType(), ARationalNumericBasicType.class))
+		{
+			node.setType(AstFactory.newARationalNumericBasicType(node.getLocation()));
+			return node.getType();
+		}
+		else
 		{
 			node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 			return node.getType();
