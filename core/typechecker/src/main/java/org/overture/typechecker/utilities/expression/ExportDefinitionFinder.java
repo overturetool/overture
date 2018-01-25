@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -66,7 +67,17 @@ public class ExportDefinitionFinder
 	public Collection<? extends PDefinition> caseAAllExport(AAllExport exp,
 			LinkedList<PDefinition> actualDefs) throws AnalysisException
 	{
-		return actualDefs; // The lot!
+		List<PDefinition> list = new Vector<PDefinition>();
+		
+		for (PDefinition d: actualDefs)
+		{
+			if (!(d instanceof AStateDefinition))
+			{
+				list.add(d);
+			}
+		}
+		
+		return list;
 	}
 
 	@Override
