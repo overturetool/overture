@@ -22,12 +22,14 @@
 package org.overture.typechecker.assistant.type;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -93,6 +95,44 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 		type.setDefinitions((List<? extends PDefinition>) t.getDefinitions().clone());
 		type.setInstantiated(null);
 		return type;
+	}
+
+	public AFunctionType getMeasureType(AFunctionType type, boolean isCurried, PType actual)
+	{
+		List<PType> cparams = new Vector<PType>();
+		cparams.addAll(type.getParameters());
+		AFunctionType ft = type;
+		
+		while (ft.getResult() instanceof AFunctionType)
+		{
+			ft = (AFunctionType)type.getResult();
+			cparams.addAll(ft.getParameters());
+		}
+		
+		// Clean the return types to be precisely nat or nat-tuple.
+		
+		
+		
+		if (af.createPTypeAssistant().isNumeric(actual))
+		{
+			actual = AstFactory.newANatNumericBasicType(type.getLocation());
+		}
+		else if (af.createPTypeAssistant().isProduct(actual))
+		{
+			AProductType p = af.createPTypeAssistant().getProduct(actual);
+			List<PType> nats = new Vector<PType>();
+			
+			for (int i=0; i<p.getTypes().size(); i++)
+			{
+				nats.add(AstFactory.newANatNumericBasicType(type.getLocation()));
+			}
+			
+			actual = AstFactory.newAProductType(type.getLocation(), nats);
+		}
+
+		AFunctionType mtype = AstFactory.newAFunctionType(type.getLocation(), false, cparams, actual);
+		mtype.setDefinitions(type.getDefinitions());
+		return mtype;
 	}
 
 }

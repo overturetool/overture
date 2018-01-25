@@ -169,9 +169,9 @@ public class FunctionValue extends Value
 		this.classdef = def.getClassDefinition();
 		this.result = null;
 
-		if (Settings.measureChecks && def.getMeasureDef() != null)
+		if (Settings.measureChecks && def.getMeasureName() != null)
 		{
-			measureName = def.getMeasureDef().getName();
+			measureName = def.getMeasureName();
 			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
 		}
 	}
@@ -203,9 +203,9 @@ public class FunctionValue extends Value
 		this.checkInvariants = true;
 		this.classdef = def.getClassDefinition();
 
-		if (Settings.measureChecks && def.getMeasureDef() != null)
+		if (Settings.measureChecks && def.getMeasureName() != null)
 		{
-			measureName = def.getMeasureDef().getName();
+			measureName = def.getMeasureName();
 			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
 		}
 	}

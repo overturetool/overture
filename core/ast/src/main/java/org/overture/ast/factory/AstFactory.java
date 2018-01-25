@@ -597,7 +597,7 @@ public class AstFactory
 			ILexNameToken name, NameScope scope,
 			List<ILexNameToken> typeParams, AFunctionType type,
 			List<List<PPattern>> parameters, PExp body, PExp precondition,
-			PExp postcondition, boolean typeInvariant, ILexNameToken measure)
+			PExp postcondition, boolean typeInvariant, PExp measure)
 	{
 
 		AExplicitFunctionDefinition result = new AExplicitFunctionDefinition();
@@ -617,7 +617,7 @@ public class AstFactory
 		result.setIsCurried(parameters.size() > 1);
 		result.setRecursive(false);
 		result.setIsUndefined(false);
-		result.setMeasureLexical(0);
+		result.setMeasureName(null);
 
 		List<PDefinition> defsList = new LinkedList<PDefinition>();
 		defsList.add(result);
@@ -633,7 +633,7 @@ public class AstFactory
 			List<ILexNameToken> typeParams,
 			List<APatternListTypePair> parameterPatterns,
 			APatternTypePair resultPattern, PExp body, PExp precondition,
-			PExp postcondition, ILexNameToken measure)
+			PExp postcondition, PExp measure)
 	{
 
 		AImplicitFunctionDefinition result = new AImplicitFunctionDefinition();
@@ -651,7 +651,7 @@ public class AstFactory
 		result.setMeasure(measure);
 		result.setRecursive(false);
 		result.setIsUndefined(false);
-		result.setMeasureLexical(0);
+		result.setMeasureName(null);
 
 		List<PType> ptypes = new LinkedList<PType>();
 
