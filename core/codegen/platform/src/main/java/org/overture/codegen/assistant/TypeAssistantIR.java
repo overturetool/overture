@@ -189,6 +189,11 @@ public class TypeAssistantIR extends AssistantBase
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
 		SClassDeclIR classDecl = assistantManager.getDeclAssistant().findClass(info.getClasses(), fieldModule);
+		
+		if(classDecl == null)
+		{
+			return null;
+		}
 
 		List<AMethodDeclIR> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, info.getClasses());
 

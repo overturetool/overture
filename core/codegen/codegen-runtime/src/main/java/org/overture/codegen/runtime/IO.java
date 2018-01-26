@@ -106,17 +106,23 @@ public class IO
 		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
 	}
 
-	public boolean echo(String text)
+	/*
+	 * Unlike the VDMPP/VDM-RT versions, echo, fecho (including the overloaded
+	 * versions) and ferror are declared *static* in the code-generation runtime.
+	 * This ensures that they also work for code-generated VDM-SL models (where
+	 * everything is static)
+	 */
+	public static boolean echo(String text)
 	{
 		return fecho("[]", text, null);
 	}
 
-	public boolean echo(VDMSeq text)
+	public static boolean echo(VDMSeq text)
 	{
 		return fecho("[]", SeqUtil.toStr(text), null);
 	}
 
-	public boolean fecho(String filename, String text, Object fdir)
+	public static boolean fecho(String filename, String text, Object fdir)
 	{
 
 		if (filename.equals("[]"))
@@ -142,13 +148,13 @@ public class IO
 		return true;
 	}
 
-	public boolean fecho(VDMSeq filename, VDMSeq text, Object fdir)
+	public static boolean fecho(VDMSeq filename, VDMSeq text, Object fdir)
 	{
 
 		return fecho(filename.toString(), text.toString(), fdir);
 	}
 
-	public String ferror()
+	public static String ferror()
 	{
 		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
 	}

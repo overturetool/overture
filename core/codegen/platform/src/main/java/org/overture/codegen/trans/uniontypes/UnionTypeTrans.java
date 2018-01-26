@@ -639,6 +639,12 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			String recordName = recordType.getName().getName();
 
 			SClassDeclIR classDecl = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findClass(transAssistant.getInfo().getClasses(), definingClassName);
+			
+			if(classDecl == null)
+			{
+				return;
+			}
+			
 			ARecordDeclIR record = transAssistant.getInfo().getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
 
 			List<STypeIR> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);

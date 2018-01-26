@@ -278,6 +278,12 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 				{
 					continue;
 				}
+				else if(pattern instanceof AIgnorePatternIR)
+				{
+					AIdentifierPatternIR idPattern = getIdPattern(config.getIgnorePatternPrefix());
+					transAssistant.replaceNodeWith(pattern, idPattern);
+					continue;
+				}
 
 				// TODO: Make it such that the successer var is passed on (multiple binds)
 				ABlockStmIR patternHandlingBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, nextElementDecl.getExp());
