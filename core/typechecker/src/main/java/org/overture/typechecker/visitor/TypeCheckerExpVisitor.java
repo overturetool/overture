@@ -666,13 +666,20 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkNumeric(node, THIS, question.newConstraint(null));
-
-		if (node.getLeft().getType() instanceof ARealNumericBasicType
-				|| node.getRight().getType() instanceof ARealNumericBasicType)
+		
+		if (question.assistantFactory.createPTypeAssistant().isType(node.getLeft().getType(), ARealNumericBasicType.class) ||
+			question.assistantFactory.createPTypeAssistant().isType(node.getRight().getType(), ARealNumericBasicType.class))
 		{
 			node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 			return node.getType();
-		} else
+		}
+		else if (question.assistantFactory.createPTypeAssistant().isType(node.getLeft().getType(), ARationalNumericBasicType.class) ||
+				 question.assistantFactory.createPTypeAssistant().isType(node.getRight().getType(), ARationalNumericBasicType.class))
+		{
+			node.setType(AstFactory.newARationalNumericBasicType(node.getLocation()));
+			return node.getType();
+		}
+		else
 		{
 			node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 			return node.getType();
