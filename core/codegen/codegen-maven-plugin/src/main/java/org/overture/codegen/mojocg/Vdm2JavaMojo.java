@@ -81,6 +81,23 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo {
             MsgPrinter.getPrinter().setSilent(true);
         }
 
+       getLog().info("Starting the VDM-to-Java code generator...");
+
+        List<File> files = new LinkedList<File>();
+
+        if (specificationDir != null && specificationDir.isDirectory()) {
+            findVdmSources(files, specificationDir);
+        }
+
+        if (files == null || files.isEmpty()) {
+            throw new MojoFailureException("Nothing to generate, no specification files.");
+        }
+
+        if (!isReGenerationRequired(files)) {
+            getLog().info("No change in specification files. Skipping generating.");
+            return;
+        }
+
         if (outputDirectory != null && outputDirectory.exists()) {
             getLog().debug("Deleting Java code generation output folder: " + outputDirectory.getAbsolutePath());
             try {
@@ -91,8 +108,6 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo {
 
             }
         }
-
-        getLog().info("Starting the VDM-to-Java code generator...");
 
         // Let's make sure that maven knows to look in the output directory
         project.addCompileSourceRoot(outputDirectory.getPath());
@@ -124,25 +139,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo {
             }
         }
 
-        List<File> files = new LinkedList<File>();
-
-        if (specificationDir != null && specificationDir.isDirectory()) {
-            findVdmSources(files, specificationDir);
-        }
-
-        if (files == null || files.isEmpty()) {
-            throw new MojoFailureException("Nothing to generate, no specification files.");
-        }
-
-        if (!isReGenerationRequired(files)) {
-            getLog().info("No change in specification files. Skipping generating.");
-            return;
-        }
-
         outputDirectory.mkdirs();
-
-        List<File> tmp = new Vector<File>();
-        tmp.addAll(files);
 
         if (release.equals(VDM_10)) {
             Settings.release = Release.VDM_10;
