@@ -47,6 +47,8 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
@@ -69,7 +71,7 @@ public class RecursiveObligation extends ProofObligation
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);
 
-		PExp lt_exp = buildStructuralComparison(measureLeft_exp, measureRight_exp, def.getMeasureLexical());
+		PExp lt_exp = buildStructuralComparison(measureLeft_exp, measureRight_exp, getLex(def.getMeasureDef()));
 
 		stitch = lt_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(lt_exp));
@@ -84,7 +86,7 @@ public class RecursiveObligation extends ProofObligation
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);
 
-		PExp lt_exp = buildStructuralComparison(measureLeft_exp, measureRight_exp, def.getMeasureLexical());
+		PExp lt_exp = buildStructuralComparison(measureLeft_exp, measureRight_exp, getLex(def.getMeasureDef()));
 
 		stitch = lt_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(lt_exp));
@@ -99,7 +101,7 @@ public class RecursiveObligation extends ProofObligation
 			paramPatterns.addAll(list);
 		}
 
-		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), def.getMeasure(), paramPatterns);
+		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), def.getMeasureName(), paramPatterns);
 	}
 
 	private PExp buildMeasureLeft(AImplicitFunctionDefinition def,
@@ -111,7 +113,7 @@ public class RecursiveObligation extends ProofObligation
 			paramPatterns.addAll(pair.getPatterns());
 		}
 
-		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), def.getMeasure(), paramPatterns);
+		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), def.getMeasureName(), paramPatterns);
 	}
 
 	private PExp buildMeasureLeftParams(AApplyExp apply,
@@ -158,13 +160,13 @@ public class RecursiveObligation extends ProofObligation
 	private PExp buildMeasureRight(AExplicitFunctionDefinition def,
 			AApplyExp apply)
 	{
-		return buildMeasureRightParams(apply, def.getMeasure(), def.getActualResult());
+		return buildMeasureRightParams(apply, def.getMeasureName(), def.getActualResult());
 	}
 
 	private PExp buildMeasureRight(AImplicitFunctionDefinition def,
 			AApplyExp apply)
 	{
-		return buildMeasureRightParams(apply, def.getMeasure(), def.getActualResult());
+		return buildMeasureRightParams(apply, def.getMeasureName(), def.getActualResult());
 	}
 
 	private PExp buildMeasureRightParams(AApplyExp apply,
@@ -292,5 +294,19 @@ public class RecursiveObligation extends ProofObligation
 		r.setOriginal(name.getFullName());
 		return r;
 	}
-
+	
+	private int getLex(AExplicitFunctionDefinition mdef)
+	{
+		AFunctionType ftype = (AFunctionType) mdef.getType();
+		
+		if (ftype.getResult() instanceof AProductType)
+		{
+			AProductType type = (AProductType)ftype.getResult();
+			return type.getTypes().size();
+		}
+		else
+		{
+			return 0;
+		}
+	}
 }

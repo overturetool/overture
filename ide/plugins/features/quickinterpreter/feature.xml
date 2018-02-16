@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.quickinterpreter"
       label="VDM Quick Interpreter"
-      version="2.5.6">
+      version="2.6.0">
 
    <description>
       %description

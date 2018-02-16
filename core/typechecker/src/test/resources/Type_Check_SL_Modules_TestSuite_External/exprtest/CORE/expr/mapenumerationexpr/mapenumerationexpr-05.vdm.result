@@ -4,6 +4,7 @@
 <message column="24" line="17" message="Value is not of the right type" messageType="error" number="3327" resource="mapenumerationexpr-05.vdm"/>
 <message column="22" line="20" message="Value is not of the right type" messageType="error" number="3327" resource="mapenumerationexpr-05.vdm"/>
 <message column="24" line="21" message="Value is not of the right type" messageType="error" number="3327" resource="mapenumerationexpr-05.vdm"/>
+<message column="10" line="15" message="Value is not of the right type" messageType="error" number="3327" resource="mapenumerationexpr-05.vdm"/>
 <message column="14" line="14" message="Expression does not match declared type" messageType="error" number="3051" resource="mapenumerationexpr-05.vdm"/>
 <result/>
 </testResult>

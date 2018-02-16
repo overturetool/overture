@@ -202,6 +202,11 @@ public class NamedValueLister extends
 			nvl.add(new NameValuePair(def.getPostdef().getName(), postfunc));
 			postfunc.uninstantiated = !def.getTypeParams().isEmpty();
 		}
+		
+		if (def.getMeasureDef() != null && def.getMeasureDef().getName().toString().startsWith("measure_"))
+		{
+			nvl.add(new NameValuePair(def.getMeasureName(), new FunctionValue(def.getMeasureDef(), null, null, null)));
+		}
 
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
@@ -278,6 +283,11 @@ public class NamedValueLister extends
 		{
 			nvl.add(new NameValuePair(def.getPostdef().getName(), postfunc));
 			postfunc.uninstantiated = !def.getTypeParams().isEmpty();
+		}
+		
+		if (def.getMeasureDef() != null && def.getMeasureName().toString().startsWith("measure_"))
+		{
+			nvl.add(new NameValuePair(def.getMeasureName(), new FunctionValue(def.getMeasureDef(), null, null, null)));
 		}
 
 		if (Settings.dialect == Dialect.VDM_SL)

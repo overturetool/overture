@@ -3,6 +3,7 @@
 <message column="14" line="34" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-70.vdm"/>
 <message column="29" line="36" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-70.vdm"/>
 <message column="38" line="36" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-70.vdm"/>
+<message column="37" line="36" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-70.vdm"/>
 <message column="30" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-70.vdm"/>
 <message column="61" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-70.vdm"/>
 <message column="10" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-70.vdm"/>

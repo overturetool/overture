@@ -359,6 +359,12 @@ public class SeqUtil
 
 	public static String toStr(Object seq)
 	{
+		if(seq == null)
+		{
+			/* In case the object subject to conversion is of an optional type */
+			return null;
+		}
+
 		if (seq instanceof VDMSeq)
 		{
 			VDMSeq vdmSeq = (VDMSeq) seq;
@@ -381,6 +387,12 @@ public class SeqUtil
 	@SuppressWarnings("unchecked")
 	public static VDMSeq toSeq(Object str)
 	{
+		if(str == null)
+		{
+			/* In case the object subject to conversion is of an optional type */
+			return null;
+		}
+
 		VDMSeq result = seq();
 
 		if (str instanceof String)
