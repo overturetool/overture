@@ -23,9 +23,11 @@ public class Entry {
         Number x = ((Number) iterator_2.next());
         setCompResult_2.add(x.longValue() + d.longValue());
       }
-      final VDMSet e = Utils.copy(setCompResult_2);
-      final Number f = 20L;
-      return SetUtil.union(Utils.copy(b), Utils.copy(e));
+      {
+        final VDMSet e = Utils.copy(setCompResult_2);
+        final Number f = 20L;
+        return SetUtil.union(Utils.copy(b), Utils.copy(e));
+      }
     }
   }
 
