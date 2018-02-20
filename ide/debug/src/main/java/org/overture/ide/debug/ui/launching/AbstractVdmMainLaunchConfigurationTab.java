@@ -23,6 +23,7 @@ package org.overture.ide.debug.ui.launching;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -758,6 +759,18 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		dialog.setTitle(getModuleLabelName()
 				+ " and function/operation selection");
 		dialog.setMessage("Select a function or operation");
+		
+		dialog.setComparator(new ViewerComparator(new Comparator<String>() {
+
+			@Override
+			public int compare(String str1, String str2) {
+		        int res = String.CASE_INSENSITIVE_ORDER.compare(str1, str2);
+		        if (res == 0) {
+		            res = str1.compareTo(str2);
+		        }
+		        return res;
+			}
+		}));
 
 		dialog.addFilter(new ExecutableFilter());
 		dialog.setAllowMultiple(false);
