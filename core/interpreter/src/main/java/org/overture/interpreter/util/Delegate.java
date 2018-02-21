@@ -44,6 +44,7 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.util.Utils;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
@@ -127,31 +128,37 @@ public class Delegate implements Serializable
 			{
 				if (d.getName().getName().equals(mname))
 				{
+					plist = null;
+
 					if (ctxt.assistantFactory.createPDefinitionAssistant().isOperation(d))
 					{
 						if (d instanceof AExplicitOperationDefinition)
 						{
 							AExplicitOperationDefinition e = (AExplicitOperationDefinition) d;
 							plist = e.getParameterPatterns();
-						} else if (d instanceof AImplicitOperationDefinition)
+						}
+						else if (d instanceof AImplicitOperationDefinition)
 						{
 							AImplicitOperationDefinition e = (AImplicitOperationDefinition) d;
 							plist = ctxt.assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(e);
 						}
-
-						break;
-					} else if (ctxt.assistantFactory.createPDefinitionAssistant().isFunction(d))
+					}
+					else if (ctxt.assistantFactory.createPDefinitionAssistant().isFunction(d))
 					{
 						if (d instanceof AExplicitFunctionDefinition)
 						{
 							AExplicitFunctionDefinition e = (AExplicitFunctionDefinition) d;
 							plist = e.getParamPatternList().get(0);
-						} else if (d instanceof AImplicitFunctionDefinition)
+						}
+						else if (d instanceof AImplicitFunctionDefinition)
 						{
 							AImplicitFunctionDefinition e = (AImplicitFunctionDefinition) d;
 							plist = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(e).get(0);
 						}
+					}
 
+					if (toTitle(mname, plist).equals(title))
+					{
 						break;
 					}
 				}
@@ -271,5 +278,10 @@ public class Delegate implements Serializable
 		}
 
 		out.defaultWriteObject();
+	}
+
+	private String toTitle(String mname, List<PPattern> paramPatterns)
+	{
+		return mname + Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }
