@@ -1,8 +1,9 @@
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.interpreter.runtime.*;
 import org.overture.interpreter.values.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -44,19 +45,17 @@ public class TestCase {
                         success = true;
                     } catch (Exception e) {
                         if (e instanceof ExitException) {
-                            if(((ExitException)e).value.objectValue(null).type.getName().equals("AssertionFailedError"))
-                            {
+                            if (((ExitException) e).value.objectValue(null).type.getName().equals("AssertionFailedError")) {
                                 success = false;
                             }
                             throw e;
                         }
 
                         try {
-                            return  ClassInterpreter.getInstance().evaluate("Error`throw(\""
+                            return ClassInterpreter.getInstance().evaluate("Error`throw(\""
                                     + e.getMessage().replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'")
                                     + "\")", mainContext);
-                        }catch(ExitException e2)
-                        {
+                        } catch (ExitException e2) {
                             error = e2;
                             throw e2;
                         }
@@ -79,6 +78,32 @@ public class TestCase {
         }
         return new VoidValue();
 
+    }
+
+    public static boolean reflectionRunTest(AModuleModules module, AExplicitOperationDefinition opDef) throws Exception {
+        String moduleName = module.getName().getName();
+        String testName = opDef.getName().getName();
+
+        long timerStart = System.nanoTime();
+        boolean success = false;
+        ExitException error = null;
+        try {
+            ModuleInterpreter.getInstance().evaluate(moduleName + "`" + testName + "()"
+                    , ModuleInterpreter.getInstance().initialContext);
+            success = true;
+        } catch (Exception e) {
+            if (e instanceof ExitException) {
+                success = false;
+            }
+            throw e;
+        } finally {
+            long totalExecTime = System.nanoTime() - timerStart;
+
+            if (System.getProperty(vdmUnitReportEnable) != null) {
+                recordTestResults(moduleName, testName, success, error, totalExecTime);
+            }
+        }
+        return success;
     }
 
     private static void recordTestResults(String containerName, String methodName, boolean success, ExitException error, long totalExecTime) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
@@ -115,8 +140,7 @@ public class TestCase {
                 n = doc.createElement("testcase");
             }
 
-            while(n.getFirstChild()!=null)
-            {
+            while (n.getFirstChild() != null) {
                 n.removeChild(n.getFirstChild());
             }
 
@@ -127,20 +151,20 @@ public class TestCase {
 
             testSuiteNode.setAttribute("tests", String.valueOf(Integer.parseInt(testSuiteNode.getAttribute("tests")) + 1));
 
-            if (error!=null) {
+            if (error != null) {
                 testSuiteNode.setAttribute("error", String.valueOf(Integer.parseInt(testSuiteNode.getAttribute("errors")) + 1));
                 Element errorElement = doc.createElement("error");
-                errorElement.setAttribute("message",error.number+"");
-                errorElement.setAttribute("type","ERROR");
+                errorElement.setAttribute("message", error.number + "");
+                errorElement.setAttribute("type", "ERROR");
                 StringWriter strOut = new StringWriter();
-                error.ctxt.printStackTrace(new PrintWriter(strOut),true);
+                error.ctxt.printStackTrace(new PrintWriter(strOut), true);
                 errorElement.setTextContent(strOut.toString());
                 n.appendChild(errorElement);
             } else if (!success) {
                 testSuiteNode.setAttribute("failures", String.valueOf(Integer.parseInt(testSuiteNode.getAttribute("failures")) + 1));
                 Element failureElement = doc.createElement("failure");
-                failureElement.setAttribute("message",methodName);
-                failureElement.setAttribute("type","WARNING");
+                failureElement.setAttribute("message", methodName);
+                failureElement.setAttribute("type", "WARNING");
                 failureElement.setAttribute("time", totalExecTime * 1E-9 + "");
                 n.appendChild(failureElement);
             }
