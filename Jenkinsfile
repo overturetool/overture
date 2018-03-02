@@ -2,7 +2,7 @@ node {
     try
     {
         // Only keep one build
-        properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '1']]])
+        properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '25']]])
         
         // Mark the code checkout 'stage'....
         stage ('Checkout'){
