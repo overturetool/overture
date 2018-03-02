@@ -3341,6 +3341,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			node.setType(AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation())));
 			return node.getType();
 		}
+		else if (etype instanceof ASeq1SeqType)
+		{
+			ASeq1SeqType s = (ASeq1SeqType)etype;
+			etype = AstFactory.newASeqSeqType(node.getLocation(), s.getSeqof());
+		}
 
 		node.setType(etype);
 		return etype;
