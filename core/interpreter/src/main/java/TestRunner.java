@@ -10,6 +10,31 @@ import java.util.List;
 import java.util.Vector;
 
 public class TestRunner {
+	
+	private static boolean fail = false;
+	private static String msg = null;
+	
+	public static Value markFail()
+	{
+		fail = true;
+		return new VoidValue();
+	}
+	
+	public static Value setMsg(Value msgVal)
+	{
+		if(msgVal instanceof SeqValue)
+		{
+			try {
+				msg = msgVal.stringValue(null);
+			} catch (ValueException e) {
+				
+				Console.out.println("\tReceived unexpected message: " + msgVal);
+			}
+		}
+		
+		return new VoidValue();
+	}
+	
     public static Value collectTests(Value obj) {
         List<String> tests = new Vector<String>();
         ObjectValue instance = (ObjectValue) obj;
@@ -91,19 +116,37 @@ public class TestRunner {
         int testErrorCount = 0;
 
         for (AModuleModules module : tests) {
+        	        	
             String moduleName = module.getName().getName();
             for (PDefinition def : module.getDefs()) {
 
                 String testName = def.getName().getName();
                 if (def instanceof AExplicitOperationDefinition && testName.startsWith("test")) {
+                	
+                	fail = false;
+                	msg = null;
+                	
                     try {
                         testCount++;
                         Console.out.println("Executing test: " + moduleName + "`" + testName + "()");
-                        if (TestCase.reflectionRunTest(module, (AExplicitOperationDefinition) def)) {
-                            Console.out.println("\tOK");
-                        } else {
+                        
+                        TestCase.reflectionRunTest(module, (AExplicitOperationDefinition) def);
+                        
+                        if(fail)
+                        {
                             testFailCount++;
-                            Console.out.println("\tFAIL");
+                            //TODO: is this the right format?
+                            if(msg != null)
+                            {
+                            	Console.out.println("\tFAIL: " + msg);
+                            }
+                            else
+                            {                            	
+                            	Console.out.println("\tFAIL");
+                            }
+                        }
+                        else {
+                        	Console.out.println("\tOK");
                         }
                     } catch (Exception e) {
                         testErrorCount++;
