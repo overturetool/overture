@@ -6,6 +6,7 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.*;
 import org.overture.interpreter.values.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -116,7 +117,10 @@ public class TestRunner {
         int testErrorCount = 0;
 
         for (AModuleModules module : tests) {
-        	        	
+        	
+        	AExplicitOperationDefinition setup = findLifecycleOp(module.getDefs(), "setUp");
+        	AExplicitOperationDefinition tearDown = findLifecycleOp(module.getDefs(), "tearDown");
+        	
             String moduleName = module.getName().getName();
             for (PDefinition def : module.getDefs()) {
 
@@ -126,11 +130,25 @@ public class TestRunner {
                 	fail = false;
                 	msg = null;
                 	
+                	boolean tearDownRun = false;
+                	
                     try {
                         testCount++;
                         Console.out.println("Executing test: " + moduleName + "`" + testName + "()");
                         
+                        if(setup != null)
+                        {
+                        	TestCase.reflectionRunTest(module, setup);
+                        }
+                        
                         TestCase.reflectionRunTest(module, (AExplicitOperationDefinition) def);
+                        
+                        tearDownRun = true;
+                        
+                        if(tearDown != null)
+                        {
+                        	TestCase.reflectionRunTest(module, tearDown);
+                        }
                         
                         if(fail)
                         {
@@ -152,6 +170,22 @@ public class TestRunner {
                         testErrorCount++;
                         Console.out.println("\tERROR");
                     }
+					finally
+					{
+						if (!tearDownRun)
+						{
+							if (tearDown != null)
+							{
+								try
+								{
+									TestCase.reflectionRunTest(module, tearDown);
+								} catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+							}
+						}
+					}
                 }
             }
         }
@@ -176,4 +210,17 @@ public class TestRunner {
 
         return new VoidValue();
     }
+
+	private static AExplicitOperationDefinition findLifecycleOp(LinkedList<PDefinition> defs, String name) {
+		
+		for(PDefinition d : defs)
+		{
+			if(d instanceof AExplicitOperationDefinition && d.getName().getName().equals(name))
+			{
+				return (AExplicitOperationDefinition) d;
+			}
+		}
+		
+		return null;
+	}
 }
