@@ -217,7 +217,7 @@ public class Delegate implements Serializable
                 m = getJavaDelegateMethod(mname, ptypes);
             }catch(InternalException e)
             {
-                searchException = e;
+                // Fine
             }
 
 			if(m==null)
@@ -253,7 +253,7 @@ public class Delegate implements Serializable
 				m = getJavaDelegateMethod(OVERTURE_LIB_PKG_PREFIX+mname, ptypes);
 			}catch(InternalException e)
 			{
-				searchException = e;
+				// Fine
 			}
 		}
 		if(m==null && searchException!=null) {
