@@ -124,9 +124,8 @@ public class TestRunner {
             String moduleName = module.getName().getName();
             for (PDefinition def : module.getDefs()) {
 
-                String testName = def.getName().getName();
-                if (def instanceof AExplicitOperationDefinition && testName.startsWith("test")) {
-                	
+                if (def instanceof AExplicitOperationDefinition && def.getName().getName().startsWith("test")) {
+
                 	fail = false;
                 	msg = null;
                 	
@@ -134,7 +133,7 @@ public class TestRunner {
                 	
                     try {
                         testCount++;
-                        Console.out.println("Executing test: " + moduleName + "`" + testName + "()");
+                        Console.out.println("Executing test: " + moduleName + "`" + def.getName().getName() + "()");
                         
                         if(setup != null)
                         {
