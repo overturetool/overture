@@ -105,6 +105,7 @@ public class BaseTransformationAssistant
 				LinkedList<SStmIR> statementsToLift = block.getStatements();
 
 				ABlockStmIR liftedBlock = new ABlockStmIR();
+				liftedBlock.setScoped(block.getScoped());
 				liftedBlock.setLocalDefs(defsToLift);
 				liftedBlock.setStatements(statementsToLift);
 
