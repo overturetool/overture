@@ -90,10 +90,11 @@ public class TestCase {
         try {
             ModuleInterpreter.getInstance().evaluate(moduleName + "`" + testName + "()"
                     , ModuleInterpreter.getInstance().initialContext);
-            success = true;
+            success = !TestRunner.isFailed();
         } catch (Exception e) {
+            success = false;
             if (e instanceof ExitException) {
-                success = false;
+                error = (ExitException) e;
             }
             throw e;
         } finally {
@@ -166,6 +167,10 @@ public class TestCase {
                 failureElement.setAttribute("message", methodName);
                 failureElement.setAttribute("type", "WARNING");
                 failureElement.setAttribute("time", totalExecTime * 1E-9 + "");
+                if(TestRunner.getMsg()!=null)
+                {
+                    failureElement.setTextContent(TestRunner.getMsg());
+                }
                 n.appendChild(failureElement);
             }
 
