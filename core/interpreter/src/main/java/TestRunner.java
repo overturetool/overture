@@ -20,6 +20,11 @@ public class TestRunner {
 		fail = true;
 		return new VoidValue();
 	}
+
+	public static boolean isFailed()
+    {
+        return fail;
+    }
 	
 	public static Value setMsg(Value msgVal)
 	{
@@ -35,6 +40,11 @@ public class TestRunner {
 		
 		return new VoidValue();
 	}
+
+	public static String getMsg()
+    {
+        return msg;
+    }
 	
     public static Value collectTests(Value obj) {
         List<String> tests = new Vector<String>();
@@ -184,6 +194,8 @@ public class TestRunner {
 								}
 							}
 						}
+						msg = null;
+                        fail = false;
 					}
                 }
             }
