@@ -65,6 +65,7 @@ node {
                 sh "ssh ${REMOTE} mkdir -p ${DEST}"
 
 	        sh "scp core/commandline/target/Overture-${version}.jar ${REMOTE}:${DEST}"
+		sh "scp -r ide/product/target/products/*.zip ${REMOTE}:${DEST}"
 
                 sh "ssh ${REMOTE} /home/jenkins/update-latest.sh web/overture/${deployBranchName}"
             }
