@@ -155,7 +155,7 @@ public class TestCase {
             if (error != null) {
                 testSuiteNode.setAttribute("error", String.valueOf(Integer.parseInt(testSuiteNode.getAttribute("errors")) + 1));
                 Element errorElement = doc.createElement("error");
-                errorElement.setAttribute("message", error.number + "");
+                errorElement.setAttribute("message", error.getMessage() + "");
                 errorElement.setAttribute("type", "ERROR");
                 StringWriter strOut = new StringWriter();
                 error.ctxt.printStackTrace(new PrintWriter(strOut), true);
