@@ -147,7 +147,7 @@ public class TestRunner {
                         
                         if(setup != null)
                         {
-                        	TestCase.reflectionRunTest(module, setup);
+                        	TestCase.reflectionRun(module, setup);
                         }
                         
                         TestCase.reflectionRunTest(module, (AExplicitOperationDefinition) def);
@@ -156,7 +156,7 @@ public class TestRunner {
                         
                         if(tearDown != null)
                         {
-                        	TestCase.reflectionRunTest(module, tearDown);
+                        	TestCase.reflectionRun(module, tearDown);
                         }
                         
                         if(fail)
@@ -177,7 +177,7 @@ public class TestRunner {
                         }
                     } catch (Exception e) {
                         testErrorCount++;
-                        Console.out.println("\tERROR");
+                        Console.out.println("\tERROR: "+e.getMessage());
                     }
 					finally
 					{
@@ -187,7 +187,7 @@ public class TestRunner {
 							{
 								try
 								{
-									TestCase.reflectionRunTest(module, tearDown);
+									TestCase.reflectionRun(module, tearDown);
 								} catch (Exception e)
 								{
 									e.printStackTrace();

@@ -86,16 +86,14 @@ public class TestCase {
 
         long timerStart = System.nanoTime();
         boolean success = false;
-        ExitException error = null;
+        Exception error = null;
         try {
             ModuleInterpreter.getInstance().evaluate(moduleName + "`" + testName + "()"
                     , ModuleInterpreter.getInstance().initialContext);
             success = !TestRunner.isFailed();
         } catch (Exception e) {
             success = false;
-            if (e instanceof ExitException) {
-                error = (ExitException) e;
-            }
+            error =  e;
             throw e;
         } finally {
             long totalExecTime = System.nanoTime() - timerStart;
@@ -107,7 +105,20 @@ public class TestCase {
         return success;
     }
 
-    private static void recordTestResults(String containerName, String methodName, boolean success, ExitException error, long totalExecTime) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
+
+    public static void reflectionRun(AModuleModules module, AExplicitOperationDefinition opDef) {
+        String moduleName = module.getName().getName();
+        String testName = opDef.getName().getName();
+
+        try {
+            ModuleInterpreter.getInstance().evaluate(moduleName + "`" + testName + "()"
+                    , ModuleInterpreter.getInstance().initialContext);
+        } catch (Exception e) {
+            // Fine
+        }
+    }
+
+    private static void recordTestResults(String containerName, String methodName, boolean success, Exception error, long totalExecTime) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
 
         File report = new File("TEST-" + containerName + ".xml");
 
@@ -158,7 +169,12 @@ public class TestCase {
                 errorElement.setAttribute("message", error.getMessage() + "");
                 errorElement.setAttribute("type", "ERROR");
                 StringWriter strOut = new StringWriter();
-                error.ctxt.printStackTrace(new PrintWriter(strOut), true);
+                if(error instanceof  ExitException) {
+                    ((ExitException)error).ctxt.printStackTrace(new PrintWriter(strOut), true);
+                }else
+                {
+                    error.printStackTrace(new PrintWriter(strOut));
+                }
                 errorElement.setTextContent(strOut.toString());
                 n.appendChild(errorElement);
             } else if (!success) {
