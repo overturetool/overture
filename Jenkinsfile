@@ -47,6 +47,30 @@ node {
                 step([$class: 'TasksPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', high: 'FIXME', ignoreCase: true, low: '', normal: 'TODO', pattern: '', unHealthy: ''])
             }
         }
+
+	stage('Deploy') {
+            def deployBranchName = env.BRANCH_NAME
+            if (env.BRANCH_NAME == 'kel/sltest-delegate-merge') {
+
+		sh "echo Detecting current version"
+                version = sh(script: "mvn -s ${env.MVN_SETTINGS_PATH} -N org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -DDmaven.repo.local=.repository/ | grep -v '\\[' | grep -v -e '^\$'", returnStdout: true).trim()
+                sh "echo Version: ${version}"
+
+                sh "echo branch is now ${env.BRANCH_NAME}"
+
+                DEST = sh script: "echo /home/jenkins/web/overture/${deployBranchName}/Build-${BUILD_NUMBER}_`date +%Y-%m-%d_%H-%M`", returnStdout: true
+                REMOTE = "jenkins@overture.au.dk"
+
+                sh "echo The remote dir will be: ${DEST}"
+                sh "ssh ${REMOTE} mkdir -p ${DEST}"
+
+	        sh "scp core/commandline/target/Overture-${version}.jar ${REMOTE}:${DEST}"
+
+                sh "ssh ${REMOTE} /home/jenkins/update-latest.sh web/overture/${deployBranchName}"
+            }
+        }
+
+
     } catch (any) {
         currentBuild.result = 'FAILURE'
         throw any //rethrow exception to prevent the build from proceeding
