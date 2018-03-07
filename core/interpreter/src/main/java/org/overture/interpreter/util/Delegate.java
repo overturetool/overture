@@ -24,7 +24,9 @@
 package org.overture.interpreter.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -55,6 +57,7 @@ public class Delegate implements Serializable
 	private static final long serialVersionUID = 1L;
 	private final String name;
 	private List<PDefinition> definitions;
+	private static final String OVERTURE_LIB_PKG_PREFIX="org.overture.lib.";
 
 	public Delegate(String name, List<PDefinition> definitions)
 	{
@@ -73,16 +76,31 @@ public class Delegate implements Serializable
 		{
 			delegateChecked = true;
 
+			String classname = name.replace('_', '.');
 			try
 			{
-				String classname = name.replace('_', '.');
 				delegateClass = this.getClass().getClassLoader().loadClass(classname);
-				delegateMethods = new HashMap<String, Method>();
-				delegateArgs = new HashMap<String, LexNameList>();
-				definitions = assistantFactory.createPDefinitionListAssistant().singleDefinitions(definitions);
 			} catch (ClassNotFoundException e)
 			{
 				// Fine
+			}
+
+			if(delegateClass==null)
+			{
+				try
+				{
+					delegateClass = this.getClass().getClassLoader().loadClass(OVERTURE_LIB_PKG_PREFIX+classname);
+				} catch (ClassNotFoundException e)
+				{
+					// Fine
+				}
+			}
+
+
+			if(delegateClass!=null) {
+				delegateMethods = new HashMap<>();
+				delegateArgs = new HashMap<>();
+				definitions = assistantFactory.createPDefinitionListAssistant().singleDefinitions(definitions);
 			}
 		}
 
@@ -183,29 +201,88 @@ public class Delegate implements Serializable
 						+ title);
 			}
 
-			try
+			// search with no context and default package + org.overture.lib
+			InternalException searchException = null;
+			Method basicMathod = null;
+			try {
+				basicMathod = getDelegateMethod(mname, ptypes);
+			}catch(InternalException e)
 			{
-				Class<?>[] array = new Class<?>[0];
-				m = delegateClass.getMethod(mname, ptypes.toArray(array));
+				searchException = e;
+			}
 
-				if (!m.getReturnType().equals(Value.class))
-				{
-					throw new InternalException(58, "Native method does not return Value: "
-							+ m);
-				}
-			} catch (SecurityException e)
+			// search with context and default package + org.overture.lib this is preferred over no context
+            try {
+                ptypes.add(0,Context.class);
+                m = getJavaDelegateMethod(mname, ptypes);
+            }catch(InternalException e)
+            {
+                // Fine
+            }
+
+			if(m==null)
 			{
-				throw new InternalException(60, "Cannot access native method: "
-						+ e.getMessage());
-			} catch (NoSuchMethodException e)
+				m = basicMathod;
+			}
+
+
+
+			if(m==null && searchException!=null)
 			{
-				throw new InternalException(61, "Cannot find native method: "
-						+ e.getMessage());
+				throw searchException;
 			}
 
 			delegateMethods.put(title, m);
 		}
 
+		return m;
+	}
+
+	private Method getDelegateMethod(String mname, List<Class<?>> ptypes) {
+		Method m = null;
+		InternalException searchException = null;
+		try {
+			m = getJavaDelegateMethod(mname, ptypes);
+		}catch(InternalException e)
+		{
+			searchException = e;
+		}
+		if(m == null)
+		{
+			try {
+				m = getJavaDelegateMethod(OVERTURE_LIB_PKG_PREFIX+mname, ptypes);
+			}catch(InternalException e)
+			{
+				// Fine
+			}
+		}
+		if(m==null && searchException!=null) {
+			throw searchException;
+		}
+		return m;
+	}
+
+	private Method getJavaDelegateMethod(String mname, List<Class<?>> ptypes) {
+		Method m;
+		try
+        {
+            Class<?>[] array = new Class<?>[0];
+            m = delegateClass.getMethod(mname, ptypes.toArray(array));
+
+            if (!m.getReturnType().equals(Value.class))
+            {
+                throw new InternalException(58, "Native method does not return Value: "
+                        + m);
+            }
+        } catch (SecurityException e)
+        {
+            throw new InternalException(60, "Cannot access native method: "
+                    + e.getMessage());
+        } catch (NoSuchMethodException e)
+        {
+            throw new InternalException(61, "Cannot find native method: "
+                    + e.getMessage());
+        }
 		return m;
 	}
 
@@ -219,9 +296,22 @@ public class Delegate implements Serializable
 					+ m.getName());
 		}
 
+		boolean useContext = m.getParameterTypes().length >0 && m.getParameterTypes()[0].equals(Context.class);
+
 		LexNameList anames = delegateArgs.get(ctxt.title);
-		Object[] avals = new Object[anames.size()];
+
+		int argCount = anames.size();
+		if(useContext)
+		{
+			argCount++;
+		}
+		Object[] avals = new Object[argCount];
 		int a = 0;
+
+		if(useContext)
+		{
+			avals[a++] = ctxt;
+		}
 
 		for (ILexNameToken arg : anames)
 		{
@@ -253,8 +343,12 @@ public class Delegate implements Serializable
 			// {
 			// throw (ValueException)e.getTargetException();
 			// }
+
+            StringWriter strOut = new StringWriter();
+			strOut.append(e.getTargetException().getMessage()+"\n");
+			e.getTargetException().printStackTrace(new PrintWriter(strOut));
 			throw new InternalException(59, "Failed in native method: "
-					+ e.getTargetException().getMessage());
+					+ strOut);
 		}
 	}
 
