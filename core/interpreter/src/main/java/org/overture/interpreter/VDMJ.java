@@ -24,6 +24,8 @@
 package org.overture.interpreter;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -93,7 +95,13 @@ abstract public class VDMJ
 
 		Properties.init(); // Read properties file, if any
 		Settings.usingCmdLine = true;
-
+		
+		if(largs.contains("-version"))
+		{
+			println(getOvertureVersion());
+			System.exit(0);
+		}
+		
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
@@ -418,6 +426,20 @@ abstract public class VDMJ
 
 		System.exit(status == ExitStatus.EXIT_OK ? 0 : 1);
 	}
+	
+	public static String getOvertureVersion() {
+		String path = "/version.prop";
+		InputStream stream = VDMJ.class.getResourceAsStream(path);
+		if (stream == null) return "UNKNOWN";
+		java.util.Properties props = new java.util.Properties();
+		try {
+			props.load(stream);
+			stream.close();
+			return (String)props.get("version");
+		} catch (IOException e) {
+			return "UNKNOWN";
+		}
+	}
 
 	private static void usage(String msg)
 	{
@@ -444,6 +466,7 @@ abstract public class VDMJ
 		System.err.println("-measures: disable recursive measure checking");
 		System.err.println("-log: enable real-time event logging");
 		System.err.println("-remote <class>: enable remote control");
+		System.err.println("-version: print Overture version number");
 
 		System.exit(1);
 	}
