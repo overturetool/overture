@@ -130,14 +130,14 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				if (recursive instanceof AExplicitFunctionDefinition)
 				{
 					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) recursive;
-					if (def.getMeasure() != null)
+					if (def.getMeasureName() != null)
 					{
 						obligations.add(new RecursiveObligation(def, node, question, aF));
 					}
 				} else if (recursive instanceof AImplicitFunctionDefinition)
 				{
 					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition) recursive;
-					if (def.getMeasure() != null)
+					if (def.getMeasureName() != null)
 					{
 						obligations.add(new RecursiveObligation(def, node, question, aF));
 					}
