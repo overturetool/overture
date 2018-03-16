@@ -190,6 +190,12 @@ public class ModuleInterpreter extends Interpreter
 	{
 		return new ModuleEnvironment(assistantFactory, defaultModule);
 	}
+	
+	@Override
+	public Environment getGlobalEnvironment(String module)
+	{
+		return new ModuleEnvironment(assistantFactory, findModule(module));
+	}
 
 	/**
 	 * @return The list of loaded modules.

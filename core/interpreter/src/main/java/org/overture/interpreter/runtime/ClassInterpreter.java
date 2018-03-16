@@ -175,6 +175,12 @@ public class ClassInterpreter extends Interpreter
 	{
 		return new PublicClassEnvironment(assistantFactory, classes, null);
 	}
+	
+	@Override
+	public Environment getGlobalEnvironment(String module)
+	{
+		return getGlobalEnvironment(); 
+	}
 
 	@Override
 	public void init(DBGPReader dbgp)
