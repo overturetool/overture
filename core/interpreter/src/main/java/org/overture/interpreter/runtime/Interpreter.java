@@ -149,6 +149,13 @@ abstract public class Interpreter
 	 */
 
 	abstract public Environment getGlobalEnvironment();
+	
+	/**
+	 * Get the global environment for some module
+	 * 
+	 * @return
+	 */
+	abstract public Environment getGlobalEnvironment(String module);
 
 	/**
 	 * @return The Interpreter instance.
