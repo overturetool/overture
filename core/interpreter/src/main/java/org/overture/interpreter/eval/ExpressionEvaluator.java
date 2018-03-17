@@ -813,8 +813,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		PatternListTC list = ctxt.assistantFactory.createPatternList();
 		list.addAll(node.getParamPatterns());
+		
+		// Resolve any @T types referred to in the type parameters
+		IQuestionAnswer<Context, PType> instantiator = ctxt.assistantFactory.getAllConcreteTypeInstantiator();
+		PType ftype = node.getType().apply(instantiator, ctxt);
 
-		return new FunctionValue(node.getLocation(), "lambda", (AFunctionType) node.getType(), list, node.getExpression(), free);
+		return new FunctionValue(node.getLocation(), "lambda", (AFunctionType) ftype, list, node.getExpression(), free);
 	}
 
 	@Override
