@@ -158,10 +158,6 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 								}
 							}
 						}
-						else
-						{
-							log.warn("Expected class type but got: " + type);
-						}
 					}
 				});
 			} catch (AnalysisException e)
