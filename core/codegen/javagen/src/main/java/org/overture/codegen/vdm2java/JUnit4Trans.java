@@ -27,7 +27,11 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 
 	private static final String TEST_MODULE_NAME_PREFIX = "Test";
 	private static final String TEST_NAME_PREFIX = "test";
+	private static final String TEST_SETUP = "setUp";
+	private static final String TEST_TEARDOWN = "tearDown";
 	public static final String TEST_ANNOTATION = "@Test";
+	public static final String TEST_SETUP_ANNOTATION = "@Before";
+	public static final String TEST_TEARDOWN_ANNOTATION = "@After";
 	public static final String JUNI4_IMPORT = "org.junit.*";
 	public static final String ASSERT_MODULE = "Assert";
 	public static final String ASSERT_TRUE_MSG_METHOD = "assertTrueMsg";
@@ -189,18 +193,46 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 
 		for (AMethodDeclIR m : node.getMethods())
 		{
-			if (m.getName().startsWith(TEST_NAME_PREFIX)
-					&& m.getAccess().equals(IRConstants.PUBLIC)
-					&& BooleanUtils.isFalse(m.getStatic())
-					&& BooleanUtils.isFalse(m.getIsConstructor())
-					&& m.getFormalParams().isEmpty()
-					&& !(m.getTag() instanceof IRGeneratedTag))
+			if (isTestMethod(m))
 			{
 				nodeAssist.addMetaData(m, str2meta(TEST_ANNOTATION), false);
+			}
+			else if(isSetup(m))
+			{
+				nodeAssist.addMetaData(m, str2meta(TEST_SETUP_ANNOTATION), false);
+			}
+			else if(isTearDown(m))
+			{
+				nodeAssist.addMetaData(m, str2meta(TEST_TEARDOWN_ANNOTATION), false);
 			}
 		}
 	}
 
+	private boolean isTestMethod(AMethodDeclIR m)
+	{
+		return m.getName().startsWith(TEST_NAME_PREFIX)
+				&& isJUnitSignature(m);
+	}
+	
+	private boolean isSetup(AMethodDeclIR m)
+	{
+		return m.getName().equals(TEST_SETUP);
+	}
+	
+	private boolean isTearDown(AMethodDeclIR m)
+	{
+		return m.getName().equals(TEST_TEARDOWN);
+	}
+
+	private boolean isJUnitSignature(AMethodDeclIR m)
+	{
+		return m.getAccess().equals(IRConstants.PUBLIC)
+				&& BooleanUtils.isFalse(m.getStatic())
+				&& BooleanUtils.isFalse(m.getIsConstructor())
+				&& m.getFormalParams().isEmpty()
+				&& !(m.getTag() instanceof IRGeneratedTag);
+	}
+	
 	public void importJunit4(ADefaultClassDeclIR node)
 	{
 		assist.getInfo().getDeclAssistant().addDependencies(node, str2meta(JUNI4_IMPORT), false);

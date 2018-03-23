@@ -151,7 +151,7 @@ public class ValueFactory
 	{
 		Interpreter i = Interpreter.getInstance();
 		LexNameToken tcname = new LexNameToken(module, name,new LexLocation());
-		PDefinition def = i.getGlobalEnvironment().findType(tcname, i.getDefaultName());
+		PDefinition def = i.getGlobalEnvironment(module).findType(tcname, i.getDefaultName());
 		
 		if (def == null)
 		{

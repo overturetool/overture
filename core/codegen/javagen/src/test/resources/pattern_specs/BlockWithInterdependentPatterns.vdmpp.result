@@ -21,41 +21,45 @@ public class Entry {
         throw new RuntimeException("Tuple pattern match failed");
       }
 
-      final Number d = 11L;
-      final Rec recordPattern_1 = new Rec(a.longValue() + b.longValue() + c.longValue(), d);
-      Boolean success_2 = true;
-      Number e = null;
-      Number f = null;
-      e = recordPattern_1.f1;
-      f = recordPattern_1.f2;
+      {
+        final Number d = 11L;
+        final Rec recordPattern_1 = new Rec(a.longValue() + b.longValue() + c.longValue(), d);
+        Boolean success_2 = true;
+        Number e = null;
+        Number f = null;
+        e = recordPattern_1.f1;
+        f = recordPattern_1.f2;
 
-      if (!(success_2)) {
-        throw new RuntimeException("Record pattern match failed");
+        if (!(success_2)) {
+          throw new RuntimeException("Record pattern match failed");
+        }
+
+        {
+          final Number g = 21L;
+          final Tuple tuplePattern_2 = Tuple.mk_(9L, 10L);
+          Boolean success_3 = tuplePattern_2.compatible(Number.class, Number.class);
+          Number h = null;
+          Number i = null;
+          if (success_3) {
+            h = ((Number) tuplePattern_2.get(0));
+            i = ((Number) tuplePattern_2.get(1));
+          }
+
+          if (!(success_3)) {
+            throw new RuntimeException("Tuple pattern match failed");
+          }
+
+          return a.longValue()
+              + b.longValue()
+              + c.longValue()
+              + d.longValue()
+              + e.longValue()
+              + f.longValue()
+              + g.longValue()
+              + h.longValue()
+              + i.longValue();
+        }
       }
-
-      final Number g = 21L;
-      final Tuple tuplePattern_2 = Tuple.mk_(9L, 10L);
-      Boolean success_3 = tuplePattern_2.compatible(Number.class, Number.class);
-      Number h = null;
-      Number i = null;
-      if (success_3) {
-        h = ((Number) tuplePattern_2.get(0));
-        i = ((Number) tuplePattern_2.get(1));
-      }
-
-      if (!(success_3)) {
-        throw new RuntimeException("Tuple pattern match failed");
-      }
-
-      return a.longValue()
-          + b.longValue()
-          + c.longValue()
-          + d.longValue()
-          + e.longValue()
-          + f.longValue()
-          + g.longValue()
-          + h.longValue()
-          + i.longValue();
     }
   }
 

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
+
 public class IO
 {
 
@@ -47,14 +48,27 @@ public class IO
 
 	public static <p> boolean fwriteval(String filename, p val, Object fdir)
 	{
+		File file = getFile(filename);
+		String text = Utils.toString(val);
+		String fdirStr = Utils.toString(fdir); // <start>|<append>
 
-		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+		try
+		{
+			FileOutputStream fos = new FileOutputStream(file, fdirStr.equals("<append>"));
+
+			fos.write(text.getBytes(Charset.defaultCharset().name()));
+			fos.close();
+		} catch (IOException e)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	public static <p> boolean fwriteval(VDMSeq filename, p val, Object fdir)
 	{
-
-		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+		return fwriteval(SeqUtil.toStr(filename), val, fdir);
 	}
 
 	public static <p> Tuple freadval(String filename)
@@ -86,7 +100,7 @@ public class IO
 		 * structure
 		 */
 
-		file.getParentFile().mkdirs();
+		file.getAbsoluteFile().getParentFile().mkdirs();
 
 		if (!file.exists())
 		{
