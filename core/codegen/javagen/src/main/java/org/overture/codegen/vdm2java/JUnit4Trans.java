@@ -7,11 +7,14 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.NodeAssistantIR;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGeneratedTag;
+import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
+import org.overture.codegen.ir.statements.APlainCallStmIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 import org.overture.config.Settings;
 
@@ -26,6 +29,12 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 	private static final String TEST_NAME_PREFIX = "test";
 	public static final String TEST_ANNOTATION = "@Test";
 	public static final String JUNI4_IMPORT = "org.junit.*";
+	public static final String ASSERT_MODULE = "Assert";
+	public static final String ASSERT_TRUE_MSG_METHOD = "assertTrueMsg";
+	public static final String ASSERT_FALSE_MSG_METHOD = "assertFalseMsg";
+	public static final String JUNIT4_ASSERT_TRUE_METHOD = "assertTrue";
+	public static final String JUNIT4_ASSERT_FALSE_METHOD = "assertFalse";
+	
 
 	public TransAssistantIR assist;
 	private JavaCodeGen javaCg;
@@ -119,6 +128,43 @@ public class JUnit4Trans extends DepthFirstAnalysisAdaptor
 		for(AMethodDeclIR m : copy.getMethods())
 		{
 			m.setStatic(false);
+			
+			try
+			{
+				m.apply(new DepthFirstAnalysisAdaptor()
+				{
+					@Override
+					public void caseAPlainCallStmIR(APlainCallStmIR node)
+							throws AnalysisException
+					{
+						STypeIR type = node.getClassType();
+
+						if (type instanceof AClassTypeIR)
+						{
+							AClassTypeIR classType = (AClassTypeIR) type;
+							
+							if (classType.getName().equals(ASSERT_MODULE))
+							{
+								if (node.getName().equals(ASSERT_FALSE_MSG_METHOD))
+								{
+									node.setName(JUNIT4_ASSERT_FALSE_METHOD);
+								} else if (node.getName().equals(ASSERT_TRUE_MSG_METHOD))
+								{
+									node.setName(JUNIT4_ASSERT_TRUE_METHOD);
+								}
+							}
+						}
+						else
+						{
+							log.warn("Expected class type but got: " + type);
+						}
+					}
+				});
+			} catch (AnalysisException e)
+			{
+				log.error("Got unexpected analysis error: " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
 
 		for(int i = 0; i < copy.getMethods().size(); i++)
