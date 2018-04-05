@@ -247,7 +247,8 @@ public class NameFinder extends
 			return question.sought.equals(node.getOldname()) ? node : null;
 		}
 
-		return question.sought.equals(node.getState().getName()) ? node : null;
+		// return question.sought.equals(node.getState().getName()) ? node : null;
+		return defaultPDefinition(node, question) != null ? node : null;
 	}
 
 	@Override
