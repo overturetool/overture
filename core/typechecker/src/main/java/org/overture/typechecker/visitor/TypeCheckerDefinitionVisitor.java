@@ -1385,11 +1385,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getInvdef() != null)
 		{
 			node.getInvdef().apply(THIS, question);
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getInvPattern(), THIS, question);
 		}
 
 		if (node.getInitdef() != null)
 		{
 			node.getInitdef().apply(THIS, question);
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getInitPattern(), THIS, question);
 		}
 
 		return null;
