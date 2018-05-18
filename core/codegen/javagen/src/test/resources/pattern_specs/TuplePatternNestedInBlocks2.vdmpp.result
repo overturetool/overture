@@ -21,9 +21,10 @@ public class Entry {
         throw new RuntimeException("Tuple pattern match failed");
       }
 
-      final Number r = a.longValue() + b.longValue();
-      /* skip */
-
+      {
+        final Number r = a.longValue() + b.longValue();
+        /* skip */
+      }
     }
 
     return 2L;

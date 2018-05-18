@@ -307,6 +307,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		AIdentifierVarExpIR instance = new AIdentifierVarExpIR();
 		instance.setName(instanceName);
 		instance.setType(instanceType.clone());
+		instance.setIsLocal(true);
 
 		ACallObjectExpStmIR call = new ACallObjectExpStmIR();
 		call.setType(new AVoidTypeIR());

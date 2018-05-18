@@ -24,13 +24,18 @@ package org.overture.codegen.vdm2java;
 import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableString;
+import org.overture.codegen.assistant.AssistantBase;
 import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
@@ -41,6 +46,7 @@ import org.overture.codegen.ir.SStmIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
@@ -57,6 +63,7 @@ import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
 import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
 import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
 import org.overture.codegen.ir.expressions.AHistoryExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.AIsolationUnaryExpIR;
 import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
 import org.overture.codegen.ir.expressions.ANewExpIR;
@@ -1063,5 +1070,88 @@ public class JavaFormat
 	public boolean isUndefined(ACastUnaryExpIR cast)
 	{
 		return info.getExpAssistant().isUndefined(cast);
+	}
+	
+	public String formatIdentifierVar(AIdentifierVarExpIR var)
+	{
+		String varName = "";
+		
+		if(!getJavaSettings().genRecsAsInnerClasses() && (var != null && !var.getIsLocal()))
+		{
+			// Only the VDM-SL-to-JML generator uses this strategy
+			ADefaultClassDeclIR enclosingIrClass = var.getAncestor(ADefaultClassDeclIR.class);
+			
+			if(enclosingIrClass != null)
+			{
+				org.overture.ast.node.INode vdmNode = AssistantBase.getVdmNode(enclosingIrClass);
+				
+				if(!(vdmNode instanceof AModuleModules))
+				{
+					// The VDM node is a record (or state definition, which is also translated to a record class)
+					// The variable  ('var') must belong to the VDM module enclosing 'vdmNode'	
+					
+					AModuleModules module = vdmNode.getAncestor(AModuleModules.class);
+					
+					if(module != null)
+					{
+						List<String> fieldNames = new LinkedList<>();
+						
+						if(vdmNode instanceof ARecordInvariantType)
+						{
+							ARecordInvariantType rec = (ARecordInvariantType) vdmNode;
+							fieldNames = rec.getFields().stream().map(f -> f.getTagname().getName()).collect(Collectors.toList());
+						}
+						else if(vdmNode instanceof AStateDefinition)
+						{
+							AStateDefinition stateDef = (AStateDefinition) vdmNode;
+							fieldNames = stateDef.getFields().stream().map(f -> f.getTagname().getName()).collect(Collectors.toList());
+						}
+						else
+						{
+							log.error("Expected a record or statedefinition at this point, but got: " + vdmNode);
+						}
+						
+						if(!fieldNames.contains(var.getName()))
+						{
+							// It's not one of the record field names
+							
+							if (JavaCodeGenUtil.isValidJavaPackage(getJavaSettings().getJavaRootPackage()))
+							{
+								varName += getJavaSettings().getJavaRootPackage() + ".";
+							}
+
+							varName += module.getName().getName() + "." + var.getName();
+						}
+						else
+						{
+							// We're accessing a record field, so there's no need to use a fully qualified name
+							varName = var.getName();
+						}
+					}
+					else
+					{
+						log.error("Expected 'vdmNode' to be enclosed by a module");
+					}
+				}
+				else
+				{
+					// Orginary case, we're inside a module
+					varName = var.getName();
+				}
+			}
+		}
+		else
+		{
+			varName = var.getName();
+		}
+		
+		if(valueSemantics.shouldClone(var))
+		{
+			return "Utils.copy(" + varName + ")";
+		}
+		else
+		{
+			return varName;
+		}
 	}
 }

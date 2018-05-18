@@ -155,7 +155,7 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 
 		AIdentifierVarExpIR instanceField = new AIdentifierVarExpIR();
 		instanceField.setType(param.getType().clone());
-		instanceField.setIsLocal(false);
+		instanceField.setIsLocal(true);
 		instanceField.setName(param.getName());
 
 		fieldComparison.setLeft(instanceField);

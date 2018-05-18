@@ -592,7 +592,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (node.getMeasure() == null && node.getRecursive())
+		if (node.getMeasure() != null && node.getBody() == null)
+		{
+			TypeCheckerErrors.report(3273, "Measure not allowed for an implicit function", node.getMeasure().getLocation(), node);
+		}
+		else if (node.getMeasure() == null && node.getRecursive())
 		{
 			TypeCheckerErrors.warning(5012, "Recursive function has no measure", node.getLocation(), node);
 		}
@@ -1385,11 +1389,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getInvdef() != null)
 		{
 			node.getInvdef().apply(THIS, question);
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getInvPattern(), THIS, question);
 		}
 
 		if (node.getInitdef() != null)
 		{
 			node.getInitdef().apply(THIS, question);
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getInitPattern(), THIS, question);
 		}
 
 		return null;
