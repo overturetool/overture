@@ -355,7 +355,7 @@ public class Delegate implements Serializable
 			strOut.append(e.getTargetException().getMessage()+"\n");
 			e.getTargetException().printStackTrace(new PrintWriter(strOut));
 			throw new InternalException(59, "Failed in native method: "
-					+ strOut);
+					+ strOut,e);
 		}
 	}
 

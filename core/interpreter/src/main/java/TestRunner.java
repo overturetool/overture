@@ -11,14 +11,20 @@ import java.util.List;
 import java.util.Vector;
 
 public class TestRunner {
+
+    public static class TestAsserException extends RuntimeException
+    {
+        public TestAsserException(String message) {
+            super(message);
+        }
+    }
 	
 	private static boolean fail = false;
 	private static String msg = null;
 	
-	public static Value markFail()
-	{
+	public static Value markFail() {
 		fail = true;
-		return new VoidValue();
+        throw new TestAsserException("Assert message: "+getMsg());
 	}
 
 	public static boolean isFailed()

@@ -1,4 +1,5 @@
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.messages.InternalException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.interpreter.runtime.*;
 import org.overture.interpreter.values.*;
@@ -15,6 +16,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 
 
 public class TestCase {
@@ -91,7 +93,20 @@ public class TestCase {
             ModuleInterpreter.getInstance().evaluate(moduleName + "`" + testName + "()"
                     , ModuleInterpreter.getInstance().initialContext);
             success = !TestRunner.isFailed();
-        } catch (Exception e) {
+        } catch(TestRunner.TestAsserException e)
+        {
+            success =false;
+        }catch(InternalException e)
+        {
+            if(e.getCause() instanceof InvocationTargetException && ((InvocationTargetException)e.getCause()).getTargetException() instanceof TestRunner.TestAsserException)
+            {
+                success =false;
+            }else
+            {
+                throw e;
+            }
+        }
+        catch (Exception e) {
             success = false;
             error =  e;
             throw e;

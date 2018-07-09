@@ -36,6 +36,12 @@ public class InternalException extends RuntimeException
 		this.number = number;
 	}
 
+	public InternalException(int number, String message, Throwable cause)
+	{
+		super(message,cause);
+		this.number = number;
+	}
+
 	@Override
 	public String toString()
 	{
