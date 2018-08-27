@@ -937,8 +937,22 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.getLeft().apply(THIS, question);
-		node.getRight().apply(THIS, question);
+		TypeCheckInfo lrconstraint = question;
+		
+		if (question.constraint != null
+				&& question.assistantFactory.createPTypeAssistant().isSeq(question.constraint))
+		{
+			SSeqType stype = question.assistantFactory.createPTypeAssistant().getSeq(question.constraint);
+			
+			if (stype instanceof ASeq1SeqType)
+			{
+				stype = AstFactory.newASeqSeqType(node.getLocation(), stype.getSeqof());
+				lrconstraint = question.newConstraint(stype);
+			}
+		}
+
+		node.getLeft().apply(THIS, lrconstraint);
+		node.getRight().apply(THIS, lrconstraint);
 
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
