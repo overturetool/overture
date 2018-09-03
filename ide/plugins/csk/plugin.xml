@@ -8,7 +8,7 @@
             category="org.overture.ide.ui.vdm"
             class="org.overture.ide.plugins.csk.internal.WorkbenchPreferencePageCsk"
             id="org.overture.ide.plugins.csk.page1"
-            name="SCSK/VDM Tools">
+            name="VDMTools">
       </page>
    </extension>
    <extension

@@ -193,7 +193,7 @@ public class VdmTools
 		}
 		if (!valid)
 		{
-			MessageDialog.openError(shell, "VDM Tools Error", "CSK VDM Tools Path not valid");
+			MessageDialog.openError(shell, "VDMTools Error", "VDMTools path not valid");
 			path = null;
 		}
 		// Assert.isTrue(valid, "VDM Tools path is not valid");
