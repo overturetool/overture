@@ -24,10 +24,12 @@ package org.overture.typechecker.utilities.pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ATuplePattern;
+import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -72,6 +74,22 @@ public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 	{
 		return af.createPPatternListAssistant().alwaysMatches(pattern.getPlist());
 	}
+	
+	@Override
+	public Boolean caseAConcatenationPattern(AConcatenationPattern node)
+			throws AnalysisException
+	{
+		return af.createPPatternAssistant().alwaysMatches(node.getLeft()) &&
+			   af.createPPatternAssistant().alwaysMatches(node.getRight());
+	}
+	
+	@Override
+	public Boolean caseAUnionPattern(AUnionPattern node)
+			throws AnalysisException
+	{
+		return af.createPPatternAssistant().alwaysMatches(node.getLeft()) &&
+			   af.createPPatternAssistant().alwaysMatches(node.getRight());
+	}
 
 	@Override
 	public Boolean defaultPPattern(PPattern pattern) throws AnalysisException
@@ -82,15 +100,12 @@ public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean createNewReturnValue(INode node) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Boolean createNewReturnValue(Object node) throws AnalysisException
 	{
-
 		return false;
 	}
-
 }
