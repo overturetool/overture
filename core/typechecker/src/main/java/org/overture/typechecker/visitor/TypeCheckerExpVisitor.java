@@ -3185,14 +3185,20 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 
 		PType etype = exp.apply(THIS, question.newConstraint(null));
+		boolean empty = false;
 
 		if (!question.assistantFactory.createPTypeAssistant().isSeq(etype))
 		{
 			TypeCheckerErrors.report(3109, "Argument to 'inds' is not a sequence", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual type", etype);
 		}
+		else
+		{
+			empty = question.assistantFactory.createPTypeAssistant().getSeq(etype).getEmpty();
+		}
 
 		node.setType(AstFactory.newASetSetType(node.getLocation(), AstFactory.newANatOneNumericBasicType(node.getLocation())));
+		((ASetSetType)node.getType()).setEmpty(empty);
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
