@@ -209,6 +209,8 @@ IR {-> package='org.overture.codegen.ir'
     	[opname]:java_String
     	[guardname]:java_String
     	[pred]:IR.#exp
+    |	{renamed}
+        [def]:IR.#decl
     |	{mutexSync}
     	[opnames]:IR.#name*
     |	{var}

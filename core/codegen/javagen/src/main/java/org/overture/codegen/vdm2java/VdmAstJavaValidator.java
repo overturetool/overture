@@ -1,12 +1,8 @@
 package org.overture.codegen.vdm2java;
 
-import java.util.List;
-import java.util.Set;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.*;
@@ -17,6 +13,9 @@ import org.overture.ast.types.PType;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+
+import java.util.List;
+import java.util.Set;
 
 public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 {
@@ -98,13 +97,6 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		{
 			info.addUnsupportedNode(node, "Implicit functions cannot be instantiated since they are not supported.");
 		}
-	}
-
-	@Override
-	public void inARenamedDefinition(ARenamedDefinition node)
-			throws AnalysisException
-	{
-		info.addUnsupportedNode(node, "Renaming of imported definitions is not currently supported");
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -73,6 +74,7 @@ public class JavaTransSeries
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(varMan.postCheckMethodName());
 
 		// Construct the transformations
+		RenamedTrans renamedTr = new RenamedTrans(transAssist);
 		AtomicStmTrans atomicTr = new AtomicStmTrans(transAssist, varMan.atomicTmpVar());
 		NonDetStmTrans nonDetTr = new NonDetStmTrans(transAssist);
 		FuncTrans funcTr = new FuncTrans(transAssist);
@@ -108,6 +110,7 @@ public class JavaTransSeries
 		// End concurrency transformations
 
 		// Set up order of transformations
+		series.add(renamedTr);
 		series.add(atomicTr);
 		series.add(nonDetTr);
 		series.add(divideTr);
