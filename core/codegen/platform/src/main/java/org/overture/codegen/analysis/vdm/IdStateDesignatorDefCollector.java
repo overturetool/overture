@@ -9,17 +9,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.*;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -115,8 +105,8 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 
 		for (PDefinition def : node.getDefinitions())
 		{
-			// Check only explicit operations or threads within the enclosing class
-			if (def instanceof AExplicitOperationDefinition
+			// Check only operations or threads within the enclosing class
+			if (def instanceof SOperationDefinition
 					|| def instanceof AThreadDefinition)
 			{
 				def.apply(this);
@@ -159,8 +149,7 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 
 		for (PDefinition def : node.getDefs())
 		{
-			// Check only explicit operations
-			if (def instanceof AExplicitOperationDefinition)
+			if (def instanceof SOperationDefinition)
 			{
 				def.apply(this);
 			}
