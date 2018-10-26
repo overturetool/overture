@@ -823,16 +823,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		PExp exp = node.getExp();
 		PType type = node.getType();
 
-		if (!(type instanceof SSeqType))
-		{
-			question.addUnsupportedNode(node, "Unexpected sequence type for reverse unary expression: "
-					+ type.getClass().getName());
-			return null;
-		}
-
-		SSeqType seqType = (SSeqType) type;
-
-		STypeIR seqTypeCg = seqType.apply(question.getTypeVisitor(), question);
+		STypeIR seqTypeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 
 		AReverseUnaryExpIR reverse = new AReverseUnaryExpIR();
