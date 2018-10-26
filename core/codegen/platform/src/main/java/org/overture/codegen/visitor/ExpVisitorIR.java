@@ -1801,13 +1801,6 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			PType bindType = typeBind.getType();
 			PPattern pattern = typeBind.getPattern();
 
-			if (!(pattern instanceof AIdentifierPattern))
-			{
-				question.addUnsupportedNode(node, "Expected identifier pattern for lambda expression. Got: "
-						+ pattern);
-				return null;
-			}
-
 			STypeIR bindTypeCg = bindType.apply(question.getTypeVisitor(), question);
 			SPatternIR patternCg = pattern.apply(question.getPatternVisitor(), question);
 

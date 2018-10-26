@@ -127,6 +127,7 @@ public class FuncValTrans extends DepthFirstAnalysisAdaptor
 		classType.setName(lambdaInterface.getName());
 
 		AMethodDeclIR lambdaDecl = lambdaInterface.getMethodSignatures().get(0).clone();
+		lambdaDecl.setAbstract(false);
 
 		for (int i = 0; i < params.size(); i++)
 		{

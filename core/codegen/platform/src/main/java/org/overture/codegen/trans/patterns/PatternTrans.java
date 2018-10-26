@@ -336,6 +336,11 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 			}
 		}
 
+		for(AVarDeclIR dcl : node.getLocalDefs())
+		{
+			dcl.apply(this);
+		}
+
 		for (SStmIR stm : node.getStatements())
 		{
 			stm.apply(this);
