@@ -24,6 +24,7 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -60,8 +61,8 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	protected IterationVarPrefixes iteVarPrefixes;
 
 	public Exp2StmTrans(IterationVarPrefixes iteVarPrefixes,
-			TransAssistantIR transAssistant, CounterData counterData,
-			ILanguageIterator langIterator, Exp2StmVarPrefixes prefixes)
+						TransAssistantIR transAssistant, CounterData counterData,
+						ILanguageIterator langIterator, Exp2StmVarPrefixes prefixes)
 	{
 		this.transAssistant = transAssistant;
 		this.counterData = counterData;
@@ -193,21 +194,23 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		SStmIR enclosingStm = transAssistant.getEnclosingStm(node, "let be st expressions");
 
 		AHeaderLetBeStIR header = node.getHeader();
+		SMultipleBindIR binding = header.getBinding();
+		SExpIR suchThat = header.getSuchThat();
 
-		if (!(header.getBinding() instanceof ASetMultipleBindIR))
+		if(!(binding instanceof ASetMultipleBindIR || binding instanceof ASeqMultipleBindIR))
 		{
-			transAssistant.getInfo().addTransformationWarning(node.getHeader().getBinding(), "This transformation only works for 'let be st' "
-					+ "expressions with with multiple set binds and not multiple type binds in '"
-					+ this.getClass().getSimpleName() + "'");
+			transAssistant.getInfo().addTransformationWarning(node.getHeader().getBinding(),
+					"This transformation only works for 'let be st' " +
+							"expressions with with multiple set or sequence binds and not multiple type binds in '"
+							+ this.getClass().getSimpleName() + "'");
 			return;
 		}
 
-		ASetMultipleBindIR binding = (ASetMultipleBindIR) header.getBinding();
-		SExpIR suchThat = header.getSuchThat();
-		SSetTypeIR setType = transAssistant.getSetTypeCloned(binding.getSet());
+		STypeIR colType = getCol(binding).getType().clone();
+
 		ITempVarGen tempVarNameGen = transAssistant.getInfo().getTempVarNameGen();
 
-		LetBeStStrategy strategy = consLetBeStStrategy(suchThat, setType, tempVarNameGen);
+		LetBeStStrategy strategy = consLetBeStStrategy(suchThat, colType, tempVarNameGen);
 
 		ABlockStmIR outerBlock = new ABlockStmIR();
 
@@ -241,7 +244,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		transAssistant.replaceNodeWith(node, letBeStResult);
 
 		LinkedList<SPatternIR> patterns = binding.getPatterns();
-		ABlockStmIR block = transAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy, iteVarPrefixes);
+		ABlockStmIR block = transAssistant.consIterationBlock(patterns, getCol(binding), tempVarNameGen, strategy, iteVarPrefixes);
 		outerBlock.getStatements().addFirst(block);
 
 		// Replace the enclosing statement with the transformation
@@ -254,8 +257,22 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		outerBlock.setScoped(transAssistant.getInfo().getStmAssistant().isScoped(outerBlock));
 	}
 
-	public LetBeStStrategy consLetBeStStrategy(SExpIR suchThat, SSetTypeIR setType, ITempVarGen tempVarNameGen) {
-		return new LetBeStStrategy(transAssistant, suchThat, setType, langIterator, tempVarNameGen, iteVarPrefixes);
+	private SExpIR getCol(SMultipleBindIR binding)
+	{
+		if(binding instanceof ASetMultipleBindIR)
+		{
+			return ((ASetMultipleBindIR) binding).getSet();
+		}
+		else if(binding instanceof ASeqMultipleBindIR)
+		{
+			return ((ASeqMultipleBindIR) binding).getSeq();
+		}
+
+		return null;
+	}
+
+	public LetBeStStrategy consLetBeStStrategy(SExpIR suchThat, STypeIR colType, ITempVarGen tempVarNameGen) {
+		return new LetBeStStrategy(transAssistant, suchThat, colType, langIterator, tempVarNameGen, iteVarPrefixes);
 	}
 
 	@Override
@@ -590,7 +607,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	protected void replaceCompWithTransformation(SStmIR enclosingStm,
-			ABlockStmIR block, STypeIR type, String var, SExpIR comp)
+												 ABlockStmIR block, STypeIR type, String var, SExpIR comp)
 	{
 		AIdentifierVarExpIR compResult = new AIdentifierVarExpIR();
 		compResult.setType(type.clone());
@@ -602,7 +619,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	protected void transform(SStmIR enclosingStm, ABlockStmIR block,
-			SExpIR nodeResult, SExpIR node)
+							 SExpIR nodeResult, SExpIR node)
 	{
 		// Replace the node with the node result
 		transAssistant.replaceNodeWith(node, nodeResult);
@@ -673,7 +690,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	protected AIfStmIR consAndExpCheck(AAndBoolBinaryExpIR node,
-			String andResultVarName)
+									   String andResultVarName)
 	{
 		SExpIR left = node.getLeft().clone();
 		SExpIR right = node.getRight().clone();
@@ -696,7 +713,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	protected SStmIR consOrExpCheck(AOrBoolBinaryExpIR node,
-			String orResultVarName)
+									String orResultVarName)
 	{
 		SExpIR left = node.getLeft().clone();
 		SExpIR right = node.getRight().clone();
@@ -720,7 +737,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	protected boolean transformBoolBinaryExp(SBoolBinaryExpIR node,
-			SStmIR enclosingStm)
+											 SStmIR enclosingStm)
 	{
 		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather
 		// than
@@ -739,7 +756,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	protected void handleLogicExp(SBoolBinaryExpIR node, SStmIR enclosingStm,
-			SStmIR checkBlock, String resultName) throws AnalysisException
+								  SStmIR checkBlock, String resultName) throws AnalysisException
 	{
 		AVarDeclIR andResultDecl = transAssistant.consBoolVarDecl(resultName, false);
 
@@ -759,7 +776,7 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	protected List<SMultipleBindIR> filterBindList(INode node,
-			List<SMultipleBindIR> bindList)
+												   List<SMultipleBindIR> bindList)
 	{
 		List<SMultipleBindIR> multipleBinds = new LinkedList<SMultipleBindIR>();
 
