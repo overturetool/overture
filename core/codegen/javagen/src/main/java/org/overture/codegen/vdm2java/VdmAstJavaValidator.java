@@ -6,9 +6,11 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.*;
+import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.types.PType;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -212,7 +214,16 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public void caseATypeMultipleBind(ATypeMultipleBind node)
 			throws AnalysisException
 	{
-		info.addUnsupportedNode(node, "Type binds are not supported");
+		ADefPatternBind bind = node.getAncestor(ADefPatternBind.class);
+
+		if(bind != null && bind.parent() instanceof AForPatternBindStm)
+		{
+			super.caseATypeMultipleBind(node);
+		}
+		else {
+
+			info.addUnsupportedNode(node, "Type binds are not supported");
+		}
 	}
 
 	private boolean inUnsupportedContext(org.overture.ast.node.INode node)
