@@ -6,8 +6,6 @@
 
 This release contains some type-checker fixes and improvements for the user interface.
 
-MAC users: The Overture MAC app will not be signed immediately after this release. In case you experience issues related to the MAC app not being signed, try to follow the instructions in the [FAQ](http://overturetool.org/faq/) (see "Q: Why can’t I open Overture on MacOS Sierra?"). We will try to get the MAC app signed as soon as possible. Sorry for any inconvenience this may cause.
-
 Note that Overture requires Java 8. If you're using more recent versions of Java (e.g. version 10) you may experience errors when you launch Overture. In particular, Overture, currently builds against Eclipse Oxygen, which is known to have issues related to recent versions of Java. In case you experience issues try to follow the suggestions in the [FAQ](http://overturetool.org/faq/) (see "Q: Why can’t I open Overture using the latest versions of Java?").
 
 ## Reporting Problems and Troubleshooting
