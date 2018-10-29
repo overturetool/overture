@@ -602,21 +602,22 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACasesStm(ACasesStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
 		PType expType = node.getExp().apply(THIS, question);
-
 		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
+		boolean always = false;
 
 		for (ACaseAlternativeStm c : node.getCases())
 		{
 			c.setCtype(expType);
 			rtypes.add(c.apply(THIS, question));
+			always = always || question.assistantFactory.createPPatternAssistant().alwaysMatches(c.getPattern(), expType);
 		}
 
 		if (node.getOthers() != null)
 		{
 			rtypes.add(node.getOthers().apply(THIS, question));
-		} else
+		}
+		else if (!always)
 		{
 			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
 		}
