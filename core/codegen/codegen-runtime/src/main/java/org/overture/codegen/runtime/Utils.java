@@ -25,6 +25,18 @@ public class Utils
 {
 	public static final Object VOID_VALUE = new Object();
 
+	// Used to pass type arguments for instantiated functions in the generated code
+	public static final Object NAT = new Object();
+	public static final Object NAT1 = new Object();
+	public static final Object INT = new Object();
+	public static final Object REAL = new Object();
+	public static final Object RAT = new Object();
+	public static final Object BOOL = new Object();
+	public static final Object CHAR = new Object();
+	public static final Object TOKEN = new Object();
+	// Only basic types and unions of basic types can currently be used as polymorphic type arguments
+	public static final Object TYPE_NOT_SUPPORTED = new Object();
+
 	public static boolean isVoidValue(Object value)
 	{
 		return value == VOID_VALUE;
@@ -267,9 +279,55 @@ public class Utils
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static boolean is_(Object exp, Class type)
+	public static boolean is_(Object exp, Object type)
 	{
-		return exp != null && exp.getClass() == type;
+		// Handle polymorphic type arguments
+		if(type == NAT)
+		{
+			return is_nat(exp);
+		}
+		else if(type == NAT1)
+		{
+			return is_nat1(exp);
+		}
+		else if(type == INT)
+		{
+			return is_int(exp);
+		}
+		else if(type == REAL)
+		{
+			return is_real(exp);
+		}
+		else if(type == RAT)
+		{
+			return is_rat(exp);
+		}
+		else if(type == BOOL)
+		{
+			return is_bool(exp);
+		}
+		else if(type == CHAR)
+		{
+			return is_char(exp);
+		}
+		else if(type == TOKEN)
+		{
+			return is_token(exp);
+		}
+		else if(type == TYPE_NOT_SUPPORTED)
+		{
+			throw new IllegalArgumentException("Only basic types and unions of basic types " +
+					"can currently be used as polymorphic type arguments");
+		}
+
+		if(type instanceof Class)
+		{
+			return ((Class) type).isInstance(exp);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public static double divide(Object left, Object right)

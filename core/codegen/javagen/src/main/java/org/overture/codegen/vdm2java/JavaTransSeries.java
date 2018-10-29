@@ -83,6 +83,7 @@ public class JavaTransSeries
 		AssignStmTrans assignTr = new AssignStmTrans(transAssist);
 		PrePostTrans prePostTr = new PrePostTrans(info);
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
+		PolyFuncTrans polyTr = new PolyFuncTrans(transAssist);
 		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, funcValPrefixes);
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, iteVarPrefixes);
 		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, iteVarPrefixes);
@@ -116,6 +117,7 @@ public class JavaTransSeries
 		series.add(divideTr);
 		series.add(assignTr);
 		series.add(callObjTr);
+		series.add(polyTr);
 		series.add(funcTr);
 		series.add(prePostTr);
 		series.add(ifExpTr);

@@ -9,22 +9,23 @@ public class A {
     return f1().longValue()
         + f2().f1().longValue()
         + new A().f1().longValue()
-        + g(1L, 'a').longValue();
+        + g(1L, 'a', Utils.NAT, Utils.CHAR).longValue();
   }
 
   public A f2() {
 
-    return g(new A(), 2L);
+    return g(new A(), 2L, Utils.TYPE_NOT_SUPPORTED, Utils.REAL);
   }
 
   public A() {}
 
   public static Number f1() {
 
-    return g(1L, 2L);
+    return g(1L, 2L, Utils.NAT, Utils.REAL);
   }
 
-  public static <T, U> T g(final T arg1, final U ignorePattern_1) {
+  public static <T, U> T g(
+      final T arg1, final U ignorePattern_1, final Object _type_T, final Object _type_U) {
 
     return arg1;
   }

@@ -1,0 +1,48 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    return SeqUtil.seq(
+        fun(0L, Utils.NAT),
+        fun(-1L, Utils.NAT),
+        fun(1L, Utils.NAT1),
+        fun(0L, Utils.NAT1),
+        fun(-1L, Utils.INT),
+        fun(1.5, Utils.INT),
+        fun(1.5, Utils.REAL),
+        fun(null, Utils.REAL),
+        fun(1.5, Utils.RAT),
+        fun(new Token(SeqUtil.seq('x')), Utils.RAT),
+        fun(true, Utils.BOOL),
+        fun(32L, Utils.BOOL),
+        fun('a', Utils.CHAR),
+        fun(42L, Utils.CHAR),
+        fun(new Token(SeqUtil.seq('x')), Utils.TOKEN),
+        fun(1L, Utils.TOKEN),
+        fun2(2.5, Utils.BOOL, Utils.REAL),
+        fun2(2.5, Utils.BOOL, Utils.NAT));
+  }
+
+  public Entry() {}
+
+  private static <T> Boolean fun(final Object v, final Object _type_T) {
+
+    return Utils.is_(v, _type_T);
+  }
+
+  private static <T, P> Boolean fun2(final Object v, final Object _type_T, final Object _type_P) {
+
+    return Utils.is_(v, _type_P) || Utils.is_(v, _type_T);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

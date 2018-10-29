@@ -21,11 +21,6 @@
  */
 package org.overture.codegen.vdm2java;
 
-import java.io.StringWriter;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.overture.ast.definitions.AStateDefinition;
@@ -38,75 +33,27 @@ import org.overture.ast.util.ClonableString;
 import org.overture.codegen.assistant.AssistantBase;
 import org.overture.codegen.assistant.LocationAssistantIR;
 import org.overture.codegen.assistant.TypeAssistantIR;
-import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.PIR;
-import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.SStmIR;
-import org.overture.codegen.ir.STypeIR;
-import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
-import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
-import org.overture.codegen.ir.declarations.AMethodDeclIR;
-import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
-import org.overture.codegen.ir.declarations.ARecordDeclIR;
-import org.overture.codegen.ir.declarations.ATypeDeclIR;
-import org.overture.codegen.ir.declarations.AVarDeclIR;
-import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.ir.expressions.AAbsUnaryExpIR;
-import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
-import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
-import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
-import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
-import org.overture.codegen.ir.expressions.AHistoryExpIR;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.AIsolationUnaryExpIR;
-import org.overture.codegen.ir.expressions.AMinusUnaryExpIR;
-import org.overture.codegen.ir.expressions.ANewExpIR;
-import org.overture.codegen.ir.expressions.ANotEqualsBinaryExpIR;
-import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
-import org.overture.codegen.ir.expressions.APlusUnaryExpIR;
-import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
-import org.overture.codegen.ir.expressions.ASeqToStringUnaryExpIR;
-import org.overture.codegen.ir.expressions.AStringToSeqUnaryExpIR;
-import org.overture.codegen.ir.expressions.ATernaryIfExpIR;
-import org.overture.codegen.ir.expressions.AUndefinedExpIR;
-import org.overture.codegen.ir.expressions.SBinaryExpIR;
-import org.overture.codegen.ir.expressions.SLiteralExpIR;
-import org.overture.codegen.ir.expressions.SNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.SUnaryExpIR;
-import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.declarations.*;
+import org.overture.codegen.ir.expressions.*;
 import org.overture.codegen.ir.name.ATokenNameIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
 import org.overture.codegen.ir.statements.AForLoopStmIR;
 import org.overture.codegen.ir.statements.AStartStmIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
-import org.overture.codegen.ir.types.ACharBasicTypeIR;
-import org.overture.codegen.ir.types.AClassTypeIR;
-import org.overture.codegen.ir.types.AInterfaceTypeIR;
-import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.types.AObjectTypeIR;
-import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.types.AStringTypeIR;
-import org.overture.codegen.ir.types.ATupleTypeIR;
-import org.overture.codegen.ir.types.AUnionTypeIR;
-import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.types.SBasicTypeIR;
-import org.overture.codegen.ir.types.SMapTypeIR;
-import org.overture.codegen.ir.types.SSeqTypeIR;
-import org.overture.codegen.ir.types.SSetTypeIR;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.trans.funcvalues.FuncValAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Settings;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+
+import java.io.StringWriter;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JavaFormat
 {
@@ -463,7 +410,11 @@ public class JavaFormat
 		if (type == null)
 		{
 			return null;
-		} else
+		} else if(type instanceof AExternalTypeIR)
+		{
+			return ((AExternalTypeIR) type).getName();
+		}
+		else
 		{
 			List<STypeIR> types = new LinkedList<STypeIR>();
 			types.add(type);

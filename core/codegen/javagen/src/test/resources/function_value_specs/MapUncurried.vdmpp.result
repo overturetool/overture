@@ -14,19 +14,22 @@ public class Entry {
             return x.longValue() + 1L;
           }
         };
-    return seq_map(Utils.copy(xs), func);
+    return seq_map(Utils.copy(xs), func, Utils.INT, Utils.INT);
   }
 
   public Entry() {}
 
-  private static <A, B> VDMSeq seq_map(final VDMSeq s, final Func_1<A, B> f) {
+  private static <A, B> VDMSeq seq_map(
+      final VDMSeq s, final Func_1<A, B> f, final Object _type_A, final Object _type_B) {
 
     if (Utils.empty(s)) {
       return SeqUtil.seq();
 
     } else {
       return SeqUtil.conc(
-          SeqUtil.seq(f.eval(((A) s.get(0)))), seq_map(SeqUtil.tail(Utils.copy(s)), f));
+          SeqUtil.seq(f.eval(((A) s.get(0)))),
+          seq_map(
+              SeqUtil.tail(Utils.copy(s)), f, Utils.TYPE_NOT_SUPPORTED, Utils.TYPE_NOT_SUPPORTED));
     }
   }
 

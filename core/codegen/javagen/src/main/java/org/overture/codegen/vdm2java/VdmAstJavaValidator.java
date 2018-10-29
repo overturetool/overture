@@ -226,6 +226,17 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		}
 	}
 
+	@Override
+	public void caseAFuncInstatiationExp(AFuncInstatiationExp node) throws AnalysisException {
+
+		if(!(node.parent() instanceof AApplyExp && ((AApplyExp) node.parent()).getRoot() == node))
+		{
+			info.addUnsupportedNode(node, "Function must be applied at the time of instantiation");
+		}
+
+		super.caseAFuncInstatiationExp(node);
+	}
+
 	private boolean inUnsupportedContext(org.overture.ast.node.INode node)
 	{
 		return info.getExpAssistant().outsideImperativeContext(node)

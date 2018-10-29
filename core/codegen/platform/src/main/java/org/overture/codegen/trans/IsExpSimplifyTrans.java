@@ -6,6 +6,7 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.*;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
@@ -77,6 +78,17 @@ public class IsExpSimplifyTrans  extends DepthFirstAnalysisAdaptor {
                 {
                     return consGeneralIsExp(exp, checkedType);
                 }
+            }
+            else if(checkedType instanceof ATemplateTypeIR)
+            {
+                ATemplateTypeIR templateType = (ATemplateTypeIR) checkedType;
+
+                String argName = PolyFuncTrans.toTypeArgName(templateType);
+
+                AExternalTypeIR typeVar = new AExternalTypeIR();
+                typeVar.setName(argName);
+
+                return consGeneralIsExp(exp, typeVar);
             }
 
             return null;

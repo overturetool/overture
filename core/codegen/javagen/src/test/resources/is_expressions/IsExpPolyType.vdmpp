@@ -1,0 +1,34 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+return [fun[nat](0),
+        fun[nat](-1),
+        fun[nat1](1),
+        fun[nat1](0),
+        fun[int](-1),
+        fun[int](1.5),
+        fun[real](1.5),
+        fun[real](nil),
+        fun[rat](1.5),
+        fun[rat](mk_token("x")),
+        fun[bool](true),
+        fun[bool](32),
+        fun[char]('a'),
+        fun[char](42),
+        fun[token](mk_token("x")),
+        fun[token](1),
+        fun2[bool,real](2.5),
+        fun2[bool,nat](2.5)];
+functions
+
+fun[@T] : ? -> bool
+fun (v) == is_(v,@T);
+
+fun2[@T,@P]: ? -> bool
+fun2(v) == is_(v,@T | @P)
+
+
+end Entry
