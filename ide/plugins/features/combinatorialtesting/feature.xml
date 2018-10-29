@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.combinatorialtesting"
       label="Combinatorial Testing"
-      version="2.6.3.qualifier">
+      version="2.6.4">
 
    <description>
       %description
