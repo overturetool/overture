@@ -25,15 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.SFunctionDefinition;
-import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.definitions.*;
 import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
@@ -46,13 +38,7 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.AClassType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.PType;
-import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.SSetType;
+import org.overture.ast.types.*;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SBindIR;
 import org.overture.codegen.ir.SExpIR;
@@ -837,16 +823,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		PExp exp = node.getExp();
 		PType type = node.getType();
 
-		if (!(type instanceof SSeqType))
-		{
-			question.addUnsupportedNode(node, "Unexpected sequence type for reverse unary expression: "
-					+ type.getClass().getName());
-			return null;
-		}
-
-		SSeqType seqType = (SSeqType) type;
-
-		STypeIR seqTypeCg = seqType.apply(question.getTypeVisitor(), question);
+		STypeIR seqTypeCg = type.apply(question.getTypeVisitor(), question);
 		SExpIR expCg = exp.apply(question.getExpVisitor(), question);
 
 		AReverseUnaryExpIR reverse = new AReverseUnaryExpIR();
@@ -1278,7 +1255,9 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		}
 
 		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type)
-				&& !(unfolded instanceof SFunctionDefinition);
+				&& !(unfolded instanceof SFunctionDefinition)
+				// Renamed functions will still have function types and function definitions
+				&& !(unfolded instanceof ARenamedDefinition);
 
 		boolean explicit = node.getName().getExplicit();
 
@@ -1812,13 +1791,6 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 		{
 			PType bindType = typeBind.getType();
 			PPattern pattern = typeBind.getPattern();
-
-			if (!(pattern instanceof AIdentifierPattern))
-			{
-				question.addUnsupportedNode(node, "Expected identifier pattern for lambda expression. Got: "
-						+ pattern);
-				return null;
-			}
 
 			STypeIR bindTypeCg = bindType.apply(question.getTypeVisitor(), question);
 			SPatternIR patternCg = pattern.apply(question.getPatternVisitor(), question);
