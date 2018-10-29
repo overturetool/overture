@@ -101,17 +101,19 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 	{
 		List<PType> cparams = new Vector<PType>();
 		cparams.addAll(type.getParameters());
-		AFunctionType ft = type;
 		
-		while (ft.getResult() instanceof AFunctionType)
+		if (isCurried)
 		{
-			ft = (AFunctionType)type.getResult();
-			cparams.addAll(ft.getParameters());
+			AFunctionType ft = type;
+			
+			while (ft.getResult() instanceof AFunctionType)
+			{
+				ft = (AFunctionType)type.getResult();
+				cparams.addAll(ft.getParameters());
+			}
 		}
 		
 		// Clean the return types to be precisely nat or nat-tuple.
-		
-		
 		
 		if (af.createPTypeAssistant().isNumeric(actual))
 		{
