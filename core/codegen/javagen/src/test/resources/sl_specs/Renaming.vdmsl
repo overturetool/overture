@@ -14,7 +14,11 @@ Run : () ==> A`Type
 Run () == 
 let a : RenamedType = RenamedVal + A`Val
 in
-    return a + renamedFun() + A`fun() + renamedOp() + A`op();
+    return a + renamedFun() + A`fun() + renamedOp() + A`op() + util();
+
+-- Renaming that appears in call statements
+util : () ==> nat
+util () == renamedOp();
 
 end Entry
 
