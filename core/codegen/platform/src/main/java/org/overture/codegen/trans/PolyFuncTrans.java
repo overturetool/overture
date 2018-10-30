@@ -15,7 +15,18 @@ import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
-import org.overture.codegen.ir.types.*;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
@@ -53,8 +64,6 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
 
             for(ATemplateTypeIR t : node.getTemplateTypes())
             {
-                String typeName = t.getName();
-
                 AFormalParamLocalParamIR param = new AFormalParamLocalParamIR();
                 param.setType(new AUnknownTypeIR());
                 param.setPattern(assist.getInfo().getPatternAssistant().consIdPattern(toTypeArgName(t)));
