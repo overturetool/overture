@@ -23,8 +23,13 @@ public class Entry {
         fun(42L, Utils.CHAR),
         fun(new Token(SeqUtil.seq('x')), Utils.TOKEN),
         fun(1L, Utils.TOKEN),
+        fun(quotes.AQuote.getInstance(), quotes.AQuote.getInstance()),
+        fun(quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
         fun2(2.5, Utils.BOOL, Utils.REAL),
-        fun2(2.5, Utils.BOOL, Utils.NAT));
+        fun2(2.5, Utils.BOOL, Utils.NAT),
+        fun2(quotes.BQuote.getInstance(), quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
+        fun2(
+            quotes.AQuote.getInstance(), quotes.BQuote.getInstance(), quotes.CQuote.getInstance()));
   }
 
   public Entry() {}
@@ -45,4 +50,7 @@ public class Entry {
   }
 }
 
+##########
+*Quotes*
+A,B,C
 ##########

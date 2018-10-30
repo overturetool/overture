@@ -15,6 +15,7 @@ import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
+import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
@@ -22,6 +23,7 @@ import org.overture.codegen.ir.types.AExternalTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
 import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
 import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
@@ -128,59 +130,68 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
 
             for(STypeIR type : methodInst.getActualTypes())
             {
-                AExternalTypeIR runtimeUtilClass = new AExternalTypeIR();
-                runtimeUtilClass.setName(getUtilClass());
-
-                AExternalTypeIR anyType = new AExternalTypeIR();
-                anyType.setName(getTypeArgumentFieldName());
-
-                AExplicitVarExpIR typeArg = new AExplicitVarExpIR();
-                typeArg.setClassType(runtimeUtilClass);
-                typeArg.setIsLocal(false);
-                typeArg.setIsLambda(false);
-                typeArg.setType(anyType);
-
-                String name;
-                if(type instanceof ANatNumericBasicTypeIR)
+                if(type instanceof AQuoteTypeIR)
                 {
-                    name = NAT;
-                }
-                else if(type instanceof ANat1NumericBasicTypeIR)
-                {
-                    name = NAT1;
-                }
-                else if(type instanceof AIntNumericBasicTypeIR)
-                {
-                    name = INT;
-                }
-                else if(type instanceof ARealNumericBasicTypeIR)
-                {
-                    name = REAL;
-                }
-                else if(type instanceof ARatNumericBasicTypeIR)
-                {
-                    name = RAT;
-                }
-                else if(type instanceof ABoolBasicTypeIR)
-                {
-                    name = BOOL;
-                }
-                else if(type instanceof ACharBasicTypeIR)
-                {
-                    name = CHAR;
-                }
-                else if(type instanceof ATokenBasicTypeIR)
-                {
-                    name = TOKEN;
+                    AQuoteLiteralExpIR qt = new AQuoteLiteralExpIR();
+                    qt.setValue(((AQuoteTypeIR) type).getValue());
+                    node.getArgs().add(qt);
                 }
                 else
                 {
-                    assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only works for basic types");
-                    name = getUnsupportedTypeFieldName();
-                }
-                typeArg.setName(name);
+                    AExternalTypeIR runtimeUtilClass = new AExternalTypeIR();
+                    runtimeUtilClass.setName(getUtilClass());
 
-                node.getArgs().add(typeArg);
+                    AExternalTypeIR anyType = new AExternalTypeIR();
+                    anyType.setName(getTypeArgumentFieldName());
+
+                    AExplicitVarExpIR typeArg = new AExplicitVarExpIR();
+                    typeArg.setClassType(runtimeUtilClass);
+                    typeArg.setIsLocal(false);
+                    typeArg.setIsLambda(false);
+                    typeArg.setType(anyType);
+
+                    String name;
+                    if(type instanceof ANatNumericBasicTypeIR)
+                    {
+                        name = NAT;
+                    }
+                    else if(type instanceof ANat1NumericBasicTypeIR)
+                    {
+                        name = NAT1;
+                    }
+                    else if(type instanceof AIntNumericBasicTypeIR)
+                    {
+                        name = INT;
+                    }
+                    else if(type instanceof ARealNumericBasicTypeIR)
+                    {
+                        name = REAL;
+                    }
+                    else if(type instanceof ARatNumericBasicTypeIR)
+                    {
+                        name = RAT;
+                    }
+                    else if(type instanceof ABoolBasicTypeIR)
+                    {
+                        name = BOOL;
+                    }
+                    else if(type instanceof ACharBasicTypeIR)
+                    {
+                        name = CHAR;
+                    }
+                    else if(type instanceof ATokenBasicTypeIR)
+                    {
+                        name = TOKEN;
+                    }
+                    else
+                    {
+                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only works for basic types, quotes and unions of these types");
+                        name = getUnsupportedTypeFieldName();
+                    }
+                    typeArg.setName(name);
+
+                    node.getArgs().add(typeArg);
+                }
             }
         }
     }

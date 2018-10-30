@@ -20,8 +20,13 @@ return [fun[nat](0),
         fun[char](42),
         fun[token](mk_token("x")),
         fun[token](1),
+        fun[<A>](<A>),
+        fun[<B>](<A>),
         fun2[bool,real](2.5),
-        fun2[bool,nat](2.5)];
+        fun2[bool,nat](2.5),
+        fun2[<A>,<B>](<B>),
+        fun2[<B>,<C>](<A>)];
+
 functions
 
 fun[@T] : ? -> bool
