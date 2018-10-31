@@ -1,5 +1,14 @@
 class Entry
 
+types
+
+RecA ::
+  a : int
+  b : int;
+
+RecB ::
+  c : bool
+
 operations
 
 public static Run : () ==> ?
@@ -22,6 +31,8 @@ return [fun[nat](0),
         fun[token](1),
         fun[<A>](<A>),
         fun[<B>](<A>),
+        fun[RecA](mk_RecA(1,2)),
+        fun[RecB](mk_RecA(1,2)),
         fun2[bool,real](2.5),
         fun2[bool,nat](2.5),
         fun2[<A>,<B>](<B>),

@@ -1070,7 +1070,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
   private static String MakeScanListing(final VDMSet msgs) {
 
-    final VDMSeq msgSeq = set2seq(Utils.copy(msgs), Utils.TYPE_NOT_SUPPORTED);
+    final VDMSeq msgSeq = set2seq(Utils.copy(msgs), POP3Server.MessageInfo.class);
 
     VDMSeq seqCompResult_1 = SeqUtil.seq();
     VDMSet set_3 = SeqUtil.inds(msgSeq);

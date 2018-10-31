@@ -34,7 +34,7 @@ public class Utils
 	public static final Object BOOL = new Object();
 	public static final Object CHAR = new Object();
 	public static final Object TOKEN = new Object();
-	// Only basic types, quotes and unions of these types can currently be used as polymorphic type arguments
+	// Only basic types, quotes, and records can currently be used as polymorphic type arguments
 	public static final Object TYPE_NOT_SUPPORTED = new Object();
 
 	public static boolean isVoidValue(Object value)
@@ -316,7 +316,7 @@ public class Utils
 		}
 		else if(type == TYPE_NOT_SUPPORTED)
 		{
-			throw new IllegalArgumentException("Only basic types, quotes and unions of these types " +
+			throw new IllegalArgumentException("Only basic types, quotes and records " +
 					"can currently be used as polymorphic type arguments");
 		}
 		else if(type instanceof Class)

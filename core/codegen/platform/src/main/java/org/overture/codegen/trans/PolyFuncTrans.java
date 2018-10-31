@@ -16,6 +16,7 @@ import org.overture.codegen.ir.expressions.AExplicitVarExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
 import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATypeArgExpIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
 import org.overture.codegen.ir.types.AClassTypeIR;
@@ -26,6 +27,7 @@ import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
 import org.overture.codegen.ir.types.AQuoteTypeIR;
 import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.ATemplateTypeIR;
 import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
@@ -136,6 +138,12 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     qt.setValue(((AQuoteTypeIR) type).getValue());
                     node.getArgs().add(qt);
                 }
+                else if(type instanceof ARecordTypeIR)
+                {
+                    ATypeArgExpIR typeArg = new ATypeArgExpIR();
+                    typeArg.setType(type.clone());
+                    node.getArgs().add(typeArg);
+                }
                 else
                 {
                     AExternalTypeIR runtimeUtilClass = new AExternalTypeIR();
@@ -185,7 +193,7 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     }
                     else
                     {
-                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only works for basic types, quotes and unions of these types");
+                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only works for basic types, quotes, records and unions");
                         name = getUnsupportedTypeFieldName();
                     }
                     typeArg.setName(name);

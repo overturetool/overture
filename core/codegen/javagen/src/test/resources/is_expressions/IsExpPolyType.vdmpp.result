@@ -25,6 +25,8 @@ public class Entry {
         fun(1L, Utils.TOKEN),
         fun(quotes.AQuote.getInstance(), quotes.AQuote.getInstance()),
         fun(quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
+        fun(new RecA(1L, 2L), RecA.class),
+        fun(new RecA(1L, 2L), RecB.class),
         fun2(2.5, Utils.BOOL, Utils.REAL),
         fun2(2.5, Utils.BOOL, Utils.NAT),
         fun2(quotes.BQuote.getInstance(), quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
@@ -47,6 +49,78 @@ public class Entry {
   public String toString() {
 
     return "Entry{}";
+  }
+
+  private static class RecA implements Record {
+    public Number a;
+    public Number b;
+
+    public RecA(final Number _a, final Number _b) {
+
+      a = _a;
+      b = _b;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecA)) {
+        return false;
+      }
+
+      RecA other = ((RecA) obj);
+
+      return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(a, b);
+    }
+
+    public RecA copy() {
+
+      return new RecA(a, b);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`RecA" + Utils.formatFields(a, b);
+    }
+  }
+
+  private static class RecB implements Record {
+    public Boolean c;
+
+    public RecB(final Boolean _c) {
+
+      c = _c;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecB)) {
+        return false;
+      }
+
+      RecB other = ((RecB) obj);
+
+      return Utils.equals(c, other.c);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(c);
+    }
+
+    public RecB copy() {
+
+      return new RecB(c);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`RecB" + Utils.formatFields(c);
+    }
   }
 }
 
