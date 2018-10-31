@@ -21,13 +21,6 @@
  */
 package org.overture.codegen.vdm2java;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
@@ -39,15 +32,14 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.printer.MsgPrinter;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
-import org.overture.codegen.utils.GeneralUtils;
-import org.overture.codegen.utils.Generated;
-import org.overture.codegen.utils.GeneratedData;
-import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.utils.*;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
+
+import java.io.File;
+import java.util.*;
 
 public class JavaCodeGenMain
 {
@@ -71,6 +63,7 @@ public class JavaCodeGenMain
 	public static final String NO_STRINGS = "-nostrings";
 	public static final String CONC = "-concurrency";
 	public static final String GEN_SYS_CLASS = "-gensysclass";
+	public static final String NO_WARNINGS = "-nowarnings";
 
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
@@ -78,10 +71,12 @@ public class JavaCodeGenMain
 
 	public static void main(String[] args)
 	{
+		long clock = System.currentTimeMillis();
 		Settings.release = Release.VDM_10;
 
 		JavaCodeGenMode cgMode = null;
 		boolean printClasses = false;
+		boolean printWarnings = true;
 
 		if (args == null || args.length <= 1)
 		{
@@ -130,7 +125,11 @@ public class JavaCodeGenMain
 			} else if (arg.equals(VDM10))
 			{
 				Settings.release = Release.VDM_10;
-			} else if (arg.equals(EXP_ARG))
+			} else if (arg.equals(NO_WARNINGS))
+			{
+				printWarnings = false;
+			}
+			 else if (arg.equals(EXP_ARG))
 			{
 				cgMode = JavaCodeGenMode.EXP;
 
@@ -267,18 +266,18 @@ public class JavaCodeGenMain
 
 			if (cgMode == JavaCodeGenMode.OO_SPEC)
 			{
-				handleOo(files, irSettings, javaSettings, Settings.dialect, printClasses, outputDir, separateTestCode);
+				handleOo(files, irSettings, javaSettings, Settings.dialect, printClasses, outputDir, separateTestCode, printWarnings);
 			} else if (cgMode == JavaCodeGenMode.SL_SPEC)
 			{
-				handleSl(files, irSettings, javaSettings, printClasses, outputDir, separateTestCode);
+				handleSl(files, irSettings, javaSettings, printClasses, outputDir, separateTestCode, printWarnings);
 			} else
 			{
 				MsgPrinter.getPrinter().errorln("Unexpected dialect: "
 						+ cgMode);
 			}
 		}
-
-		MsgPrinter.getPrinter().println("\nFinished code generation! Bye...");
+		clock = System.currentTimeMillis() - clock;
+		MsgPrinter.getPrinter().println("\nFinished code generation! Bye... @" + (clock / 1000) + "s");
 	}
 
 	private static void handleExp(String exp, IRSettings irSettings,
@@ -325,7 +324,7 @@ public class JavaCodeGenMain
 
 	public static void handleSl(List<File> files, IRSettings irSettings,
 			JavaSettings javaSettings, boolean printCode, File outputDir,
-			boolean separateTestCode)
+			boolean separateTestCode, boolean printWarnings)
 	{
 		try
 		{
@@ -345,7 +344,7 @@ public class JavaCodeGenMain
 
 			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 
-			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
+			processData(printCode, outputDir, vdmCodGen, data, separateTestCode, printWarnings);
 
 		} catch (AnalysisException e)
 		{
@@ -356,7 +355,7 @@ public class JavaCodeGenMain
 
 	public static void handleOo(List<File> files, IRSettings irSettings,
 			JavaSettings javaSettings, Dialect dialect, boolean printCode,
-			File outputDir, boolean separateTestCode)
+			File outputDir, boolean separateTestCode, boolean printWarnings)
 	{
 		try
 		{
@@ -383,7 +382,7 @@ public class JavaCodeGenMain
 
 			GeneratedData data = vdmCodGen.generate(CodeGenBase.getNodes(tcResult.result));
 
-			processData(printCode, outputDir, vdmCodGen, data, separateTestCode);
+			processData(printCode, outputDir, vdmCodGen, data, separateTestCode,printWarnings);
 
 		} catch (AnalysisException e)
 		{
@@ -394,10 +393,13 @@ public class JavaCodeGenMain
 	}
 
 	public static void processData(boolean printCode, final File outputDir,
-			JavaCodeGen vdmCodGen, GeneratedData data, boolean separateTestCode)
+			JavaCodeGen vdmCodGen, GeneratedData data, boolean separateTestCode,
+			boolean printWarnings)
 	{
 		List<GeneratedModule> generatedClasses = data.getClasses();
-
+		List<String> names = new ArrayList<>();
+		int errors_ = 0;
+		int warnings_ = 0;
 		if (!generatedClasses.isEmpty())
 		{
 			for (GeneratedModule generatedClass : generatedClasses)
@@ -415,12 +417,14 @@ public class JavaCodeGenMain
 					if (generatedClass.hasUnsupportedIrNodes())
 					{
 						MsgPrinter.getPrinter().println("Following VDM constructs are not supported by the code generator:");
+						errors_ += generatedClass.getUnsupportedInIr().size();
 						GeneralCodeGenUtils.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
 					}
 
 					if (generatedClass.hasUnsupportedTargLangNodes())
 					{
 						MsgPrinter.getPrinter().println("Following constructs are not supported by the code generator:");
+						errors_ += generatedClass.getUnsupportedInTargLang().size();
 						GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
 					}
 
@@ -444,6 +448,8 @@ public class JavaCodeGenMain
 						}
 					}
 
+					names.add(generatedClass.getName());
+
 					if (printCode)
 					{
 						MsgPrinter.getPrinter().println("**********");
@@ -460,7 +466,11 @@ public class JavaCodeGenMain
 					if (!warnings.isEmpty())
 					{
 						MsgPrinter.getPrinter().println("Following transformation warnings were found:");
-						GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getTransformationWarnings());
+						warnings_ += generatedClass.getTransformationWarnings().size();
+						if (printWarnings) 
+							GeneralCodeGenUtils.printUnsupportedNodes(generatedClass.getTransformationWarnings());
+						else
+							MsgPrinter.getPrinter().println("\t ...");
 					}
 				}
 			}
@@ -473,7 +483,7 @@ public class JavaCodeGenMain
 
 		if (quotes != null && !quotes.isEmpty())
 		{
-			MsgPrinter.getPrinter().println("\nGenerated following quotes:");
+			MsgPrinter.getPrinter().println("\nGenerated following quotes (" + quotes.size() + "):");
 			
 			if (outputDir != null)
 			{
@@ -508,12 +518,12 @@ public class JavaCodeGenMain
 
 		if (!allRenamings.isEmpty())
 		{
-			MsgPrinter.getPrinter().println("\nDue to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made: ");
+			MsgPrinter.getPrinter().println("\nDue to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made (" + allRenamings.size()+"): ");
 
 			MsgPrinter.getPrinter().println(GeneralCodeGenUtils.constructVarRenamingString(allRenamings));
 		}
 
-		if (data.getWarnings() != null && !data.getWarnings().isEmpty())
+		if (data.getWarnings() != null && !data.getWarnings().isEmpty() && printWarnings)
 		{
 			MsgPrinter.getPrinter().println("");
 			for (String w : data.getWarnings())
@@ -521,6 +531,19 @@ public class JavaCodeGenMain
 				MsgPrinter.getPrinter().println("[WARNING] " + w);
 			}
 		}
+		List<String> missing = new ArrayList<String>();
+
+		for (GeneratedModule c : generatedClasses)
+		{
+			missing.add(c.getName());
+		}
+
+		missing.removeAll(names);
+
+		MsgPrinter.getPrinter().println("\n Generated " + names.size() + " classes out of " + generatedClasses.size() + " requested" +
+				"\n\tMissing : " + missing.toString() +
+				"\n\tErrors  : " + errors_ +
+				"\n\tWarnings: " + warnings_);
 	}
 
 	public static List<File> filterFiles(List<File> files)
@@ -584,6 +607,8 @@ public class JavaCodeGenMain
 		
 		MsgPrinter.getPrinter().errorln(GEN_SYS_CLASS
 				+ ": To generate the VDM-RT system class");
+		MsgPrinter.getPrinter().errorln(NO_WARNINGS
+				+ ": To suppress printing detailed warning messages");
 
 		// Terminate
 		System.exit(1);

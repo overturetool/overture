@@ -206,7 +206,7 @@ public class Vdm2JavaMojo extends Vdm2JavaBaseMojo {
         }
 
         if (genData != null) {
-            JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData, separateTestCode);
+            JavaCodeGenMain.processData(false, outputDirectory, javaCodeGen, genData, separateTestCode, true);
 
             if (genData.hasErrors()) {
                 throw new MojoExecutionException("Could not code generate model.");
