@@ -193,7 +193,7 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     }
                     else
                     {
-                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only works for basic types, quotes, records and unions");
+                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only works for basic types, quotes and records");
                         name = getUnsupportedTypeFieldName();
                     }
                     typeArg.setName(name);
