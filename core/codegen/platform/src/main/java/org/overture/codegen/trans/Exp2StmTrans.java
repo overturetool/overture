@@ -24,7 +24,9 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.codegen.assistant.AssistantBase;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -53,6 +55,8 @@ import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
 
 public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 {
+	protected Logger log = Logger.getLogger(this.getClass().getName());
+
 	protected TransAssistantIR transAssistant;
 	protected ILanguageIterator langIterator;
 
@@ -290,12 +294,27 @@ public class Exp2StmTrans extends DepthFirstAnalysisAdaptor
 		ABlockStmIR replacementBlock = new ABlockStmIR();
 		replacementBlock.getStatements().add(declStm);
 
+		if(transAssistant.getInfo().getTypeAssistant().isIncompleteRecType(node.getRecType())) {
+			log.warn("Record type of mu_ expression '" + AssistantBase.getVdmNode(node) + "' has incomplete information." +
+					" Record type name: " + node.getRecType().getName().getName() +
+					". Defining class of record type: " + node.getRecType().getName().getDefiningClass());
+		}
+
 		for (ARecordModifierIR modifier : node.getModifiers())
 		{
 			String name = modifier.getName();
 			SExpIR value = modifier.getValue().clone();
 
-			STypeIR fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(transAssistant.getInfo().getClasses(), node.getRecType(), name);
+			STypeIR fieldType;
+
+			if(transAssistant.getInfo().getTypeAssistant().isIncompleteRecType(node.getRecType()))
+			{
+				fieldType = value.getType().clone();
+			}
+			else
+			{
+				fieldType = transAssistant.getInfo().getTypeAssistant().getFieldType(transAssistant.getInfo().getClasses(), node.getRecType(), name);
+			}
 
 			AFieldExpIR field = new AFieldExpIR();
 			field.setType(fieldType);

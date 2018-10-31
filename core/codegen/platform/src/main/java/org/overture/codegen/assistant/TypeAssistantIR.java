@@ -884,4 +884,9 @@ public class TypeAssistantIR extends AssistantBase
 		log.error("Could not get VDM type of " + type);
 		return new AUnknownType();
 	}
+
+	public boolean isIncompleteRecType(ARecordTypeIR recType)
+	{
+		return recType.getName().getName().equals("?") || recType.getName().getDefiningClass().equals("?");
+	}
 }
