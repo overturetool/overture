@@ -36,7 +36,10 @@ return [fun[nat](0),
         fun2[bool,real](2.5),
         fun2[bool,nat](2.5),
         fun2[<A>,<B>](<B>),
-        fun2[<B>,<C>](<A>)];
+        fun2[<B>,<C>](<A>),
+        -- Passing of polymorphic types
+        isType[nat](0),
+        isType[nat](-1)];
 
 functions
 
@@ -44,7 +47,12 @@ fun[@T] : ? -> bool
 fun (v) == is_(v,@T);
 
 fun2[@T,@P]: ? -> bool
-fun2(v) == is_(v,@T | @P)
+fun2(v) == is_(v,@T | @P);
 
+isType[@T]: ? -> bool
+isType(x) == isType2[@T](x);
+
+isType2[@T]: ? -> bool
+isType2(x) == is_(x,@T)
 
 end Entry

@@ -30,8 +30,9 @@ public class Entry {
         fun2(2.5, Utils.BOOL, Utils.REAL),
         fun2(2.5, Utils.BOOL, Utils.NAT),
         fun2(quotes.BQuote.getInstance(), quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
-        fun2(
-            quotes.AQuote.getInstance(), quotes.BQuote.getInstance(), quotes.CQuote.getInstance()));
+        fun2(quotes.AQuote.getInstance(), quotes.BQuote.getInstance(), quotes.CQuote.getInstance()),
+        isType(0L, Utils.NAT),
+        isType(-1L, Utils.NAT));
   }
 
   public Entry() {}
@@ -44,6 +45,16 @@ public class Entry {
   private static <T, P> Boolean fun2(final Object v, final Object _type_T, final Object _type_P) {
 
     return Utils.is_(v, _type_P) || Utils.is_(v, _type_T);
+  }
+
+  private static <T> Boolean isType(final Object x, final Object _type_T) {
+
+    return isType2(x, _type_T);
+  }
+
+  private static <T> Boolean isType2(final Object x, final Object _type_T) {
+
+    return Utils.is_(x, _type_T);
   }
 
   public String toString() {

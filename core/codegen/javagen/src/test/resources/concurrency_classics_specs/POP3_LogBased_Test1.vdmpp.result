@@ -1062,8 +1062,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
       letBeStExp_1 =
           SeqUtil.conc(
-              SeqUtil.seq(v),
-              set2seq(SetUtil.diff(Utils.copy(s), SetUtil.set(v)), Utils.TYPE_NOT_SUPPORTED));
+              SeqUtil.seq(v), set2seq(SetUtil.diff(Utils.copy(s), SetUtil.set(v)), _type_tp));
       return Utils.copy(letBeStExp_1);
     }
   }

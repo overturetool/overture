@@ -28,8 +28,7 @@ public class Entry {
     } else {
       return SeqUtil.conc(
           SeqUtil.seq(f.eval(((A) s.get(0)))),
-          seq_map(
-              SeqUtil.tail(Utils.copy(s)), f, Utils.TYPE_NOT_SUPPORTED, Utils.TYPE_NOT_SUPPORTED));
+          seq_map(SeqUtil.tail(Utils.copy(s)), f, _type_A, _type_B));
     }
   }
 

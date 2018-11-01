@@ -144,6 +144,13 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     typeArg.setType(type.clone());
                     node.getArgs().add(typeArg);
                 }
+                else if(type instanceof ATemplateTypeIR)
+                {
+                    ATemplateTypeIR templateType = (ATemplateTypeIR) type;
+                    String paramName = toTypeArgName(templateType);
+                    AIdentifierVarExpIR templateTypeArg = assist.getInfo().getExpAssistant().consIdVar(paramName, templateType.clone());
+                    node.getArgs().add(templateTypeArg);
+                }
                 else
                 {
                     AExternalTypeIR runtimeUtilClass = new AExternalTypeIR();
@@ -193,7 +200,8 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     }
                     else
                     {
-                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only works for basic types, quotes and records");
+                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only " +
+                                "works for basic types, quotes, polymorphic types and records");
                         name = getUnsupportedTypeFieldName();
                     }
                     typeArg.setName(name);

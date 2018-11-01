@@ -38,8 +38,7 @@ public class Entry {
           ternaryIfExp_1 =
               SeqUtil.conc(
                   SeqUtil.seq(f.eval(((a) l.get(0)))),
-                  mmap(f, Utils.TYPE_NOT_SUPPORTED, Utils.TYPE_NOT_SUPPORTED)
-                      .eval(SeqUtil.tail(Utils.copy(l))));
+                  mmap(f, _type_a, _type_b).eval(SeqUtil.tail(Utils.copy(l))));
         }
 
         return Utils.copy(ternaryIfExp_1);
