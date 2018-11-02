@@ -25,6 +25,12 @@ public class Entry {
         fun(1L, Utils.TOKEN),
         fun(quotes.AQuote.getInstance(), quotes.AQuote.getInstance()),
         fun(quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
+        fun(
+            quotes.AQuote.getInstance(),
+            SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
+        fun(
+            quotes.CQuote.getInstance(),
+            SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
         fun(new RecA(1L, 2L), RecA.class),
         fun(new RecA(1L, 2L), RecB.class),
         fun2(2.5, Utils.BOOL, Utils.REAL),

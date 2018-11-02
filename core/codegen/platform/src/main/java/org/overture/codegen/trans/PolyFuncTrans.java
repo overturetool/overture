@@ -1,5 +1,6 @@
 package org.overture.codegen.trans;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
@@ -22,11 +23,17 @@ import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
 
+    protected Logger log = Logger.getLogger(this.getClass().getName());
+
     private TransAssistantIR assist;
 
     private static final String TYPE_ARG_PREFIX = "_type_";
 
     private static final String UTIL_CLASS = "Utils";
+    private static final String SET_UTIL = "SetUtil";
+    private static final String VDM_SET = "VDMSet";
+    private static final String SET_METHOD_NAME = "set";
+
 
     public static final String OBJECT = "Object";
 
@@ -139,19 +146,52 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     AIdentifierVarExpIR templateTypeArg = assist.getInfo().getExpAssistant().consIdVar(paramName, templateType.clone());
                     node.getArgs().add(templateTypeArg);
                 }
+                else if(type instanceof AUnionTypeIR)
+                {
+                    AUnionTypeIR unionType = (AUnionTypeIR) type;
+
+                    if(assist.getInfo().getTypeAssistant().isUnionOfType(unionType, AQuoteTypeIR.class))
+                    {
+                        AExplicitVarExpIR setConstructorMember = consTypeArg(getSetUtil());
+                        setConstructorMember.setName(getSetMethodName());
+
+                        AExternalTypeIR setType = new AExternalTypeIR();
+                        setType.setName(getVdmSet());
+
+                        AApplyExpIR setConstructor = new AApplyExpIR();
+                        setConstructor.setType(setType);
+                        setConstructor.setRoot(setConstructorMember);
+
+                        for(STypeIR t : unionType.getTypes())
+                        {
+                            AQuoteLiteralExpIR qt = new AQuoteLiteralExpIR();
+                            qt.setType(t.clone());
+                            if(t instanceof AQuoteTypeIR)
+                            {
+                                qt.setValue(((AQuoteTypeIR) t).getValue());
+                            }
+                            else
+                            {
+                                // Should never happen
+                                log.warn("Expected type to be a quote type but got " + t);
+                            }
+                            setConstructor.getArgs().add(qt);
+                        }
+
+                        node.getArgs().add(setConstructor);
+
+                    }
+                    else {
+                        issueUnsupportedWarning(methodInst);
+                        AExplicitVarExpIR typeArg = consTypeArg(getUtilClass());
+                        String name = getUnsupportedTypeFieldName();
+                        typeArg.setName(name);
+                        node.getArgs().add(typeArg);
+                    }
+                }
                 else
                 {
-                    AExternalTypeIR runtimeUtilClass = new AExternalTypeIR();
-                    runtimeUtilClass.setName(getUtilClass());
-
-                    AExternalTypeIR anyType = new AExternalTypeIR();
-                    anyType.setName(getTypeArgumentFieldName());
-
-                    AExplicitVarExpIR typeArg = new AExplicitVarExpIR();
-                    typeArg.setClassType(runtimeUtilClass);
-                    typeArg.setIsLocal(false);
-                    typeArg.setIsLambda(false);
-                    typeArg.setType(anyType);
+                    AExplicitVarExpIR typeArg = consTypeArg(getUtilClass());
 
                     String name;
                     if(type instanceof ANatNumericBasicTypeIR)
@@ -192,8 +232,7 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     }
                     else
                     {
-                        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only " +
-                                "works for basic types, quotes, strings, polymorphic types and records");
+                        issueUnsupportedWarning(methodInst);
                         name = getUnsupportedTypeFieldName();
                     }
                     typeArg.setName(name);
@@ -202,6 +241,27 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                 }
             }
         }
+    }
+
+    public AExplicitVarExpIR consTypeArg(String className) {
+
+        AExternalTypeIR runtimeUtilClass = new AExternalTypeIR();
+        runtimeUtilClass.setName(className);
+
+        AExternalTypeIR anyType = new AExternalTypeIR();
+        anyType.setName(getTypeArgumentFieldName());
+
+        AExplicitVarExpIR typeArg = new AExplicitVarExpIR();
+        typeArg.setClassType(runtimeUtilClass);
+        typeArg.setIsLocal(false);
+        typeArg.setIsLambda(false);
+        typeArg.setType(anyType);
+        return typeArg;
+    }
+
+    public void issueUnsupportedWarning(AMethodInstantiationExpIR methodInst) {
+        assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only " +
+                "works for basic types, quotes, union of quotes, strings, polymorphic types and records");
     }
 
     public String getUnsupportedTypeFieldName() {
@@ -214,5 +274,18 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
 
     public String getUtilClass() {
         return UTIL_CLASS;
+    }
+
+    public String getSetUtil(){
+        return SET_UTIL;
+    }
+
+    public String getVdmSet()
+    {
+        return VDM_SET;
+    }
+
+    public String getSetMethodName(){
+        return SET_METHOD_NAME;
     }
 }

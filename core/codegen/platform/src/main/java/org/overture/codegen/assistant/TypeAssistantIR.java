@@ -57,35 +57,7 @@ import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.SBinaryExpIR;
 import org.overture.codegen.ir.statements.AApplyObjectDesignatorIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeWrappersTypeIR;
-import org.overture.codegen.ir.types.ACharBasicTypeIR;
-import org.overture.codegen.ir.types.ACharBasicTypeWrappersTypeIR;
-import org.overture.codegen.ir.types.AClassTypeIR;
-import org.overture.codegen.ir.types.AIntBasicTypeWrappersTypeIR;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.types.ANat1BasicTypeWrappersTypeIR;
-import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
-import org.overture.codegen.ir.types.ANatBasicTypeWrappersTypeIR;
-import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
-import org.overture.codegen.ir.types.AObjectTypeIR;
-import org.overture.codegen.ir.types.ARatBasicTypeWrappersTypeIR;
-import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ARealBasicTypeWrappersTypeIR;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.types.ASeqSeqTypeIR;
-import org.overture.codegen.ir.types.ASetSetTypeIR;
-import org.overture.codegen.ir.types.AStringTypeIR;
-import org.overture.codegen.ir.types.ATokenBasicTypeIR;
-import org.overture.codegen.ir.types.ATupleTypeIR;
-import org.overture.codegen.ir.types.AUnionTypeIR;
-import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.ir.types.SBasicTypeIR;
-import org.overture.codegen.ir.types.SMapTypeIR;
-import org.overture.codegen.ir.types.SSeqTypeIR;
-import org.overture.codegen.ir.types.SSetTypeIR;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.trans.conv.ObjectDesignatorToExpIR;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -434,6 +406,33 @@ public class TypeAssistantIR extends AssistantBase
 			for (PType t : unionType.getTypes())
 			{
 				if (!typeAssistant.isType(t, type))
+				{
+					return false;
+				}
+			}
+		} catch (Error t)// Hack for stackoverflowError
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean isUnionOfType(AUnionTypeIR unionType,
+								 Class<? extends STypeIR> type)
+	{
+		try
+		{
+			for (STypeIR t : unionType.getTypes())
+			{
+				if(t instanceof AUnionTypeIR)
+				{
+					if(!isUnionOfType((AUnionTypeIR) t, type))
+					{
+						return false;
+					}
+				}
+				else if (!(t instanceof AQuoteTypeIR))
 				{
 					return false;
 				}
