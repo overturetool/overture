@@ -17,20 +17,7 @@ import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
 import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
 import org.overture.codegen.ir.expressions.ATypeArgExpIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
-import org.overture.codegen.ir.types.ACharBasicTypeIR;
-import org.overture.codegen.ir.types.AClassTypeIR;
-import org.overture.codegen.ir.types.AExternalTypeIR;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
-import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
-import org.overture.codegen.ir.types.AQuoteTypeIR;
-import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.types.ATemplateTypeIR;
-import org.overture.codegen.ir.types.ATokenBasicTypeIR;
-import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
@@ -51,6 +38,7 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
     public static final String BOOL = "BOOL";
     public static final String CHAR = "CHAR";
     public static final String TOKEN = "TOKEN";
+    public static final String STRING = "STRING";
 
     public static final String TYPE_NOT_SUPPORTED = "TYPE_NOT_SUPPORTED";
 
@@ -198,10 +186,14 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     {
                         name = TOKEN;
                     }
+                    else if(type instanceof AStringTypeIR)
+                    {
+                        name = STRING;
+                    }
                     else
                     {
                         assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only " +
-                                "works for basic types, quotes, polymorphic types and records");
+                                "works for basic types, quotes, strings, polymorphic types and records");
                         name = getUnsupportedTypeFieldName();
                     }
                     typeArg.setName(name);
