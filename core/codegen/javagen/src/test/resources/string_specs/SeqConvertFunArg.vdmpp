@@ -1,0 +1,27 @@
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () == return fun("hej");
+
+functions
+
+fun: seq of char -> nat
+fun(date) ==
+  fun2[char](date) + B`fun2[char](date);
+
+fun2[@T]: seq of @T -> nat
+fun2(-) == 1;
+
+end Entry
+
+class B
+
+functions
+
+public fun2[@T]: seq of @T -> nat
+fun2(-) == 2;
+
+
+end B

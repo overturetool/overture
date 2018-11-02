@@ -1,0 +1,51 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Number Run() {
+
+    return fun("hej");
+  }
+
+  public Entry() {}
+
+  private static Number fun(final String date) {
+
+    return fun2(SeqUtil.toSeq(date), Utils.CHAR).longValue()
+        + B.fun2(SeqUtil.toSeq(date), Utils.CHAR).longValue();
+  }
+
+  private static <T> Number fun2(final VDMSeq ignorePattern_1, final Object _type_T) {
+
+    return 1L;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class B {
+  public B() {}
+
+  public static <T> Number fun2(final VDMSeq ignorePattern_2, final Object _type_T) {
+
+    return 2L;
+  }
+
+  public String toString() {
+
+    return "B{}";
+  }
+}
+
+##########
