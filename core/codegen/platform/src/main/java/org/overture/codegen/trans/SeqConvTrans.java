@@ -137,10 +137,7 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	@Override
-	public void caseAApplyExpIR(AApplyExpIR node) throws AnalysisException {
-		super.caseAApplyExpIR(node);
-
+	public AMethodTypeIR getMethodType(AApplyExpIR node, List<SExpIR> args) throws AnalysisException {
 		SExpIR root = node.getRoot();
 		STypeIR type = root.getType();
 
@@ -163,7 +160,7 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 			}
 			else
 			{
-				return;
+				return null;
 			}
 			fieldName = expVar.getName();
 		}
@@ -191,7 +188,7 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 					else
 					{
 						log.warn("Could not find enclosing class for " + node);
-						return;
+						return null;
 					}
 
 				}
@@ -206,7 +203,7 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 				else
 				{
 					log.warn("Could not find enclosing class for " + node);
-					return;
+					return null;
 				}
 			}
 		}
@@ -223,30 +220,45 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 			}
 			else
 			{
-				return;
+				return null;
 			}
 		}
 		else
 		{
-			return;
+			return null;
 		}
 
 		if(!(type instanceof AMethodTypeIR))
 		{
-			return;
+			return null;
 		}
 
 		AMethodTypeIR rootType = (AMethodTypeIR) type;
 
 		// All arguments -- except type arguments (polymorphic types)
-		List<SExpIR> args = new LinkedList<>();
-		for(int i = 0; i < rootType.getParams().size(); i++)
+
+		if(args == null)
 		{
+			args = new LinkedList<>();
+		}
+
+		for (int i = 0; i < rootType.getParams().size(); i++) {
 			args.add(node.getArgs().get(i));
 		}
 
 		AMethodTypeIR methodType = transformationAssistant.getInfo().getTypeAssistant().
 				getMethodType(transformationAssistant.getInfo(), moduleName, fieldName, args);
+
+		return methodType;
+	}
+
+	@Override
+	public void caseAApplyExpIR(AApplyExpIR node) throws AnalysisException {
+		super.caseAApplyExpIR(node);
+
+		List<SExpIR> args = new LinkedList<>();
+
+		AMethodTypeIR methodType = getMethodType(node, args);
 
 		if(methodType == null)
 		{
@@ -256,7 +268,35 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 		for(int i = 0; i < methodType.getParams().size(); i ++)
 		{
 			STypeIR paramType = methodType.getParams().get(i);
-			STypeIR argType = node.getArgs().get(i).getType();
+
+			SExpIR arg = node.getArgs().get(i);
+
+			STypeIR argType;
+
+			if(arg instanceof AApplyExpIR)
+			{
+				// Consider the case where the argument type is string (originating from seq of char).
+				// In this case we cannnot be sure that the return type of the function definition
+				// associated with the apply expression is 'seq of char'.
+				// This is the case if 'arg' is fun[char](..) and the return type of 'fun' is 'seq of @T'.
+
+				AMethodTypeIR argMethodType = getMethodType((AApplyExpIR) arg, null);
+
+				if(argMethodType != null)
+				{
+					argType = argMethodType.getResult();
+				}
+				else
+				{
+					// Fall back on the argument type
+					argType = arg.getType();
+				}
+			}
+			else
+			{
+				argType = arg.getType();
+			}
+
 
 			if (paramType instanceof AStringTypeIR
 					&& argType instanceof SSeqTypeIR)
