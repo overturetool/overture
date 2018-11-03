@@ -40,6 +40,7 @@ public class IRSettings
 	private boolean generateTraces;
 
 	private boolean generateInvariantChecks;
+	private boolean addStateInvToModule = true;
 
 	public IRSettings()
 	{
@@ -144,5 +145,13 @@ public class IRSettings
 	public void setGenerateInvariants(boolean generateInvariantChecks)
 	{
 		this.generateInvariantChecks = generateInvariantChecks;
+	}
+
+	public boolean addStateInvToModule() {
+		return addStateInvToModule;
+    }
+
+	public void setAddStateInvToModule(boolean addStateInvToModule) {
+		this.addStateInvToModule = addStateInvToModule;
 	}
 }

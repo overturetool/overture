@@ -96,7 +96,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		SPatternIR initPatternCg = initPattern != null
 				? initPattern.apply(question.getPatternVisitor(), question)
 				: null;
-		SDeclIR invDeclCg = invdef != null
+		SDeclIR invDeclCg = question.getSettings().generateInvariants() && invdef != null
 				? invdef.apply(question.getDeclVisitor(), question) : null;
 		SExpIR invExpCg = invExp != null
 				? invExp.apply(question.getExpVisitor(), question) : null;
@@ -222,7 +222,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		ARecordDeclIR record = new ARecordDeclIR();
 		record.setName(name.getName());
 
-		if (node.getInvDef() != null)
+		if (node.getInvDef() != null && question.getSettings().generateInvariants())
 		{
 			SDeclIR invCg = node.getInvDef().apply(question.getDeclVisitor(), question);
 			record.setInvariant(invCg);
@@ -270,7 +270,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		SDeclIR declCg = type.apply(question.getDeclVisitor(), question);
 
-		SDeclIR invCg = node.getInvdef() != null
+		SDeclIR invCg = question.getSettings().generateInvariants() && node.getInvdef() != null
 				? node.getInvdef().apply(question.getDeclVisitor(), question)
 				: null;
 

@@ -64,6 +64,9 @@ public class JavaCodeGenMain
 	public static final String CONC = "-concurrency";
 	public static final String GEN_SYS_CLASS = "-gensysclass";
 	public static final String NO_WARNINGS = "-nowarnings";
+	public static final String GEN_PRE_CONDITIONS = "-pre";
+	public static final String GEN_POST_CONDITIONS = "-post";
+	public static final String GEN_INVARIANTS = "-inv";
 
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
@@ -222,6 +225,18 @@ public class JavaCodeGenMain
 			else if(arg.equals(GEN_SYS_CLASS))
 			{
 				javaSettings.setGenSystemClass(true);
+			}
+			else if(arg.equals(GEN_PRE_CONDITIONS))
+			{
+				irSettings.setGeneratePreConds(true);
+			}
+			else if(arg.equals(GEN_POST_CONDITIONS))
+			{
+				irSettings.setGeneratePostConds(true);
+			}
+			else if(arg.equals(GEN_INVARIANTS))
+			{
+				irSettings.setGenerateInvariants(true);
 			}
 			else
 			{
@@ -579,6 +594,12 @@ public class JavaCodeGenMain
 				+ ": code generate using the VDM-10 language release");
 		MsgPrinter.getPrinter().errorln(EXP_ARG
 				+ " <expression>: code generate a VDMPP expression");
+		MsgPrinter.getPrinter().errorln(GEN_PRE_CONDITIONS
+				+ ": generate pre condition functions");
+		MsgPrinter.getPrinter().errorln(GEN_POST_CONDITIONS
+				+ ": generate post condition functions");
+		MsgPrinter.getPrinter().errorln(GEN_INVARIANTS
+				+ ": generate invariant functions");
 		MsgPrinter.getPrinter().errorln(FOLDER_ARG
 				+ " <folder path>: a folder containing input vdm source files");
 		MsgPrinter.getPrinter().errorln(PRINT_ARG
