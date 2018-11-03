@@ -272,11 +272,6 @@ public class TypeAssistantIR extends AssistantBase
 			List<STypeIR> paramTypes)
 			throws org.overture.codegen.ir.analysis.AnalysisException
 	{
-		if (args.size() != paramTypes.size())
-		{
-			return false;
-		}
-
 		for (int i = 0; i < paramTypes.size(); i++)
 		{
 			STypeIR paramType = paramTypes.get(i);

@@ -145,9 +145,14 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return exp;
 	}
 
-	private boolean correctArgTypes(List<SExpIR> args, List<STypeIR> paramTypes)
+	private boolean correctArgTypes(List<SExpIR> args, List<STypeIR> paramTypes, boolean sameSize)
 			throws AnalysisException
 	{
+		if (sameSize && args.size() != paramTypes.size())
+		{
+			return false;
+		}
+
 		if (transAssistant.getInfo().getAssistantManager().getTypeAssistant().checkArgTypes(transAssistant.getInfo(), args, paramTypes))
 		{
 			for (int k = 0; k < paramTypes.size(); k++)
@@ -581,8 +586,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			LinkedList<STypeIR> paramTypes = methodType.getParams();
 
 			LinkedList<SExpIR> args = node.getArgs();
-
-			correctArgTypes(args, paramTypes);
+			correctArgTypes(args, paramTypes, false);
 		}
 	}
 
@@ -626,7 +630,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 						continue;
 					}
 
-					if (correctArgTypes(args, method.getMethodType().getParams()))
+					if (correctArgTypes(args, method.getMethodType().getParams(), true))
 					{
 						return;
 					}
@@ -649,7 +653,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 			List<STypeIR> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
 
-			if (correctArgTypes(args, fieldTypes))
+			if (correctArgTypes(args, fieldTypes, true))
 			{
 				return;
 			}
@@ -707,7 +711,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		if (methodType != null)
 		{
-			correctArgTypes(args, methodType.getParams());
+			correctArgTypes(args, methodType.getParams(), true);
 		}
 	}
 
@@ -781,7 +785,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 			if (methodType != null)
 			{
-				correctArgTypes(callCopy.getArgs(), methodType.getParams());
+				correctArgTypes(callCopy.getArgs(), methodType.getParams(), true);
 			} else
 			{
 				// It's possible (due to the way union types work) that the method type for the

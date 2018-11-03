@@ -1,0 +1,18 @@
+class Entry
+
+operations
+
+public static Run : () ==> bool
+Run () == return fun[nat]([1,2,3]);
+
+functions
+
+fun2[@T]: seq of @T -> bool
+fun2(-) == true;
+
+fun[@T]: seq of @T | nat -> bool
+fun(xs) == 
+  fun2[@T](xs);
+
+
+end Entry

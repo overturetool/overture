@@ -55,7 +55,7 @@ public class Entry {
 
   private static <T> Boolean isType(final Object x, final Object _type_T) {
 
-    return isType2(x, _type_T);
+    return isType2(((Object) x), _type_T);
   }
 
   private static <T> Boolean isType2(final Object x, final Object _type_T) {
