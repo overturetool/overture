@@ -31,6 +31,7 @@ public class Entry {
         fun(
             quotes.CQuote.getInstance(),
             SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
+        fun(null, Utils.UNKNOWN),
         fun(new RecA(1L, 2L), RecA.class),
         fun(new RecA(1L, 2L), RecB.class),
         fun2(2.5, Utils.BOOL, Utils.REAL),

@@ -35,7 +35,8 @@ public class Utils
 	public static final Object CHAR = new Object();
 	public static final Object TOKEN = new Object();
 	public static final Object STRING = new Object();
-	// Only basic types, quotes, union of quotes, strings, polymorphic types and records can currently be used as polymorphic type arguments
+	public static final Object UNKNOWN = new Object();
+	// Only basic types, quotes, union of quotes, strings, polymorphic types, the unknown type and records can currently be used as polymorphic type arguments
 	public static final Object TYPE_NOT_SUPPORTED = new Object();
 
 	public static boolean isVoidValue(Object value)
@@ -317,12 +318,16 @@ public class Utils
 		}
 		else if(type == TYPE_NOT_SUPPORTED)
 		{
-			throw new IllegalArgumentException("Only basic types, quotes, union of quotes, strings, polymorphic types and records " +
-					"can currently be used as polymorphic type arguments");
+			throw new IllegalArgumentException("Only basic types, quotes, union of quotes, strings, polymorphic types,"
+					+ " the unknown type and records can currently be used as polymorphic type arguments");
 		}
 		else if(type == STRING)
 		{
 			return exp instanceof String;
+		}
+		else if(type == UNKNOWN)
+		{
+			return true;
 		}
 		else if(type instanceof VDMSet)
 		{

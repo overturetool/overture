@@ -6,7 +6,6 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.ir.expressions.*;
-import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.*;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
@@ -59,6 +58,14 @@ public class IsExpSimplifyTrans  extends DepthFirstAnalysisAdaptor {
                 || checkedType instanceof AStringTypeIR)
         {
             return consGeneralIsExp(exp, checkedType);
+        } else if(checkedType instanceof AUnknownTypeIR)
+        {
+            ABoolLiteralExpIR boolLiteral = new ABoolLiteralExpIR();
+            boolLiteral.setType(new ABoolBasicTypeIR());
+            boolLiteral.setValue(true);
+
+            return boolLiteral;
+
         } else
         {
             if (checkedType instanceof ASeqSeqTypeIR)
@@ -75,6 +82,15 @@ public class IsExpSimplifyTrans  extends DepthFirstAnalysisAdaptor {
 
                 if (mapType.getFrom() instanceof AUnknownTypeIR
                         && mapType.getTo() instanceof AUnknownTypeIR)
+                {
+                    return consGeneralIsExp(exp, checkedType);
+                }
+            }
+            else if(checkedType instanceof ASetSetTypeIR)
+            {
+                ASetSetTypeIR setType = (ASetSetTypeIR) checkedType;
+
+                if(setType.getSetOf() instanceof AUnknownTypeIR)
                 {
                     return consGeneralIsExp(exp, checkedType);
                 }

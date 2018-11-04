@@ -46,6 +46,7 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
     public static final String CHAR = "CHAR";
     public static final String TOKEN = "TOKEN";
     public static final String STRING = "STRING";
+    public static final String UNKNOWN = "UNKNOWN";
 
     public static final String TYPE_NOT_SUPPORTED = "TYPE_NOT_SUPPORTED";
 
@@ -229,6 +230,10 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     else if(type instanceof AStringTypeIR)
                     {
                         name = STRING;
+                    }
+                    else if(type instanceof AUnknownTypeIR)
+                    {
+                        name = UNKNOWN;
                     }
                     else
                     {
