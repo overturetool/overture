@@ -34,4 +34,5 @@ Bundle-ClassPath: .,
  jars/google-java-format.jar,
  jars/guava.jar,
  jars/log4j.jar,
- jars/velocity.jar
+ jars/velocity.jar,
+ jars/jgrapht-core.jar

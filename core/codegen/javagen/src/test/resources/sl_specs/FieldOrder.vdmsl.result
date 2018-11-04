@@ -1,0 +1,54 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class Entry {
+  public static final Number D = 4L;
+  public static final Number C = D;
+  public static final Object B = C;
+  public static final Object A = B;
+  public static final Object E = Mod.AA;
+
+  private Entry() {}
+
+  public static Number Run() {
+
+    return ((Number) A);
+  }
+
+  public String toString() {
+
+    return "Entry{"
+        + "D = "
+        + Utils.toString(D)
+        + ", C = "
+        + Utils.toString(C)
+        + ", B = "
+        + Utils.toString(B)
+        + ", A = "
+        + Utils.toString(A)
+        + ", E = "
+        + Utils.toString(E)
+        + "}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class Mod {
+  public static final Number AA = 2L;
+
+  private Mod() {}
+
+  public String toString() {
+
+    return "Mod{" + "AA = " + Utils.toString(AA) + "}";
+  }
+}
+
+##########
