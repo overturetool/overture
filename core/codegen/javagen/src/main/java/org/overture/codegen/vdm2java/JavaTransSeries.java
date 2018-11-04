@@ -3,7 +3,6 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -102,6 +101,7 @@ public class JavaTransSeries
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 		ConstructorTrans ctorTr = new ConstructorTrans(transAssist, OBJ_INIT_CALL_NAME_PREFIX);
 		ImportsTrans impTr = new ImportsTrans(info);
+		SlAccessTrans slAccessTr = new SlAccessTrans();
 		JUnit4Trans junitTr = new JUnit4Trans(transAssist, codeGen);
 
 		// Start concurrency transformations
@@ -143,6 +143,7 @@ public class JavaTransSeries
 		series.add(recTr);
 		series.add(ctorTr);
 		series.add(impTr);
+		series.add(slAccessTr);
 		series.add(junitTr);
 
 		return series;
