@@ -54,18 +54,7 @@ import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
 import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.statements.ASuperCallStmIR;
 import org.overture.codegen.ir.statements.SCallStmIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
-import org.overture.codegen.ir.types.AClassTypeIR;
-import org.overture.codegen.ir.types.AErrorTypeIR;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.types.ATupleTypeIR;
-import org.overture.codegen.ir.types.AUnionTypeIR;
-import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.ir.types.SMapTypeIR;
-import org.overture.codegen.ir.types.SSeqTypeIR;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
@@ -129,9 +118,11 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	private SExpIR correctTypes(SExpIR exp, STypeIR castedType)
 			throws AnalysisException
 	{
-		if ((exp.getType() instanceof AUnknownTypeIR
-				|| exp.getType() instanceof AUnionTypeIR)
-				&& !(exp instanceof ACastUnaryExpIR))
+		if ((exp.getType() instanceof AUnknownTypeIR ||
+				exp.getType() instanceof AUnionTypeIR ||
+				castedType instanceof ATemplateTypeIR) &&
+				!(exp instanceof ACastUnaryExpIR) &&
+				!exp.getType().equals(castedType))
 		{
 			ACastUnaryExpIR casted = new ACastUnaryExpIR();
 			casted.setType(castedType.clone());

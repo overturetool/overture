@@ -1441,12 +1441,12 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
       }
 
       {
-        msgChannel.ServerSend(ReceiveCommand(((Object) Utils.copy(cmd))));
+        msgChannel.ServerSend(ReceiveCommand(Utils.copy(cmd)));
         cmd = msgChannel.ServerListen();
       }
     }
 
-    msgChannel.ServerSend(ReceiveCommand(((Object) Utils.copy(cmd))));
+    msgChannel.ServerSend(ReceiveCommand(Utils.copy(cmd)));
   }
 }
 
@@ -2700,7 +2700,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
     sentinel.entering(((POP3TestSender_sentinel) sentinel).SendCmd);
     try {
       mcarg.ClientSend(Utils.copy(cmd));
-      LogClient(((Object) Utils.copy(cmd)));
+      LogClient(Utils.copy(cmd));
 
     } finally {
       sentinel.leaving(((POP3TestSender_sentinel) sentinel).SendCmd);
@@ -2746,7 +2746,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
   public void run() {
     for (Iterator iterator_14 = cmds.iterator(); iterator_14.hasNext(); ) {
       Object cmd = (Object) iterator_14.next();
-      SendCmd(mc, ((Object) Utils.copy(cmd)));
+      SendCmd(mc, Utils.copy(cmd));
     }
   }
 }
@@ -2860,12 +2860,12 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
       }
 
       {
-        LogServer(((Object) Utils.copy(response)));
+        LogServer(Utils.copy(response));
         response = mc.ClientListen();
       }
     }
 
-    LogServer(((Object) Utils.copy(response)));
+    LogServer(Utils.copy(response));
     finished = true;
     sentinel.stateChanged();
   }
