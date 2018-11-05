@@ -74,6 +74,7 @@ public class JavaTransSeries
 
 		// Construct the transformations
 		RenamedTrans renamedTr = new RenamedTrans(transAssist);
+		ModuleRenamerTrans moduleRenamerTr = new ModuleRenamerTrans(transAssist);
 		UnsupportedLibWarningTrans libWarnTr = new UnsupportedLibWarningTrans(transAssist);
 		FieldOrderTrans fieldOrderTr = new FieldOrderTrans();
 		AtomicStmTrans atomicTr = new AtomicStmTrans(transAssist, varMan.atomicTmpVar());
@@ -114,6 +115,7 @@ public class JavaTransSeries
 
 		// Set up order of transformations
 		series.add(renamedTr);
+		series.add(moduleRenamerTr);
 		series.add(libWarnTr);
 		series.add(fieldOrderTr);
 		series.add(atomicTr);
