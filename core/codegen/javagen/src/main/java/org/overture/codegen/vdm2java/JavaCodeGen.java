@@ -693,12 +693,6 @@ public class JavaCodeGen extends CodeGenBase
 				javaFileName = generatedModule.getName();
 			}
 
-
-			if (JavaCodeGenUtil.isQuote(generatedModule.getIrNode(), getJavaSettings()))
-			{
-				javaFileName += JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
-			}
-
 			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;
 
 			emitCode(moduleOutputDir, javaFileName, generatedModule.getContent());
