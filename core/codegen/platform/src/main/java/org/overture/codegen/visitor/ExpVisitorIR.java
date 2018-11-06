@@ -111,7 +111,14 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	public SExpIR caseAUndefinedExp(AUndefinedExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AUndefinedExpIR();
+		PType type = node.getType();
+
+		STypeIR typeCg = type.apply(question.getTypeVisitor(), question);
+
+		AUndefinedExpIR undefExpCg = new AUndefinedExpIR();
+		undefExpCg.setTag(typeCg);
+
+		return undefExpCg;
 	}
 
 	@Override

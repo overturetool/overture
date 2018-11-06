@@ -273,7 +273,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 
 			for (int i = 0; i < stateDecl.getFields().size(); i++)
 			{
-				defaultRecInit.getArgs().add(new AUndefinedExpIR());
+				defaultRecInit.getArgs().add(transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 			}
 
 			return defaultRecInit;

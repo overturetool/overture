@@ -1,0 +1,20 @@
+class Entry
+
+types
+	R :: x: int;
+
+operations
+
+public static Run : () ==> int
+Run () ==
+let m = {1 |-> 42},
+    r = fun(m)
+in
+  return r.x;
+
+functions
+	
+fun: map nat to ? -> R
+fun(m) == mk_R(m(1));
+
+end Entry

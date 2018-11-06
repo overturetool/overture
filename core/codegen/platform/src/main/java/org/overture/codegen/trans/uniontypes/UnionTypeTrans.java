@@ -592,22 +592,6 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	{
 		LinkedList<SExpIR> args = node.getArgs();
 
-		boolean hasUnionTypes = false;
-
-		for (SExpIR arg : args)
-		{
-			if (arg.getType() instanceof AUnionTypeIR)
-			{
-				hasUnionTypes = true;
-				break;
-			}
-		}
-
-		if (!hasUnionTypes)
-		{
-			return;
-		}
-
 		STypeIR type = node.getType();
 
 		if (type instanceof AClassTypeIR)
@@ -644,10 +628,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 			List<STypeIR> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
 
-			if (correctArgTypes(args, fieldTypes, true))
-			{
-				return;
-			}
+			correctArgTypes(args, fieldTypes, true);
 		}
 	}
 
