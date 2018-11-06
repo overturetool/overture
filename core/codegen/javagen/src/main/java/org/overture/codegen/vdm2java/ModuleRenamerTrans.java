@@ -2,10 +2,13 @@ package org.overture.codegen.vdm2java;
 
 
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.AssistantBase;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.analysis.DepthFirstAnalysisAdaptor;
@@ -61,14 +64,31 @@ public class ModuleRenamerTrans extends DepthFirstAnalysisAdaptor {
 
                 for(PDefinition def : module.getDefs())
                 {
+                    String name = module.getName().getName();
                     if(def instanceof AStateDefinition)
                     {
-                        if(module.getName().getName().equals(def.getName().getName()))
+                        if(name.equals(def.getName().getName()))
                         {
-                            modulesToRename.add(module.getName().getName());
+                            modulesToRename.add(name);
                         }
 
                         break;
+                    }
+                    else if(def instanceof ATypeDefinition)
+                    {
+                        ATypeDefinition typeDef = (ATypeDefinition) def;
+
+                        PType type = typeDef.getType();
+
+                        if(type instanceof ARecordInvariantType)
+                        {
+                            String recName = ((ARecordInvariantType) type).getName().getName();
+
+                            if(recName.equals(name))
+                            {
+                                modulesToRename.add(name);
+                            }
+                        }
                     }
                 }
             }

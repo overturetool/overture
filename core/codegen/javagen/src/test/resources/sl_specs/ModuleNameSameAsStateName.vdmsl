@@ -43,3 +43,14 @@ in
   a.id;
 
 end A
+
+module X
+
+exports all
+definitions
+types
+
+X ::
+  x : int;
+
+end X

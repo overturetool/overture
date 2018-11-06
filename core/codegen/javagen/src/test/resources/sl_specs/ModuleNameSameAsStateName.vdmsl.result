@@ -91,3 +91,53 @@ final public class A_Module {
 }
 
 ##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class X_Module {
+  private X_Module() {}
+
+  public String toString() {
+
+    return "X_Module{}";
+  }
+
+  public static class X implements Record {
+    public Number x;
+
+    public X(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof X)) {
+        return false;
+      }
+
+      X other = ((X) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public X copy() {
+
+      return new X(x);
+    }
+
+    public String toString() {
+
+      return "mk_X_Module`X" + Utils.formatFields(x);
+    }
+  }
+}
+
+##########
