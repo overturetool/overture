@@ -442,7 +442,16 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		func.setAbstract(false);
 		func.setAccess(accessCg);
 		func.setImplicit(true);
-		func.setBody(new ANotImplementedExpIR());
+
+		if(node.getBody() == null)
+		{
+			func.setBody(new ANotImplementedExpIR());
+		}
+		else
+		{
+			func.setBody(node.getBody().apply(question.getExpVisitor(), question));
+		}
+
 		func.setFormalParams(question.getDeclAssistant().consFormalParams(node.getParamPatterns(), question));
 		func.setMethodType((AMethodTypeIR) typeCg);
 		func.setName(funcNameCg);
@@ -518,7 +527,11 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		// Exceptions thrown:
 		// LinkedList<AErrorCase> errors = node.getErrors();
 
-		method.setBody(new ANotImplementedStmIR());
+		if(method.getBody() == null)
+		{
+			method.setBody(new ANotImplementedStmIR());
+		}
+
 		method.setFormalParams(question.getDeclAssistant().consFormalParams(node.getParameterPatterns(), question));
 		return method;
 	}
