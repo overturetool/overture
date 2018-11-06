@@ -22,7 +22,7 @@ Run () ==
 
 op() ==
 (
-  id := 20;
+  id := 20 + id;
 )
 ext
   wr id;

@@ -1330,7 +1330,10 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			if (question.getDeclAssistant().inFunc(node)
 					|| varDef.getAncestor(AStateDefinition.class) == null)
 			{
-				question.registerSlStateRead(res);
+				if(!(varDef instanceof AExternalDefinition))
+				{
+					question.registerSlStateRead(res);
+				}
 			}
 
 			return res;

@@ -16,7 +16,7 @@ final public class Entry {
 
   public static void op() {
 
-    St.id = 20L;
+    St.id = 20L + St.id.longValue();
   }
 
   public String toString() {
