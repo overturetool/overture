@@ -672,7 +672,7 @@ public class ExpressionReader extends SyntaxReader
 							{
 								exp = readPreExpression(ve);
 								break;
-							} else if (name.startsWith("narrow_"))
+							} else if (name.equals("narrow_"))
 							{
 								if (Settings.release == Release.CLASSIC)
 								{
