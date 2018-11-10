@@ -27,6 +27,9 @@ import java.util.List;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.assistant.AssistantBase;
+import org.overture.codegen.assistant.DeclAssistantIR;
+import org.overture.codegen.assistant.ExpAssistantIR;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
@@ -342,7 +345,10 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		AIdentifierPatternIR id = new AIdentifierPatternIR();
 		id.setName(applyResultName);
 
-		AVarDeclIR resultDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
+		org.overture.ast.node.INode vdmNode = AssistantBase.getVdmNode(node);
+		DeclAssistantIR declAssist = transAssistant.getInfo().getDeclAssistant();
+		ExpAssistantIR expAssist = transAssistant.getInfo().getExpAssistant();
+		AVarDeclIR resultDecl = declAssist.consLocalVarDecl(vdmNode, resultType, id, expAssist.consUndefinedExp());
 
 		AIdentifierVarExpIR resultVar = new AIdentifierVarExpIR();
 		resultVar.setSourceNode(node.getSourceNode());
@@ -361,7 +367,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			AIdentifierPatternIR objId = new AIdentifierPatternIR();
 			objId.setName(objName);
 
-			AVarDeclIR objectDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
+			AVarDeclIR objectDecl = declAssist.consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
 
 			replacementBlock.getLocalDefs().add(objectDecl);
 
