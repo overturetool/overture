@@ -164,7 +164,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			elementType = ((ASeqSeqTypeIR) t).getSeqOf().clone();
 		} else
 		{
-			log.error("Expected set or sequence type. Got: " + t);
+			log.error("Expected set or sequence type. Got: " + t.getClass().getName());
 			elementType = new AUnknownTypeIR();
 			elementType.setSourceNode(t.getSourceNode());
 		}
