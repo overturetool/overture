@@ -819,8 +819,10 @@ public class JavaFormat
 			return format(new ACharBasicTypeIR());
 		} else
 		{
+			String vdmNodeInfo = info.getLocationAssistant().consVdmNodeInfoStr(type);
+
 			log.error("Expected set, seq or string type when trying to format element type. Got: "
-					+ type);
+					+ type + ". " + vdmNodeInfo);
 			return format(new AUnknownTypeIR());
 		}
 	}

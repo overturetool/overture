@@ -22,12 +22,9 @@
 package org.overture.codegen.trans.assistants;
 
 import org.apache.log4j.Logger;
-import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.node.INode;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.assistant.AssistantBase;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.*;
@@ -129,16 +126,9 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			elementType = ((ASeqSeqTypeIR) t).getSeqOf().clone();
 		} else
 		{
-			INode vdmNode = AssistantBase.getVdmNode(t);
-			ILexLocation loc = null;
+			String vdmNodeInfo = info.getLocationAssistant().consVdmNodeInfoStr(t);
 
-			if(vdmNode != null)
-			{
-				loc = info.getLocationAssistant().findLocation(vdmNode);
-			}
-
-			log.error("Expected set or sequence type. Got: " + t.getClass().getName() + "." +
-					(loc != null ? (" VDM source location:" + loc.toString() + ".") : "") );
+			log.error("Expected set or sequence type. Got: " + t.getClass().getName() + "." + vdmNodeInfo);
 
 			elementType = new AUnknownTypeIR();
 			elementType.setSourceNode(t.getSourceNode());
@@ -146,6 +136,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 
 		return elementType;
 	}
+
 
 	public AIdentifierVarExpIR consSuccessVar(String successVarName)
 	{
