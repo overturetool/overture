@@ -1299,6 +1299,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			ARecordInvariantType rec = question.assistantFactory.createPTypeAssistant().getRecord(root);
 			AFieldField cf = question.assistantFactory.createARecordInvariantTypeAssistant().findField(rec, node.getField().getName());
+			
+    		// Check for state access via state record
+    		AStateDefinition state = question.env.findStateDefinition();
+    		
+    		if (state != null && state.getRecordType().equals(rec))
+    		{
+    			LexNameToken sname = new LexNameToken(rec.getName().getModule(), node.getField().getName(), node.getLocation());
+    			question.assistantFactory.createPDefinitionAssistant().findName(state, sname, NameScope.STATE);		// Lookup marks as used
+    		}
 
 			if (cf != null)
 			{
