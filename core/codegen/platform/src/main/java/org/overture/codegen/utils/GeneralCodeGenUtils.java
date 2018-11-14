@@ -581,7 +581,7 @@ public class GeneralCodeGenUtils
 
 			MsgPrinter.getPrinter().print(location != null
 					? " at [line, pos] = [" + location.getStartLine() + ", "
-							+ location.getStartPos() + "]"
+							+ location.getStartPos() + "] in " + location.getFile()
 					: "");
 
 			String reason = nodeInfo.getReason();

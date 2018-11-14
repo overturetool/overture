@@ -110,6 +110,7 @@ abstract public class JavaClassCreatorBase
 		toStringMethod.setAccess(IJavaConstants.PUBLIC);
 		toStringMethod.setStatic(false);
 		toStringMethod.setName(IJavaConstants.TO_STRING);
+		toStringMethod.setAbstract(false);
 
 		AStringTypeIR returnType = new AStringTypeIR();
 

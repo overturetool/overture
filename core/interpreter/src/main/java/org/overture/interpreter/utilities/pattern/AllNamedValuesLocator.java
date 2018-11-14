@@ -159,10 +159,11 @@ public class AllNamedValuesLocator
 		{
 			if (rlen == PPatternAssistantInterpreter.ANY)
 			{
-				if (size == 0)
-				{
-					// Can't match a ^ b with []
-				} else if (size % 2 == 1)
+//				if (size == 0)
+//				{
+//					// Can't match a ^ b with []
+//				} else
+				if (size % 2 == 1)
 				{
 					// Odd => add the middle, then those either side
 					int half = size / 2 + 1;
@@ -1140,10 +1141,11 @@ public class AllNamedValuesLocator
 		{
 			if (rlen == PPatternAssistantInterpreter.ANY)
 			{
-				if (size == 0)
-				{
-					// Can't match a union b with {}
-				} else if (size % 2 == 1)
+//				if (size == 0)
+//				{
+//					// Can't match a union b with {}
+//				} else
+				if (size % 2 == 1)
 				{
 					// Odd => add the middle, then those either side
 					int half = size / 2 + 1;

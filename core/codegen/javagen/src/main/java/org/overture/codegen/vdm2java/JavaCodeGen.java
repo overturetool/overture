@@ -678,11 +678,19 @@ public class JavaCodeGen extends CodeGenBase
 		if (generatedModule != null && generatedModule.canBeGenerated()
 				&& !generatedModule.hasMergeErrors())
 		{
-			String javaFileName = generatedModule.getName();
+			String javaFileName;
 
-			if (JavaCodeGenUtil.isQuote(generatedModule.getIrNode(), getJavaSettings()))
+			org.overture.codegen.ir.INode irNode = generatedModule.getIrNode();
+
+			if(irNode instanceof SClassDeclIR)
 			{
-				javaFileName += JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
+				// The class may have been renamed, hence different form the original name
+				SClassDeclIR clazz = (SClassDeclIR) irNode;
+				javaFileName = clazz.getName();
+			}
+			else
+			{
+				javaFileName = generatedModule.getName();
 			}
 
 			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;

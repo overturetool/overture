@@ -73,6 +73,10 @@ public class JavaTransSeries
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(varMan.postCheckMethodName());
 
 		// Construct the transformations
+		RenamedTrans renamedTr = new RenamedTrans(transAssist);
+		ModuleRenamerTrans moduleRenamerTr = new ModuleRenamerTrans(transAssist);
+		UnsupportedLibWarningTrans libWarnTr = new UnsupportedLibWarningTrans(transAssist);
+		FieldOrderTrans fieldOrderTr = new FieldOrderTrans();
 		AtomicStmTrans atomicTr = new AtomicStmTrans(transAssist, varMan.atomicTmpVar());
 		NonDetStmTrans nonDetTr = new NonDetStmTrans(transAssist);
 		FuncTrans funcTr = new FuncTrans(transAssist);
@@ -81,6 +85,7 @@ public class JavaTransSeries
 		AssignStmTrans assignTr = new AssignStmTrans(transAssist);
 		PrePostTrans prePostTr = new PrePostTrans(info);
 		IfExpTrans ifExpTr = new IfExpTrans(transAssist);
+		PolyFuncTrans polyTr = new PolyFuncTrans(transAssist);
 		FuncValTrans funcValTr = new FuncValTrans(transAssist, funcValAssist, funcValPrefixes);
 		ILanguageIterator langIte = new JavaLanguageIterator(transAssist, iteVarPrefixes);
 		LetBeStTrans letBeStTr = new LetBeStTrans(transAssist, langIte, iteVarPrefixes);
@@ -98,6 +103,7 @@ public class JavaTransSeries
 		RecMethodsTrans recTr = new RecMethodsTrans(codeGen.getJavaFormat().getRecCreator());
 		ConstructorTrans ctorTr = new ConstructorTrans(transAssist, OBJ_INIT_CALL_NAME_PREFIX);
 		ImportsTrans impTr = new ImportsTrans(info);
+		SlAccessTrans slAccessTr = new SlAccessTrans();
 		JUnit4Trans junitTr = new JUnit4Trans(transAssist, codeGen);
 
 		// Start concurrency transformations
@@ -108,11 +114,16 @@ public class JavaTransSeries
 		// End concurrency transformations
 
 		// Set up order of transformations
+		series.add(renamedTr);
+		series.add(moduleRenamerTr);
+		series.add(libWarnTr);
+		series.add(fieldOrderTr);
 		series.add(atomicTr);
 		series.add(nonDetTr);
 		series.add(divideTr);
 		series.add(assignTr);
 		series.add(callObjTr);
+		series.add(polyTr);
 		series.add(funcTr);
 		series.add(prePostTr);
 		series.add(ifExpTr);
@@ -136,6 +147,7 @@ public class JavaTransSeries
 		series.add(recTr);
 		series.add(ctorTr);
 		series.add(impTr);
+		series.add(slAccessTr);
 		series.add(junitTr);
 
 		return series;

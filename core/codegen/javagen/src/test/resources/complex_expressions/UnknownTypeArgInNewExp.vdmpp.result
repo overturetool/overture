@@ -1,0 +1,62 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Number Run() {
+
+    final VDMMap m = MapUtil.map(new Maplet(1L, 42L));
+    final R r = fun(Utils.copy(m));
+    return r.x;
+  }
+
+  public Entry() {}
+
+  private static R fun(final VDMMap m) {
+
+    return new R(((Number) Utils.get(m, 1L)));
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class R implements Record {
+    public Number x;
+
+    public R(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R)) {
+        return false;
+      }
+
+      R other = ((R) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public R copy() {
+
+      return new R(x);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R" + Utils.formatFields(x);
+    }
+  }
+}
+
+##########

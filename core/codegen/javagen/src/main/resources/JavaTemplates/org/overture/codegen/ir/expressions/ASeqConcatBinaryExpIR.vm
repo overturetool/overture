@@ -1,4 +1,4 @@
-#if ($JavaFormat.isStringType($node.getType()))
+#if ($JavaFormat.isStringType($node.getType()) && $JavaFormat.isStringType($node.getLeft().getType()) && $JavaFormat.isStringType($node.getRight().getType()))
 	$JavaFormat.format($node.getLeft(), true) + $JavaFormat.format($node.getRight(), false)
 #else
 	SeqUtil.conc($JavaFormat.format($node.getLeft()), $JavaFormat.format($node.getRight()))

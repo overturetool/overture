@@ -131,6 +131,9 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 				// The state invariant constrains the type of the state
 				// see https://github.com/overturetool/overture/issues/459
 				record.setInvariant(stateDecl.getInvDecl().clone());
+				if(info.getSettings().addStateInvToModule()) {
+					clazz.getFunctions().add(stateDecl.getInvDecl().clone());
+				}
 			}
 
 			for (AFieldDeclIR field : stateDecl.getFields())
@@ -270,7 +273,7 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 
 			for (int i = 0; i < stateDecl.getFields().size(); i++)
 			{
-				defaultRecInit.getArgs().add(new AUndefinedExpIR());
+				defaultRecInit.getArgs().add(transAssistant.getInfo().getExpAssistant().consUndefinedExp());
 			}
 
 			return defaultRecInit;

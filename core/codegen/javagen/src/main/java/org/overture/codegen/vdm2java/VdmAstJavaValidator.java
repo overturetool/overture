@@ -1,22 +1,23 @@
 package org.overture.codegen.vdm2java;
 
-import java.util.List;
-import java.util.Set;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.*;
+import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.types.PType;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+
+import java.util.List;
+import java.util.Set;
 
 public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 {
@@ -98,13 +99,6 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 		{
 			info.addUnsupportedNode(node, "Implicit functions cannot be instantiated since they are not supported.");
 		}
-	}
-
-	@Override
-	public void inARenamedDefinition(ARenamedDefinition node)
-			throws AnalysisException
-	{
-		info.addUnsupportedNode(node, "Renaming of imported definitions is not currently supported");
 	}
 
 	@Override
@@ -220,7 +214,27 @@ public class VdmAstJavaValidator extends DepthFirstAnalysisAdaptor
 	public void caseATypeMultipleBind(ATypeMultipleBind node)
 			throws AnalysisException
 	{
-		info.addUnsupportedNode(node, "Type binds are not supported");
+		ADefPatternBind bind = node.getAncestor(ADefPatternBind.class);
+
+		if(bind != null && bind.parent() instanceof AForPatternBindStm)
+		{
+			super.caseATypeMultipleBind(node);
+		}
+		else {
+
+			info.addUnsupportedNode(node, "Type binds are not supported");
+		}
+	}
+
+	@Override
+	public void caseAFuncInstatiationExp(AFuncInstatiationExp node) throws AnalysisException {
+
+		if(!(node.parent() instanceof AApplyExp && ((AApplyExp) node.parent()).getRoot() == node))
+		{
+			info.addUnsupportedNode(node, "Function must be applied at the time of instantiation");
+		}
+
+		super.caseAFuncInstatiationExp(node);
 	}
 
 	private boolean inUnsupportedContext(org.overture.ast.node.INode node)

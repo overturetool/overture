@@ -739,17 +739,29 @@ public class DefinitionReader extends SyntaxReader
 
 		return typeParams;
 	}
+	
+	private void verifyName(String name) throws ParserException, LexException
+	{
+		if (name.startsWith("mk_"))
+		{
+			throwMessage(2016, "Name cannot start with 'mk_'");
+		}
+		else if (name.equals("mu"))
+		{
+			throwMessage(2016, "Name cannot be 'mu' (reserved)");
+		}
+		else if (name.equals("narrow_"))
+		{
+			throwMessage(2016, "Name cannot be 'narrow_' (reserved)");
+		}
+	}
 
 	private PDefinition readFunctionDefinition(NameScope scope)
 			throws ParserException, LexException
 	{
 		PDefinition def = null;
 		LexIdentifierToken funcName = readIdToken("Expecting new function identifier");
-
-		if (funcName.getName().startsWith("mk_"))
-		{
-			throwMessage(2016, "Function name cannot start with 'mk_'");
-		}
+		verifyName(funcName.getName());
 
 		LexNameList typeParams = readTypeParams();
 
@@ -1058,14 +1070,15 @@ public class DefinitionReader extends SyntaxReader
 			LexException
 	{
 		PDefinition def = null;
-		LexIdentifierToken funcName = readIdToken("Expecting new operation identifier");
+		LexIdentifierToken opName = readIdToken("Expecting new operation identifier");
+		verifyName(opName.getName());
 
 		if (lastToken().is(VDMToken.COLON))
 		{
-			def = readExplicitOperationDefinition(funcName);
+			def = readExplicitOperationDefinition(opName);
 		} else if (lastToken().is(VDMToken.BRA))
 		{
-			def = readImplicitOperationDefinition(funcName);
+			def = readImplicitOperationDefinition(opName);
 		} else if (lastToken().is(VDMToken.SEQ_OPEN))
 		{
 			throwMessage(2059, "Operations cannot have [@T] type parameters");
@@ -1074,12 +1087,12 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2021, "Expecting ':' or '(' after name in operation definition");
 		}
 
-		LexLocation.addSpan(idToName(funcName), lastToken());
+		LexLocation.addSpan(idToName(opName), lastToken());
 		return def;
 	}
 
 	private PDefinition readExplicitOperationDefinition(
-			LexIdentifierToken funcName) throws ParserException, LexException
+			LexIdentifierToken opName) throws ParserException, LexException
 	{
 		// Like "f: int ==> bool f(x) == <statement>"
 
@@ -1088,9 +1101,9 @@ public class DefinitionReader extends SyntaxReader
 
 		LexIdentifierToken name = readIdToken("Expecting operation identifier after type in definition");
 
-		if (!name.equals(funcName))
+		if (!name.equals(opName))
 		{
-			throwMessage(2022, "Expecting name " + funcName.getName()
+			throwMessage(2022, "Expecting name " + opName.getName()
 					+ " after type in definition");
 		}
 
@@ -1128,11 +1141,11 @@ public class DefinitionReader extends SyntaxReader
 			postcondition = getExpressionReader().readExpression();
 		}
 
-		return AstFactory.newAExplicitOperationDefinition(idToName(funcName), type, parameters, precondition, postcondition, body);
+		return AstFactory.newAExplicitOperationDefinition(idToName(opName), type, parameters, precondition, postcondition, body);
 	}
 
 	private PDefinition readImplicitOperationDefinition(
-			LexIdentifierToken funcName) throws ParserException, LexException
+			LexIdentifierToken opName) throws ParserException, LexException
 	{
 		// Like g(x: int) [y: bool]? ext rd fred[:int] pre exp post exp
 
@@ -1195,9 +1208,9 @@ public class DefinitionReader extends SyntaxReader
 			body = readOperationBody();
 		}
 
-		ASpecificationStm spec = readSpecification(funcName.location, body == null);
+		ASpecificationStm spec = readSpecification(opName.location, body == null);
 
-		AImplicitOperationDefinition def = AstFactory.newAImplicitOperationDefinition(idToName(funcName), parameterPatterns, resultPattern, body, spec);
+		AImplicitOperationDefinition def = AstFactory.newAImplicitOperationDefinition(idToName(opName), parameterPatterns, resultPattern, body, spec);
 
 		return def;
 	}

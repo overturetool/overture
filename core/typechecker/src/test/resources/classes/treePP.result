@@ -9,10 +9,7 @@
 <message column="18" line="30" message="Impure operation '(lt.gettree)' cannot be called from here" messageType="error" number="3300" resource="treePP"/>
 <message column="42" line="30" message="Impure operation '(rt.gettree)' cannot be called from here" messageType="error" number="3300" resource="treePP"/>
 <message column="13" line="81" message="Impure operation 'isEmpty' cannot be called from here" messageType="error" number="3300" resource="treePP"/>
-<message column="5" line="114" message="Operation returns void value" messageType="error" number="3313" resource="treePP"/>
 <message column="13" line="139" message="Impure operation 'isEmpty' cannot be called from here" messageType="error" number="3300" resource="treePP"/>
 <message column="13" line="144" message="Impure operation 'isEmpty' cannot be called from here" messageType="error" number="3300" resource="treePP"/>
-<message column="5" line="172" message="Operation returns void value" messageType="error" number="3313" resource="treePP"/>
-<message column="12" line="181" message="Operation returns void value" messageType="error" number="3313" resource="treePP"/>
 <result/>
 </testResult>

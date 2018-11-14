@@ -41,6 +41,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
 
 /**
@@ -216,6 +217,10 @@ abstract public class Value implements Comparable<Value>, Serializable,
     				catch (ValueException e)
     				{
     					// Union type not applicable
+    				}
+    				catch (ContextException e)
+    				{
+    					// Pre/post/inv failures
     				}
 				}
 			}

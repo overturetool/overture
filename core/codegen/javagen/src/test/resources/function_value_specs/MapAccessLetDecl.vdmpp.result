@@ -15,14 +15,17 @@ public class Entry {
 
                     return x.longValue() + c.longValue();
                   }
-                })
+                },
+                Utils.INT,
+                Utils.NAT)
             .eval(Utils.copy(l));
     return ((Number) Utils.get(xs, 1L));
   }
 
   public Entry() {}
 
-  private static <a, b> Func_1<VDMSeq, VDMSeq> mmap(final Func_1<a, b> f) {
+  private static <a, b> Func_1<VDMSeq, VDMSeq> mmap(
+      final Func_1<a, b> f, final Object _type_a, final Object _type_b) {
 
     return new Func_1<VDMSeq, VDMSeq>() {
       public VDMSeq eval(final VDMSeq l) {
@@ -34,7 +37,8 @@ public class Entry {
         } else {
           ternaryIfExp_1 =
               SeqUtil.conc(
-                  SeqUtil.seq(f.eval(((a) l.get(0)))), mmap(f).eval(SeqUtil.tail(Utils.copy(l))));
+                  SeqUtil.seq(f.eval(((a) l.get(0)))),
+                  mmap(f, _type_a, _type_b).eval(SeqUtil.tail(Utils.copy(l))));
         }
 
         return Utils.copy(ternaryIfExp_1);

@@ -1,0 +1,29 @@
+module Entry
+
+imports from Mod values AA renamed RenamedAA
+exports all
+definitions
+values
+
+A = B;
+B = C;
+C = D;
+D = 4;
+E = RenamedAA;
+
+operations
+
+Run : () ==> nat
+Run () == return A;
+
+end Entry
+
+module Mod
+
+exports all
+definitions
+values
+
+AA = 2;
+
+end Mod

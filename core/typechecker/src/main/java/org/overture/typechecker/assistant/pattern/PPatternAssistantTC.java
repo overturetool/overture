@@ -158,4 +158,8 @@ public class PPatternAssistantTC extends PPatternAssistant implements IAstAssist
 		}
 	}
 
+	public boolean alwaysMatches(PPattern pattern, PType type)
+	{
+		return af.getTypeComparator().isSubType(getPossibleType(pattern), type) && alwaysMatches(pattern);
+	}
 }

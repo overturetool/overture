@@ -143,7 +143,7 @@ public class JmlGenMain
 			if (!GeneralCodeGenUtils.hasErrors(tcResult))
 			{
 				GeneratedData data = jmlGen.generateJml(tcResult.result);
-				JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data, false);
+				JavaCodeGenMain.processData(print, outputDir, jmlGen.getJavaGen(), data, false, true);
 			} else
 			{
 				MsgPrinter.getPrinter().errorln("Could not parse/type check VDM model:\n"
