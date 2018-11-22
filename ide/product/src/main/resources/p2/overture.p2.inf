@@ -16,9 +16,7 @@ instructions.configure=\
   addRepository(type:0,name:Neon,enabled:true,location:http${#58}//download.eclipse.org/releases/neon/);\
   addRepository(type:1,name:Neon,enabled:true,location:http${#58}//download.eclipse.org/releases/neon/);\
   addRepository(type:0,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.6);\
-  addRepository(type:1,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.6);\
-  addRepository(type:0,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);\
-  addRepository(type:1,name:JODTool,enabled:true,location:http${#58}//aofa.csce.kyushu-u.ac.jp/JODTool/);
+  addRepository(type:1,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.6);
 instructions.configure.import=\
   org.eclipse.equinox.p2.touchpoint.natives.chmod,\
   org.eclipse.equinox.p2.touchpoint.natives.copy,\
