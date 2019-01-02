@@ -48,7 +48,7 @@ public class TraceVariableStatement extends PStmBase
 	@SuppressWarnings("deprecation")
 	public TraceVariableStatement(TraceVariable var)
 	{
-		super(var.name.getLocation());
+		super(var.name.getLocation(), null);
 		this.var = var;
 	}
 
