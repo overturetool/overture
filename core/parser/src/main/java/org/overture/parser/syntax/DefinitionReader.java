@@ -46,6 +46,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexToken;
@@ -505,9 +506,11 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				ATypeDefinition def = readTypeDefinition();
+				def.setComments(comments);
 
 				// Force all type defs (invs) to be static
 				def.setAccess(access);
@@ -535,9 +538,11 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				PDefinition def = readValueDefinition(NameScope.GLOBAL);
+				def.setComments(comments);
 
 				// Force all values to be static
 				def.setAccess(access);
@@ -575,8 +580,10 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				PDefinition def = readFunctionDefinition(NameScope.GLOBAL);
+				def.setComments(comments);
 
 				if (Settings.release == Release.VDM_10)
 				{
@@ -613,8 +620,10 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT, true);
 				PDefinition def = readOperationDefinition();
+				def.setComments(comments);
 				def.setAccess(access);
 				((AOperationType)def.getType()).setPure(access.getPure());
 				list.add(def);
@@ -649,7 +658,9 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
 				PDefinition def = readInstanceVariableDefinition();
+				def.setComments(comments);
 				list.add(def);
 
 				if (!newSection())
@@ -674,7 +685,9 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
 				PDefinition def = readNamedTraceDefinition();
+				def.setComments(comments);
 				list.add(def);
 
 				if (!newSection())
@@ -699,7 +712,9 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
 				PDefinition def = readPermissionPredicateDefinition();
+				def.setComments(comments);
 				list.add(def);
 
 				if (!newSection())

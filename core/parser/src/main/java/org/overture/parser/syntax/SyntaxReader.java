@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
@@ -686,5 +687,10 @@ public abstract class SyntaxReader
 	public String toString()
 	{
 		return reader.toString();
+	}
+	
+	protected ILexCommentList getComments()
+	{
+		return reader.getComments();
 	}
 }

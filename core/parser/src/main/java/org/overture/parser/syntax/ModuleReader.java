@@ -30,6 +30,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexLocation;
@@ -92,7 +93,10 @@ public class ModuleReader extends SyntaxReader
 				switch (lastToken().type)
 				{
 					case MODULE:
-						modules.add(readModule());
+						ILexCommentList comments = getComments();
+						AModuleModules module = readModule();
+						module.setComments(comments);
+						modules.add(module);
 						break;
 
 					case DLMODULE:

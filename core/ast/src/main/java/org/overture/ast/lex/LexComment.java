@@ -31,11 +31,11 @@ import org.overture.ast.intf.lex.ILexLocation;
  */
 public class LexComment implements ILexComment
 {
-	private final LexLocation location;
+	private final ILexLocation location;
 	private final String comment;
 	private final boolean block;
 
-	public LexComment(LexLocation location, String comment, boolean block)
+	public LexComment(ILexLocation location, String comment, boolean block)
 	{
 		super();
 		

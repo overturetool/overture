@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
@@ -75,6 +76,7 @@ public class StatementReader extends SyntaxReader
 
 	public PStm readStatement() throws ParserException, LexException
 	{
+		ILexCommentList comments = getComments();
 		PStm stmt = null;
 		LexToken token = lastToken();
 		ILexLocation location = token.location;
@@ -204,6 +206,7 @@ public class StatementReader extends SyntaxReader
 				throwMessage(2063, "Unexpected token in statement");
 		}
 
+		stmt.setComments(comments);
 		return stmt;
 	}
 

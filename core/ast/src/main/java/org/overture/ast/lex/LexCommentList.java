@@ -25,9 +25,10 @@ package org.overture.ast.lex;
 
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 
-public class LexCommentList extends Vector<LexComment>
+public class LexCommentList extends Vector<LexComment> implements ILexCommentList
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,17 +42,20 @@ public class LexCommentList extends Vector<LexComment>
 		super();
 	}
 	
-	public void add(LexLocation location, String comment, boolean block)
+	@Override
+	public void add(ILexLocation here, String comment, boolean block)
 	{
-		this.add(new LexComment(location, comment, block));
+		this.add(new LexComment(here, comment, block));
 	}
 
+	@Override
 	public String getComment(int i)
 	{
 		return get(i).getComment();
 	}
 
-	public ILexLocation location(int i)
+	@Override
+	public ILexLocation getLocation(int i)
 	{
 		return get(i).getLocation();
 	}

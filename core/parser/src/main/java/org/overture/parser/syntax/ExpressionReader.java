@@ -57,6 +57,7 @@ import org.overture.ast.expressions.SMapExp;
 import org.overture.ast.expressions.SSeqExp;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
@@ -618,7 +619,9 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readApplicatorExpression() throws ParserException,
 			LexException
 	{
+		ILexCommentList comments = getComments();
 		PExp exp = readBasicExpression();
+		exp.setComments(comments);
 		boolean more = true;
 
 		while (more)
