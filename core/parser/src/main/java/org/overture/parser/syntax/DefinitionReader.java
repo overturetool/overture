@@ -34,6 +34,7 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PAccess;
@@ -51,6 +52,7 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexCommentList;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
@@ -1042,6 +1044,7 @@ public class DefinitionReader extends SyntaxReader
 	private PDefinition readStateDefinition() throws ParserException,
 			LexException
 	{
+		ILexCommentList comments = getComments();
 		LexIdentifierToken name = readIdToken("Expecting identifier after 'state' definition");
 		checkFor(VDMToken.OF, 2097, "Expecting 'of' after state name");
 		List<AFieldField> fieldList = getTypeReader().readFieldList();
@@ -1078,7 +1081,9 @@ public class DefinitionReader extends SyntaxReader
 
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 
-		return AstFactory.newAStateDefinition(idToName(name), fieldList, invPattern, invExpression, initPattern, initExpression);
+		AStateDefinition def = AstFactory.newAStateDefinition(idToName(name), fieldList, invPattern, invExpression, initPattern, initExpression);
+		def.setComments(comments);
+		return def;
 	}
 
 	private PDefinition readOperationDefinition() throws ParserException,
