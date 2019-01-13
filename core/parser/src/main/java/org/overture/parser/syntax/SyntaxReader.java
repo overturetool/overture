@@ -24,10 +24,15 @@
 package org.overture.parser.syntax;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.Annotation;
+import org.overture.ast.annotations.PAnnotation;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexToken;
@@ -317,6 +322,75 @@ public abstract class SyntaxReader
 		}
 
 		throwMessage(2061, message);
+		return null;
+	}
+
+	/**
+	 * Read any annotations from the collected comments, and clear them.
+	 */
+	private static boolean readingAnnotations = false;
+	
+	protected List<PAnnotation> readAnnotations(ILexCommentList comments) throws LexException, ParserException
+	{
+		List<PAnnotation> annotations = new Vector<PAnnotation>();
+		if (readingAnnotations) return annotations; else readingAnnotations = true;
+		
+		for (int i=0; i<comments.size(); i++)
+		{
+			if (comments.getComment(i).trim().startsWith("@"))
+			{
+				try
+				{
+					annotations.add(readAnnotation(new LexTokenReader(
+							comments.getComment(i), comments.getLocation(i), reader)));
+				}
+				catch (Exception e)
+				{
+					// ignore - comment is not parsable
+				}
+			}
+		}
+		
+		readingAnnotations = false;
+		return annotations;
+	}
+	
+	private PAnnotation readAnnotation(LexTokenReader ltr) throws LexException, ParserException
+	{
+		ltr.nextToken();
+		
+		if (ltr.nextToken().is(VDMToken.IDENTIFIER))
+		{
+			LexIdentifierToken name = (LexIdentifierToken)ltr.getLast();  
+			List<PExp> args = new Vector<PExp>();
+			
+			if (ltr.nextToken().is(VDMToken.BRA))
+			{
+				if (ltr.nextToken().isNot(VDMToken.KET))
+				{
+					ExpressionReader er = new ExpressionReader(ltr);
+					args.add(er.readExpression());
+			
+					while (ltr.getLast().is(VDMToken.COMMA))
+					{
+						ltr.nextToken();
+						args.add(er.readExpression());
+					}
+				}
+		
+				if (ltr.getLast().isNot(VDMToken.KET))
+				{
+					throwMessage(0, "Malformed @Annotation");
+				}
+			}
+
+			PAnnotation ast = AstFactory.newAAnnotationAnnotation(name, args);
+			Annotation impl = makeAnnotationImpl(name, ast);
+			ast.setImpl(impl);
+			return ast;
+		}
+		
+		throwMessage(0, "Comment has no @Annotation");
 		return null;
 	}
 
@@ -689,6 +763,34 @@ public abstract class SyntaxReader
 		return reader.toString();
 	}
 	
+	protected Annotation makeAnnotationImpl(LexIdentifierToken name, PAnnotation ast)
+			throws ParserException, LexException
+	{
+		String classpath = System.getProperty("overture.annotations", "org.overture.annotations;annotations");
+		String[] packages = classpath.split(";|:");
+
+		for (String pack: packages)
+		{
+			try
+			{
+				Class<?> clazz = Class.forName(pack + "." + name + "Annotation");
+				Constructor<?> ctor = clazz.getConstructor(PAnnotation.class);
+				return (Annotation) ctor.newInstance(ast);
+			}
+			catch (ClassNotFoundException e)
+			{
+				// Try the next package
+			}
+			catch (Exception e)
+			{
+				throwMessage(2334, "Failed to instantiate AST" + name + "Annotation");
+			}
+		}
+
+		throwMessage(2334, "Cannot find AST" + name + "Annotation on " + classpath);
+		return null;
+	}
+		
 	protected ILexCommentList getComments()
 	{
 		return reader.getComments();

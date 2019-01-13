@@ -23,9 +23,11 @@
 
 package org.overture.parser.syntax;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -73,8 +75,35 @@ public class StatementReader extends SyntaxReader
 	{
 		super(reader);
 	}
-
 	public PStm readStatement() throws ParserException, LexException
+	{
+		ILexCommentList comments = getComments();
+		List<PAnnotation> annotations = readAnnotations(comments);
+		PStm stmt = null;
+
+		if (!annotations.isEmpty())
+		{
+			// Process before annotations
+			stmt = readAnyStatement();
+			// Process after annotations
+			
+			Collections.reverse(annotations);	// Build the chain backwards
+			
+			for (PAnnotation annotation: annotations)
+			{
+				stmt = AstFactory.newAAnnotatedStm(annotation.getName().getLocation(), annotation, stmt);
+			}
+		}
+		else
+		{
+			stmt = readAnyStatement();
+		}
+		
+		stmt.setComments(comments);
+		return stmt;
+	}
+
+	public PStm readAnyStatement() throws ParserException, LexException
 	{
 		ILexCommentList comments = getComments();
 		PStm stmt = null;

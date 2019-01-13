@@ -15,6 +15,7 @@ import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAnnotatedStm;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
@@ -62,6 +63,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.interpreter.annotations.INAnnotation;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -1501,6 +1503,27 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
+	}
+	
+	@Override
+	public Value caseAAnnotatedStm(AAnnotatedStm node, Context ctxt)
+			throws AnalysisException
+	{
+		if (node.getAnnotation() instanceof INAnnotation)
+		{
+			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
+			impl.inBefore(node, ctxt);
+		}
+		
+		Value result = node.getStmt().apply(THIS, ctxt);
+		
+		if (node.getAnnotation() instanceof INAnnotation)
+		{
+			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
+			impl.inAfter(node, ctxt);
+		}
+
+		return result;
 	}
 
 	@Override

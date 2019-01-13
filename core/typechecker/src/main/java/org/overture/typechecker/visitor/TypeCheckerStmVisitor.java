@@ -50,6 +50,7 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAnnotatedStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -129,6 +130,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		node.getAlways().apply(THIS, question);
 		node.setType(node.getBody().apply(THIS, question));
 		return node.getType();
+	}
+	
+	@Override
+	public PType caseAAnnotatedStm(AAnnotatedStm node, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		node.getAnnotation().apply(THIS, question);
+		return node.getStmt().apply(THIS, question);
 	}
 
 	@Override

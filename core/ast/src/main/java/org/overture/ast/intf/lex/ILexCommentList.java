@@ -30,4 +30,6 @@ public interface ILexCommentList extends ExternalNode
 	public void add(ILexLocation location, String comment, boolean block);
 	public String getComment(int i);
 	public ILexLocation getLocation(int i);
+	public int size();
+	public boolean isEmpty();
 }

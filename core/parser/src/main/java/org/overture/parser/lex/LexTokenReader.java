@@ -272,15 +272,15 @@ public class LexTokenReader extends BacktrackInputReader
 	/**
 	 * Create a string based LexTokenReader, with the position details of another reader.
 	 */
-	public LexTokenReader(String content, LexLocation location, LexTokenReader reader)
+	public LexTokenReader(String content, ILexLocation location, LexTokenReader reader)
 	{
 		super(content);
 		this.currentModule = reader.currentModule;
-		this.file = location.file;
+		this.file = location.getFile();
 		this.dialect = reader.dialect;
 		rdCh();
-		this.linecount = location.startLine;
-		this.charpos = location.startPos;
+		this.linecount = location.getStartLine();
+		this.charpos = location.getStartPos();
 		this.charsread = 0;
 		this.tokensread = 0;
 		this.last = null;

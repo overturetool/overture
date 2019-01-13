@@ -23,9 +23,11 @@
 
 package org.overture.parser.syntax;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
@@ -619,9 +621,7 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readApplicatorExpression() throws ParserException,
 			LexException
 	{
-		ILexCommentList comments = getComments();
-		PExp exp = readBasicExpression();
-		exp.setComments(comments);
+		PExp exp = readAnnotatedExpression();
 		boolean more = true;
 
 		while (more)
@@ -811,6 +811,34 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		return exp;
+	}
+
+	private PExp readAnnotatedExpression() throws ParserException, LexException
+	{
+		ILexCommentList comments = getComments();
+		List<PAnnotation> annotations = readAnnotations(comments);
+		PExp body = null;
+
+		if (!annotations.isEmpty())
+		{
+			// Process annotations before
+			body = readBasicExpression();
+			// Process annotations after
+
+			Collections.reverse(annotations);	// Build the chain backwards
+			
+			for (PAnnotation annotation: annotations)
+			{
+				body = AstFactory.newAAnnotatedUnaryExp(annotation.getName().getLocation(), annotation, body);
+			}
+		}
+		else
+		{
+			body = readBasicExpression();
+		}
+		
+		body.setComments(comments);
+		return body;
 	}
 
 	private PExp readBasicExpression() throws ParserException, LexException

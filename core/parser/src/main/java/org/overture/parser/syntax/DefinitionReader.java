@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -508,9 +509,13 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				// Process before annotations
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				ATypeDefinition def = readTypeDefinition();
+				// Process after annotations
+				def.setAnnotations(annotations);
 				def.setComments(comments);
 
 				// Force all type defs (invs) to be static
@@ -540,9 +545,13 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				// Process before annotations
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				PDefinition def = readValueDefinition(NameScope.GLOBAL);
+				// Process after annotations
+				def.setAnnotations(annotations);
 				def.setComments(comments);
 
 				// Force all values to be static
@@ -582,8 +591,12 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				// Process before annotations
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				PDefinition def = readFunctionDefinition(NameScope.GLOBAL);
+				// Process after annotations
+				def.setAnnotations(annotations);
 				def.setComments(comments);
 
 				if (Settings.release == Release.VDM_10)
@@ -622,8 +635,12 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				// Process before annotations
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT, true);
 				PDefinition def = readOperationDefinition();
+				// Process after annotations
+				def.setAnnotations(annotations);
 				def.setComments(comments);
 				def.setAccess(access);
 				((AOperationType)def.getType()).setPure(access.getPure());
@@ -660,7 +677,11 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				// Process before annotations
 				PDefinition def = readInstanceVariableDefinition();
+				// Process after annotations
+				def.setAnnotations(annotations);
 				def.setComments(comments);
 				list.add(def);
 
@@ -687,7 +708,11 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				// Process before annotations
 				PDefinition def = readNamedTraceDefinition();
+				// Process after annotations
+				def.setAnnotations(annotations);
 				def.setComments(comments);
 				list.add(def);
 
@@ -714,7 +739,11 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				// Process before annotations
 				PDefinition def = readPermissionPredicateDefinition();
+				// Process after annotations
+				def.setAnnotations(annotations);
 				def.setComments(comments);
 				list.add(def);
 
@@ -1044,6 +1073,8 @@ public class DefinitionReader extends SyntaxReader
 			LexException
 	{
 		ILexCommentList comments = getComments();
+		List<PAnnotation> annotations = readAnnotations(comments);
+		// Process before annotations
 		LexIdentifierToken name = readIdToken("Expecting identifier after 'state' definition");
 		checkFor(VDMToken.OF, 2097, "Expecting 'of' after state name");
 		List<AFieldField> fieldList = getTypeReader().readFieldList();
@@ -1081,6 +1112,8 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 
 		AStateDefinition def = AstFactory.newAStateDefinition(idToName(name), fieldList, invPattern, invExpression, initPattern, initExpression);
+		// Process after annotations
+		def.setAnnotations(annotations);
 		def.setComments(comments);
 		return def;
 	}

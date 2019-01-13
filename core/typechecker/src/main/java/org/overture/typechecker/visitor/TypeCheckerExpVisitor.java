@@ -3018,6 +3018,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.setType(t);
 		return t;
 	}
+	
+	@Override
+	public PType caseAAnnotatedUnaryExp(AAnnotatedUnaryExp node, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		node.getAnnotation().apply(THIS, question);
+		return node.getExp().apply(THIS, question);
+	}
 
 	@Override public PType caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
