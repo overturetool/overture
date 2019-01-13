@@ -3023,8 +3023,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAnnotatedUnaryExp(AAnnotatedUnaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.getAnnotation().apply(THIS, question);
-		return node.getExp().apply(THIS, question);
+		node.getAnnotation().apply(THIS, question);		// check the annotation itself first?
+		beforeAnnotation(node.getAnnotation(), node, question);
+		PType result = node.getExp().apply(THIS, question);
+		afterAnnotation(node.getAnnotation(), node, question);
+		return result;
 	}
 
 	@Override public PType caseACardinalityUnaryExp(ACardinalityUnaryExp node,

@@ -2,6 +2,7 @@ package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -14,11 +15,11 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.*;
 import org.overture.ast.types.*;
+import org.overture.pog.annotations.POAnnotation;
 import org.overture.pog.contexts.*;
 import org.overture.pog.obligation.*;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -64,6 +65,15 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
 		this.aF = new PogAssistantFactory();
+	}
+	
+	@Override
+	public IProofObligationList caseAAnnotatedUnaryExp(AAnnotatedUnaryExp node, IPOContextStack question)
+		throws AnalysisException
+	{
+		IProofObligationList obligations = beforeAnnotation(node.getAnnotation(), node, question);
+		obligations.addAll(node.getExp().apply(this, question));
+		return afterAnnotation(node.getAnnotation(), node, obligations, question);
 	}
 
 	@Override
@@ -1937,5 +1947,34 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			return null;
 		}
 	}
+	
+	/**
+	 * Process annotations.
+	 * @return 
+	 */
+	private IProofObligationList beforeAnnotation(PAnnotation annotation, INode node, IPOContextStack question)
+		throws AnalysisException
+	{
+		IProofObligationList list = new ProofObligationList();
 
+		if (annotation.getImpl() instanceof POAnnotation)
+		{
+			POAnnotation impl = (POAnnotation)annotation.getImpl();
+			impl.poBefore(node, list, question);
+		}
+		
+		return list;
+	}
+	
+	private IProofObligationList afterAnnotation(PAnnotation annotation, INode node, IProofObligationList list, IPOContextStack question)
+		throws AnalysisException
+	{
+		if (annotation.getImpl() instanceof POAnnotation)
+		{
+			POAnnotation impl = (POAnnotation)annotation.getImpl();
+			impl.poAfter(node, list, question);
+		}
+		
+		return list;
+	}
 }

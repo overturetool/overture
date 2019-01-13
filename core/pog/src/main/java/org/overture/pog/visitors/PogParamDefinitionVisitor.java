@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -40,6 +41,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.pog.annotations.POAnnotation;
 import org.overture.pog.contexts.AssignmentContext;
 import org.overture.pog.contexts.OpBodyEndContext;
 import org.overture.pog.contexts.POFunctionDefinitionContext;
@@ -349,7 +351,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node, question);
 			LexNameList pids = new LexNameList();
 
 			AFunctionType ftype = (AFunctionType) node.getType();
@@ -427,8 +429,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			question.pop();
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -448,7 +451,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			question.setGenerator(new UniqueNameGenerator(node));
 
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node, question);
 			LexNameList pids = new LexNameList();
 
 			Boolean precond = true;
@@ -514,8 +517,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			}
 			question.clearStateContexts();
 			question.pop();
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -572,7 +576,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node, question);
 			LexNameList pids = new LexNameList();
 
 			AOperationType otype = (AOperationType) node.getType();
@@ -648,8 +652,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			}
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -699,7 +704,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node, question);
 
 			PExp expression = node.getExpression();
 			PType type = node.getType();
@@ -716,8 +721,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			}
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -730,10 +736,12 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		try
 		{
 			question.push(new PONameContext(new LexNameList(node.getOpname())));
-			IProofObligationList list = node.getGuard().apply(rootVisitor, question);
+			IProofObligationList list = beforeAnnotations(node, question);
+			list.addAll(node.getGuard().apply(rootVisitor, question));
 			question.pop();
-			return list;
-		} catch (Exception e)
+			return afterAnnotations(node, list, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -745,7 +753,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList list = new ProofObligationList();
+			IProofObligationList list = beforeAnnotations(node, question);
 
 			if (node.getInvdef() != null)
 			{
@@ -753,8 +761,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				list.add(new SatisfiabilityObligation(node, question, assistantFactory));
 			}
 
-			return list;
-		} catch (Exception e)
+			return afterAnnotations(node, list, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -766,8 +775,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList list = new ProofObligationList();
-
+			IProofObligationList list = beforeAnnotations(node, question);
 			AExplicitFunctionDefinition invDef = node.getInvdef();
 
 			if (invDef != null)
@@ -789,8 +797,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			}
 
-			return list;
-		} catch (Exception e)
+			return afterAnnotations(node, list, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -802,7 +811,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node, question);
 
 			PExp exp = node.getExpression();
 			obligations.addAll(exp.apply(rootVisitor, question));
@@ -850,8 +859,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			}
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -880,7 +890,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList proofObligationList = new ProofObligationList();
+			IProofObligationList proofObligationList = beforeAnnotations(node, question);
 			question.setGenerator(new UniqueNameGenerator(node));
 
 			for (PDefinition def : node.getDefinitions())
@@ -891,8 +901,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				question.clearStateContexts();
 			}
 
-			return proofObligationList;
-		} catch (Exception e)
+			return afterAnnotations(node, proofObligationList, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -912,4 +923,38 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		return new ProofObligationList();
 	}
 
+	
+	/**
+	 * Process annotations.
+	 * @return 
+	 */
+	private IProofObligationList beforeAnnotations(PDefinition node, IPOContextStack question) throws AnalysisException
+	{
+		IProofObligationList list = new ProofObligationList();
+
+		for (PAnnotation annotation: node.getAnnotations())
+		{
+			if (annotation.getImpl() instanceof POAnnotation)
+			{
+				POAnnotation impl = (POAnnotation)annotation.getImpl();
+				impl.poBefore(node, list, question);
+			}
+		}
+		
+		return list;
+	}
+	
+	private IProofObligationList afterAnnotations(PDefinition node, IProofObligationList list, IPOContextStack question) throws AnalysisException
+	{
+		for (PAnnotation annotation: node.getAnnotations())
+		{
+			if (annotation.getImpl() instanceof POAnnotation)
+			{
+				POAnnotation impl = (POAnnotation)annotation.getImpl();
+				impl.poAfter(node, list, question);
+			}
+		}
+		
+		return list;
+	}
 }

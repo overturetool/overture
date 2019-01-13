@@ -66,7 +66,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	public Value caseAAnnotatedUnaryExp(AAnnotatedUnaryExp node, Context ctxt)
 			throws AnalysisException
 	{
-		if (node.getAnnotation() instanceof INAnnotation)
+		if (node.getAnnotation().getImpl() instanceof INAnnotation)
 		{
 			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
 			impl.inBefore(node, ctxt);
@@ -74,10 +74,10 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 
 		Value result = node.getExp().apply(THIS, ctxt);
 		
-		if (node.getAnnotation() instanceof INAnnotation)
+		if (node.getAnnotation().getImpl() instanceof INAnnotation)
 		{
 			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
-			impl.inAfter(node, ctxt);
+			impl.inAfter(node, result, ctxt);
 		}
 
 		return result;

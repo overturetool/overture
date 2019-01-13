@@ -1509,7 +1509,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseAAnnotatedStm(AAnnotatedStm node, Context ctxt)
 			throws AnalysisException
 	{
-		if (node.getAnnotation() instanceof INAnnotation)
+		if (node.getAnnotation().getImpl() instanceof INAnnotation)
 		{
 			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
 			impl.inBefore(node, ctxt);
@@ -1517,10 +1517,10 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		
 		Value result = node.getStmt().apply(THIS, ctxt);
 		
-		if (node.getAnnotation() instanceof INAnnotation)
+		if (node.getAnnotation().getImpl() instanceof INAnnotation)
 		{
 			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
-			impl.inAfter(node, ctxt);
+			impl.inAfter(node, result, ctxt);
 		}
 
 		return result;

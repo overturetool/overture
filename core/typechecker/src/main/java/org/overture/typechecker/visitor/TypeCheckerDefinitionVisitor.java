@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.annotations.AAnnotationAnnotation;
 import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -70,7 +69,6 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -105,7 +103,6 @@ import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.annotations.TCAnnotation;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -155,7 +152,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (node.getExpression() instanceof AUndefinedExp)
 		{
@@ -198,7 +195,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.detail2("Declared", question.assistantFactory.createPDefinitionAssistant().getType(node), "Expression", node.getExpType());
 		}
 
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 
 	}
@@ -314,7 +311,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
@@ -474,7 +471,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(node.getType());
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 	}
 
@@ -492,7 +489,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -647,7 +644,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(node.getType());
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 	}
 
@@ -657,7 +654,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
@@ -842,7 +839,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(node.getType());
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 	}
 
@@ -852,7 +849,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		question = new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers);
@@ -1136,7 +1133,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		// node.setType(node.getActualResult());
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 	}
 
@@ -1196,7 +1193,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 		SClassDefinition classdef = question.env.findClassDefinition();
 
 		if (node.getOperations().isEmpty())
@@ -1263,7 +1260,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		}
 
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return null;
 	}
 
@@ -1272,7 +1269,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (question.env.isVDMPP())
 		{
@@ -1287,7 +1284,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		// Mark node as used, as traces are not used anyway
 		question.assistantFactory.createPDefinitionAssistant().markUsed(node);
 		
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return null;
 	}
 
@@ -1296,7 +1293,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 		Environment base = question.env;
 
 		SClassDefinition classdef = base.findClassDefinition();
@@ -1382,7 +1379,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(rt);
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 	}
 
@@ -1400,7 +1397,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 		Environment base = question.env;
 
 		if (base.findStateDefinition() != node)
@@ -1431,7 +1428,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			question.assistantFactory.createPPatternAssistant().typeResolve(node.getInitPattern(), THIS, question);
 		}
 
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return null;
 	}
 
@@ -1465,7 +1462,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (node.getInvdef() != null)
 		{
@@ -1528,7 +1525,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 
 	}
@@ -1547,7 +1544,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (node.getType() != null)
 		{
@@ -1611,7 +1608,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);
 
-		afterAnnotations(node, question);
+		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
 	}
 
@@ -1917,53 +1914,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	 */
 	private void checkAnnotations(PDefinition node, TypeCheckInfo question) throws AnalysisException
 	{
-		if (node.getAnnotations() != null)
+		for (PAnnotation annotation: node.getAnnotations())
 		{
-			for (PAnnotation annotation: node.getAnnotations())
-			{
-				annotation.apply(this, question);	// Check the annotation itself
-			}
+			annotation.apply(THIS, question);	// Check the annotation itself
 		}
-	}
-	
-	private void beforeAnnotations(PDefinition node, TypeCheckInfo question) throws AnalysisException
-	{
-		if (node.getAnnotations() != null)
-		{
-			for (PAnnotation annotation: node.getAnnotations())
-			{
-				if (annotation.getImpl() instanceof TCAnnotation)
-				{
-					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-					impl.tcBefore(node, question);
-				}
-			}
-		}
-	}
-	
-	private void afterAnnotations(PDefinition node, TypeCheckInfo question) throws AnalysisException
-	{
-		if (node.getAnnotations() != null)
-		{
-			for (PAnnotation annotation: node.getAnnotations())
-			{
-				if (annotation.getImpl() instanceof TCAnnotation)
-				{
-					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-					impl.tcAfter(node, question);
-				}
-			}
-		}
-	}
-	
-	public PType caseAAnnotationAnnotation(AAnnotationAnnotation node, TypeCheckInfo question)
-			throws AnalysisException
-	{
-		for (PExp arg: node.getArgs())
-		{
-			arg.apply(THIS, question);
-		}
-		
-		return null;	// No type for the annotation as such
 	}
 }

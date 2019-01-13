@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -46,6 +47,7 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.annotations.TCAnnotation;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class AbstractTypeCheckVisitor extends
@@ -296,5 +298,39 @@ public class AbstractTypeCheckVisitor extends
 				return r;
 			}
 		};
+	}
+	
+	protected void beforeAnnotations(List<PAnnotation> annotations, INode node, TypeCheckInfo question) throws AnalysisException
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			beforeAnnotation(annotation, node, question);
+		}
+	}
+
+	protected void beforeAnnotation(PAnnotation annotation, INode node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			impl.tcBefore(node, question);
+		}
+	}
+	
+	protected void afterAnnotations(List<PAnnotation> annotations, INode node, TypeCheckInfo question) throws AnalysisException
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			afterAnnotation(annotation, node, question);
+		}
+	}
+
+	protected void afterAnnotation(PAnnotation annotation, INode node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			impl.tcAfter(node, question);
+		}
 	}
 }

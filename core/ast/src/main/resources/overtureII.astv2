@@ -540,6 +540,7 @@ modules {-> package='org.overture.ast.modules'}
                 (typeChecked):java_Boolean
                 [isDLModule]:java_Boolean //The typechecker needs to know this, since the actual exports does not exists in a DLModule
                 [comments]:comments
+                [annotations]:annotation*
     ;
 
 
