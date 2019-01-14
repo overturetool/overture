@@ -28,11 +28,14 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.annotations.Annotation;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.annotations.TCAnnotation;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
@@ -159,6 +162,21 @@ public class ClassTypeChecker extends TypeChecker
 			}
 		}
 
+		// Initialise any annotations
+		Annotation.init();
+
+		for (SClassDefinition c: classes)
+		{
+			for (PAnnotation annotation: c.getAnnotations())
+			{
+				if (annotation.getImpl() instanceof TCAnnotation)
+				{
+					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+					impl.tcBefore(c, null);
+				}
+			}
+		}
+
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> tc = getTypeCheckVisitor();
 		for (Pass pass : Pass.values())
 		{
@@ -185,6 +203,18 @@ public class ClassTypeChecker extends TypeChecker
 					{
 						report(3431, te.getMessage(), null);// FIXME: internal error
 					}
+				}
+			}
+		}
+		
+		for (SClassDefinition c: classes)
+		{
+			for (PAnnotation annotation: c.getAnnotations())
+			{
+				if (annotation.getImpl() instanceof TCAnnotation)
+				{
+					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+					impl.tcAfter(c, null);
 				}
 			}
 		}

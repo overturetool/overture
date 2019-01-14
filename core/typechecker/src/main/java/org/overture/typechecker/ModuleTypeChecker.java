@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.annotations.Annotation;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
@@ -34,6 +36,7 @@ import org.overture.ast.typechecker.Pass;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.annotations.TCAnnotation;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -220,6 +223,21 @@ public class ModuleTypeChecker extends TypeChecker
 				report(3431, te.getMessage(), null);// FIXME: internal error
 			}
 		}
+		
+		// Initialise any annotations
+		Annotation.init();
+
+		for (AModuleModules m: modules)
+		{
+			for (PAnnotation annotation: m.getAnnotations())
+			{
+				if (annotation.getImpl() instanceof TCAnnotation)
+				{
+					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+					impl.tcBefore(m, null);
+				}
+			}
+		}
 
 		// Proceed to type check all definitions, considering types, values
 		// and remaining definitions, in that order.
@@ -260,6 +278,18 @@ public class ModuleTypeChecker extends TypeChecker
 						}
 						// System.out.println("Number of Defs: " + m.getDefs().size());
 					}
+				}
+			}
+		}
+
+		for (AModuleModules m: modules)
+		{
+			for (PAnnotation annotation: m.getAnnotations())
+			{
+				if (annotation.getImpl() instanceof TCAnnotation)
+				{
+					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+					impl.tcAfter(m, null);
 				}
 			}
 		}

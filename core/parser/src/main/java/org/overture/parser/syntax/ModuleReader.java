@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -94,7 +95,9 @@ public class ModuleReader extends SyntaxReader
 				{
 					case MODULE:
 						ILexCommentList comments = getComments();
+						List<PAnnotation> annotations = readAnnotations(comments);
 						AModuleModules module = readModule();
+						module.setAnnotations(annotations);
 						module.setComments(comments);
 						modules.add(module);
 						break;

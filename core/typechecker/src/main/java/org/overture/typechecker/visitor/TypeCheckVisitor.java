@@ -147,9 +147,12 @@ public class TypeCheckVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAnnotationAnnotation(AAnnotationAnnotation node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		for (PExp arg: node.getArgs())
+		if (node.getImpl().typecheckArgs())
 		{
-			arg.apply(THIS, question);
+			for (PExp arg: node.getArgs())
+			{
+				arg.apply(THIS, question);
+			}
 		}
 		
 		return null;	// No type for the annotation as such
