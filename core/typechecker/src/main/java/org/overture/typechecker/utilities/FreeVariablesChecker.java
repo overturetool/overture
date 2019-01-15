@@ -89,6 +89,7 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAnnotatedStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -1173,6 +1174,13 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		return node.getExp().apply(this, info);
 	}
 	
+	@Override
+	public LexNameSet caseAAnnotatedStm(AAnnotatedStm node, FreeVarInfo question)
+			throws AnalysisException
+	{
+		return node.getStmt().apply(this, question);
+	}
+	
 	/************************* Defaults ***************************/
 	
 	@Override
@@ -1210,6 +1218,8 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		
 		return names;
 	}
+	
+	
 
 	/************************* New values etc ***************************/
 
