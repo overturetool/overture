@@ -16,6 +16,6 @@ import org.overture.pog.pub.IProofObligationList;
 
 public interface POAnnotation
 {
-	public void poBefore(INode node, IProofObligationList list, IPOContextStack question);
+	public IProofObligationList poBefore(INode node, IPOContextStack question);
 	public void poAfter(INode node, IProofObligationList list, IPOContextStack question);
 }

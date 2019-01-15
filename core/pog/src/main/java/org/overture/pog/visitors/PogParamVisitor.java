@@ -93,7 +93,7 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 			if (annotation.getImpl() instanceof POAnnotation)
 			{
 				POAnnotation impl = (POAnnotation)annotation.getImpl();
-				impl.poBefore(node, ipol, question);
+				ipol.addAll(impl.poBefore(node, question));
 			}
 		}
 

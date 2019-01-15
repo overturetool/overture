@@ -36,7 +36,7 @@ public abstract class AbstractPogParamVisitor extends QuestionAnswerAdaptor<IPOC
 		if (annotation.getImpl() instanceof POAnnotation)
 		{
 			POAnnotation impl = (POAnnotation)annotation.getImpl();
-			impl.poBefore(node, list, question);
+			list.addAll(impl.poBefore(node, question));
 		}
 		
 		return list;
