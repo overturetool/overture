@@ -96,7 +96,9 @@ public class ModuleReader extends SyntaxReader
 					case MODULE:
 						ILexCommentList comments = getComments();
 						List<PAnnotation> annotations = readAnnotations(comments);
+						beforeAnnotations(this, annotations);
 						AModuleModules module = readModule();
+						afterAnnotations(this, annotations, module);
 						module.setAnnotations(annotations);
 						module.setComments(comments);
 						modules.add(module);

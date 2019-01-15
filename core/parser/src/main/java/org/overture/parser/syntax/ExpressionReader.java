@@ -821,9 +821,9 @@ public class ExpressionReader extends SyntaxReader
 
 		if (!annotations.isEmpty())
 		{
-			// Process annotations before
+			beforeAnnotations(this, annotations);
 			body = readBasicExpression();
-			// Process annotations after
+			afterAnnotations(this, annotations, body);
 
 			Collections.reverse(annotations);	// Build the chain backwards
 			

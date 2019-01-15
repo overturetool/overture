@@ -31,6 +31,8 @@ import java.util.Vector;
 
 import org.overture.ast.annotations.Annotation;
 import org.overture.ast.annotations.PAnnotation;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexCommentList;
@@ -42,6 +44,9 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.messages.InternalException;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
+import org.overture.parser.annotations.ASTAnnotation;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.LocatedException;
@@ -794,5 +799,78 @@ public abstract class SyntaxReader
 	protected ILexCommentList getComments()
 	{
 		return reader.getComments();
+	}
+	
+	protected void beforeAnnotations(SyntaxReader reader, List<PAnnotation> annotations)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astBefore(reader);
+			}
+		}
+	}
+
+	
+	protected void afterAnnotations(DefinitionReader reader, List<PAnnotation> annotations, PDefinition def)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, def);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(ExpressionReader reader, List<PAnnotation> annotations, PExp exp)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, exp);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(StatementReader reader, List<PAnnotation> annotations, PStm stmt)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, stmt);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(ModuleReader reader, List<PAnnotation> annotations, AModuleModules module)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, module);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(ClassReader reader, List<PAnnotation> annotations, SClassDefinition clazz)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, clazz);
+			}
+		}
 	}
 }

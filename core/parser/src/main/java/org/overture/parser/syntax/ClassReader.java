@@ -79,6 +79,7 @@ public class ClassReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				SClassDefinition clazz = null;
 
 				if (lastToken().is(VDMToken.CLASS))
@@ -90,6 +91,7 @@ public class ClassReader extends SyntaxReader
 					clazz = readSystem();
 				}
 				
+				afterAnnotations(this, annotations, clazz);
 				clazz.setAnnotations(annotations);
 				clazz.setComments(comments);
 				list.add(clazz);

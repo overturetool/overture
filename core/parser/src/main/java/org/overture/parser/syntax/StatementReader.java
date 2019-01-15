@@ -83,9 +83,9 @@ public class StatementReader extends SyntaxReader
 
 		if (!annotations.isEmpty())
 		{
-			// Process before annotations
+			beforeAnnotations(this, annotations);
 			stmt = readAnyStatement();
-			// Process after annotations
+			afterAnnotations(this, annotations, stmt);
 			
 			Collections.reverse(annotations);	// Build the chain backwards
 			

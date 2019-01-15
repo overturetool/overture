@@ -510,11 +510,11 @@ public class DefinitionReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
-				// Process before annotations
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				ATypeDefinition def = readTypeDefinition();
-				// Process after annotations
+				afterAnnotations(this, annotations, def);
 				def.setAnnotations(annotations);
 				def.setComments(comments);
 
@@ -546,11 +546,11 @@ public class DefinitionReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
-				// Process before annotations
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				PDefinition def = readValueDefinition(NameScope.GLOBAL);
-				// Process after annotations
+				afterAnnotations(this, annotations, def);
 				def.setAnnotations(annotations);
 				def.setComments(comments);
 
@@ -592,10 +592,10 @@ public class DefinitionReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
-				// Process before annotations
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				PDefinition def = readFunctionDefinition(NameScope.GLOBAL);
-				// Process after annotations
+				afterAnnotations(this, annotations, def);
 				def.setAnnotations(annotations);
 				def.setComments(comments);
 
@@ -636,10 +636,10 @@ public class DefinitionReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
-				// Process before annotations
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT, true);
 				PDefinition def = readOperationDefinition();
-				// Process after annotations
+				afterAnnotations(this, annotations, def);
 				def.setAnnotations(annotations);
 				def.setComments(comments);
 				def.setAccess(access);
@@ -678,9 +678,9 @@ public class DefinitionReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
-				// Process before annotations
+				beforeAnnotations(this, annotations);
 				PDefinition def = readInstanceVariableDefinition();
-				// Process after annotations
+				afterAnnotations(this, annotations, def);
 				def.setAnnotations(annotations);
 				def.setComments(comments);
 				list.add(def);
@@ -709,9 +709,9 @@ public class DefinitionReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
-				// Process before annotations
+				beforeAnnotations(this, annotations);
 				PDefinition def = readNamedTraceDefinition();
-				// Process after annotations
+				afterAnnotations(this, annotations, def);
 				def.setAnnotations(annotations);
 				def.setComments(comments);
 				list.add(def);
@@ -740,9 +740,9 @@ public class DefinitionReader extends SyntaxReader
 			{
 				ILexCommentList comments = getComments();
 				List<PAnnotation> annotations = readAnnotations(comments);
-				// Process before annotations
+				beforeAnnotations(this, annotations);
 				PDefinition def = readPermissionPredicateDefinition();
-				// Process after annotations
+				afterAnnotations(this, annotations, def);
 				def.setAnnotations(annotations);
 				def.setComments(comments);
 				list.add(def);
@@ -1074,7 +1074,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		ILexCommentList comments = getComments();
 		List<PAnnotation> annotations = readAnnotations(comments);
-		// Process before annotations
+		beforeAnnotations(this, annotations);
 		LexIdentifierToken name = readIdToken("Expecting identifier after 'state' definition");
 		checkFor(VDMToken.OF, 2097, "Expecting 'of' after state name");
 		List<AFieldField> fieldList = getTypeReader().readFieldList();
@@ -1112,7 +1112,7 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 
 		AStateDefinition def = AstFactory.newAStateDefinition(idToName(name), fieldList, invPattern, invExpression, initPattern, initExpression);
-		// Process after annotations
+		afterAnnotations(this, annotations, def);
 		def.setAnnotations(annotations);
 		def.setComments(comments);
 		return def;
