@@ -1,8 +1,6 @@
 package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.PExp;
@@ -33,7 +31,6 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
-import org.overture.pog.annotations.POAnnotation;
 import org.overture.pog.contexts.POCaseContext;
 import org.overture.pog.contexts.PONameContext;
 import org.overture.pog.contexts.PONotCaseContext;
@@ -56,7 +53,7 @@ import org.overture.pog.utility.PogAssistantFactory;
  * @since 1.0
  */
 public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligationList>
-		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
+		extends AbstractPogParamVisitor
 {
 
 	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
@@ -86,17 +83,8 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	public IProofObligationList caseAModuleModules(AModuleModules node,
 			IPOContextStack question) throws AnalysisException
 	{
-		IProofObligationList ipol = new ProofObligationList();
+		IProofObligationList ipol = beforeAnnotations(node, question);
 		
-		for (PAnnotation annotation: node.getAnnotations())
-		{
-			if (annotation.getImpl() instanceof POAnnotation)
-			{
-				POAnnotation impl = (POAnnotation)annotation.getImpl();
-				ipol.addAll(impl.poBefore(node, question));
-			}
-		}
-
 		for (PDefinition p : node.getDefs())
 		{
 			question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(p)));
@@ -105,15 +93,7 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 			question.clearStateContexts();
 		}
 
-		for (PAnnotation annotation: node.getAnnotations())
-		{
-			if (annotation.getImpl() instanceof POAnnotation)
-			{
-				POAnnotation impl = (POAnnotation)annotation.getImpl();
-				impl.poAfter(node, ipol, question);
-			}
-		}
-
+		afterAnnotations(node, ipol, question);
 		return ipol;
 	}
 
@@ -272,7 +252,6 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	public IProofObligationList defaultPDefinition(PDefinition node,
 			IPOContextStack question) throws AnalysisException
 	{
-
 		return node.apply(pogDefinitionVisitor, question);
 	}
 
