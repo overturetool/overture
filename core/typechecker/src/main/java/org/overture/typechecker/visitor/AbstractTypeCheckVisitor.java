@@ -37,8 +37,10 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
@@ -300,15 +302,35 @@ public class AbstractTypeCheckVisitor extends
 		};
 	}
 	
-	protected void beforeAnnotations(List<PAnnotation> annotations, INode node, TypeCheckInfo question) throws AnalysisException
+	/**
+	 * Annotation before processing.
+	 */
+	
+	protected void beforeAnnotations(PDefinition node, TypeCheckInfo question) throws AnalysisException
 	{
-		for (PAnnotation annotation: annotations)
+		for (PAnnotation annotation: node.getAnnotations())
 		{
 			beforeAnnotation(annotation, node, question);
 		}
 	}
 
-	protected void beforeAnnotation(PAnnotation annotation, INode node, TypeCheckInfo question)
+	protected void beforeAnnotations(List<PAnnotation> annotations, AModuleModules node, TypeCheckInfo question) throws AnalysisException
+	{
+		for (PAnnotation annotation: node.getAnnotations())
+		{
+			beforeAnnotation(annotation, node, question);
+		}
+	}
+
+	protected void beforeAnnotations(List<PAnnotation> annotations, SClassDefinition node, TypeCheckInfo question) throws AnalysisException
+	{
+		for (PAnnotation annotation: node.getAnnotations())
+		{
+			beforeAnnotation(annotation, node, question);
+		}
+	}
+
+	protected void beforeAnnotation(PAnnotation annotation, PDefinition node, TypeCheckInfo question)
 	{
 		if (annotation.getImpl() instanceof TCAnnotation)
 		{
@@ -316,6 +338,46 @@ public class AbstractTypeCheckVisitor extends
 			impl.tcBefore(node, question);
 		}
 	}
+	
+	protected void beforeAnnotation(PAnnotation annotation, PExp node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			impl.tcBefore(node, question);
+		}
+	}
+	
+	protected void beforeAnnotation(PAnnotation annotation, PStm node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			impl.tcBefore(node, question);
+		}
+	}
+	
+	protected void beforeAnnotation(PAnnotation annotation, AModuleModules node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			impl.tcBefore(node, question);
+		}
+	}
+	
+	protected void beforeAnnotation(PAnnotation annotation, SClassDefinition node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			impl.tcBefore(node, question);
+		}
+	}
+	
+	/**
+	 * After annotation processing.
+	 */
 	
 	protected void afterAnnotations(List<PAnnotation> annotations, INode node, TypeCheckInfo question) throws AnalysisException
 	{

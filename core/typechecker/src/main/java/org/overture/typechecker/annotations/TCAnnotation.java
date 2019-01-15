@@ -10,11 +10,21 @@
 
 package org.overture.typechecker.annotations;
 
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.PStm;
 import org.overture.typechecker.TypeCheckInfo;
 
 public interface TCAnnotation
 {
-	public void tcBefore(INode node, TypeCheckInfo question);
+	public void tcBefore(PDefinition node, TypeCheckInfo question);
+	public void tcBefore(PExp node, TypeCheckInfo question);
+	public void tcBefore(PStm node, TypeCheckInfo question);
+	public void tcBefore(AModuleModules node, TypeCheckInfo question);
+	public void tcBefore(SClassDefinition node, TypeCheckInfo question);
+
 	public void tcAfter(INode node, TypeCheckInfo question);
 }
