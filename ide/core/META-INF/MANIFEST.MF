@@ -27,7 +27,7 @@ Export-Package: org.overture.ast.analysis,org.overture.ast.analysis.in
  .ide.core.propertytester,org.overture.ide.core.resources,org.overture
  .ide.core.utility,org.overture.parser.config,org.overture.parser.lex,
  org.overture.parser.messages,org.overture.parser.syntax,org.overture.
- parser.util,org.overture.util
+ parser.util,org.overture.util,org.overture.ast.annotations
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
 Bundle-ClassPath: .,
