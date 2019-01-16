@@ -801,6 +801,9 @@ public abstract class SyntaxReader
 		return reader.getComments();
 	}
 	
+	/**
+	 * Annotation processing...
+	 */
 	protected void beforeAnnotations(SyntaxReader reader, List<PAnnotation> annotations)
 	{
 		for (PAnnotation annotation: annotations)
@@ -808,12 +811,36 @@ public abstract class SyntaxReader
 			if (annotation.getImpl() instanceof ASTAnnotation)
 			{
 				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
-				impl.astBefore(reader);
+				
+				// This is not as ugly as multiple overloaded beforeAnotation and beforeAnnotations!
+				if (reader instanceof DefinitionReader)
+				{
+					impl.astBefore((DefinitionReader)reader);
+				}
+				else if (reader instanceof ExpressionReader)
+				{
+					impl.astBefore((ExpressionReader)reader);
+				}
+				else if (reader instanceof StatementReader)
+				{
+					impl.astBefore((StatementReader)reader);
+				}
+				else if (reader instanceof ModuleReader)
+				{
+					impl.astBefore((ModuleReader)reader);
+				}
+				else if (reader instanceof ClassReader)
+				{
+					impl.astBefore((ClassReader)reader);
+				}
+				else
+				{
+					System.err.println("Cannot apply annoation to " + reader.getClass().getSimpleName());
+				}
 			}
 		}
 	}
 
-	
 	protected void afterAnnotations(DefinitionReader reader, List<PAnnotation> annotations, PDefinition def)
 	{
 		for (PAnnotation annotation: annotations)

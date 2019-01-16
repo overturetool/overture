@@ -20,11 +20,14 @@ import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ModuleReader;
 import org.overture.parser.syntax.StatementReader;
-import org.overture.parser.syntax.SyntaxReader;
 
 public interface ASTAnnotation
 {
-	public void astBefore(SyntaxReader reader);
+	public void astBefore(DefinitionReader reader);
+	public void astBefore(StatementReader reader);
+	public void astBefore(ExpressionReader reader);
+	public void astBefore(ModuleReader reader);
+	public void astBefore(ClassReader reader);
 
 	public void astAfter(DefinitionReader reader, PDefinition def);
 	public void astAfter(StatementReader reader, PStm stmt);

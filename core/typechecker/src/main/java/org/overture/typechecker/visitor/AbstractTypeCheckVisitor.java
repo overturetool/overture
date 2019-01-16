@@ -306,72 +306,45 @@ public class AbstractTypeCheckVisitor extends
 	 * Annotation before processing.
 	 */
 	
-	protected void beforeAnnotations(PDefinition node, TypeCheckInfo question) throws AnalysisException
+	protected void beforeAnnotations(List<PAnnotation> annotations, INode node, TypeCheckInfo question) throws AnalysisException
 	{
-		for (PAnnotation annotation: node.getAnnotations())
+		for (PAnnotation annotation: annotations)
 		{
 			beforeAnnotation(annotation, node, question);
 		}
 	}
-
-	protected void beforeAnnotations(List<PAnnotation> annotations, AModuleModules node, TypeCheckInfo question) throws AnalysisException
-	{
-		for (PAnnotation annotation: node.getAnnotations())
-		{
-			beforeAnnotation(annotation, node, question);
-		}
-	}
-
-	protected void beforeAnnotations(List<PAnnotation> annotations, SClassDefinition node, TypeCheckInfo question) throws AnalysisException
-	{
-		for (PAnnotation annotation: node.getAnnotations())
-		{
-			beforeAnnotation(annotation, node, question);
-		}
-	}
-
-	protected void beforeAnnotation(PAnnotation annotation, PDefinition node, TypeCheckInfo question)
-	{
-		if (annotation.getImpl() instanceof TCAnnotation)
-		{
-			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-			impl.tcBefore(node, question);
-		}
-	}
 	
-	protected void beforeAnnotation(PAnnotation annotation, PExp node, TypeCheckInfo question)
+	protected void beforeAnnotation(PAnnotation annotation, INode node, TypeCheckInfo question)
 	{
 		if (annotation.getImpl() instanceof TCAnnotation)
 		{
 			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-			impl.tcBefore(node, question);
-		}
-	}
-	
-	protected void beforeAnnotation(PAnnotation annotation, PStm node, TypeCheckInfo question)
-	{
-		if (annotation.getImpl() instanceof TCAnnotation)
-		{
-			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-			impl.tcBefore(node, question);
-		}
-	}
-	
-	protected void beforeAnnotation(PAnnotation annotation, AModuleModules node, TypeCheckInfo question)
-	{
-		if (annotation.getImpl() instanceof TCAnnotation)
-		{
-			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-			impl.tcBefore(node, question);
-		}
-	}
-	
-	protected void beforeAnnotation(PAnnotation annotation, SClassDefinition node, TypeCheckInfo question)
-	{
-		if (annotation.getImpl() instanceof TCAnnotation)
-		{
-			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-			impl.tcBefore(node, question);
+			
+			// This is not as ugly as multiple overloaded beforeAnotation and beforeAnnotations!
+			if (node instanceof PDefinition)
+			{
+				impl.tcBefore((PDefinition)node, question);
+			}
+			else if (node instanceof PExp)
+			{
+				impl.tcBefore((PExp)node, question);
+			}
+			else if (node instanceof PStm)
+			{
+				impl.tcBefore((PStm)node, question);
+			}
+			else if (node instanceof AModuleModules)
+			{
+				impl.tcBefore((AModuleModules)node, question);
+			}
+			else if (node instanceof SClassDefinition)
+			{
+				impl.tcBefore((SClassDefinition)node, question);
+			}
+			else
+			{
+				System.err.println("Cannot apply annoation to " + node.getClass().getSimpleName());
+			}
 		}
 	}
 	
@@ -392,7 +365,32 @@ public class AbstractTypeCheckVisitor extends
 		if (annotation.getImpl() instanceof TCAnnotation)
 		{
 			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
-			impl.tcAfter(node, question);
+			
+			// This is not as ugly as multiple overloaded beforeAnotation and beforeAnnotations!
+			if (node instanceof PDefinition)
+			{
+				impl.tcAfter((PDefinition)node, question);
+			}
+			else if (node instanceof PExp)
+			{
+				impl.tcAfter((PExp)node, question);
+			}
+			else if (node instanceof PStm)
+			{
+				impl.tcAfter((PStm)node, question);
+			}
+			else if (node instanceof AModuleModules)
+			{
+				impl.tcAfter((AModuleModules)node, question);
+			}
+			else if (node instanceof SClassDefinition)
+			{
+				impl.tcAfter((SClassDefinition)node, question);
+			}
+			else
+			{
+				System.err.println("Cannot apply annoation to " + node.getClass().getSimpleName());
+			}
 		}
 	}
 }

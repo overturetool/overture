@@ -152,7 +152,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (node.getExpression() instanceof AUndefinedExp)
 		{
@@ -311,7 +311,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
@@ -489,7 +489,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -654,7 +654,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
@@ -849,7 +849,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		question = new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers);
@@ -1193,7 +1193,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 		SClassDefinition classdef = question.env.findClassDefinition();
 
 		if (node.getOperations().isEmpty())
@@ -1269,7 +1269,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (question.env.isVDMPP())
 		{
@@ -1293,7 +1293,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 		Environment base = question.env;
 
 		SClassDefinition classdef = base.findClassDefinition();
@@ -1397,7 +1397,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 		Environment base = question.env;
 
 		if (base.findStateDefinition() != node)
@@ -1462,7 +1462,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (node.getInvdef() != null)
 		{
@@ -1544,7 +1544,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		checkAnnotations(node, question);
-		beforeAnnotations(node, question);
+		beforeAnnotations(node.getAnnotations(), node, question);
 
 		if (node.getType() != null)
 		{

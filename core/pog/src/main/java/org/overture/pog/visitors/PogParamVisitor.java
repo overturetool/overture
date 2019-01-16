@@ -83,7 +83,7 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	public IProofObligationList caseAModuleModules(AModuleModules node,
 			IPOContextStack question) throws AnalysisException
 	{
-		IProofObligationList ipol = beforeAnnotations(node, question);
+		IProofObligationList ipol = beforeAnnotations(node.getAnnotations(), node, question);
 		
 		for (PDefinition p : node.getDefs())
 		{
@@ -93,7 +93,7 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 			question.clearStateContexts();
 		}
 
-		afterAnnotations(node, ipol, question);
+		afterAnnotations(node.getAnnotations(), node, ipol, question);
 		return ipol;
 	}
 
