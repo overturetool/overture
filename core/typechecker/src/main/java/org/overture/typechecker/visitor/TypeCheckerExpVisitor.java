@@ -3027,6 +3027,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		beforeAnnotation(node.getAnnotation(), node, question);
 		PType result = node.getExp().apply(THIS, question);
 		afterAnnotation(node.getAnnotation(), node, question);
+		node.setType(result);
 		return result;
 	}
 

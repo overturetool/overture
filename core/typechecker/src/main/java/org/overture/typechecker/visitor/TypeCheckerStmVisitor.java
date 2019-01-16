@@ -140,6 +140,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		beforeAnnotation(node.getAnnotation(), node, question);
 		PType result = node.getStmt().apply(THIS, question);
 		afterAnnotation(node.getAnnotation(), node, question);
+		node.setType(result);
 		return result;
 	}
 
