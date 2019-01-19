@@ -1464,63 +1464,70 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		checkAnnotations(node, question);
 		beforeAnnotations(node.getAnnotations(), node, question);
 
-		if (node.getInvdef() != null)
+		if (node.getPass() == Pass.DEFS)
 		{
-			question.scope = NameScope.NAMES;
-			node.getInvdef().apply(THIS, question);
-		}
-
-		if (node.getEqRelation() != null)
-		{
-			question.scope = NameScope.NAMES;
-			node.getEqRelation().apply(THIS,question);
-		}
-
-		if (node.getOrdRelation() != null)
-		{
-			question.scope = NameScope.NAMES;
-			node.getOrdRelation().apply(THIS,question);
-		}
-
-		PType type = question.assistantFactory.createPDefinitionAssistant().getType(node);
-		node.setType(type);
-
-		// We have to do the "top level" here, rather than delegating to the types
-		// because the definition pointer from these top level types just refers
-		// to the definition we are checking, which is never "narrower" than itself.
-		// See the narrowerThan method in NamedType and RecordType.
-
-		if (type instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType ntype = (ANamedInvariantType) type;
-
-			// Rebuild the compose definitions, after we check whether they already exist
-			node.getComposeDefinitions().clear();
-
-			for (PType compose : question.assistantFactory.getTypeComparator().checkComposeTypes(ntype.getType(), question.env, true))
+			if (node.getInvdef() != null)
 			{
-				ARecordInvariantType rtype = (ARecordInvariantType) compose;
-				PDefinition cdef = AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null);
-				cdef.setAccess(node.getAccess().clone());
-				node.getComposeDefinitions().add(cdef);
-				rtype.getDefinitions().get(0).setAccess(node.getAccess().clone());
+				question.scope = NameScope.NAMES;
+				node.getInvdef().apply(THIS, question);
 			}
-
-			if (question.assistantFactory.createPTypeAssistant().narrowerThan(ntype.getType(), node.getAccess()))
+	
+			if (node.getEqRelation() != null)
 			{
-				TypeCheckerErrors.report(3321, "Type component visibility less than type's definition", node.getLocation(), node);
+				question.scope = NameScope.NAMES;
+				node.getEqRelation().apply(THIS,question);
 			}
-		} else if (type instanceof ARecordInvariantType)
-		{
-			ARecordInvariantType rtype = (ARecordInvariantType) type;
-
-			for (AFieldField field : rtype.getFields())
+	
+			if (node.getOrdRelation() != null)
 			{
-				question.assistantFactory.getTypeComparator().checkComposeTypes(field.getType(), question.env, false);
-
-				if (question.assistantFactory.createPTypeAssistant().narrowerThan(field.getType(), node.getAccess()))
+				question.scope = NameScope.NAMES;
+				node.getOrdRelation().apply(THIS,question);
+			}
+		}
+		else
+		{
+			node.setPass(Pass.DEFS);		// Come back later to do inv definitions above.
+			
+			PType type = question.assistantFactory.createPDefinitionAssistant().getType(node);
+			node.setType(type);
+	
+			// We have to do the "top level" here, rather than delegating to the types
+			// because the definition pointer from these top level types just refers
+			// to the definition we are checking, which is never "narrower" than itself.
+			// See the narrowerThan method in NamedType and RecordType.
+	
+			if (type instanceof ANamedInvariantType)
+			{
+				ANamedInvariantType ntype = (ANamedInvariantType) type;
+	
+				// Rebuild the compose definitions, after we check whether they already exist
+				node.getComposeDefinitions().clear();
+	
+				for (PType compose : question.assistantFactory.getTypeComparator().checkComposeTypes(ntype.getType(), question.env, true))
 				{
-					TypeCheckerErrors.report(3321, "Field type visibility less than type's definition", field.getTagname().getLocation(), field.getTagname());
+					ARecordInvariantType rtype = (ARecordInvariantType) compose;
+					PDefinition cdef = AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null);
+					cdef.setAccess(node.getAccess().clone());
+					node.getComposeDefinitions().add(cdef);
+					rtype.getDefinitions().get(0).setAccess(node.getAccess().clone());
+				}
+	
+				if (question.assistantFactory.createPTypeAssistant().narrowerThan(ntype.getType(), node.getAccess()))
+				{
+					TypeCheckerErrors.report(3321, "Type component visibility less than type's definition", node.getLocation(), node);
+				}
+			} else if (type instanceof ARecordInvariantType)
+			{
+				ARecordInvariantType rtype = (ARecordInvariantType) type;
+	
+				for (AFieldField field : rtype.getFields())
+				{
+					question.assistantFactory.getTypeComparator().checkComposeTypes(field.getType(), question.env, false);
+	
+					if (question.assistantFactory.createPTypeAssistant().narrowerThan(field.getType(), node.getAccess()))
+					{
+						TypeCheckerErrors.report(3321, "Field type visibility less than type's definition", field.getTagname().getLocation(), field.getTagname());
+					}
 				}
 			}
 		}
