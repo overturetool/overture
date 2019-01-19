@@ -5,7 +5,7 @@ import org.overture.codegen.runtime.*;
 @SuppressWarnings("all")
 final public class Entry {
   public static final Number x = 78L;
-  private static St St = new St(((Number) x));
+  private static St St = new St(x);
 
   private Entry() {}
 

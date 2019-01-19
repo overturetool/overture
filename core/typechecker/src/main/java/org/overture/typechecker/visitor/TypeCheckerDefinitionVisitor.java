@@ -1398,34 +1398,41 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 		checkAnnotations(node, question);
 		beforeAnnotations(node.getAnnotations(), node, question);
-		Environment base = question.env;
 
-		if (base.findStateDefinition() != node)
+		if (node.getPass() == Pass.TYPES)
 		{
-			TypeCheckerErrors.report(3047, "Only one state definition allowed per module", node.getLocation(), node);
-			return null;
-		}
+			Environment base = question.env;
 
-		for (PDefinition def : node.getStateDefs())
-		{
-			if (!def.getName().getOld()) // Don't check old names
+			if (base.findStateDefinition() != node)
 			{
-				question.assistantFactory.getTypeComparator().checkComposeTypes(def.getType(), question.env, false);
+				TypeCheckerErrors.report(3047, "Only one state definition allowed per module", node.getLocation(), node);
+				return null;
 			}
+
+			for (PDefinition def : node.getStateDefs())
+			{
+				if (!def.getName().getOld()) // Don't check old names
+				{
+					question.assistantFactory.getTypeComparator().checkComposeTypes(def.getType(), question.env, false);
+				}
+			}
+
+			question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getStateDefs(), THIS, question);
+			node.setPass(Pass.DEFS);
 		}
-
-		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getStateDefs(), THIS, question);
-
-		if (node.getInvdef() != null)
+		else
 		{
-			node.getInvdef().apply(THIS, question);
-			question.assistantFactory.createPPatternAssistant().typeResolve(node.getInvPattern(), THIS, question);
-		}
+			if (node.getInvdef() != null)
+			{
+				node.getInvdef().apply(THIS, question);
+				question.assistantFactory.createPPatternAssistant().typeResolve(node.getInvPattern(), THIS, question);
+			}
 
-		if (node.getInitdef() != null)
-		{
-			node.getInitdef().apply(THIS, question);
-			question.assistantFactory.createPPatternAssistant().typeResolve(node.getInitPattern(), THIS, question);
+			if (node.getInitdef() != null)
+			{
+				node.getInitdef().apply(THIS, question);
+				question.assistantFactory.createPPatternAssistant().typeResolve(node.getInitPattern(), THIS, question);
+			}
 		}
 
 		afterAnnotations(node.getAnnotations(), node, question);
