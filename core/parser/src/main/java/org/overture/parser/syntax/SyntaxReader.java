@@ -366,32 +366,12 @@ public abstract class SyntaxReader
 		
 		if (ltr.nextToken().is(VDMToken.IDENTIFIER))
 		{
-			LexIdentifierToken name = (LexIdentifierToken)ltr.getLast();  
-			List<PExp> args = new Vector<PExp>();
-			
-			if (ltr.nextToken().is(VDMToken.BRA))
-			{
-				if (ltr.nextToken().isNot(VDMToken.KET))
-				{
-					ExpressionReader er = new ExpressionReader(ltr);
-					args.add(er.readExpression());
-			
-					while (ltr.getLast().is(VDMToken.COMMA))
-					{
-						ltr.nextToken();
-						args.add(er.readExpression());
-					}
-				}
-		
-				if (ltr.getLast().isNot(VDMToken.KET))
-				{
-					throwMessage(0, "Malformed @Annotation");
-				}
-			}
-
+			LexIdentifierToken name = (LexIdentifierToken)ltr.getLast();
+			ASTAnnotation impl = loadAnnotationImpl(name);
+			List<PExp> args = impl.parse(ltr);
 			PAnnotation ast = AstFactory.newAAnnotationAnnotation(name, args);
-			Annotation impl = makeAnnotationImpl(name, ast);
-			ast.setImpl(impl);
+			ast.setImpl((Annotation) impl);
+			impl.setAST(ast);
 			return ast;
 		}
 		
@@ -768,7 +748,7 @@ public abstract class SyntaxReader
 		return reader.toString();
 	}
 	
-	protected Annotation makeAnnotationImpl(LexIdentifierToken name, PAnnotation ast)
+	protected ASTAnnotation loadAnnotationImpl(LexIdentifierToken name)
 			throws ParserException, LexException
 	{
 		String classpath = System.getProperty("overture.annotations", "org.overture.annotations;annotations");
@@ -779,8 +759,8 @@ public abstract class SyntaxReader
 			try
 			{
 				Class<?> clazz = Class.forName(pack + "." + name + "Annotation");
-				Constructor<?> ctor = clazz.getConstructor(PAnnotation.class);
-				return (Annotation) ctor.newInstance(ast);
+				Constructor<?> ctor = clazz.getConstructor();
+				return (ASTAnnotation) ctor.newInstance();
 			}
 			catch (ClassNotFoundException e)
 			{

@@ -22,13 +22,17 @@ import java.util.Set;
  */
 public abstract class Annotation
 {
-	protected final PAnnotation ast;
+	protected PAnnotation ast = null;
 	private static final Set<Class<?>> declared = new HashSet<Class<?>>(); 
 
-	protected Annotation(PAnnotation ast)
+	protected Annotation()
+	{
+		declared.add(this.getClass());
+	}
+	
+	public void setAST(PAnnotation ast)
 	{
 		this.ast = ast;
-		declared.add(this.getClass());
 	}
 
 	public static void init()
