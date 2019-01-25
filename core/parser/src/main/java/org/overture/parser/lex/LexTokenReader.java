@@ -431,6 +431,14 @@ public class LexTokenReader extends BacktrackInputReader
 	{
 		return tokensread;
 	}
+	
+	/**
+	 * @return the current location.
+	 */
+	public ILexLocation getLocation()
+	{
+		return new LexLocation(file, currentModule, linecount, charpos, 0, 0, 0, 0);
+	}
 
 	/**
 	 * Read the next character from the stream. The position details are updated, accounting for newlines and tab stops.

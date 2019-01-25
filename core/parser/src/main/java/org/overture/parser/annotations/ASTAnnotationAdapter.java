@@ -1,6 +1,13 @@
-/**
- * 
- */
+/*******************************************************************************
+ *
+ *	Copyright (c) 2019 Nick Battle.
+ *
+ *	Author: Nick Battle
+ *
+ *	This file is part of Overture
+ *
+ ******************************************************************************/
+
 package org.overture.parser.annotations;
 
 import java.util.List;
@@ -10,6 +17,7 @@ import org.overture.ast.annotations.Annotation;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.modules.AModuleModules;
@@ -24,8 +32,8 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.parser.syntax.StatementReader;
 
 /**
- * @author nick
- *
+ * The default implementation of the annotation parser in ASTAnnotation. Most user
+ * annotations will extend this class.
  */
 public class ASTAnnotationAdapter extends Annotation implements ASTAnnotation
 {
@@ -34,9 +42,10 @@ public class ASTAnnotationAdapter extends Annotation implements ASTAnnotation
 		super();
 	}
 
-	protected void parseException(String message) throws LexException
+	protected void parseException(String message, ILexLocation location) throws LexException
 	{
-		throw new LexException(0, "Malformed @Annotation: " + message, (LexLocation) ast.getName().getLocation());
+		System.err.println("Malformed @Annotation: " + message + " " + location);
+		throw new LexException(0, "Malformed @Annotation: " + message, (LexLocation) location);
 	}
 	
 	/**
@@ -64,7 +73,7 @@ public class ASTAnnotationAdapter extends Annotation implements ASTAnnotation
 	
 			if (ltr.getLast().isNot(VDMToken.KET))
 			{
-				parseException("Malformed @Annotation");
+				parseException("Malformed @Annotation", ltr.getLast().getLocation());
 			}
 		}
 		
