@@ -2144,12 +2144,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 			for (ARecordModifier rm : node.getModifiers())
 			{
-				PType mtype = rm.getValue().apply(THIS, question.newConstraint(null));
-				modTypes.add(mtype);
 				AFieldField f = question.assistantFactory.createARecordInvariantTypeAssistant().findField(node.getRecordType(), rm.getTag().getName());
 
 				if (f != null)
 				{
+					PType mtype = rm.getValue().apply(THIS, question.newConstraint(f.getType()));
+					modTypes.add(mtype);
+
 					if (!question.assistantFactory.getTypeComparator().compatible(f.getType(), mtype))
 					{
 						TypeCheckerErrors.report(3130,

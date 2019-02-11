@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="27" line="24" message="Value is not of the right type" messageType="error" number="3327" resource="recordmodifierexpr-10.vdm"/>
+<message column="27" line="25" message="Value is not of the right type" messageType="error" number="3327" resource="recordmodifierexpr-10.vdm"/>
 <message column="10" line="23" message="Modifier for n should be nat1" messageType="error" number="3130" resource="recordmodifierexpr-10.vdm"/>
+<message column="32" line="27" message="Value is not of the right type" messageType="error" number="3327" resource="recordmodifierexpr-10.vdm"/>
+<message column="34" line="28" message="Value is not of the right type" messageType="error" number="3327" resource="recordmodifierexpr-10.vdm"/>
 <message column="10" line="23" message="Modifier for r should be real" messageType="error" number="3130" resource="recordmodifierexpr-10.vdm"/>
 <result/>
 </testResult>
