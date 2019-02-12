@@ -3,6 +3,5 @@
 <message column="1" line="5" message="Definition 'a' not used" messageType="warning" number="5000" resource="oldname-01.vdm"/>
 <message column="1" line="12" message="Definition 'Test' not used" messageType="warning" number="5000" resource="oldname-01.vdm"/>
 <message column="11" line="14" message="State variable 'OldNameTest`a~' cannot be accessed from this context" messageType="error" number="3302" resource="oldname-01.vdm"/>
-<message column="11" line="14" message="State variable 'OldNameTest`a~' cannot be accessed from this context" messageType="error" number="3302" resource="oldname-01.vdm"/>
 <result/>
 </testResult>

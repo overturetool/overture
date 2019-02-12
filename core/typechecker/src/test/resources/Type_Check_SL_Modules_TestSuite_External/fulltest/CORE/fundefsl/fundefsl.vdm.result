@@ -9,8 +9,8 @@
 <message column="14" line="76" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefsl.vdm"/>
 <message column="27" line="109" message="Definition 'n3' not used" messageType="warning" number="5000" resource="fundefsl.vdm"/>
 <message column="3" line="114" message="Recursive function has no measure" messageType="warning" number="5012" resource="fundefsl.vdm"/>
-<message column="23" line="115" message="Definition 'c' not used" messageType="warning" number="5000" resource="fundefsl.vdm"/>
 <message column="21" line="115" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefsl.vdm"/>
+<message column="23" line="115" message="Definition 'c' not used" messageType="warning" number="5000" resource="fundefsl.vdm"/>
 <message column="14" line="115" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefsl.vdm"/>
 <message column="12" line="152" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefsl.vdm"/>
 <message column="7" line="27" message="'in set' expression is always false" messageType="error" number="3319" resource="fundefsl.vdm"/>
