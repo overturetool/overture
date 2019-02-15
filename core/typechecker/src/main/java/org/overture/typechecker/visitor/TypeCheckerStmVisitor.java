@@ -136,10 +136,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAnnotatedStm(AAnnotatedStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.getAnnotation().apply(THIS, question);		// Check annotation first?
-		beforeAnnotation(node.getAnnotation(), node, question);
+		TypeCheckInfo unconstrained = question.newConstraint(null);
+		node.getAnnotation().apply(THIS, unconstrained);		// Check annotation first?
+		beforeAnnotation(node.getAnnotation(), node, unconstrained);
 		PType result = node.getStmt().apply(THIS, question);
-		afterAnnotation(node.getAnnotation(), node, question);
+		afterAnnotation(node.getAnnotation(), node, unconstrained);
 		node.setType(result);
 		return result;
 	}
