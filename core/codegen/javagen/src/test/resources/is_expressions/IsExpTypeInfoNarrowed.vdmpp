@@ -1,0 +1,21 @@
+class Entry
+
+types
+
+functions
+
+f1 : seq of nat -> bool
+f1 (-) == true;
+
+f2 : seq of ? -> bool
+f2 (xs) ==
+  let x : ? = xs(1)
+  in
+    is_(x, seq of ?) and f1(x)
+
+operations
+
+public static Run : () ==> ?
+Run () == f2([1,2,3]);
+
+end Entry
