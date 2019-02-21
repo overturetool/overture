@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let search = lambda x : nat & x = 2
+in
+  return fun[nat1](search, [1,2,3])
+
+functions
+
+fun[@T] : (@T -> bool) * seq of nat1 -> bool
+fun (search, res) == search(res(2));
+
+
+end Entry

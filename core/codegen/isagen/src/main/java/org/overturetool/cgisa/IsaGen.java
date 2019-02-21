@@ -50,6 +50,12 @@ import org.overturetool.cgisa.transformations.StateInit;
  */
 public class IsaGen extends CodeGenBase {
 
+    public IsaGen()
+    {
+        this.getSettings().setAddStateInvToModule(false);
+        this.getSettings().setGenerateInvariants(true);
+    }
+
     public static String vdmExp2IsaString(PExp exp) throws AnalysisException,
             org.overture.codegen.ir.analysis.AnalysisException {
         IsaGen ig = new IsaGen();

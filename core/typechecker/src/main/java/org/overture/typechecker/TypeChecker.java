@@ -96,6 +96,11 @@ abstract public class TypeChecker
 			return;		// For now, to allow us to skip if there are issues.
 		}
 		
+		if (getErrorCount() > 0)
+		{
+			return;		// Can't really check everything until it's clean
+		}
+		
 		Map<ILexNameToken, LexNameSet> dependencies = new HashMap<ILexNameToken, LexNameSet>();
 		LexNameSet skip = new LexNameSet();
 		PDefinitionAssistantTC assistant = assistantFactory.createPDefinitionAssistant();

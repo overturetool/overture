@@ -19,7 +19,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.6.3-SNAPSHOT</version>
+  <version>2.6.5-SNAPSHOT</version>
 
   <name>The Overture Tool Platform root</name>
   <description>

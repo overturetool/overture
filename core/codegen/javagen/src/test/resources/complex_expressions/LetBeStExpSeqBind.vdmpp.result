@@ -1,0 +1,38 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Number Run() {
+
+    return f();
+  }
+
+  public Entry() {}
+
+  private static Number f() {
+
+    Number letBeStExp_1 = null;
+    Number m = null;
+    Boolean success_1 = false;
+    VDMSeq set_1 = SeqUtil.seq(42L);
+    for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext() && !(success_1); ) {
+      m = ((Number) iterator_1.next());
+      success_1 = true;
+    }
+    if (!(success_1)) {
+      throw new RuntimeException("Let Be St found no applicable bindings");
+    }
+
+    letBeStExp_1 = m;
+    return letBeStExp_1;
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

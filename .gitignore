@@ -77,6 +77,7 @@ target/
 .metadata/
 .project
 bin
+.factorypath
 
 # Intellij metadata #
 #####################
@@ -92,7 +93,6 @@ repository/
 # Java files created by ASTgen &c #
 ###################################
 /core/parser/bin
-/core/codegen/src/main/java/org/overture/codegen/vdm2java/JavaCodeGenMain.java
 /core/ast/out.svg
 /testdata
 
@@ -122,3 +122,7 @@ documentation/sequence2.png
 documentation/sequence3.png
 documentation/sequence4.png
 documentation/UML main.ucls
+
+# Emacs related #
+#################
+.meghanada/

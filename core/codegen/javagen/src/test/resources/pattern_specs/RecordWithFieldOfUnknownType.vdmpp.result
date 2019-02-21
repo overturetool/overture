@@ -1,0 +1,74 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Number Run() {
+
+    return f(new R(Tuple.mk_(1L, 2L)));
+  }
+
+  public Entry() {}
+
+  private static Number f(final R recordPattern_1) {
+
+    Boolean success_1 = true;
+    Object a = null;
+    Object b = null;
+    Tuple tuplePattern_1 = ((Tuple) recordPattern_1.f);
+    success_1 = tuplePattern_1.compatible(Object.class, Object.class);
+    if (success_1) {
+      a = ((Object) tuplePattern_1.get(0));
+      b = ((Object) tuplePattern_1.get(1));
+    }
+
+    if (!(success_1)) {
+      throw new RuntimeException("Record pattern match failed");
+    }
+
+    return ((Number) a).doubleValue() + ((Number) b).doubleValue();
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class R implements Record {
+    public Object f;
+
+    public R(final Object _f) {
+
+      f = _f != null ? _f : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R)) {
+        return false;
+      }
+
+      R other = ((R) obj);
+
+      return Utils.equals(f, other.f);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(f);
+    }
+
+    public R copy() {
+
+      return new R(f);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R" + Utils.formatFields(f);
+    }
+  }
+}
+
+##########

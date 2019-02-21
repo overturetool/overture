@@ -82,11 +82,6 @@ public class Entry {
     }
   }
 
-  private static Boolean inv_R1(final R1 r1) {
-
-    return r1.x.longValue() > 0L;
-  }
-
   private static class R2 implements Record {
     public Number x;
 
@@ -120,11 +115,6 @@ public class Entry {
 
       return "mk_Entry`R2" + Utils.formatFields(x);
     }
-  }
-
-  private static Boolean inv_R2(final R2 r2) {
-
-    return r2.x.longValue() > 0L;
   }
 }
 

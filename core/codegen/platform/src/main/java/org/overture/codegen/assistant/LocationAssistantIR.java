@@ -21,19 +21,11 @@
  */
 package org.overture.codegen.assistant;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
-import org.overture.codegen.ir.IrNodeInfo;
-import org.overture.codegen.ir.PIR;
-import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.ir.VdmNodeInfo;
+import org.overture.codegen.ir.*;
+
+import java.util.*;
 
 public class LocationAssistantIR extends AssistantBase
 {
@@ -184,5 +176,26 @@ public class LocationAssistantIR extends AssistantBase
 		});
 
 		return list;
+	}
+
+
+	public String consVdmNodeInfoStr(STypeIR t) {
+
+		StringBuilder sb = new StringBuilder();
+		INode vdmNode = AssistantBase.getVdmNode(t);
+
+		if(vdmNode != null)
+		{
+			sb.append("VDM node: " + vdmNode + ".");
+
+			ILexLocation loc = findLocation(vdmNode);
+
+			if(loc != null)
+			{
+				sb.append(" VDM node location: " + loc + ".");
+			}
+		}
+
+		return sb.toString();
 	}
 }

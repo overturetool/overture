@@ -700,6 +700,13 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 	{
 		// Example for mk_(a,b) in [mk_(1,2), mk_(3,4)] do skip;
 		PPattern pattern = node.getPatternBind().getPattern();
+
+		if(pattern == null)
+		{
+			// The pattern may appear in a type bind, e.g.: for x : nat in xs do ...
+			pattern = node.getPatternBind().getBind().getPattern();
+		}
+
 		PExp exp = node.getExp();
 		PStm stm = node.getStatement();
 		Boolean reverse = node.getReverse();

@@ -27,6 +27,9 @@ import java.util.List;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.assistant.AssistantBase;
+import org.overture.codegen.assistant.DeclAssistantIR;
+import org.overture.codegen.assistant.ExpAssistantIR;
 import org.overture.codegen.assistant.TypeAssistantIR;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
@@ -54,18 +57,7 @@ import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
 import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.statements.ASuperCallStmIR;
 import org.overture.codegen.ir.statements.SCallStmIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
-import org.overture.codegen.ir.types.AClassTypeIR;
-import org.overture.codegen.ir.types.AErrorTypeIR;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.types.ATupleTypeIR;
-import org.overture.codegen.ir.types.AUnionTypeIR;
-import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.ir.types.SMapTypeIR;
-import org.overture.codegen.ir.types.SSeqTypeIR;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
@@ -129,9 +121,11 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	private SExpIR correctTypes(SExpIR exp, STypeIR castedType)
 			throws AnalysisException
 	{
-		if ((exp.getType() instanceof AUnknownTypeIR
-				|| exp.getType() instanceof AUnionTypeIR)
-				&& !(exp instanceof ACastUnaryExpIR))
+		if ((exp.getType() instanceof AUnknownTypeIR ||
+				exp.getType() instanceof AUnionTypeIR ||
+				castedType instanceof ATemplateTypeIR) &&
+				!(exp instanceof ACastUnaryExpIR) &&
+				!exp.getType().equals(castedType))
 		{
 			ACastUnaryExpIR casted = new ACastUnaryExpIR();
 			casted.setType(castedType.clone());
@@ -145,9 +139,14 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		return exp;
 	}
 
-	private boolean correctArgTypes(List<SExpIR> args, List<STypeIR> paramTypes)
+	private boolean correctArgTypes(List<SExpIR> args, List<STypeIR> paramTypes, boolean sameSize)
 			throws AnalysisException
 	{
+		if (sameSize && args.size() != paramTypes.size())
+		{
+			return false;
+		}
+
 		if (transAssistant.getInfo().getAssistantManager().getTypeAssistant().checkArgTypes(transAssistant.getInfo(), args, paramTypes))
 		{
 			for (int k = 0; k < paramTypes.size(); k++)
@@ -346,7 +345,10 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		AIdentifierPatternIR id = new AIdentifierPatternIR();
 		id.setName(applyResultName);
 
-		AVarDeclIR resultDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, transAssistant.getInfo().getExpAssistant().consUndefinedExp());
+		org.overture.ast.node.INode vdmNode = AssistantBase.getVdmNode(node);
+		DeclAssistantIR declAssist = transAssistant.getInfo().getDeclAssistant();
+		ExpAssistantIR expAssist = transAssistant.getInfo().getExpAssistant();
+		AVarDeclIR resultDecl = declAssist.consLocalVarDecl(vdmNode, resultType, id, expAssist.consUndefinedExp());
 
 		AIdentifierVarExpIR resultVar = new AIdentifierVarExpIR();
 		resultVar.setSourceNode(node.getSourceNode());
@@ -365,7 +367,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			AIdentifierPatternIR objId = new AIdentifierPatternIR();
 			objId.setName(objName);
 
-			AVarDeclIR objectDecl = transAssistant.getInfo().getDeclAssistant().consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
+			AVarDeclIR objectDecl = declAssist.consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
 
 			replacementBlock.getLocalDefs().add(objectDecl);
 
@@ -581,8 +583,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			LinkedList<STypeIR> paramTypes = methodType.getParams();
 
 			LinkedList<SExpIR> args = node.getArgs();
-
-			correctArgTypes(args, paramTypes);
+			correctArgTypes(args, paramTypes, false);
 		}
 	}
 
@@ -597,22 +598,6 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	{
 		LinkedList<SExpIR> args = node.getArgs();
 
-		boolean hasUnionTypes = false;
-
-		for (SExpIR arg : args)
-		{
-			if (arg.getType() instanceof AUnionTypeIR)
-			{
-				hasUnionTypes = true;
-				break;
-			}
-		}
-
-		if (!hasUnionTypes)
-		{
-			return;
-		}
-
 		STypeIR type = node.getType();
 
 		if (type instanceof AClassTypeIR)
@@ -626,7 +611,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 						continue;
 					}
 
-					if (correctArgTypes(args, method.getMethodType().getParams()))
+					if (correctArgTypes(args, method.getMethodType().getParams(), true))
 					{
 						return;
 					}
@@ -649,10 +634,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 			List<STypeIR> fieldTypes = transAssistant.getInfo().getAssistantManager().getTypeAssistant().getFieldTypes(record);
 
-			if (correctArgTypes(args, fieldTypes))
-			{
-				return;
-			}
+			correctArgTypes(args, fieldTypes, true);
 		}
 	}
 
@@ -707,7 +689,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 		if (methodType != null)
 		{
-			correctArgTypes(args, methodType.getParams());
+			correctArgTypes(args, methodType.getParams(), true);
 		}
 	}
 
@@ -781,7 +763,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 			if (methodType != null)
 			{
-				correctArgTypes(callCopy.getArgs(), methodType.getParams());
+				correctArgTypes(callCopy.getArgs(), methodType.getParams(), true);
 			} else
 			{
 				// It's possible (due to the way union types work) that the method type for the

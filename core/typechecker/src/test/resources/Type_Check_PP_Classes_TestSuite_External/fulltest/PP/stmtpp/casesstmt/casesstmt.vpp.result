@@ -23,8 +23,6 @@
 <message column="7" line="7" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="casesstmt.vpp"/>
 <message column="7" line="7" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp"/>
 <message column="31" line="7" message="Right hand of and is not bool" messageType="error" number="3066" resource="casesstmt.vpp"/>
-<message column="3" line="4" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt.vpp"/>
-<message column="3" line="18" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt.vpp"/>
 <message column="10" line="26" message="Matching expression is not a set type" messageType="error" number="3206" resource="casesstmt.vpp"/>
 <message column="10" line="26" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp"/>
 <message column="32" line="26" message="Left hand of / is not numeric" messageType="error" number="3139" resource="casesstmt.vpp"/>

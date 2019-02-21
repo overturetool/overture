@@ -1,0 +1,16 @@
+class Entry
+
+functions
+
+f : () -> nat 
+f () ==
+let m in seq [42] be st true
+in
+  m;
+
+operations
+
+public static Run : () ==> nat
+Run () == f();
+  
+end Entry

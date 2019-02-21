@@ -1,0 +1,61 @@
+class Entry
+
+types
+
+RecA ::
+  a : int
+  b : int;
+
+RecB ::
+  c : bool
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+return [fun[nat](0),
+        fun[nat](-1),
+        fun[nat1](1),
+        fun[nat1](0),
+        fun[int](-1),
+        fun[int](1.5),
+        fun[real](1.5),
+        fun[real](nil),
+        fun[rat](1.5),
+        fun[rat](mk_token("x")),
+        fun[bool](true),
+        fun[bool](32),
+        fun[char]('a'),
+        fun[char](42),
+        fun[token](mk_token("x")),
+        fun[token](1),
+        fun[<A>](<A>),
+        fun[<B>](<A>),
+        fun[<A>|<B>](<A>),
+        fun[<A>|<B>](<C>),
+        fun[?](nil),
+        fun[RecA](mk_RecA(1,2)),
+        fun[RecB](mk_RecA(1,2)),
+        fun2[bool,real](2.5),
+        fun2[bool,nat](2.5),
+        fun2[<A>,<B>](<B>),
+        fun2[<B>,<C>](<A>),
+        -- Passing of polymorphic types
+        isType[nat](0),
+        isType[nat](-1)];
+
+functions
+
+fun[@T] : ? -> bool
+fun (v) == is_(v,@T);
+
+fun2[@T,@P]: ? -> bool
+fun2(v) == is_(v,@T | @P);
+
+isType[@T]: ? -> bool
+isType(x) == isType2[@T](x);
+
+isType2[@T]: ? -> bool
+isType2(x) == is_(x,@T)
+
+end Entry

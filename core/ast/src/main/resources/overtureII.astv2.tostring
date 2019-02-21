@@ -147,6 +147,8 @@ import org.overture.ast.util.ToStringUtil;
 %pattern->map = "" + $($[maplets]$.isEmpty() ? "{|->}" : Utils.listToString("{", $[maplets]$, ", ", "}"))$
 %pattern->object = "obj_" [classname]  "(" + $Utils.listToString($[fields]$)$ + ")"
 
+%patternBind->def = "pattern=" [pattern] ", bind=" [bind] ", defs=(" + $Utils.listToString($[defs]$)$ + "), type=" [type]
+
   
 
 //  Definitions

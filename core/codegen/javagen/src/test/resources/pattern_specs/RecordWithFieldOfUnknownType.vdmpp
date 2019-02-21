@@ -1,0 +1,17 @@
+class Entry
+
+types 
+
+	R ::
+		f : ?;
+	
+operations
+
+public static Run : () ==> nat
+Run () == return f(mk_R(mk_(1,2)));	
+
+functions 
+	f: R -> nat
+	f(mk_R(mk_(a,b))) == a + b;
+
+end Entry

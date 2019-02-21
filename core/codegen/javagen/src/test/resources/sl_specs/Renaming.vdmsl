@@ -1,0 +1,48 @@
+module Entry
+
+exports all
+imports from A all,
+        from A values Val renamed RenamedVal,
+        from A types Type renamed RenamedType,
+        from A functions fun renamed renamedFun,
+        from A operations op renamed renamedOp
+definitions
+
+operations
+
+Run : () ==> A`Type
+Run () == 
+let a : RenamedType = RenamedVal + A`Val
+in
+    return a + renamedFun() + A`fun() + renamedOp() + A`op() + util();
+
+-- Renaming that appears in call statements
+util : () ==> nat
+util () == renamedOp();
+
+end Entry
+
+module A
+
+exports all
+definitions
+
+values
+
+Val = 5;
+
+types
+
+Type = nat;
+
+functions
+
+fun : () -> nat
+fun () == 42;
+
+operations
+
+op : () ==> nat
+op () == return 43;
+
+end A
