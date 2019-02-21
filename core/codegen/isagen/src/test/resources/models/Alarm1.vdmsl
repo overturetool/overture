@@ -1,0 +1,6 @@
+types
+    Period = token;
+
+    ExpertId = token;
+
+    Qualification = <Elec> | <Mech> | <Bio> | <Chem>;

@@ -35,7 +35,7 @@ import org.overture.core.testing.PathsProvider;
  * @author ldc
  */
 @RunWith(Parameterized.class)
-@Ignore
+
 public class IsaGenModelTest extends IsaGenParamTest
 {
 
