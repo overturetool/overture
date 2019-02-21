@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -176,6 +177,12 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				{
 					AVariableExp varExp = (AVariableExp) source;
 					PType varDefType = varExp.getVardef().getType();
+					
+					while(varDefType instanceof ANamedInvariantType)
+					{
+						varDefType = ((ANamedInvariantType) varDefType).getType();
+					}
+					
 					if((varDefType instanceof AUnknownType ||
 							varDefType instanceof AUnionType ||
 							castedType instanceof AParameterType) &&
