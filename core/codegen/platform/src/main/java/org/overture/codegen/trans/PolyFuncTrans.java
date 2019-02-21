@@ -18,7 +18,25 @@ import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.AMethodInstantiationExpIR;
 import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
 import org.overture.codegen.ir.expressions.ATypeArgExpIR;
-import org.overture.codegen.ir.types.*;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AExternalTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMapMapTypeIR;
+import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.ASetSetTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
@@ -46,6 +64,9 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
     public static final String CHAR = "CHAR";
     public static final String TOKEN = "TOKEN";
     public static final String STRING = "STRING";
+    public static final String SEQ_OF_ANYTHING = "SEQ_OF_ANYTHING";
+    public static final String SET_OF_ANYTHING = "SET_OF_ANYTHING";
+    public static final String MAP_ANYTHING_TO_ANYTHING = "MAP_ANYTHING_TO_ANYTHING";
     public static final String UNKNOWN = "UNKNOWN";
 
     public static final String TYPE_NOT_SUPPORTED = "TYPE_NOT_SUPPORTED";
@@ -231,6 +252,40 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
                     {
                         name = STRING;
                     }
+					else if (type instanceof ASeqSeqTypeIR) {
+						ASeqSeqTypeIR seqType = ((ASeqSeqTypeIR) type);
+						STypeIR seqOf = seqType.getSeqOf();
+
+						if (seqOf instanceof AUnknownTypeIR && !seqType.getSeq1()) {
+							name = SEQ_OF_ANYTHING;
+						} else {
+							issueUnsupportedWarning(methodInst);
+							name = getUnsupportedTypeFieldName();
+						}
+					} else if (type instanceof ASetSetTypeIR) {
+						ASetSetTypeIR setType = ((ASetSetTypeIR) type);
+						STypeIR setOf = setType.getSetOf();
+
+						// set1 is not accounted for (it's not supported by the IR)
+						if (setOf instanceof AUnknownTypeIR) {
+							name = SET_OF_ANYTHING;
+						} else {
+							issueUnsupportedWarning(methodInst);
+							name = getUnsupportedTypeFieldName();
+						}
+					} else if (type instanceof AMapMapTypeIR) {
+						AMapMapTypeIR mapType = ((AMapMapTypeIR) type);
+						STypeIR from = mapType.getFrom();
+						STypeIR to = mapType.getTo();
+
+						// Injective maps are not accounted for
+						if (from instanceof AUnknownTypeIR && to instanceof AUnknownTypeIR) {
+							name = MAP_ANYTHING_TO_ANYTHING;
+						} else {
+							issueUnsupportedWarning(methodInst);
+							name = getUnsupportedTypeFieldName();
+						}
+					}
                     else if(type instanceof AUnknownTypeIR)
                     {
                         name = UNKNOWN;
@@ -266,7 +321,7 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
 
     public void issueUnsupportedWarning(AMethodInstantiationExpIR methodInst) {
         assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only " +
-                "works for basic types, quotes, union of quotes, strings, polymorphic types and records");
+                "works for basic types, set of ?, seq of ?, map ? to ?, quotes, union of quotes, strings, polymorphic types and records");
     }
 
     public String getUnsupportedTypeFieldName() {

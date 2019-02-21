@@ -35,8 +35,11 @@ public class Utils
 	public static final Object CHAR = new Object();
 	public static final Object TOKEN = new Object();
 	public static final Object STRING = new Object();
+	public static final Object SEQ_OF_ANYTHING = new Object();
+	public static final Object SET_OF_ANYTHING = new Object();
+	public static final Object MAP_ANYTHING_TO_ANYTHING = new Object();
 	public static final Object UNKNOWN = new Object();
-	// Only basic types, quotes, union of quotes, strings, polymorphic types, the unknown type and records can currently be used as polymorphic type arguments
+	// Only basic types, set of ?, seq of ?, map ? to ?, quotes, union of quotes, strings, polymorphic types, the unknown type and records can currently be used as polymorphic type arguments
 	public static final Object TYPE_NOT_SUPPORTED = new Object();
 
 	public static boolean isVoidValue(Object value)
@@ -324,6 +327,18 @@ public class Utils
 		else if(type == STRING)
 		{
 			return exp instanceof String;
+		}
+		else if(type == SEQ_OF_ANYTHING)
+		{
+			return exp instanceof VDMSeq;
+		}
+		else if(type == SET_OF_ANYTHING)
+		{
+			return exp instanceof VDMSet;
+		}
+		else if(type == MAP_ANYTHING_TO_ANYTHING)
+		{
+			return exp instanceof VDMMap;
 		}
 		else if(type == UNKNOWN)
 		{
