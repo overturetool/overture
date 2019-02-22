@@ -149,159 +149,162 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
 
             for(STypeIR type : methodInst.getActualTypes())
             {
-                if(type instanceof AQuoteTypeIR)
+            	SExpIR expToAdd = consTypeArg(methodInst, type);
+                
+                if(expToAdd != null)
                 {
-                    AQuoteLiteralExpIR qt = new AQuoteLiteralExpIR();
-                    qt.setValue(((AQuoteTypeIR) type).getValue());
-                    node.getArgs().add(qt);
-                }
-                else if(type instanceof ARecordTypeIR)
-                {
-                    ATypeArgExpIR typeArg = new ATypeArgExpIR();
-                    typeArg.setType(type.clone());
-                    node.getArgs().add(typeArg);
-                }
-                else if(type instanceof ATemplateTypeIR)
-                {
-                    ATemplateTypeIR templateType = (ATemplateTypeIR) type;
-                    String paramName = toTypeArgName(templateType);
-                    AIdentifierVarExpIR templateTypeArg = assist.getInfo().getExpAssistant().consIdVar(paramName, templateType.clone());
-                    node.getArgs().add(templateTypeArg);
-                }
-                else if(type instanceof AUnionTypeIR)
-                {
-                    AUnionTypeIR unionType = (AUnionTypeIR) type;
-
-                    if(assist.getInfo().getTypeAssistant().isUnionOfType(unionType, AQuoteTypeIR.class))
-                    {
-                        AExplicitVarExpIR setConstructorMember = consTypeArg(getSetUtil());
-                        setConstructorMember.setName(getSetMethodName());
-
-                        AExternalTypeIR setType = new AExternalTypeIR();
-                        setType.setName(getVdmSet());
-
-                        AApplyExpIR setConstructor = new AApplyExpIR();
-                        setConstructor.setType(setType);
-                        setConstructor.setRoot(setConstructorMember);
-
-                        for(STypeIR t : unionType.getTypes())
-                        {
-                            AQuoteLiteralExpIR qt = new AQuoteLiteralExpIR();
-                            qt.setType(t.clone());
-                            if(t instanceof AQuoteTypeIR)
-                            {
-                                qt.setValue(((AQuoteTypeIR) t).getValue());
-                            }
-                            else
-                            {
-                                // Should never happen
-                                log.warn("Expected type to be a quote type but got " + t);
-                            }
-                            setConstructor.getArgs().add(qt);
-                        }
-
-                        node.getArgs().add(setConstructor);
-
-                    }
-                    else {
-                        issueUnsupportedWarning(methodInst);
-                        AExplicitVarExpIR typeArg = consTypeArg(getUtilClass());
-                        String name = getUnsupportedTypeFieldName();
-                        typeArg.setName(name);
-                        node.getArgs().add(typeArg);
-                    }
-                }
-                else
-                {
-                    AExplicitVarExpIR typeArg = consTypeArg(getUtilClass());
-
-                    String name;
-                    if(type instanceof ANatNumericBasicTypeIR)
-                    {
-                        name = NAT;
-                    }
-                    else if(type instanceof ANat1NumericBasicTypeIR)
-                    {
-                        name = NAT1;
-                    }
-                    else if(type instanceof AIntNumericBasicTypeIR)
-                    {
-                        name = INT;
-                    }
-                    else if(type instanceof ARealNumericBasicTypeIR)
-                    {
-                        name = REAL;
-                    }
-                    else if(type instanceof ARatNumericBasicTypeIR)
-                    {
-                        name = RAT;
-                    }
-                    else if(type instanceof ABoolBasicTypeIR)
-                    {
-                        name = BOOL;
-                    }
-                    else if(type instanceof ACharBasicTypeIR)
-                    {
-                        name = CHAR;
-                    }
-                    else if(type instanceof ATokenBasicTypeIR)
-                    {
-                        name = TOKEN;
-                    }
-                    else if(type instanceof AStringTypeIR)
-                    {
-                        name = STRING;
-                    }
-					else if (type instanceof ASeqSeqTypeIR) {
-						ASeqSeqTypeIR seqType = ((ASeqSeqTypeIR) type);
-						STypeIR seqOf = seqType.getSeqOf();
-
-						if (seqOf instanceof AUnknownTypeIR && !seqType.getSeq1()) {
-							name = SEQ_OF_ANYTHING;
-						} else {
-							issueUnsupportedWarning(methodInst);
-							name = getUnsupportedTypeFieldName();
-						}
-					} else if (type instanceof ASetSetTypeIR) {
-						ASetSetTypeIR setType = ((ASetSetTypeIR) type);
-						STypeIR setOf = setType.getSetOf();
-
-						// set1 is not accounted for (it's not supported by the IR)
-						if (setOf instanceof AUnknownTypeIR) {
-							name = SET_OF_ANYTHING;
-						} else {
-							issueUnsupportedWarning(methodInst);
-							name = getUnsupportedTypeFieldName();
-						}
-					} else if (type instanceof AMapMapTypeIR) {
-						AMapMapTypeIR mapType = ((AMapMapTypeIR) type);
-						STypeIR from = mapType.getFrom();
-						STypeIR to = mapType.getTo();
-
-						// Injective maps are not accounted for
-						if (from instanceof AUnknownTypeIR && to instanceof AUnknownTypeIR) {
-							name = MAP_ANYTHING_TO_ANYTHING;
-						} else {
-							issueUnsupportedWarning(methodInst);
-							name = getUnsupportedTypeFieldName();
-						}
-					}
-                    else if(type instanceof AUnknownTypeIR)
-                    {
-                        name = UNKNOWN;
-                    }
-                    else
-                    {
-                        issueUnsupportedWarning(methodInst);
-                        name = getUnsupportedTypeFieldName();
-                    }
-                    typeArg.setName(name);
-
-                    node.getArgs().add(typeArg);
+                	node.getArgs().add(expToAdd);
                 }
             }
         }
     }
+
+	private SExpIR consTypeArg(AMethodInstantiationExpIR methodInst, STypeIR type) {
+		SExpIR expToAdd = null;
+		if(type instanceof AQuoteTypeIR)
+		{
+		    AQuoteLiteralExpIR qt = new AQuoteLiteralExpIR();
+		    qt.setValue(((AQuoteTypeIR) type).getValue());
+		    expToAdd = qt;
+		}
+		else if(type instanceof ARecordTypeIR)
+		{
+		    ATypeArgExpIR typeArg = new ATypeArgExpIR();
+		    typeArg.setType(type.clone());
+		    expToAdd = typeArg;
+		}
+		else if(type instanceof ATemplateTypeIR)
+		{
+		    ATemplateTypeIR templateType = (ATemplateTypeIR) type;
+		    String paramName = toTypeArgName(templateType);
+		    AIdentifierVarExpIR templateTypeArg = assist.getInfo().getExpAssistant().consIdVar(paramName, templateType.clone());
+		    expToAdd = templateTypeArg;
+		}
+		else if(type instanceof AUnionTypeIR)
+		{
+		    AUnionTypeIR unionType = (AUnionTypeIR) type;
+
+		    if(assist.getInfo().getTypeAssistant().isUnionOfNonCollectionTypes(unionType))
+		    {
+		        AExplicitVarExpIR setConstructorMember = consTypeArg(getSetUtil());
+		        setConstructorMember.setName(getSetMethodName());
+
+		        AExternalTypeIR setType = new AExternalTypeIR();
+		        setType.setName(getVdmSet());
+
+		        AApplyExpIR setConstructor = new AApplyExpIR();
+		        setConstructor.setType(setType);
+		        setConstructor.setRoot(setConstructorMember);
+
+		        for(STypeIR t : unionType.getTypes())
+		        {
+		            setConstructor.getArgs().add(consTypeArg(methodInst, t));
+		        }
+
+		        expToAdd = setConstructor;
+		    }
+		    else {
+		        issueUnsupportedWarning(methodInst);
+		        AExplicitVarExpIR typeArg = consTypeArg(getUtilClass());
+		        String name = getUnsupportedTypeFieldName();
+		        typeArg.setName(name);
+		        expToAdd = typeArg;
+		    }
+		}
+		else
+		{
+		    AExplicitVarExpIR typeArg = consTypeArgFlag(methodInst, type);
+		    expToAdd = typeArg;
+		}
+		return expToAdd;
+	}
+
+	private AExplicitVarExpIR consTypeArgFlag(AMethodInstantiationExpIR methodInst, STypeIR type) {
+		AExplicitVarExpIR typeArg = consTypeArg(getUtilClass());
+
+		String name;
+		if(type instanceof ANatNumericBasicTypeIR)
+		{
+		    name = NAT;
+		}
+		else if(type instanceof ANat1NumericBasicTypeIR)
+		{
+		    name = NAT1;
+		}
+		else if(type instanceof AIntNumericBasicTypeIR)
+		{
+		    name = INT;
+		}
+		else if(type instanceof ARealNumericBasicTypeIR)
+		{
+		    name = REAL;
+		}
+		else if(type instanceof ARatNumericBasicTypeIR)
+		{
+		    name = RAT;
+		}
+		else if(type instanceof ABoolBasicTypeIR)
+		{
+		    name = BOOL;
+		}
+		else if(type instanceof ACharBasicTypeIR)
+		{
+		    name = CHAR;
+		}
+		else if(type instanceof ATokenBasicTypeIR)
+		{
+		    name = TOKEN;
+		}
+		else if(type instanceof AStringTypeIR)
+		{
+		    name = STRING;
+		}
+		else if (type instanceof ASeqSeqTypeIR) {
+			ASeqSeqTypeIR seqType = ((ASeqSeqTypeIR) type);
+			STypeIR seqOf = seqType.getSeqOf();
+
+			if (seqOf instanceof AUnknownTypeIR && !seqType.getSeq1()) {
+				name = SEQ_OF_ANYTHING;
+			} else {
+				issueUnsupportedWarning(methodInst);
+				name = getUnsupportedTypeFieldName();
+			}
+		} else if (type instanceof ASetSetTypeIR) {
+			ASetSetTypeIR setType = ((ASetSetTypeIR) type);
+			STypeIR setOf = setType.getSetOf();
+
+			// set1 is not accounted for (it's not supported by the IR)
+			if (setOf instanceof AUnknownTypeIR) {
+				name = SET_OF_ANYTHING;
+			} else {
+				issueUnsupportedWarning(methodInst);
+				name = getUnsupportedTypeFieldName();
+			}
+		} else if (type instanceof AMapMapTypeIR) {
+			AMapMapTypeIR mapType = ((AMapMapTypeIR) type);
+			STypeIR from = mapType.getFrom();
+			STypeIR to = mapType.getTo();
+
+			// Injective maps are not accounted for
+			if (from instanceof AUnknownTypeIR && to instanceof AUnknownTypeIR) {
+				name = MAP_ANYTHING_TO_ANYTHING;
+			} else {
+				issueUnsupportedWarning(methodInst);
+				name = getUnsupportedTypeFieldName();
+			}
+		}
+		else if(type instanceof AUnknownTypeIR)
+		{
+		    name = UNKNOWN;
+		}
+		else
+		{
+		    issueUnsupportedWarning(methodInst);
+		    name = getUnsupportedTypeFieldName();
+		}
+		typeArg.setName(name);
+		return typeArg;
+	}
 
     public AExplicitVarExpIR consTypeArg(String className) {
 
@@ -321,7 +324,8 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
 
     public void issueUnsupportedWarning(AMethodInstantiationExpIR methodInst) {
         assist.getInfo().addTransformationWarning(methodInst, "Function instantiation only " +
-                "works for basic types, set of ?, seq of ?, map ? to ?, quotes, union of quotes, strings, polymorphic types and records");
+                "works for basic types, set of ?, seq of ?, map ? to ?, quotes, unions " + 
+        		"of non-collection types, strings, polymorphic types and records");
     }
 
     public String getUnsupportedTypeFieldName() {

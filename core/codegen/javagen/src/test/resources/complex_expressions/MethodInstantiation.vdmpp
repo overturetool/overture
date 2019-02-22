@@ -19,7 +19,7 @@ else
 operations
 
 public go :  () ==> nat
-go () == return f1() + f2().f1() + new A().f1() + g[nat,char](1,'a') + h[seq of ?]([1, true]) + h[set of ?]({<A>, 'x'}) + h[map ? to ?]({1 |-> 'a'});	
+go () == return f1() + f2().f1() + new A().f1() + g[nat,char](1,'a') + h[seq of ?]([1, true]) + h[set of ?]({<A>, 'x'}) + h[map ? to ?]({1 |-> 'a'}) + h[<A> | <B> | nat](4);	
 
 public f2: () ==> A
 f2() == return g[A,real](new A(),2);

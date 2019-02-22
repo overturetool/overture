@@ -39,7 +39,7 @@ public class Utils
 	public static final Object SET_OF_ANYTHING = new Object();
 	public static final Object MAP_ANYTHING_TO_ANYTHING = new Object();
 	public static final Object UNKNOWN = new Object();
-	// Only basic types, set of ?, seq of ?, map ? to ?, quotes, union of quotes, strings, polymorphic types, the unknown type and records can currently be used as polymorphic type arguments
+	// Only basic types, set of ?, seq of ?, map ? to ?, quotes, unions of non-collection types, strings, polymorphic types, the unknown type and records can currently be used as polymorphic type arguments
 	public static final Object TYPE_NOT_SUPPORTED = new Object();
 
 	public static boolean isVoidValue(Object value)
@@ -321,7 +321,7 @@ public class Utils
 		}
 		else if(type == TYPE_NOT_SUPPORTED)
 		{
-			throw new IllegalArgumentException("Only basic types, quotes, union of quotes, strings, polymorphic types,"
+			throw new IllegalArgumentException("Only basic types, set of ?, seq of ?, map ? to ?, quotes, unions of non-collection types, strings, polymorphic types,"
 					+ " the unknown type and records can currently be used as polymorphic type arguments");
 		}
 		else if(type == STRING)
@@ -350,7 +350,7 @@ public class Utils
 
 			for(Object o : ((VDMSet) type))
 			{
-				if(exp == o)
+				if(is_(exp, o))
 				{
 					return true;
 				}
