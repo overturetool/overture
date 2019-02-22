@@ -1,5 +1,7 @@
-#if( $node.Inv && !$Isa.isRecordDecl($node))
-$Isa.trans($node.Inv)
 
+$Isa.trans( $node.Decl )
+#if( $node.Inv )
+$Isa.trans( $node.Inv )
+#else
+#invTrue ( $node.Decl )
 #end
-$Isa.trans($node.Decl)

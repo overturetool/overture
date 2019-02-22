@@ -1,6 +1,14 @@
 types
-    Period = token;
 
-    ExpertId = token;
+  Period = token;
 
-    Qualification = <Elec> | <Mech> | <Bio> | <Chem>;
+  ExpertId = token;
+
+  Qualification = <Elec> | <Mech> | <Bio> | <Chem>;
+
+  Alarm :: alarmtext : seq of char
+           quali     : Qualification;
+
+  Expert :: expertid : ExpertId
+            quali    : set of Qualification
+  inv ex == ex.quali <> {};

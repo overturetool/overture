@@ -1,5 +1,5 @@
 theory $Isa.norm($node.Name)
-  imports vdm_sl
+  imports VDMToolkit
 begin
 
 #foreach( $decl in $node.Decls )

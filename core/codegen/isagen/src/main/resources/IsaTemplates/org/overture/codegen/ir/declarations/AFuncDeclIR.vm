@@ -1,3 +1,22 @@
+#macro ( dummy $node )
+    #foreach($p in $node.FormalParams)##
+#*        *#$Isa.trans($p.pattern)##
+    #end
+#end
+
+#if ($Isa.isInvariant( $node )) ##No pre and post condition in this case
+definition
+    $node.Name :: "$Isa.transTypeParams($node.FormalParams) \<RightArrow> $Isa.trans($node.MethodType.Result)"
+    where
+    "$node.Name #dummy( $node) \<equiv> $Isa.trans($node.Body)"
+#else
+NOTINVARIANT
+
+#end
+
+
+
+
 #if ($node.Implicit)
 vdmifun $Isa.norm($node.Name)
 #if ($node.FormalParams.isEmpty())

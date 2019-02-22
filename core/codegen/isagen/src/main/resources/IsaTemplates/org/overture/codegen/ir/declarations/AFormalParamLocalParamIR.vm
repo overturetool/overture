@@ -1,1 +1,2 @@
-$Isa.trans($node.Pattern) :: "$Isa.trans($node.Type)"
+##$Isa.trans($node.Pattern) :: "$Isa.trans($node.Type)"
+$Isa.trans($node.Type)

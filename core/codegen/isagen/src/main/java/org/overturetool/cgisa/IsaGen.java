@@ -22,11 +22,17 @@
 
 package org.overturetool.cgisa;
 
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.runtime.RuntimeServices;
+import org.apache.velocity.runtime.RuntimeSingleton;
+import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.ir.CodeGenBase;
@@ -52,8 +58,29 @@ public class IsaGen extends CodeGenBase {
 
     public IsaGen()
     {
+        this.addInvTrueMacro();
         this.getSettings().setAddStateInvToModule(false);
         this.getSettings().setGenerateInvariants(true);
+    }
+    //TODO: Auto load files in macro directory
+    public static void addInvTrueMacro(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("#macro ( invTrue $node )\n" +
+                "    definition\n" +
+                "        inv_$node.Name :: $node.Name \\<RightArrow> \\<bool>\n" +
+                "        where\n" +
+                "        \"inv_$node.Name \\<equiv> inv_True\"\n" +
+                "#end");
+
+        Template template = new Template();
+        RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
+        StringReader reader = new StringReader(sb.toString());
+        try {
+            SimpleNode simpleNode = runtimeServices.parse(reader, "invTrue");
+            template.setRuntimeServices(runtimeServices);
+            template.setData(simpleNode);
+            template.initDocument();
+        }catch (Exception e){System.out.println("FUCK");}
     }
 
     public static String vdmExp2IsaString(PExp exp) throws AnalysisException,

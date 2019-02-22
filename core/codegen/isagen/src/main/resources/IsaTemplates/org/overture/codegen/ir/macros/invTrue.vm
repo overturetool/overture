@@ -1,0 +1,6 @@
+#macro ( invTrue $node )
+    definition
+        inv_$node.Name :: $node.Name \<RightArrow> \<bool>
+        where
+        "inv_$node.Name \<equiv> inv_True"
+#end

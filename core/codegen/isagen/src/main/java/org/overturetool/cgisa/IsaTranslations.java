@@ -26,6 +26,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ATokenBasicType;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
@@ -39,6 +42,8 @@ import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AVoidTypeIR;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
@@ -90,6 +95,13 @@ public class IsaTranslations {
     public String transBinds(List<? extends SMultipleBindIR> binds)
             throws AnalysisException {
         return transNodeList(binds, LIST_SEP);
+    }
+
+    public String mkFirstCharLowerCase(String x)
+    {
+        char c[] = x.toCharArray();
+        c[0] = Character.toLowerCase(c[0]);
+        return new String(c);
     }
 
     public String transNodeList(List<? extends INode> params, String sep)
@@ -251,4 +263,30 @@ public class IsaTranslations {
     public boolean isRecordDecl(ATypeDeclIR node) {
         return (node.getDecl() instanceof ARecordDeclIR);
     }
+
+    public boolean isTokenType(ANamedTypeDeclIR node){
+        return (node.getType() instanceof ATokenBasicTypeIR);
+    }
+
+    public boolean isUnionType(ANamedTypeDeclIR node){
+        return (node.getType() instanceof AUnionTypeIR);
+    }
+
+    public boolean hasInvariant(ATypeDeclIR node) {
+        return (node.getInv() != null);
+    }
+
+    public boolean isInvariant(AFuncDeclIR node)
+    {
+        if (node.parent() != null) {
+            ATypeDeclIR p = (ATypeDeclIR) node.parent();
+            return p.getInv() == node;
+        }
+        return false;
+    }
+
+//    public String invTrue(ATypeDefinition node){
+//        StringBuilder sb = new StringBuilder();
+//
+//    }
 }

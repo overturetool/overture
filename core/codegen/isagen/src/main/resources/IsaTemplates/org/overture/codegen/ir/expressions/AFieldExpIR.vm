@@ -1,1 +1,1 @@
-${Isa.trans($node.Object)}.${node.MemberName}
+${Isa.trans($node.Object)}.${Isa.trans($node.Object)}_${node.MemberName}

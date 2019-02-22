@@ -1,2 +1,6 @@
-definition "$node.Name = \<parallel>$Isa.trans($node.Type) $Isa.hackInv($node)\<parallel>"
-declare ${node.Name}_def [eval,evalp]
+#if( $Isa.isTokenType($node))
+type_synonym $node.Name = $Isa.trans($node.Type) $Isa.hackInv($node)
+#end
+#if ($Isa.isUnionType($node))
+datatype $node.Name = $Isa.trans($node.Type)
+#end
