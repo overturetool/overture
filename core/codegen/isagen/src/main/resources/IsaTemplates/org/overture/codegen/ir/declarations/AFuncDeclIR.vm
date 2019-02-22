@@ -1,6 +1,6 @@
 #macro ( dummy $node )
-    #foreach($p in $node.FormalParams)##
-#*        *#$Isa.trans($p.pattern)##
+    #foreach($p in $node.FormalParams)
+        $Isa.trans($p.pattern)##
     #end
 #end
 
