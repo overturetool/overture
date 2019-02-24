@@ -1447,7 +1447,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType resType = results.getType(node.getLocation());
 		node.setType(resType);
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseAFieldNumberExp(AFieldNumberExp node,
@@ -2144,12 +2144,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 			for (ARecordModifier rm : node.getModifiers())
 			{
-				PType mtype = rm.getValue().apply(THIS, question.newConstraint(null));
-				modTypes.add(mtype);
 				AFieldField f = question.assistantFactory.createARecordInvariantTypeAssistant().findField(node.getRecordType(), rm.getTag().getName());
 
 				if (f != null)
 				{
+					PType mtype = rm.getValue().apply(THIS, question.newConstraint(f.getType()));
+					modTypes.add(mtype);
+
 					if (!question.assistantFactory.getTypeComparator().compatible(f.getType(), mtype))
 					{
 						TypeCheckerErrors.report(3130,
