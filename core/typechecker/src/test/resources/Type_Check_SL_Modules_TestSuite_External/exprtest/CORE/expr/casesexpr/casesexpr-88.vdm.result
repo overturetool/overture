@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="11" line="35" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-88.vdm"/>
+<message column="11" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-88.vdm"/>
+<message column="11" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-88.vdm"/>
 <message column="11" line="44" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-88.vdm"/>
 <message column="11" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-88.vdm"/>
 <message column="11" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-88.vdm"/>

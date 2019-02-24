@@ -1447,7 +1447,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType resType = results.getType(node.getLocation());
 		node.setType(resType);
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override public PType caseAFieldNumberExp(AFieldNumberExp node,
