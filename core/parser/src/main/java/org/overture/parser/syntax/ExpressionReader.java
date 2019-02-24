@@ -1053,42 +1053,13 @@ public class ExpressionReader extends SyntaxReader
 
 				PExp value = args.get(0);
 
-				switch (type)
+				if (type == VDMToken.TOKEN)
 				{
-					case BOOL:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newABooleanBasicType(ve.getLocation()), value);
-						break;
-
-					case NAT:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newANatNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case NAT1:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newANatOneNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case INT:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newAIntNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case RAT:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newARationalNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case REAL:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newARealNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case CHAR:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newACharBasicType(ve.getLocation()), value);
-						break;
-
-					case TOKEN:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newATokenBasicType(ve.getLocation()), value);
-						break;
-
-					default:
-						throwMessage(2036, "Expecting mk_<type>");
+					exp = AstFactory.newAMkBasicExp(AstFactory.newATokenBasicType(ve.getLocation()), value);
+				}
+				else
+				{
+					throwMessage(2036, "Expecting mk_token");
 				}
 			} else
 			{
