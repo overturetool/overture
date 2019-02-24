@@ -16,7 +16,7 @@ public class Entry {
 
     final VDMSet hr = Utils.copy(ternaryIfExp_1);
     VDMMap mapCompResult_1 = MapUtil.map();
-    VDMSet set_1 = Utils.copy(hr);
+    VDMSet set_1 = ((VDMSet) Utils.copy(hr));
     for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
       VDMSeq ss = ((VDMSeq) iterator_1.next());
       Object obj_1 = Utils.copy(Utils.get(ss, 1L));

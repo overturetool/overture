@@ -24,6 +24,11 @@ package org.overture.codegen.trans.uniontypes;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -44,8 +49,29 @@ import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
 import org.overture.codegen.ir.declarations.SClassDeclIR;
-import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.ACardUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.AElemsUnaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
+import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMapDomainUnaryExpIR;
+import org.overture.codegen.ir.expressions.AMissingMemberRuntimeErrorExpIR;
+import org.overture.codegen.ir.expressions.AModNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.ANullExpIR;
+import org.overture.codegen.ir.expressions.ARemNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.ASeqConcatBinaryExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.SNumericBinaryExpIR;
+import org.overture.codegen.ir.expressions.SUnaryExpIR;
+import org.overture.codegen.ir.expressions.SVarExpBase;
+import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.statements.AAssignToExpStmIR;
 import org.overture.codegen.ir.statements.ABlockStmIR;
@@ -57,7 +83,19 @@ import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
 import org.overture.codegen.ir.statements.AReturnStmIR;
 import org.overture.codegen.ir.statements.ASuperCallStmIR;
 import org.overture.codegen.ir.statements.SCallStmIR;
-import org.overture.codegen.ir.types.*;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.AClassTypeIR;
+import org.overture.codegen.ir.types.AErrorTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ATemplateTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
+import org.overture.codegen.ir.types.SMapTypeIR;
+import org.overture.codegen.ir.types.SSeqTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
@@ -127,16 +165,47 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				!(exp instanceof ACastUnaryExpIR) &&
 				!exp.getType().equals(castedType))
 		{
-			ACastUnaryExpIR casted = new ACastUnaryExpIR();
-			casted.setType(castedType.clone());
-			casted.setExp(exp.clone());
-
-			transAssistant.replaceNodeWith(exp, casted);
-
-			return casted;
+			return consCorrection(exp, castedType);
+		}
+		else
+		{
+			org.overture.ast.node.INode source = AssistantBase.getVdmNode(exp);
+			
+			if(source != null)
+			{
+				if(source instanceof AVariableExp)
+				{
+					AVariableExp varExp = (AVariableExp) source;
+					PType varDefType = varExp.getVardef().getType();
+					
+					while(varDefType instanceof ANamedInvariantType)
+					{
+						varDefType = ((ANamedInvariantType) varDefType).getType();
+					}
+					
+					if((varDefType instanceof AUnknownType ||
+							varDefType instanceof AUnionType ||
+							castedType instanceof AParameterType) &&
+							!(exp instanceof ACastUnaryExpIR) &&
+							!exp.getType().equals(castedType))
+					{
+						return consCorrection(exp, castedType);
+					}
+				}
+			}
 		}
 
 		return exp;
+	}
+
+	private SExpIR consCorrection(SExpIR exp, STypeIR castedType) {
+		ACastUnaryExpIR casted = new ACastUnaryExpIR();
+		casted.setType(castedType.clone());
+		casted.setExp(exp.clone());
+
+		transAssistant.replaceNodeWith(exp, casted);
+
+		return casted;
 	}
 
 	private boolean correctArgTypes(List<SExpIR> args, List<STypeIR> paramTypes, boolean sameSize)

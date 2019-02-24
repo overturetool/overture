@@ -339,6 +339,29 @@ public class TypeAssistantIR extends AssistantBase
 		return type instanceof SBasicTypeIR;
 	}
 
+	public boolean isUnionOfNonCollectionTypes(AUnionTypeIR union)
+	{
+		LinkedList<STypeIR> types = union.getTypes();
+		
+		for(STypeIR t : types)
+		{	
+			if(t instanceof AUnionTypeIR)
+			{
+				if(!isUnionOfNonCollectionTypes((AUnionTypeIR) t))
+				{
+					return false;
+				}
+			}
+			else if(!(isBasicType(t) || t instanceof AQuoteTypeIR || t instanceof ARecordTypeIR || t instanceof ATupleTypeIR))
+			{
+				return false;
+			}
+		}
+		
+		
+		return true;
+	}
+	
 	public STypeIR getWrapperType(SBasicTypeIR basicType)
 	{
 
