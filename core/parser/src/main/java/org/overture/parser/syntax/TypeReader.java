@@ -58,7 +58,7 @@ public class TypeReader extends SyntaxReader
 
 	public PType readType() throws ParserException, LexException
 	{
-		PType type = readUnionType();
+		PType type = readDiscretionaryType();
 
 		if (lastToken().is(VDMToken.ARROW)
 				|| lastToken().is(VDMToken.TOTAL_FUNCTION))
@@ -67,15 +67,41 @@ public class TypeReader extends SyntaxReader
 			nextToken();
 			PType result = readType();
 
-			if (result instanceof AVoidType)
-			{
-				throwMessage(2070, "Function type cannot return void type");
-			}
-
 			type = AstFactory.newAFunctionType(token.location, token.is(VDMToken.ARROW), productExpand(type), result);
+		}
+		else if (type instanceof AVoidType)
+		{
+			throwMessage(2070, "Cannot use '()' type here");
 		}
 
 		return type;
+	}
+	
+	private PType readDiscretionaryType()
+			throws ParserException, LexException
+	{
+		LexToken token = lastToken();
+		ILexLocation location = token.location;
+		PType type = null;
+
+		if (token.is(VDMToken.BRA))
+		{
+			reader.push();
+
+			if (nextToken().is(VDMToken.KET))
+			{
+				type = AstFactory.newAVoidType(location);
+				nextToken();
+				reader.unpush();
+				return type;
+			}
+			else
+			{
+				reader.pop();
+			}
+		}
+
+		return readUnionType();
 	}
 
 	private PType readUnionType() throws ParserException, LexException
@@ -345,15 +371,9 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case BRA:
-				if (nextToken().is(VDMToken.KET))
-				{
-					type = AstFactory.newAVoidType(location);
-					nextToken();
-				} else
-				{
-					type = AstFactory.newABracketType(location, readType());
-					checkFor(VDMToken.KET, 2256, "Bracket mismatch");
-				}
+				nextToken();
+				type = AstFactory.newABracketType(location, readType());
+				checkFor(VDMToken.KET, 2256, "Bracket mismatch");
 				break;
 
 			case SEQ_OPEN:
@@ -393,10 +413,10 @@ public class TypeReader extends SyntaxReader
 	public AOperationType readOperationType() throws ParserException,
 			LexException
 	{
-		PType paramtype = readType();
+		PType paramtype = readDiscretionaryType();
 		LexToken arrow = lastToken();
 		checkFor(VDMToken.OPDEF, 2258, "Expecting '==>' in explicit operation type");
-		PType resulttype = readType();
+		PType resulttype = readDiscretionaryType();
 		return AstFactory.newAOperationType(arrow.location, productExpand(paramtype), resulttype);
 	}
 
