@@ -936,11 +936,21 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				for (int i = 0; i < types.size(); i++)
 				{
 					STypeIR currentType = types.get(i);
+					
+					boolean memberExists = false;
+
+					memberExists = memberExists(field.getMemberName(), field.parent(), transAssistant.getInfo().getTypeAssistant(), field, currentType);
+
+					if (!memberExists)
+					{
+						// If the member does not exist then the case should not be treated
+						continue;
+					}
 
 					AIsOfClassExpIR cond = consInstanceCheck(field.getObject(), currentType);
 					AAssignToExpStmIR castFieldObj = castFieldObj(node, field, currentType);
 
-					if (i == 0)
+					if (ifChecks.getIfExp() == null)
 					{
 						ifChecks.setIfExp(cond);
 						ifChecks.setThenStm(castFieldObj);

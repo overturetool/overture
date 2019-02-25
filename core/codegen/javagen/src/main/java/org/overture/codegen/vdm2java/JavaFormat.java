@@ -173,6 +173,11 @@ public class JavaFormat
 		}
 
 		methodClass.getTypes().add(methodType.getResult().clone());
+		
+		if(methodType.parent() != null)
+		{
+			methodType.parent().replaceChild(methodType, methodClass);
+		}
 
 		return methodClass != null ? format(methodClass) : OBJ;
 	}
