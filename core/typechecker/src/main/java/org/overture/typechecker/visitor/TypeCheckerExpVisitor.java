@@ -1436,9 +1436,18 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			if (!recOrClass)
 			{
-				TypeCheckerErrors.report(3093,
-						"Field '" + node.getField().getName()
-								+ "' applied to non-aggregate type", node.getObject().getLocation(), node.getObject());
+				if (root instanceof ARecordInvariantType && ((ARecordInvariantType)root).getOpaque())
+				{
+					TypeCheckerErrors.report(3093,
+							"Field '" + node.getField().getName()
+									+ "' applied to non-struct export", node.getObject().getLocation(), node.getObject());
+				}
+				else
+				{
+					TypeCheckerErrors.report(3093,
+							"Field '" + node.getField().getName()
+									+ "' applied to non-aggregate type", node.getObject().getLocation(), node.getObject());
+				}
 			}
 
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
