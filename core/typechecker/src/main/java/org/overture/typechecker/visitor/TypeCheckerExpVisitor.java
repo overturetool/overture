@@ -2075,10 +2075,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		node.setRecordType((ARecordInvariantType) rec);
 
-		if (node.getRecordType().getOpaque())
+		if (node.getRecordType().getOpaque() &&
+			!node.getLocation().getModule().equals(node.getRecordType().getLocation().getModule()))
 		{
 			TypeCheckerErrors.report(3127, "Type '" + node.getTypeName()
-					+ "' is not a record type", node.getLocation(), node);
+					+ "' has no struct export", node.getLocation(), node);
 			node.setType(rec);
 			return rec;
 		}
