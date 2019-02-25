@@ -1,0 +1,109 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Number Run() {
+
+    final R2 r = new R2(4L);
+    Object obj_1 = fun(Utils.copy(r));
+    Number apply_1 = null;
+    if (obj_1 instanceof R2) {
+      apply_1 = ((R2) obj_1).f;
+    } else {
+      throw new RuntimeException("Missing member: f");
+    }
+
+    return apply_1;
+  }
+
+  public Entry() {}
+
+  private static Object fun(final Object u) {
+
+    Object recModifierExp_1 = Utils.copy(u);
+
+    Number apply_2 = null;
+    if (u instanceof R2) {
+      apply_2 = ((R2) u).f;
+    } else {
+      throw new RuntimeException("Missing member: f");
+    }
+
+    if (recModifierExp_1 instanceof R2) {
+      ((R2) recModifierExp_1).f = apply_2;
+    } else {
+      throw new RuntimeException("Missing member: f");
+    }
+
+    return Utils.copy(recModifierExp_1);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class R1 implements Record {
+
+    public R1() {}
+
+    public boolean equals(final Object obj) {
+
+      return obj instanceof R1;
+    }
+
+    public int hashCode() {
+
+      return 0;
+    }
+
+    public R1 copy() {
+
+      return new R1();
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R1()";
+    }
+  }
+
+  private static class R2 implements Record {
+    public Number f;
+
+    public R2(final Number _f) {
+
+      f = _f;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R2)) {
+        return false;
+      }
+
+      R2 other = ((R2) obj);
+
+      return Utils.equals(f, other.f);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(f);
+    }
+
+    public R2 copy() {
+
+      return new R2(f);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R2" + Utils.formatFields(f);
+    }
+  }
+}
+
+##########
