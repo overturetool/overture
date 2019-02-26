@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.tests.output.base.JavaOutputTestBase;
 import org.overture.codegen.tests.output.util.OutputTestUtil;
 import org.overture.core.testing.PathsProvider;
@@ -22,11 +23,19 @@ public class SlOutputTest extends JavaOutputTestBase
 	{
 		super(nameParameter, inputParameter, resultParameter);
 	}
-
+	
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
 		return PathsProvider.computePaths(ROOT);
+	}
+	
+	@Override
+	public IRSettings getIrSettings()
+	{
+		IRSettings settings = super.getIrSettings();
+		settings.setGenerateInvariants(true);
+		return settings;
 	}
 
 	@Override

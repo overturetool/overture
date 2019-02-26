@@ -1,0 +1,18 @@
+module Entry
+exports all
+definitions 
+	
+state St of
+	field: nat
+inv mk_St(-) == 
+	let x: nat = 5
+	  in
+	  	x = 5
+end
+
+operations
+
+Run : () ==> ?
+Run () == return inv_St(mk_St(2))
+
+end Entry
