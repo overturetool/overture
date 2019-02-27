@@ -136,7 +136,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		node.setTargetType(node.getTarget().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env)));
-		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope, null, node.getTargetType(), null)));
+		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope, null, node.getTargetType(), null, question.fromModule)));
 
 		if (!question.assistantFactory.getTypeComparator().compatible(node.getTargetType(), node.getExpType()))
 		{
@@ -282,14 +282,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 			d.setType(question.assistantFactory.createPTypeAssistant().typeResolve(d.getType(), null, THIS, question));
-			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, d.getType(), question.returnType));
+			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, d.getType(), question.returnType, question.fromModule));
 		}
 
 		// For type checking purposes, the definitions are treated as
 		// local variables. At runtime (below) they have to be treated
 		// more like (updatable) state.
 
-		PType r = defaultSSimpleBlockStm(node, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, null, question.returnType));
+		PType r = defaultSSimpleBlockStm(node, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, null, question.returnType, question.fromModule));
 		local.unusedCheck(question.env);
 		node.setType(r);
 		return r;
@@ -592,7 +592,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDefs(), question.env, question.scope);
-		PType r = node.getResult().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, null, question.returnType));
+		PType r = node.getResult().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, null, question.returnType, question.fromModule));
 		local.unusedCheck();
 
 		return r;

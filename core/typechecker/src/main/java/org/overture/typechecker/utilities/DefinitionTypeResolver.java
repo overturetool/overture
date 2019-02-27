@@ -295,7 +295,8 @@ public class DefinitionTypeResolver extends
 	public void caseARenamedDefinition(ARenamedDefinition node,
 			NewQuestion question) throws AnalysisException
 	{
-		node.getDef().apply(this, question);
+		// NewQuestion newq = new NewQuestion(question.rootVisitor, question.question.newModule(node.getDef().getLocation().getModule()));
+		// node.getDef().apply(this, question);
 	}
 
 	@Override
@@ -412,7 +413,8 @@ public class DefinitionTypeResolver extends
 	public void caseAImportedDefinition(AImportedDefinition node, NewQuestion question)
 		throws AnalysisException
 	{
-		node.getDef().apply(this, question);
+		// NewQuestion newq = new NewQuestion(question.rootVisitor, question.question.newModule(node.getDef().getLocation().getModule()));
+		// node.getDef().apply(this, question);
 	}
 
 	public void updateDefs(AValueDefinition node, TypeCheckInfo question)

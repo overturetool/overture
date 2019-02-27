@@ -660,7 +660,7 @@ public class PTypeResolver extends
 			throws AnalysisException
 	{
 
-		PType deref = dereference(type, question.question.env, question.root, question.question.assistantFactory);
+		PType deref = dereference(type, question.question.env, question.root, question.question.assistantFactory, question.question.fromModule);
 
 		if (!(deref instanceof AClassType))
 		{
@@ -672,9 +672,9 @@ public class PTypeResolver extends
 	}
 
 	private static PType dereference(AUnresolvedType type, Environment env,
-			ATypeDefinition root, ITypeCheckerAssistantFactory af)
+			ATypeDefinition root, ITypeCheckerAssistantFactory af, String fromModule)
 	{
-		PDefinition def = env.findType(type.getName(), type.getLocation().getModule());
+		PDefinition def = env.findType(type.getName(), fromModule);
 
 		if (def == null)
 		{

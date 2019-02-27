@@ -395,7 +395,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		// This check returns the type of the function body in the case where
 		// all of the curried parameter sets are provided.
 
-		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, expectedResult, null));
+		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, expectedResult, null, question.fromModule));
 
 		node.setActualResult(actualResult);
 
@@ -533,7 +533,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
-			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, node.getResult().getType(), null)));
+			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, node.getResult().getType(), null, question.fromModule)));
 
 			if (!question.assistantFactory.getTypeComparator().compatible(node.getResult().getType(), node.getActualResult()))
 			{
@@ -752,7 +752,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PType expectedResult = ((AOperationType) node.getType()).getResult();
-		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult));
+		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult, question.fromModule));
 		node.setActualResult(actualResult);
 		boolean compatible = question.assistantFactory.getTypeComparator().compatible(expectedResult, node.getActualResult());
 
@@ -985,7 +985,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 
 			PType expectedResult = ((AOperationType) node.getType()).getResult();
-			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult)));
+			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult, question.fromModule)));
 
 			boolean compatible = question.assistantFactory.getTypeComparator().compatible(expectedResult, node.getActualResult());
 

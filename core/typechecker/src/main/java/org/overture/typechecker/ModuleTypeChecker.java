@@ -151,6 +151,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
+				assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 				assistantFactory.createAModuleModulesAssistant().processExports(m); // Populate exportDefs
 			}
 		}
@@ -162,6 +163,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
+				assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Populate importDefs
 			}
 		}
@@ -203,7 +205,8 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{
-				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(assistantFactory, env));
+				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc,
+						new TypeCheckInfo(assistantFactory, env).newModule(d.getLocation().getModule()));
 			} catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);
@@ -230,6 +233,7 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				if (!m.getTypeChecked())
 				{
+					assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 					Environment e = new ModuleEnvironment(assistantFactory, m);
 
 					for (PDefinition d : m.getDefs())
@@ -269,11 +273,13 @@ public class ModuleTypeChecker extends TypeChecker
 
 		for (AModuleModules m : modules)
 		{
+			assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 			assistantFactory.createAModuleModulesAssistant().processExports(m);
 		}
 
 		for (AModuleModules m : modules)
 		{
+			assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 			assistantFactory.createAModuleModulesAssistant().processImports(m, modules);
 		}
 
@@ -281,6 +287,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
+				assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Re-populate importDefs
 
 				try
