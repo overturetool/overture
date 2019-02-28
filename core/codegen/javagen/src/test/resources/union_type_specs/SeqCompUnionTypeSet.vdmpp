@@ -1,0 +1,13 @@
+class Entry
+
+functions
+
+f : seq of nat | <A> -> seq of nat
+f (xs) == [x | x in seq xs];
+
+operations
+
+public static Run : () ==> ?
+Run () == return f([1,2,3]);
+
+end Entry

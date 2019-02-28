@@ -401,6 +401,18 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes)
 			throws AnalysisException
 	{
+		if(set != null && set.getType() instanceof AUnionTypeIR)
+		{
+			AClassTypeIR iteType = new AClassTypeIR();
+			iteType.setName("Iterable");
+			
+			ACastUnaryExpIR cast = new ACastUnaryExpIR();
+			cast.setType(iteType);
+			cast.setExp(set);
+			
+			set = cast;
+		}
+		
 		// Variable names
 		String setName = tempGen.nextVarName(iteVarPrefixes.set());
 		AIdentifierVarExpIR setVar = consSetVar(setName, set);
