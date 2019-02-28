@@ -59,6 +59,7 @@ import org.overture.codegen.ir.expressions.AFieldExpIR;
 import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
 import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIndicesUnaryExpIR;
 import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
 import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
@@ -328,6 +329,12 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 
 	@Override
 	public void caseAHeadUnaryExpIR(AHeadUnaryExpIR node) throws AnalysisException {
+		
+		processSeqUnaryExp(node);
+	}
+	
+	@Override
+	public void caseAIndicesUnaryExpIR(AIndicesUnaryExpIR node) throws AnalysisException {
 		
 		processSeqUnaryExp(node);
 	}
