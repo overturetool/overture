@@ -1,0 +1,22 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  private static final Number ignorePattern_1 = 2L;
+
+  public static Object Run() {
+
+    return 52L;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{" + "ignorePattern_1 = " + Utils.toString(ignorePattern_1) + "}";
+  }
+}
+
+##########
