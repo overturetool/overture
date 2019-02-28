@@ -24,6 +24,7 @@ package org.overture.codegen.trans.uniontypes;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.types.ANamedInvariantType;
@@ -101,6 +102,8 @@ import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 {
+	protected Logger log = Logger.getLogger(this.getClass().getName());
+	
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
 	public static final String MISSING_MEMBER = "Missing member: ";
 
@@ -413,12 +416,21 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				
 				PDefinition varDef = vdmVar.getVardef();
 				
-				if(varDef != null && !varDef.getType().equals(vdmVar.getType()))
+				if(varDef != null)
 				{
-					// If the type of the variable expression is narrowed by an 'is_' check, e.g.
-					// is_(var, R1) then the type of this variable will be different from that of
-					// the variable definition.
-					return true;
+					if(varDef.getType() != null)
+					{
+						if (!varDef.getType().equals(vdmVar.getType())) {
+							// If the type of the variable expression is narrowed by an 'is_' check, e.g.
+							// is_(var, R1) then the type of this variable will be different from that of
+							// the variable definition.
+							return true;
+						}
+					}
+					else
+					{
+						log.warn("Type of variable definition '" + varDef + "' is null. Location: " + varDef.getLocation());
+					}
 				}
 			}			
 		}
