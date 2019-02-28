@@ -33,6 +33,7 @@ public class SlJavaGenTest extends JavaGenTestBase
 	{
 		IRSettings settings = super.getIrSettings();
 		settings.setGenerateInvariants(true);
+		settings.setGeneratePostConds(true);
 		return settings;
 	}
 

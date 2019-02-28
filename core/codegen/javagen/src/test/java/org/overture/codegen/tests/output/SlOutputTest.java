@@ -35,6 +35,7 @@ public class SlOutputTest extends JavaOutputTestBase
 	{
 		IRSettings settings = super.getIrSettings();
 		settings.setGenerateInvariants(true);
+		settings.setGeneratePostConds(true);
 		return settings;
 	}
 
