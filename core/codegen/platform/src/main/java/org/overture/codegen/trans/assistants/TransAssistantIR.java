@@ -44,6 +44,8 @@ import java.util.List;
 
 public class TransAssistantIR extends BaseTransformationAssistant
 {
+	public static final String ITERABLE = "Iterable";
+
 	protected IRInfo info;
 
 	private Logger log = Logger.getLogger(this.getClass().getName());
@@ -126,12 +128,20 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			elementType = ((ASeqSeqTypeIR) t).getSeqOf().clone();
 		} else
 		{
-			String vdmNodeInfo = info.getLocationAssistant().consVdmNodeInfoStr(t);
-
-			log.error("Expected set or sequence type. Got: " + t.getClass().getName() + "." + vdmNodeInfo);
-
 			elementType = new AUnknownTypeIR();
 			elementType.setSourceNode(t.getSourceNode());
+			
+			if(!(t instanceof AClassTypeIR))
+			{
+				AClassTypeIR classType = (AClassTypeIR) t;
+				
+				if(!classType.getName().equals(ITERABLE)) {
+					String vdmNodeInfo = info.getLocationAssistant().consVdmNodeInfoStr(t);
+					log.error("Expected set or sequence type. Got: " + t.getClass().getName() + "." + vdmNodeInfo);
+
+				}
+			}
+			
 		}
 
 		return elementType;
@@ -404,7 +414,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 		if(set != null && set.getType() instanceof AUnionTypeIR)
 		{
 			AClassTypeIR iteType = new AClassTypeIR();
-			iteType.setName("Iterable");
+			iteType.setName(ITERABLE);
 			
 			ACastUnaryExpIR cast = new ACastUnaryExpIR();
 			cast.setType(iteType);
