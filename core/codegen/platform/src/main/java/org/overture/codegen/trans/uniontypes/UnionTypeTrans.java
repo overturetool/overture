@@ -413,7 +413,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				
 				PDefinition varDef = vdmVar.getVardef();
 				
-				if(!varDef.getType().equals(vdmVar.getType()))
+				if(varDef != null && !varDef.getType().equals(vdmVar.getType()))
 				{
 					// If the type of the variable expression is narrowed by an 'is_' check, e.g.
 					// is_(var, R1) then the type of this variable will be different from that of
