@@ -1,0 +1,18 @@
+class m
+functions
+public f: nat -> nat
+f(x) == x;
+end m
+
+class Entry
+
+operations
+public static Run: () ==> ?
+Run() ==
+let
+  m: nat = 0,
+  n: nat = m`f(0)
+in
+  return n;
+	
+end Entry
