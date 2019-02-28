@@ -121,7 +121,7 @@ public class Log implements EvaluatePP {
     sentinel.entering(((Log_sentinel) sentinel).output);
     try {
       String output = "";
-      for (Iterator iterator_13 = messages.iterator(); iterator_13.hasNext(); ) {
+      for (Iterator iterator_13 = ((Iterable) messages).iterator(); iterator_13.hasNext(); ) {
         String m = (String) iterator_13.next();
         output = output + m + "\n";
       }
@@ -2744,7 +2744,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
   }
 
   public void run() {
-    for (Iterator iterator_14 = cmds.iterator(); iterator_14.hasNext(); ) {
+    for (Iterator iterator_14 = ((Iterable) cmds).iterator(); iterator_14.hasNext(); ) {
       Object cmd = (Object) iterator_14.next();
       SendCmd(mc, Utils.copy(cmd));
     }

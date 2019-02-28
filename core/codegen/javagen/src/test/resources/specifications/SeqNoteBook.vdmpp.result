@@ -154,7 +154,9 @@ public class NoteBook {
           SeqUtil.seq(
               'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'm', 'e', 's', 's', 'a', 'g', 'e', ' ',
               'i', 'n', 'd', 'i', 'c', 'e', 's', ' ', 'o', 'f', ' ', 'n', 'b', '1'));
-      for (Iterator iterator_1 = nb1.getMessageIndices().iterator(); iterator_1.hasNext(); ) {
+      for (Iterator iterator_1 = ((Iterable) nb1.getMessageIndices()).iterator();
+          iterator_1.hasNext();
+          ) {
         Number idx = (Number) iterator_1.next();
         IO.printf(SeqUtil.seq('%', 's', ' '), SeqUtil.seq(idx));
       }
@@ -164,7 +166,7 @@ public class NoteBook {
               'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'm', 'e', 's', 's', 'a', 'g', 'e', 's',
               ' ', 'o', 'f', ' ', 'n', 'b', '1', ' ', 'u', 's', 'i', 'n', 'g', ' ', '\'', 'e', 'l',
               'e', 'm', 's', '\'', ' ', 'o', 'p', 'e', 'r', 'a', 't', 'o', 'r'));
-      for (Iterator iterator_2 = SeqUtil.elems(nb1.getMessagesOrdered()).iterator();
+      for (Iterator iterator_2 = ((Iterable) SeqUtil.elems(nb1.getMessagesOrdered())).iterator();
           iterator_2.hasNext();
           ) {
         VDMSeq msg = (VDMSeq) iterator_2.next();
@@ -176,7 +178,9 @@ public class NoteBook {
               'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'm', 'e', 's', 's', 'a', 'g', 'e', 's',
               ' ', 'o', 'f', ' ', 'n', 'b', '1', ' ', 'u', 's', 'i', 'n', 'g', ' ', 't', 'h', 'e',
               ' ', 's', 'e', 'q', 'u', 'e', 'n', 'c', 'e', ' ', 'l', 'o', 'o', 'p'));
-      for (Iterator iterator_3 = nb1.getMessagesOrdered().iterator(); iterator_3.hasNext(); ) {
+      for (Iterator iterator_3 = ((Iterable) nb1.getMessagesOrdered()).iterator();
+          iterator_3.hasNext();
+          ) {
         VDMSeq msg = (VDMSeq) iterator_3.next();
         IO.print(SeqUtil.conc(Utils.copy(msg), SeqUtil.seq('\n')));
       }

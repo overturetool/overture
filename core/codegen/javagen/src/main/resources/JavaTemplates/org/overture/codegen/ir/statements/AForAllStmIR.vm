@@ -4,7 +4,8 @@
 #set( $elementType = $JavaFormat.formatElementType($node.getExp().getType()) )
 #set( $body = $JavaFormat.format($node.getBody()) )
 ##
-for (Iterator ${iterator} = ${exp}.iterator(); ${iterator}.hasNext();)
+## We cast $exp to in case it is masked by a union type
+for (Iterator ${iterator} = ((Iterable) ${exp}).iterator(); ${iterator}.hasNext();)
 {
 	${elementType} ${var} = (${elementType}) ${iterator}.next();
 	${body}

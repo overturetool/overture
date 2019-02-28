@@ -48,7 +48,7 @@ public class PhoneBook {
               'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'e', 'n', 't', 'r', 'i', 'e', 's', ' ',
               'i', 'n', ' ', 'p', 'b', '1', ' ', 'a', 's', ' ', '<', 'n', 'u', 'm', 'b', 'e', 'r',
               '>', ',', ' ', '<', 'n', 'a', 'm', 'e', '>', ':'));
-      for (Iterator iterator_1 = pb1.getNumbers().iterator(); iterator_1.hasNext(); ) {
+      for (Iterator iterator_1 = ((Iterable) pb1.getNumbers()).iterator(); iterator_1.hasNext(); ) {
         VDMSeq number = (VDMSeq) iterator_1.next();
         IO.print(
             SeqUtil.conc(
@@ -186,7 +186,7 @@ public class PhoneBook {
 
   public void listEntries() {
 
-    for (Iterator iterator_2 = getNames().iterator(); iterator_2.hasNext(); ) {
+    for (Iterator iterator_2 = ((Iterable) getNames()).iterator(); iterator_2.hasNext(); ) {
       VDMSeq name = (VDMSeq) iterator_2.next();
       IO.print(
           SeqUtil.conc(

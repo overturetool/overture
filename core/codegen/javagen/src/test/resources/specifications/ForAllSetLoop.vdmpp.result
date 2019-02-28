@@ -7,7 +7,7 @@ public class A {
   public void op() {
 
     final VDMSet x = SetUtil.set(new Rec(1L), new Rec(2L), new Rec(3L));
-    for (Iterator iterator_1 = x.iterator(); iterator_1.hasNext(); ) {
+    for (Iterator iterator_1 = ((Iterable) x).iterator(); iterator_1.hasNext(); ) {
       Rec e = (Rec) iterator_1.next();
       /* skip */
 
@@ -16,7 +16,9 @@ public class A {
 
   public void op1() {
 
-    for (Iterator iterator_2 = SetUtil.set(1L, 2L, 3L).iterator(); iterator_2.hasNext(); ) {
+    for (Iterator iterator_2 = ((Iterable) SetUtil.set(1L, 2L, 3L)).iterator();
+        iterator_2.hasNext();
+        ) {
       Number n = (Number) iterator_2.next();
       /* skip */
     }
@@ -24,7 +26,7 @@ public class A {
 
   public void op2() {
 
-    for (Iterator iterator_3 = SetUtil.set().iterator(); iterator_3.hasNext(); ) {
+    for (Iterator iterator_3 = ((Iterable) SetUtil.set()).iterator(); iterator_3.hasNext(); ) {
       Object e = (Object) iterator_3.next();
       /* skip */
     }
@@ -32,7 +34,7 @@ public class A {
 
   public void op3() {
 
-    for (Iterator iterator_4 = f().iterator(); iterator_4.hasNext(); ) {
+    for (Iterator iterator_4 = ((Iterable) f()).iterator(); iterator_4.hasNext(); ) {
       Number n = (Number) iterator_4.next();
       /* skip */
     }

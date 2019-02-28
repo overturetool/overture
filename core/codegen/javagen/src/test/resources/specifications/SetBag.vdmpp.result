@@ -188,7 +188,7 @@ public class Bag {
         SeqUtil.seq(
             'P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'p', 'o', 'w', 'e', 'r', ' ', 'b', 'a',
             'g', 's', ' ', 'o', 'f', ' ', 'b', 'a', 'g', '2', '.', '.', '\n'));
-    for (Iterator iterator_1 = bag2.powerBag().iterator(); iterator_1.hasNext(); ) {
+    for (Iterator iterator_1 = ((Iterable) bag2.powerBag()).iterator(); iterator_1.hasNext(); ) {
       Bag b = (Bag) iterator_1.next();
       b.printBag();
       IO.print(SeqUtil.seq('\n'));
@@ -206,7 +206,7 @@ public class Bag {
     if (Utils.equals(numbers.size(), 0L)) {
       IO.print(SeqUtil.seq(' '));
     } else {
-      for (Iterator iterator_2 = numbers.iterator(); iterator_2.hasNext(); ) {
+      for (Iterator iterator_2 = ((Iterable) numbers).iterator(); iterator_2.hasNext(); ) {
         Number e = (Number) iterator_2.next();
         IO.printf(SeqUtil.seq(' ', '%', 's', ' '), SeqUtil.seq(e));
       }
@@ -286,7 +286,7 @@ public class Bag {
 
     VDMSet powerSets = SetUtil.powerset(Utils.copy(numbers));
     VDMSet bags = SetUtil.set();
-    for (Iterator iterator_3 = powerSets.iterator(); iterator_3.hasNext(); ) {
+    for (Iterator iterator_3 = ((Iterable) powerSets).iterator(); iterator_3.hasNext(); ) {
       VDMSet s = (VDMSet) iterator_3.next();
       bags = SetUtil.union(Utils.copy(bags), SetUtil.set(new Bag(Utils.copy(s))));
     }

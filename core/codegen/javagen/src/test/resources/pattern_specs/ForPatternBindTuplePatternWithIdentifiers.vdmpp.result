@@ -8,12 +8,13 @@ public class Entry {
 
     Number result = 0L;
     for (Iterator iterator_1 =
-            SeqUtil.seq(
-                    Tuple.mk_(1L, 2L),
-                    Tuple.mk_(2L, 3L),
-                    Tuple.mk_(3L, 4L),
-                    Tuple.mk_(4L, 5L),
-                    Tuple.mk_(5L, 6L))
+            ((Iterable)
+                    SeqUtil.seq(
+                        Tuple.mk_(1L, 2L),
+                        Tuple.mk_(2L, 3L),
+                        Tuple.mk_(3L, 4L),
+                        Tuple.mk_(4L, 5L),
+                        Tuple.mk_(5L, 6L)))
                 .iterator();
         iterator_1.hasNext();
         ) {
