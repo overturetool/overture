@@ -1,4 +1,4 @@
 types
-    A :: b : char
+    A :: b : seq of char
          c : int
     inv a == a.c > 1

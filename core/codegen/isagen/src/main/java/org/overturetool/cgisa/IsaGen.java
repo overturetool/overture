@@ -22,32 +22,31 @@
 
 package org.overturetool.cgisa;
 
+import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
+import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.INode;
-import org.overture.codegen.ir.IRStatus;
-import org.overture.codegen.ir.PIR;
-import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.VdmNodeInfo;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overturetool.cgisa.transformations.GroupMutRecs;
-import org.overturetool.cgisa.transformations.SortDependencies;
-import org.overturetool.cgisa.transformations.StateInit;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overturetool.cgisa.transformations.*;
 
 /**
  * Main facade class for VDM 2 Isabelle IR
@@ -59,28 +58,35 @@ public class IsaGen extends CodeGenBase {
     public IsaGen()
     {
         this.addInvTrueMacro();
+
         this.getSettings().setAddStateInvToModule(false);
         this.getSettings().setGenerateInvariants(true);
     }
     //TODO: Auto load files in macro directory
     public static void addInvTrueMacro(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("#macro ( invTrue $node )\n" +
+        StringBuilder sb = new StringBuilder("#macro ( invTrue $node )\n" +
                 "    definition\n" +
                 "        inv_$node.Name :: $node.Name \\<RightArrow> \\<bool>\n" +
                 "        where\n" +
                 "        \"inv_$node.Name \\<equiv> inv_True\"\n" +
                 "#end");
-
+        addMacro("invTrue",new StringReader(sb.toString()));
         Template template = new Template();
-        RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
-        StringReader reader = new StringReader(sb.toString());
+    }
+
+    public static void addMacro(String name, StringReader reader){
         try {
-            SimpleNode simpleNode = runtimeServices.parse(reader, "invTrue");
+            Template template = new Template();
+            RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
+
+            SimpleNode simpleNode = runtimeServices.parse(reader, name);
             template.setRuntimeServices(runtimeServices);
             template.setData(simpleNode);
             template.initDocument();
-        }catch (Exception e){System.out.println("FUCK");}
+        } catch (ParseException e)
+        {
+            System.out.println("Failed with: " + e);
+        }
     }
 
     public static String vdmExp2IsaString(PExp exp) throws AnalysisException,
@@ -117,23 +123,56 @@ public class IsaGen extends CodeGenBase {
      */
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
+
+
+        // Add the VDMToolkit module
+        TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 = TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
+        AModuleModules isaToolkit = listTypeCheckResult1.result.
+                stream().
+                filter(mod -> mod.getName().getName().equals("VDMToolkit")).
+                findAny().
+                orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit module"));
+        super.genIrStatus(statuses, isaToolkit);
+        // Get all decls
+        IRStatus<PIR> vdmToolkitIR = statuses.stream().filter(x -> x.getIrNodeName().equals("VDMToolkit")).findAny().orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit IR node"));
+        AModuleDeclIR vdmToolkitModuleIR = (AModuleDeclIR) vdmToolkitIR.getIrNode();
+
+
         GeneratedData r = new GeneratedData();
         try {
+
+
             // Apply transformations
             for (IRStatus<PIR> status : statuses) {
-                // make init expression an op
-                StateInit stateInit = new StateInit(getInfo());
-                generator.applyPartialTransformation(status, stateInit);
+                if(status.getIrNodeName().equals("VDMToolkit")){
+                    System.out.println("Skipping VDMToolkit transformations");
+                } else {
 
-                // transform away any recursion cycles
-                GroupMutRecs groupMR = new GroupMutRecs();
-                generator.applyTotalTransformation(status, groupMR);
 
-                if (status.getIrNode() instanceof AModuleDeclIR) {
-                    AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
-                    // then sort remaining dependencies
-                    SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
-                    generator.applyPartialTransformation(status, sortTrans);
+                    // make init expression an op
+                    StateInit stateInit = new StateInit(getInfo());
+                    generator.applyPartialTransformation(status, stateInit);
+
+                    // transform away any recursion cycles
+                    GroupMutRecs groupMR = new GroupMutRecs();
+                    generator.applyTotalTransformation(status, groupMR);
+
+                    if (status.getIrNode() instanceof AModuleDeclIR) {
+                        AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
+                        // then sort remaining dependencies
+                        SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
+                        generator.applyPartialTransformation(status, sortTrans);
+                    }
+                    // Transform all token types to isa_VDMToken
+                    // Transform all nat types to isa_VDMNat
+                    // Transform all nat1 types to isa_VDMNat
+                    // Transform all int types to isa_VDMInt
+
+                    IsaBasicTypesConv invConv = new IsaBasicTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invConv);
+
+                    IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invTrans);
                 }
             }
 
@@ -168,7 +207,11 @@ public class IsaGen extends CodeGenBase {
         List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 
         for (IRStatus<PIR> status : statuses) {
-            generated.add(prettyPrintNode(pp, status));
+            if(status.getIrNodeName().equals("VDMToolkit")){
+                System.out.println("Skipping VDMToolkit transformations");
+            } else {
+                generated.add(prettyPrintNode(pp, status));
+            }
 
         }
 

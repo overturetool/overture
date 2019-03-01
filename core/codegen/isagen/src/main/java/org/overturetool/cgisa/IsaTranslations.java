@@ -22,13 +22,14 @@
 package org.overturetool.cgisa;
 
 import java.io.StringWriter;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.SBasicType;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
@@ -41,10 +42,7 @@ import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.types.ATokenBasicTypeIR;
-import org.overture.codegen.ir.types.AUnionTypeIR;
-import org.overture.codegen.ir.types.AVoidTypeIR;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -78,7 +76,8 @@ public class IsaTranslations {
     public String trans(INode node) throws AnalysisException {
         StringWriter writer = new StringWriter();
         node.apply(mergeVisitor, writer);
-
+//        AIntNumericBasicTypeIR node1 = (AIntNumericBasicTypeIR) node;
+//        node1.getNamedInvType()getNamedInvType().getName().getName();
         return writer.toString();
     }
 
@@ -89,7 +88,8 @@ public class IsaTranslations {
 
     public String transTypeParams(List<AFormalParamLocalParamIR> params)
             throws AnalysisException {
-        return transNodeList(params, TYPE_PARAM_SEP);
+        String result = transNodeList(params, TYPE_PARAM_SEP);
+        return result;
     }
 
     public String transBinds(List<? extends SMultipleBindIR> binds)
@@ -276,13 +276,94 @@ public class IsaTranslations {
         return (node.getInv() != null);
     }
 
+    public String genUnaryTypeConstructorInv(Object node, String name)
+    {
+        if(node instanceof ASeqSeqTypeIR ||
+            node instanceof ASetSetTypeIR)
+        {
+            String inv = "";
+            if(node instanceof ASeqSeqTypeIR)
+            {
+                ASeqSeqTypeIR node_ = (ASeqSeqTypeIR) node;
+                if(node_.getSeqOf() instanceof SBasicTypeBase)
+                {
+                    // In this case it is a seq of a basic type.
+                    inv= "inv_SeqElems inv_True";
+                }
+            }
+
+            return String.join(" ", inv, name);
+        }
+        else {
+            return "";
+        }
+    }
+
     public boolean isInvariant(AFuncDeclIR node)
     {
         if (node.parent() != null) {
-            ATypeDeclIR p = (ATypeDeclIR) node.parent();
-            return p.getInv() == node;
+            if(node.parent() instanceof ATypeDeclIR) {
+                ATypeDeclIR p = (ATypeDeclIR) node.parent();
+                return p.getInv() == node;
+            }
         }
         return false;
+    }
+
+    public boolean isUnaryTypeConstructor(Object node)
+    {
+        return node instanceof ASeqSeqTypeIR ||
+                node instanceof ASetSetTypeIR;
+    }
+
+    public boolean isAppliedToBasicType(ASeqSeqTypeIR node)
+    {
+        return node.getSeqOf() instanceof SBasicTypeIR;
+    }
+
+    public boolean isAppliedToBasicType(ASetSetTypeIR node)
+    {
+        return node.getSetOf() instanceof SBasicTypeIR;
+    }
+
+    public String concreteTypeInvariantForUnaryTypeConstructorInvariant(STypeIR t, String prefix)
+    {
+        if (t instanceof SBasicTypeIR)
+        {
+            SBasicTypeIR t_ = (SBasicTypeIR) t;
+            return prefix+"inv_True";
+        }
+        else {
+            return prefix+"inv_" + t.getNamedInvType().getName();
+        }
+    }
+
+    public String genInvariantsForUnaryTypeConstructor(Object node)
+    {
+        if(node instanceof ASeqSeqTypeIR){
+            ASeqSeqTypeIR node_ = (ASeqSeqTypeIR) node;
+            return concreteTypeInvariantForUnaryTypeConstructorInvariant(node_.getSeqOf(),"inv_SeqElems ");
+        }
+        if(node instanceof ASetSetTypeIR)
+        {
+            ASetSetTypeIR node_ = (ASetSetTypeIR) node;
+            return concreteTypeInvariantForUnaryTypeConstructorInvariant(node_.getSetOf(), "inv_SetElems");
+        }
+        return "genInvariantsForUnaryTypeConstructor found no match for node: " + node;
+    }
+
+    public String genInvariantsForRecordDecl(ARecordDeclIR node)
+    {
+        List<String> invs = new ArrayList<>();
+        for (AFieldDeclIR f : node.getFields())
+        {
+            Object type = f.getType();
+            if(isUnaryTypeConstructor(type))
+            {
+                invs.add(genInvariantsForUnaryTypeConstructor(type));
+            }
+        }
+        return String.join("\\<and>", invs);
     }
 
 //    public String invTrue(ATypeDefinition node){

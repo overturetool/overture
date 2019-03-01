@@ -1,0 +1,145 @@
+/*
+  Title : VDM mathematical toolkit constructs needed in Isabelle
+  Author: Leo Freitas and Casper Thule
+*/
+module VDMToolkit
+exports all
+
+/*
+@doc This VDM file defines named constructs used by the Isabelle theory file "VDMToolkit.thy". These are important so
+		 that during code generation to Isabelle, AST transformations can be type checked. This is achieved by implicitly
+		 importing all definitions from here. Their sole purpose is to allow the on-the-fly (IR) spec to be albe to check
+		 for type correctness. Definitions of such functions are provided for/by Isabelle fine-tuned automation choices
+		 for VDM mathematical toolkit (e.g. list_all instead of a explict forall for inv_SeqElems).
+
+		 By convention, evrery bridged name will start with the "isa_" keyword.
+*/
+
+definitions
+
+------------------------------------------------------------------------
+-- Basic types
+------------------------------------------------------------------------
+
+types
+/*
+@doc These types are important to ensure that type widening rules don't break in Isabelle (e.g. 0 - (x::nat) case
+		 in VDM has int type, whereas in Isabelle is always 0 with nat type.
+
+		 Even for VDM int itself, it is useful to Decorate/Bridge (in the design pattern sense) it with a synonym name
+		 in case we want to play in Isabelle with how these things are represented (e.g. int x real later on).
+
+		 This also shileds the intermediate representation Java code and Velocity templates from variations in
+		 the translation strategy (i.e. the templates are always in terms of isa_XXX), hence the whole translation
+		 strategy can be leveraged by how VDMToolkit.vdmsl and VDMToolkit.thy are designed (i.e. less Java coding needs).
+*/
+	isa_VDMToken = seq of char;
+	isa_VDMNat   = int;
+	isa_VDMNat1  = int;
+	isa_VDMInt   = int;
+
+/*
+@doc For the VDM implicit invariant checks, we have to explicitly have their equivalent in VDM so that the IR can be
+		 typechecked without a problem. The target Isabelle theory file will contain them as well.
+
+		 Their implementation is optional (i.e. same as "is not yet specified") given they will be already implemented
+		 (and particularly tailored for) in Isabelle.
+*/
+functions
+	isa_invTrue[@T]: @T -> bool
+	isa_invTrue(t) == true;
+
+	isa_invVDMNat : int -> bool
+	isa_invVDMNat(n) == n >= 0;
+
+	isa_invVDMNat1 : int -> bool
+	isa_invVDMNat1(n) == n > 0;
+
+------------------------------------------------------------------------
+-- Set types
+------------------------------------------------------------------------
+
+types
+	--@doc VDM doesn't allow for parametric type definitions, so let's use "?"
+	isa_VDMSet  = set of ?;
+	isa_VDMSet1	= set of ?;
+
+functions
+	--@doc We expect the generated IR to have the implicit invariant on VDM sets that
+	--		 all elements better fall within a unifiable (usually single) type @T.
+	isa_invVDMSet[@T] : set of @T -> bool
+	isa_invVDMSet(s) == is not yet specified; --@doc finiteness is not a construct in VDM
+
+	isa_invVDMSet1[@T] : set of @T -> bool
+	isa_invVDMSet1(s) == isa_invVDMSet[@T](s) and s <> {};
+
+	isa_invSetElems[@T]: set of @T * (@T -> bool) -> bool
+	isa_invSetElems(s, fcn_inv) == forall e in set s & fcn_inv(e);
+
+	--@doc The implementation here shows a convention within Isabelle: whenever things fail
+	--	   (i.e. cardinality of a non-fininte set), we reach undefined (i.e. user will be stuck).
+	--		 We also explicitly define the precondition so that the IR can access pre_vdm_card when needed.
+	isa_vdm_card[@T]: set of @T -> isa_VDMNat
+	isa_vdm_card(s) == if isa_invVDMSet[@T](s) then card s else undefined
+	pre
+		isa_invVDMSet[@T](s)
+	post
+		isa_invVDMSet[@T](s) => isa_invVDMNat(RESULT);
+
+------------------------------------------------------------------------
+-- Seq types
+------------------------------------------------------------------------
+
+types
+	isa_VDMSeq  = seq of ?;
+	isa_VDMSeq1	= seq of ?;
+
+functions
+	--@doc This is useful to impose type uniformity/unification under @T for "?"
+	isa_invVDMSeq[@T] : seq of @T -> bool
+	isa_invVDMSeq(xs) == is not yet specified;
+
+	isa_invVDMSeq1[@T] : seq of @T -> bool
+	isa_invVDMSeq1(xs) == isa_invVDMSeq[@T](xs) and xs <> [];
+
+	--@doc In Isabelle this is implemented with list_all for automation reasons.
+	--		 We use "elems s" rather than indexing to avoid multiple checks on duplicates.
+	isa_invSeqElems[@T]: seq of @T * (@T -> bool) -> bool
+	isa_invSeqElems(xs, fcn_inv) == forall e in set elems xs & fcn_inv(e);
+
+	--@todo We don't bother in Isabelle to define pre/post for these sequence functions
+	--		  Technically, some of then are important? Hum...
+
+	isa_len[@T]: seq of @T -> isa_VDMNat
+	isa_len(xs) == len xs
+	post
+		isa_invVDMNat(RESULT);
+
+	isa_elems[@T]: seq of @T -> set of @T
+	isa_elems(xs) == elems xs;
+
+	isa_inds[@T]: seq of @T -> set of isa_VDMNat1 -- isa_VDMSet[isa_VDMNat]
+	isa_inds(xs) == inds xs
+	post
+		(len xs = card RESULT);
+
+	isa_reverse[@T]: seq of @T -> seq of @T
+	isa_reverse(xs) == reverse xs
+	post
+		elems xs = elems RESULT;
+
+	isa_concat[@T]: seq of seq of @T -> seq of @T
+	isa_concat(xxs) == conc xxs
+	post
+		true; -- todo in VDMToolkit
+
+	isa_applyVDMSeq[@T]: seq of @T * isa_VDMNat1 -> @T
+	isa_applyVDMSeq(xs, i) == xs(i)
+	pre
+		(i in set inds xs)
+		or
+		(isa_invVDMNat1(i) and i <= len xs)
+	post
+		RESULT = xs(i);
+
+end VDMToolkit

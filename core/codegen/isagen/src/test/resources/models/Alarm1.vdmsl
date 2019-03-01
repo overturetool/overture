@@ -1,8 +1,29 @@
+functions
+-- We just need the type signature of these functions
+isa_invSeqElems[@T]: (@T -> bool) * seq of @T -> bool
+isa_invSeqElems( f,  x ) == true; --is not yet specified;
+
+isa_invSetElems[@T] : (@T -> bool) * set of @T -> bool
+isa_invSetElems( f, x) == true; -- is not yet specified
+
+isa_true[@T]: @T -> bool
+isa_true( x ) == true; --is not yet specified;
+
+isa_inv_VDMNat: nat -> bool
+isa_inv_VDMNat (-) == true; --is not yet specified
+
+
 types
 
-  Period = token;
+  A = nat;
 
-  ExpertId = token;
+  Period = seq of A;
+  -- inv p = isa_invSeqElemens[A](inv_A[A], p)
+
+  ExpertId = set of Period;
+  -- inv e = isa_invSetElems[Period](inv_p, e)
+
+  -- A function has to be created such that invariants can be called
 
   Qualification = <Elec> | <Mech> | <Bio> | <Chem>;
 
@@ -12,3 +33,8 @@ types
   Expert :: expertid : ExpertId
             quali    : set of Qualification
   inv ex == ex.quali <> {};
+
+  functions
+
+  inv_A : nat -> bool
+  inv_A(a) == isa_inv_VDMNat(a);

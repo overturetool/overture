@@ -1,3 +1,2 @@
 types
-
-t = int
+XType = int;

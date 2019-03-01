@@ -1,2 +1,5 @@
-##$Isa.trans($node.Pattern) :: "$Isa.trans($node.Type)"
-$Isa.trans($node.Type)
+#if ( $node.pattern)
+$node.pattern.name
+#else
+MISSING CASE IN AFORMALPARAMLOCALPARAMIR
+#end
