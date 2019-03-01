@@ -25,6 +25,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ASet1SetType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -79,18 +80,22 @@ public class SetTypeFinder extends TypeUnwrapper<SSetType>
 			// type.setSetType(PTypeAssistantTC.getSet(AstFactory.newAUnknownType(location)));
 			type.setSetType(af.createPTypeAssistant().getSet(AstFactory.newAUnknownType(location)));
 			PTypeSet set = new PTypeSet(af);
+			boolean allSet1 = true;
 
 			for (PType t : type.getTypes())
 			{
 				if (af.createPTypeAssistant().isSet(t))
 				{
-					// set.add(PTypeAssistantTC.getSet(t).getSetof());
-					set.add(t.apply(THIS).getSetof());
+					SSetType st = t.apply(THIS);
+					set.add(st.getSetof());
+					allSet1 = allSet1 && (st instanceof ASet1SetType);
 				}
 			}
 
-			type.setSetType(set.isEmpty() ? null
-					: AstFactory.newASetSetType(location, set.getType(location)));
+			type.setSetType(set.isEmpty() ? null :
+				allSet1 ?
+					AstFactory.newASet1SetType(location, set.getType(location)) :
+					AstFactory.newASetSetType(location, set.getType(location)));
 		}
 
 		return type.getSetType();
