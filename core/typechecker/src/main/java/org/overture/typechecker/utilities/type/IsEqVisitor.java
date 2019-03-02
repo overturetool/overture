@@ -32,7 +32,7 @@ public class IsEqVisitor extends QuestionAnswerAdaptor<ILexLocation, Boolean>
 	@Override public Boolean caseANamedInvariantType(ANamedInvariantType node,
 			ILexLocation q) throws AnalysisException
 	{
-		if (TypeChecker.isOpaque(node, node.getLocation().getModule()))
+		if (TypeChecker.isOpaque(node, q.getModule()))
 			return false;
 		if (node.getEqDef() != null)
 			return true;

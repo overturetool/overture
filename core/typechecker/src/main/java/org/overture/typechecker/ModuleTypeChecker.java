@@ -244,7 +244,7 @@ public class ModuleTypeChecker extends TypeChecker
 						{
 							try
 							{
-								d.apply(tc, new TypeCheckInfo(assistantFactory, e, NameScope.NAMES));
+								d.apply(tc, new TypeCheckInfo(assistantFactory, e, NameScope.NAMES).newModule(m.getName().getName()));
 								// System.out.println();
 							} catch (TypeCheckException te)
 							{

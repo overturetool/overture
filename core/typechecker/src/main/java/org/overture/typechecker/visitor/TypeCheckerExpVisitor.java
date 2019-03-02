@@ -2076,7 +2076,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		node.setRecordType((ARecordInvariantType) rec);
 
-		if (TypeChecker.isOpaque(node.getRecordType(), node.getRecordType().getLocation().getModule()))
+		if (TypeChecker.isOpaque(node.getRecordType(), question.fromModule))
 		{
 			TypeCheckerErrors.report(3127, "Type '" + node.getTypeName()
 					+ "' has no struct export", node.getLocation(), node);
