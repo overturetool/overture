@@ -83,7 +83,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 	private PExp alt2Exp(ACaseAlternative alt, ACasesExp exp,
 			IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
-		if (assistantFactory.createPPatternAssistant().isSimple(alt.getPattern()))
+		if (assistantFactory.createPPatternAssistant(null).isSimple(alt.getPattern()))
 		{
 			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression().clone(), patternToExp(alt.getPattern().clone()));
 			return equalsExp;

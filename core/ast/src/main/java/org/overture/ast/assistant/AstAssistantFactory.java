@@ -22,6 +22,7 @@
 package org.overture.ast.assistant;
 
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
@@ -44,7 +45,6 @@ import org.overture.ast.util.type.NumericFinder;
 
 public class AstAssistantFactory implements IAstAssistantFactory
 {
-
 	@Override
 	public PAccessSpecifierAssistant createPAccessSpecifierAssistant()
 	{
@@ -58,9 +58,9 @@ public class AstAssistantFactory implements IAstAssistantFactory
 	}
 
 	@Override
-	public PPatternAssistant createPPatternAssistant()
+	public PPatternAssistant createPPatternAssistant(String fromModule)
 	{
-		return new PPatternAssistant(this);
+		return new PPatternAssistant(this, fromModule);
 	}
 
 	// @Override
@@ -114,19 +114,19 @@ public class AstAssistantFactory implements IAstAssistantFactory
 	// visitors
 
 	@Override
-	public IAnswer<LexNameList> getAllVariableNameLocator()
+	public IAnswer<LexNameList> getAllVariableNameLocator(String fromModule)
 	{
-		return new AllVariableNameLocator(this);
+		return new AllVariableNameLocator(this, fromModule);
 	}
 
 	@Override
-	public IAnswer<Boolean> getNumericFinder()
+	public IQuestionAnswer<String, Boolean> getNumericFinder()
 	{
 		return new NumericFinder(this);
 	}
 
 	@Override
-	public IAnswer<SNumericBasicType> getNumericBasisChecker()
+	public IQuestionAnswer<String, SNumericBasicType> getNumericBasisChecker()
 	{
 		return new NumericBasisChecker(this);
 	}

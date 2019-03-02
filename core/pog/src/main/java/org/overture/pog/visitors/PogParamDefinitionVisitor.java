@@ -280,8 +280,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						&& !(pattern instanceof AIgnorePattern)
 						&& node.getExpType() instanceof AUnionType)
 				{
-					PType patternType = assistantFactory.createPPatternAssistant().getPossibleType(pattern); // With
-																												// unknowns
+					PType patternType = assistantFactory.createPPatternAssistant(null).getPossibleType(pattern);
 					AUnionType ut = (AUnionType) node.getExpType();
 					PTypeSet set = new PTypeSet(assistantFactory);
 
@@ -363,7 +362,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				for (PPattern p : pltp.getPatterns())
 				{
-					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					for (PDefinition def : assistantFactory.createPPatternAssistant(null).getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 					{
 						pids.add(def.getName());
 					}
@@ -467,7 +466,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			for (PPattern p : node.getParameterPatterns())
 			{
-				for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+				for (PDefinition def : assistantFactory.createPPatternAssistant(null).getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 				{
 					pids.add(def.getName());
 				}
@@ -584,7 +583,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				for (PPattern p : tp.getPatterns())
 				{
-					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					for (PDefinition def : assistantFactory.createPPatternAssistant(null).getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 					{
 						pids.add(def.getName());
 					}
@@ -812,10 +811,10 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (!(pattern instanceof AIdentifierPattern)
 					&& !(pattern instanceof AIgnorePattern)
-					&& assistantFactory.createPTypeAssistant().isUnion(type))
+					&& assistantFactory.createPTypeAssistant().isUnion(type, null))
 			{
-				PType patternType = assistantFactory.createPPatternAssistant().getPossibleType(pattern);
-				AUnionType ut = assistantFactory.createPTypeAssistant().getUnion(type);
+				PType patternType = assistantFactory.createPPatternAssistant(null).getPossibleType(pattern);
+				AUnionType ut = assistantFactory.createPTypeAssistant().getUnion(type, null);
 				PTypeSet set = new PTypeSet(assistantFactory);
 
 				for (PType u : ut.getTypes())

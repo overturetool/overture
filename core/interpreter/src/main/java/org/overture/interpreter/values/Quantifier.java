@@ -53,10 +53,10 @@ public class Quantifier
 			{
 				if (allPossibilities)
 				{
-					nvlist.addAll(ctxt.assistantFactory.createPPatternAssistant().getAllNamedValues(pattern, value, ctxt));
+					nvlist.addAll(ctxt.assistantFactory.createPPatternAssistant(null).getAllNamedValues(pattern, value, ctxt));
 				} else
 				{
-					nvlist.add(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(pattern, value, ctxt));
+					nvlist.add(ctxt.assistantFactory.createPPatternAssistant(null).getNamedValues(pattern, value, ctxt));
 				}
 			} catch (PatternMatchException e)
 			{

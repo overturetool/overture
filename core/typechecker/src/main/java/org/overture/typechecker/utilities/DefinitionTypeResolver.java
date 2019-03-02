@@ -173,7 +173,7 @@ public class DefinitionTypeResolver extends
 
 		for (PPattern p : node.getParameterPatterns())
 		{
-			af.createPPatternAssistant().typeResolve(p, question.rootVisitor, question.question);
+			af.createPPatternAssistant(node.getLocation().getModule()).typeResolve(p, question.rootVisitor, question.question);
 		}
 	}
 
@@ -194,7 +194,7 @@ public class DefinitionTypeResolver extends
 
 		if (node.getResult() != null)
 		{
-			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
+			af.createAPatternTypePairAssistant(node.getLocation().getModule()).typeResolve(node.getResult(), question.rootVisitor, question.question);
 			
 		}
 
@@ -235,7 +235,7 @@ public class DefinitionTypeResolver extends
 
 		if (node.getResult() != null)
 		{
-			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
+			af.createAPatternTypePairAssistant(node.getLocation().getModule()).typeResolve(node.getResult(), question.rootVisitor, question.question);
 		}
 
 		if (question.question.env.isVDMPP())
@@ -353,21 +353,21 @@ public class DefinitionTypeResolver extends
 			if (node.getInvdef() != null)
 			{
 				node.getInvdef().apply(this, question);
-				af.createPPatternAssistant().typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant(node.getLocation().getModule()).typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
 			}
 
 			if (node.getEqRelation() != null)
 			{
 				node.getEqRelation().getRelDef().apply(this, question);
-				af.createPPatternAssistant().typeResolve(node.getEqRelation().getLhsPattern(), question.rootVisitor, question.question);
-				af.createPPatternAssistant().typeResolve(node.getEqRelation().getRhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant(node.getLocation().getModule()).typeResolve(node.getEqRelation().getLhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant(node.getLocation().getModule()).typeResolve(node.getEqRelation().getRhsPattern(), question.rootVisitor, question.question);
 			}
 			
 			if (node.getOrdRelation() != null)
 			{
 				node.getOrdRelation().getRelDef().apply(this, question);
-				af.createPPatternAssistant().typeResolve(node.getOrdRelation().getLhsPattern(), question.rootVisitor, question.question);
-				af.createPPatternAssistant().typeResolve(node.getOrdRelation().getRhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant(node.getLocation().getModule()).typeResolve(node.getOrdRelation().getLhsPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant(node.getLocation().getModule()).typeResolve(node.getOrdRelation().getRhsPattern(), question.rootVisitor, question.question);
 
 				if (node.getOrdRelation().getMinDef() != null)
 				{
@@ -404,7 +404,7 @@ public class DefinitionTypeResolver extends
 		if (node.getType() != null)
 		{
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
-			af.createPPatternAssistant().typeResolve(node.getPattern(), question.rootVisitor, question.question);
+			af.createPPatternAssistant(node.getLocation().getModule()).typeResolve(node.getPattern(), question.rootVisitor, question.question);
 			// af.createAValueDefinitionAssistant().updateDefs(node, question.question);
 			updateDefs(node, question.question);
 		}
@@ -422,7 +422,7 @@ public class DefinitionTypeResolver extends
 		PType type = node.getType();
 		PPattern pattern = node.getPattern();
 
-		List<PDefinition> newdefs = af.createPPatternAssistant().getDefinitions(pattern, type, node.getNameScope());
+		List<PDefinition> newdefs = af.createPPatternAssistant(node.getLocation().getModule()).getDefinitions(pattern, type, node.getNameScope());
 
 		// The untyped definitions may have had "used" markers, so we copy
 		// those into the new typed definitions, lest we get warnings. We

@@ -93,14 +93,14 @@ public class MapInjectivityEnum extends ProofObligation
 		AMapDomainUnaryExp domM1 = new AMapDomainUnaryExp();
 		domM1.setExp(getVarExp(m1, mapEnumExp.getType()));
 		SSetType domType = new ASetSetType();
-		domType.setSetof(af.createPTypeAssistant().getMap(mapEnumExp.getType().clone()));
+		domType.setSetof(af.createPTypeAssistant().getMap(mapEnumExp.getType().clone(), mapEnumExp.getLocation().getModule()));
 		domM1.setType(domType.clone());
 		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();
 		domM2.setExp(getVarExp(m2, mapEnumExp.getType()));
 		domM2.setType(domType.clone());
 
-		AApplyExp applyExp = getApplyExp(getVarExp(m2, mapEnumExp.getType()), af.createPTypeAssistant().getMap(mapEnumExp.getType()).getTo(), getVarExp(d2, domType));
-		AApplyExp applyExp2 = getApplyExp(getVarExp(m1, mapEnumExp.getType()),af.createPTypeAssistant().getMap(mapEnumExp.getType()).getTo(), getVarExp(d1, domType));
+		AApplyExp applyExp = getApplyExp(getVarExp(m2, mapEnumExp.getType()), af.createPTypeAssistant().getMap(mapEnumExp.getType(), mapEnumExp.getLocation().getModule()).getTo(), getVarExp(d2, domType));
+		AApplyExp applyExp2 = getApplyExp(getVarExp(m1, mapEnumExp.getType()),af.createPTypeAssistant().getMap(mapEnumExp.getType(), mapEnumExp.getLocation().getModule()).getTo(), getVarExp(d1, domType));
 		AEqualsBinaryExp equalsExp = getEqualsExp(applyExp2, applyExp);
 		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1, domType), getVarExp(d2, domType)), equalsExp);
 

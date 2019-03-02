@@ -28,6 +28,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -35,9 +36,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class SetBasisChecker extends TypeUnwrapper<Boolean>
+public class SetBasisChecker extends TypeUnwrapper<String, Boolean>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public SetBasisChecker(ITypeCheckerAssistantFactory af)
@@ -46,43 +46,41 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean defaultSSetType(SSetType type) throws AnalysisException
+	public Boolean defaultSSetType(SSetType type, String fromModule) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType type)
+	public Boolean defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return false;
+
 		if (type instanceof ANamedInvariantType)
 		{
-			if (type.getOpaque())
-			{
-				return false;
-			}
-			return ((ANamedInvariantType) type).getType().apply(THIS);
-		} else
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return false;
 		}
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
-		// return af.createAUnionTypeAssistant().getSet(type) != null;
-		return type.apply(af.getSetTypeFinder()) != null;
+		return type.apply(af.getSetTypeFinder(), fromModule) != null;
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType type, String fromModule) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultPType(PType type) throws AnalysisException
+	public Boolean defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		return false;
 	}

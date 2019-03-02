@@ -49,19 +49,17 @@ public class PatternListTC extends Vector<PPattern>
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
 		for (PPattern pPattern : this)
 		{
-			af.createPPatternAssistant().typeResolve(pPattern, rootVisitor, question);
+			af.createPPatternAssistant(question.fromModule).typeResolve(pPattern, rootVisitor, question);
 		}
 	}
 
 	public void unResolve()
 	{
-
 		for (PPattern pPattern : this)
 		{
-			af.createPPatternAssistant().unResolve(pPattern);
+			af.createPPatternAssistant(pPattern.getLocation().getModule()).unResolve(pPattern);
 		}
 	}
 

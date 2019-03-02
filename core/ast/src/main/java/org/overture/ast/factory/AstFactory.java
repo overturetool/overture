@@ -718,7 +718,7 @@ public class AstFactory
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
+		for (ILexNameToken var : af.createPPatternAssistant(p.getLocation().getModule()).getVariableNames(p))
 		{
 			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 		}

@@ -477,7 +477,7 @@ public class TypeAssistantIR extends AssistantBase
 					return false;
 				} else
 				{
-					AProductType productType = typeAssistant.getProduct(t);
+					AProductType productType = typeAssistant.getProduct(t, null);
 					int currentSize = productType.getTypes().size();
 
 					if (commonSize == NOT_SET)
@@ -504,7 +504,7 @@ public class TypeAssistantIR extends AssistantBase
 			PPattern pattern)
 	{
 		PTypeSet possibleTypes = new PTypeSet(question.getTcFactory());
-		PType patternType = question.getTcFactory().createPPatternAssistant().getPossibleType(pattern);
+		PType patternType = question.getTcFactory().createPPatternAssistant(null).getPossibleType(pattern);
 		TypeComparator comp = question.getTcFactory().getTypeComparator();
 
 		for (PType t : unionType.getTypes())

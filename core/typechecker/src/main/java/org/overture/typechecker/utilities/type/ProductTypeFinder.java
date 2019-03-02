@@ -31,6 +31,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -38,9 +39,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class ProductTypeFinder extends TypeUnwrapper<AProductType>
+public class ProductTypeFinder extends TypeUnwrapper<String, AProductType>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public ProductTypeFinder(ITypeCheckerAssistantFactory af)
@@ -49,49 +49,51 @@ public class ProductTypeFinder extends TypeUnwrapper<AProductType>
 	}
 
 	@Override
-	public AProductType defaultSInvariantType(SInvariantType type)
+	public AProductType defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
+		
 		if (type instanceof ANamedInvariantType)
 		{
-			return ((ANamedInvariantType) type).getType().apply(THIS);
-		} else
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return null;
 		}
 	}
 
 	@Override
-	public AProductType caseAProductType(AProductType type)
+	public AProductType caseAProductType(AProductType type, String fromModule)
 			throws AnalysisException
 	{
 		return type;
 	}
 
 	@Override
-	public AProductType caseAOptionalType(AOptionalType node)
+	public AProductType caseAOptionalType(AOptionalType node, String fromModule)
 			throws AnalysisException
 	{
-		return node.getType().apply(THIS);
+		return node.getType().apply(THIS, fromModule);
 	}
 
 	@Override
-	public AProductType caseAUnionType(AUnionType type)
+	public AProductType caseAUnionType(AUnionType type, String fromModule)
 			throws AnalysisException
 	{
-		// return af.createAUnionTypeAssistant().getProduct(type, 0);
-		return type.apply(af.getProductExtendedTypeFinder(), 0);
+		return type.apply(af.getProductExtendedTypeFinder(fromModule), 0);
 	}
 
 	@Override
-	public AProductType caseAUnknownType(AUnknownType type)
+	public AProductType caseAUnknownType(AUnknownType type, String fromModule)
 			throws AnalysisException
 	{
 		return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
 	}
 
 	@Override
-	public AProductType defaultPType(PType type) throws AnalysisException
+	public AProductType defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		assert false : "cannot getProduct from non-product type";
 		return null;

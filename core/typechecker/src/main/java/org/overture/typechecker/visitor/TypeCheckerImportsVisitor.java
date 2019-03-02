@@ -124,12 +124,12 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
     			}
     			if (node instanceof AFunctionValueImport)
     			{
-    				expected = question.assistantFactory.createPTypeAssistant().isFunction(expdef.getType());
+    				expected = question.assistantFactory.createPTypeAssistant().isFunction(expdef.getType(), question.fromModule);
     				expkind = "function";
     			}
     			else if (node instanceof AOperationValueImport)
     			{
-    				expected = question.assistantFactory.createPTypeAssistant().isOperation(expdef.getType());
+    				expected = question.assistantFactory.createPTypeAssistant().isOperation(expdef.getType(), question.fromModule);
     				expkind = "operation";
     			}
     			

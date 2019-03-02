@@ -36,6 +36,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameSet;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
+import org.overture.ast.types.SInvariantType;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMMessage;
 import org.overture.parser.messages.VDMWarning;
@@ -349,5 +350,14 @@ abstract public class TypeChecker
 	public static void removeStatusListner(IStatusListener listner)
 	{
 		listners.remove(listner);
+	}
+	
+	/**
+	 * An invariant type is opaque to the caller if it is opaque (not struct exported) and
+	 * the module being used from is not the type's defining module.  
+	 */
+	public static boolean isOpaque(SInvariantType type, String fromModule)
+	{
+		return type.getOpaque() && fromModule != null && !type.getLocation().getModule().equals(fromModule);
 	}
 }

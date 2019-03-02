@@ -22,7 +22,7 @@
 package org.overture.typechecker.utilities;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AFunctionType;
@@ -32,6 +32,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -39,7 +40,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
+public class PTypeFunctionChecker extends QuestionAnswerAdaptor<String, Boolean>
 {
 
 	protected ITypeCheckerAssistantFactory af;
@@ -50,29 +51,26 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	}
 
 	@Override
-	public Boolean caseABracketType(ABracketType node) throws AnalysisException
+	public Boolean caseABracketType(ABracketType node, String fromModule) throws AnalysisException
 	{
-		return node.getType().apply(THIS);
+		return node.getType().apply(THIS, fromModule);
 	}
 
 	@Override
-	public Boolean caseAFunctionType(AFunctionType node)
+	public Boolean caseAFunctionType(AFunctionType node, String fromModule)
 			throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType node)
+	public Boolean defaultSInvariantType(SInvariantType node, String fromModule)
 			throws AnalysisException
 	{
 		if (node instanceof ANamedInvariantType)
 		{
-			if (node.getOpaque())
-			{
-				return false;
-			}
-			return ((ANamedInvariantType) node).getType().apply(THIS); // PTypeAssistantTC.isFunction(type.getType());
+			if (TypeChecker.isOpaque(node, fromModule)) return false;
+			return ((ANamedInvariantType) node).getType().apply(THIS, fromModule);
 		}
 		else
 		{
@@ -81,15 +79,15 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	}
 
 	@Override
-	public Boolean caseAOptionalType(AOptionalType node)
+	public Boolean caseAOptionalType(AOptionalType node, String fromModule)
 			throws AnalysisException
 	{
 
-		return node.getType().apply(THIS);
+		return node.getType().apply(THIS, fromModule);
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType node) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType node, String fromModule) throws AnalysisException
 	{
 
 		// return af.createAUnionTypeAssistant().getFunction(node) != null;
@@ -97,27 +95,27 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType node) throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType node, String fromModule) throws AnalysisException
 	{
 
 		return true;
 	}
 
 	@Override
-	public Boolean defaultPType(PType node) throws AnalysisException
+	public Boolean defaultPType(PType node, String fromModule) throws AnalysisException
 	{
 		return false;
 	}
 
 	@Override
-	public Boolean createNewReturnValue(INode node)
+	public Boolean createNewReturnValue(INode node, String fromModule)
 	{
 		assert false : "should not happen";
 		return null;
 	}
 
 	@Override
-	public Boolean createNewReturnValue(Object node)
+	public Boolean createNewReturnValue(Object node, String fromModule)
 	{
 		assert false : "should not happen";
 		return null;

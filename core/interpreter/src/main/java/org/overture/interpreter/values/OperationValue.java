@@ -316,7 +316,7 @@ public class OperationValue extends Value
 				// Note values are assumed to be constant, as enforced by eval()
 				Value pv = valIter.next().convertTo(typeIter.next(), ctxt);
 
-				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant(from.getModule()).getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 

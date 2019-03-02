@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -105,7 +106,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AExplicitFunctionDefinitionAssistantTC createAExplicitFunctionDefinitionAssistant();
 
-	AExplicitOperationDefinitionAssistantTC createAExplicitOperationDefinitionAssistant();
+	AExplicitOperationDefinitionAssistantTC createAExplicitOperationDefinitionAssistant(String fromModule);
 
 	AImplicitFunctionDefinitionAssistantTC createAImplicitFunctionDefinitionAssistant();
 
@@ -181,7 +182,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	// AMapUnionPatternAssistantTC createAMapUnionPatternAssistant();
 
-	APatternTypePairAssistant createAPatternTypePairAssistant();
+	APatternTypePairAssistant createAPatternTypePairAssistant(String fromModule);
 
 	// ARecordPatternAssistantTC createARecordPatternAssistant();
 
@@ -203,7 +204,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	PMultipleBindAssistantTC createPMultipleBindAssistant();
 
-	PPatternAssistantTC createPPatternAssistant();
+	PPatternAssistantTC createPPatternAssistant(String fromModule);
 
 	//PPatternBindAssistantTC createPPatternBindAssistant();
 
@@ -275,7 +276,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker();
 
-	AnswerAdaptor<Boolean> getMapBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getMapBasisChecker();
 
 	IAnswer<LexNameList> getVariableNameCollector();
 
@@ -303,7 +304,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<Boolean> getUsedChecker();
 
-	IAnswer<Boolean> getPTypeFunctionChecker();
+	IQuestionAnswer<String, Boolean> getPTypeFunctionChecker();
 
 	AnalysisAdaptor getUnusedChecker();
 
@@ -311,33 +312,33 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IQuestion<DefinitionTypeResolver.NewQuestion> getDefinitionTypeResolver();
 
-	IAnswer<SMapType> getMapTypeFinder();
+	QuestionAnswerAdaptor<String, SMapType> getMapTypeFinder();
 
-	IAnswer<SSeqType> getSeqTypeFinder();
+	QuestionAnswerAdaptor<String, SSeqType> getSeqTypeFinder();
 
-	AnswerAdaptor<Boolean> getSeqBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getSeqBasisChecker();
 
-	IAnswer<AOperationType> getOperationTypeFinder();
+	QuestionAnswerAdaptor<String, AOperationType> getOperationTypeFinder();
 
-	AnswerAdaptor<Boolean> getOperationBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getOperationBasisChecker();
 
-	AnswerAdaptor<Boolean> getSetBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getSetBasisChecker();
 
-	IAnswer<SSetType> getSetTypeFinder();
+	QuestionAnswerAdaptor<String, SSetType> getSetTypeFinder();
 
-	AnswerAdaptor<Boolean> getRecordBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getRecordBasisChecker();
 
-	AnswerAdaptor<Boolean> getTagBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getTagBasisChecker();
 
-	IAnswer<ARecordInvariantType> getRecordTypeFinder();
+	QuestionAnswerAdaptor<String, ARecordInvariantType> getRecordTypeFinder();
 
-	AnswerAdaptor<Boolean> getClassBasisChecker(Environment env);
+	QuestionAnswerAdaptor<String, Boolean> getClassBasisChecker(Environment env);
 
-	IAnswer<AClassType> getClassTypeFinder(Environment env);
+	QuestionAnswerAdaptor<String, AClassType> getClassTypeFinder(Environment env);
 
-	IAnswer<AProductType> getProductTypeFinder();
+	QuestionAnswerAdaptor<String, AProductType> getProductTypeFinder();
 
-	AnswerAdaptor<Boolean> getProductBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getProductBasisChecker();
 
 	IAnswer<String> getTypeDisplayer();
 
@@ -345,11 +346,11 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator();
 
-	IAnswer<AUnionType> getUnionTypeFinder();
+	QuestionAnswerAdaptor<String, AUnionType> getUnionTypeFinder();
 
 	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
 
-	AnswerAdaptor<Boolean> getUnionBasisChecker();
+	QuestionAnswerAdaptor<String, Boolean> getUnionBasisChecker();
 
 	IAnswer<AFunctionType> getFunctionTypeFinder();
 
@@ -357,13 +358,13 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IQuestionAnswer<ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor();
 
-	IQuestionAnswer<String, PType> getPTypeFinder();
+	IQuestionAnswer<String, PType> getPTypeFinder(String fromModule);
 
-	IQuestionAnswer<Integer, Boolean> getProductExtendedChecker();
+	IQuestionAnswer<Integer, Boolean> getProductExtendedChecker(String fromModule);
 
-	IQuestionAnswer<Integer, AProductType> getProductExtendedTypeFinder();
+	IQuestionAnswer<Integer, AProductType> getProductExtendedTypeFinder(String fromModule);
 
-	IQuestionAnswer<Class<? extends PType>, Boolean> getPTypeExtendedChecker();
+	IQuestionAnswer<Class<? extends PType>, Boolean> getPTypeExtendedChecker(String fromModule);
 
 	IAnswer<Boolean> getVoidExistanceChecker();
 
@@ -373,13 +374,13 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<Boolean> getSimplePatternChecker();
 
-	IAnswer<Boolean> getAlwaysMatchingPatternChecker();
+	IAnswer<Boolean> getAlwaysMatchingPatternChecker(String fromModule);
 
 	AnalysisAdaptor getPatternUnresolver();
 
-	IQuestion<PatternResolver.NewQuestion> getPatternResolver();
+	IQuestion<PatternResolver.NewQuestion> getPatternResolver(String fromModule);
 
-	IQuestionAnswer<AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator();
+	IQuestionAnswer<AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator(String fromModule);
 
 	IAnswer<PType> getPossibleBindTypeFinder();
 

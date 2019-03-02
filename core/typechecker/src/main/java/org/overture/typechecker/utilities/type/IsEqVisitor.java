@@ -8,6 +8,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 
 /**
  * Created by ldc on 31/05/17.
@@ -31,8 +32,7 @@ public class IsEqVisitor extends QuestionAnswerAdaptor<ILexLocation, Boolean>
 	@Override public Boolean caseANamedInvariantType(ANamedInvariantType node,
 			ILexLocation q) throws AnalysisException
 	{
-		if (node.getOpaque()
-				&& !q.getModule().equals(node.getLocation().getModule()))
+		if (TypeChecker.isOpaque(node, node.getLocation().getModule()))
 			return false;
 		if (node.getEqDef() != null)
 			return true;

@@ -139,7 +139,7 @@ public class MapValue extends Value
 				abort(4062, "Cannot convert non-injective map to an inmap", ctxt);
 			}
 
-			SMapType mapto = ctxt.assistantFactory.createPTypeAssistant().getMap(to);
+			SMapType mapto = ctxt.assistantFactory.createPTypeAssistant().getMap(to, null);
 			ValueMap nm = new ValueMap();
 
 			for (Value k : values.keySet())

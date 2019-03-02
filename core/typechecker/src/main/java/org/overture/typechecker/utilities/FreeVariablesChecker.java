@@ -396,7 +396,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getRoot() instanceof AVariableExp && node.getRoot().getType() != null &&
-			af.createPTypeAssistant().isFunction(node.getRoot().getType()))
+			af.createPTypeAssistant().isFunction(node.getRoot().getType(), null))
 		{
 			// If this is a global call, then we depend on the function
 			AVariableExp v = (AVariableExp)node.getRoot();
@@ -1231,7 +1231,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 
 		for (PPattern p : pltp.getPatterns())
 		{
-			list.addAll(af.createPPatternAssistant().getDefinitions(p, pltp.getType(), scope));
+			list.addAll(af.createPPatternAssistant(null).getDefinitions(p, pltp.getType(), scope));
 		}
 
 		return list;

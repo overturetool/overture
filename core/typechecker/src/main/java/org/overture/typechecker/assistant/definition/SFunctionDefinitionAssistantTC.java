@@ -71,14 +71,14 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 
 				for (PPattern p : plist)
 				{
-					defs.addAll(af.createPPatternAssistant().getDefinitions(p, unknown, NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant(location.getModule()).getDefinitions(p, unknown, NameScope.LOCAL));
 
 				}
 			} else
 			{
 				for (PPattern p : plist)
 				{
-					defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant(location.getModule()).getDefinitions(p, titer.next(), NameScope.LOCAL));
 				}
 			}
 

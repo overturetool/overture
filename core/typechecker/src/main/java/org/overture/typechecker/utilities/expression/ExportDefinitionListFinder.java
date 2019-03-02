@@ -67,14 +67,12 @@ public class ExportDefinitionListFinder extends
 			AFunctionExport exp) throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
-		// AAccessSpecifierAccessSpecifier
+
 		for (ILexNameToken name : exp.getNameList())
 		{
 			list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, exp.getExportType()));
-			// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-			// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-			// ((AFunctionExport)exp).getExportType(),false,name.clone()));
 		}
+		
 		return list;
 	}
 
@@ -83,13 +81,12 @@ public class ExportDefinitionListFinder extends
 			AOperationExport exp) throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
+		
 		for (ILexNameToken name : exp.getNameList())
 		{
 			list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, exp.getExportType()));
-			// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-			// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-			// ((AOperationExport)exp).getExportType(),false,name.clone()));
 		}
+
 		return list;
 	}
 
@@ -105,13 +102,12 @@ public class ExportDefinitionListFinder extends
 			throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
+		
 		for (ILexNameToken name : exp.getNameList())
 		{
 			list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, exp.getExportType()));
-			// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-			// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-			// ((AValueExport)exp).getExportType(),true,name.clone()));
 		}
+
 		return list;
 	}
 

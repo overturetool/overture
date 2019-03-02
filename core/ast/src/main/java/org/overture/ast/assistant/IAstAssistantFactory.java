@@ -22,6 +22,7 @@
 package org.overture.ast.assistant;
 
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
@@ -51,7 +52,6 @@ import org.overture.ast.types.SNumericBasicType;
  */
 public interface IAstAssistantFactory
 {
-
 	/**
 	 * Creates a new {@link PAccessSpecifierAssistant}. This assistant provides functionality to check if an
 	 * PAccessSpecifier is a "static", "public" specifier, etc.
@@ -71,10 +71,11 @@ public interface IAstAssistantFactory
 	/**
 	 * Creates a new {@link PPatternAssistant}. This assistant provides functionality for extracting variable names from
 	 * the pattern.
+	 * @param fromModule TODO
 	 * 
 	 * @return the p pattern assistant
 	 */
-	PPatternAssistant createPPatternAssistant();
+	PPatternAssistant createPPatternAssistant(String fromModule);
 
 	/**
 	 * Creates a new {@link ABracketTypeAssistant}. This assistant does nothing and is probably a candidate for
@@ -146,24 +147,25 @@ public interface IAstAssistantFactory
 
 	/**
 	 * Returns the visitor for locating all variable names in a pattern.
+	 * @param fromModule TODO
 	 * 
 	 * @return the all variable name locator
 	 */
-	IAnswer<LexNameList> getAllVariableNameLocator();
+	IAnswer<LexNameList> getAllVariableNameLocator(String fromModule);
 
 	/**
 	 * Returns the visitor to check if a type is numeric. Probably needs a better name.
 	 * 
 	 * @return the numeric finder
 	 */
-	IAnswer<Boolean> getNumericFinder();
+	IQuestionAnswer<String, Boolean> getNumericFinder();
 
 	/**
 	 * Returns the visitor that, given a numeric type, gets the the actual {@link SNumericBasicType} associated with it.
 	 * 
 	 * @return the numeric basis checker
 	 */
-	IAnswer<SNumericBasicType> getNumericBasisChecker();
+	IQuestionAnswer<String, SNumericBasicType> getNumericBasisChecker();
 
 	/**
 	 * Return the visitor that gets the hashcode of a type.

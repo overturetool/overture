@@ -52,7 +52,7 @@ public class PPatternListAssistantTC implements IAstAssistant
 
 		for (PPattern pattern : pp)
 		{
-			af.createPPatternAssistant().typeResolve(pattern, rootVisitor, question);
+			af.createPPatternAssistant(question.fromModule).typeResolve(pattern, rootVisitor, question);
 		}
 	}
 
@@ -63,16 +63,15 @@ public class PPatternListAssistantTC implements IAstAssistant
 
 		for (ANamePatternPair npp : npplist)
 		{
-			af.createPPatternAssistant().typeResolve(npp.getPattern(), rootVisitor, question);
+			af.createPPatternAssistant(question.fromModule).typeResolve(npp.getPattern(), rootVisitor, question);
 		}
 	}
 
 	public void unResolve(List<PPattern> pp)
 	{
-
 		for (PPattern pPattern : pp)
 		{
-			af.createPPatternAssistant().unResolve(pPattern);
+			af.createPPatternAssistant(null).unResolve(pPattern);
 		}
 	}
 
@@ -86,14 +85,14 @@ public class PPatternListAssistantTC implements IAstAssistant
 				return AstFactory.newAUnknownType(location);
 
 			case 1:
-				return af.createPPatternAssistant().getPossibleType(plist.get(0));
+				return af.createPPatternAssistant(location.getModule()).getPossibleType(plist.get(0));
 
 			default:
 				PTypeSet list = new PTypeSet(af);
 
 				for (PPattern p : plist)
 				{
-					list.add(af.createPPatternAssistant().getPossibleType(p));
+					list.add(af.createPPatternAssistant(location.getModule()).getPossibleType(p));
 				}
 
 				return list.getType(location); // NB. a union of types
@@ -104,8 +103,7 @@ public class PPatternListAssistantTC implements IAstAssistant
 	{
 		for (PPattern pattern : p)
 		{
-
-			if (!af.createPPatternAssistant().isSimple(pattern))
+			if (!af.createPPatternAssistant(pattern.getLocation().getModule()).isSimple(pattern))
 			{
 
 				return false; // NB. AND
@@ -119,8 +117,7 @@ public class PPatternListAssistantTC implements IAstAssistant
 	{
 		for (PPattern p : pl)
 		{
-
-			if (!af.createPPatternAssistant().alwaysMatches(p))
+			if (!af.createPPatternAssistant(p.getLocation().getModule()).alwaysMatches(p))
 			{
 
 				return false; // NB. AND

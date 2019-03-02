@@ -310,8 +310,7 @@ public class TypeComparator
     		{
     			SInvariantType ito =(SInvariantType)to;
     			
-	    		if (to instanceof ANamedInvariantType &&
-	    			(!ito.getOpaque() || ito.getLocation().getModule().equals(currentModule)))
+	    		if (to instanceof ANamedInvariantType && !TypeChecker.isOpaque(ito, currentModule))
 	    		{
 	    			to = ((ANamedInvariantType)to).getType();
 	    			continue;
@@ -322,8 +321,7 @@ public class TypeComparator
     		{
     			SInvariantType ifrom =(SInvariantType)from;
     			
-	    		if (from instanceof ANamedInvariantType &&
-	    			(!ifrom.getOpaque() || ifrom.getLocation().getModule().equals(currentModule)))
+	    		if (from instanceof ANamedInvariantType && !TypeChecker.isOpaque(ifrom, currentModule))
 	    		{
 	    			from = ((ANamedInvariantType)from).getType();
 	    			continue;

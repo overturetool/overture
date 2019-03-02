@@ -613,7 +613,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 				public SMapTypeIR findType(PType type)
 						throws org.overture.ast.analysis.AnalysisException
 				{
-					SMapType mapType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getMap(type);
+					SMapType mapType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getMap(type, null);
 
 					return mapType != null
 							? (SMapTypeIR) mapType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo())
@@ -630,7 +630,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 							throws org.overture.ast.analysis.AnalysisException
 					{
 
-						SSeqType seqType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getSeq(type);
+						SSeqType seqType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getSeq(type, null);
 
 						return seqType != null
 								? (SSeqTypeIR) seqType.apply(transAssistant.getInfo().getTypeVisitor(), transAssistant.getInfo())
@@ -1049,7 +1049,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		{
 			SExpIR exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
-			SSeqType seqType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getSeq(vdmType);
+			SSeqType seqType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getSeq(vdmType, null);
 
 			try
 			{
@@ -1074,7 +1074,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		{
 			SExpIR exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
-			SMapType mapType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getMap(vdmType);
+			SMapType mapType = transAssistant.getInfo().getTcFactory().createPTypeAssistant().getMap(vdmType, null);
 
 			try
 			{
