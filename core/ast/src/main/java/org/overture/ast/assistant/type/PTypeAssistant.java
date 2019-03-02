@@ -44,7 +44,7 @@ public class PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getNumericFinder(), fromModule);
+			return type.apply(af.getNumericFinder(fromModule));
 		}
 		catch (AnalysisException e)
 		{
@@ -56,7 +56,7 @@ public class PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getNumericBasisChecker(), fromModule);
+			return type.apply(af.getNumericBasisChecker(fromModule));
 		}
 		catch (AnalysisException e)
 		{

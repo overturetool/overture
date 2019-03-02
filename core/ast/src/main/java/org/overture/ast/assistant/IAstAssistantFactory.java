@@ -22,7 +22,6 @@
 package org.overture.ast.assistant;
 
 import org.overture.ast.analysis.intf.IAnswer;
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
@@ -155,17 +154,19 @@ public interface IAstAssistantFactory
 
 	/**
 	 * Returns the visitor to check if a type is numeric. Probably needs a better name.
+	 * @param fromModule TODO
 	 * 
 	 * @return the numeric finder
 	 */
-	IQuestionAnswer<String, Boolean> getNumericFinder();
+	IAnswer<Boolean> getNumericFinder(String fromModule);
 
 	/**
 	 * Returns the visitor that, given a numeric type, gets the the actual {@link SNumericBasicType} associated with it.
+	 * @param fromModule TODO
 	 * 
 	 * @return the numeric basis checker
 	 */
-	IQuestionAnswer<String, SNumericBasicType> getNumericBasisChecker();
+	IAnswer<SNumericBasicType> getNumericBasisChecker(String fromModule);
 
 	/**
 	 * Return the visitor that gets the hashcode of a type.

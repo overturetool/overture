@@ -22,7 +22,7 @@
 package org.overture.ast.util.type;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
@@ -41,60 +41,61 @@ import org.overture.ast.types.SNumericBasicType;
  * 
  * @author gkanos
  */
-public class NumericBasisChecker extends QuestionAnswerAdaptor<String, SNumericBasicType>
+public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 {
-	protected static IAstAssistantFactory af;
+	protected final IAstAssistantFactory af;
+	protected final String fromModule;
 
-	@SuppressWarnings("static-access")
-	public NumericBasisChecker(IAstAssistantFactory af)
+	public NumericBasisChecker(IAstAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
-	public SNumericBasicType defaultSNumericBasicType(SNumericBasicType type, String fromModule)
+	public SNumericBasicType defaultSNumericBasicType(SNumericBasicType type)
 			throws AnalysisException
 	{
 		return type;
 	}
 
 	@Override
-	public SNumericBasicType defaultSBasicType(SBasicType type, String fromModule)
+	public SNumericBasicType defaultSBasicType(SBasicType type)
 			throws AnalysisException
 	{
 		return null;
 	}
 
 	@Override
-	public SNumericBasicType caseABracketType(ABracketType type, String fromModule)
+	public SNumericBasicType caseABracketType(ABracketType type)
 			throws AnalysisException
 	{
-		return type.getType().apply(THIS, fromModule);
+		return type.getType().apply(THIS);
 	}
 
 	@Override
-	public SNumericBasicType caseANamedInvariantType(ANamedInvariantType type, String fromModule)
+	public SNumericBasicType caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		return type.getType().apply(THIS, fromModule);
+		return type.getType().apply(THIS);
 	}
 
 	@Override
-	public SNumericBasicType defaultSInvariantType(SInvariantType type, String fromModule)
+	public SNumericBasicType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		return null;
 	}
 
 	@Override
-	public SNumericBasicType caseAOptionalType(AOptionalType type, String fromModule)
+	public SNumericBasicType caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
-		return type.getType().apply(THIS, fromModule);
+		return type.getType().apply(THIS);
 	}
 
 	@Override
-	public SNumericBasicType caseAUnionType(AUnionType type, String fromModule)
+	public SNumericBasicType caseAUnionType(AUnionType type)
 			throws AnalysisException
 	{
 		if (!type.getNumDone())
@@ -128,21 +129,21 @@ public class NumericBasisChecker extends QuestionAnswerAdaptor<String, SNumericB
 	}
 
 	@Override
-	public SNumericBasicType caseAUnknownType(AUnknownType type, String fromModule)
+	public SNumericBasicType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
 		return AstFactory.newARealNumericBasicType(type.getLocation());
 	}
 
 	@Override
-	public SNumericBasicType defaultPType(PType type, String fromModule) throws AnalysisException
+	public SNumericBasicType defaultPType(PType type) throws AnalysisException
 	{
 		assert false : "Can't getNumeric of a non-numeric";
 		return null;
 	}
 
 	@Override
-	public SNumericBasicType createNewReturnValue(INode type, String fromModule)
+	public SNumericBasicType createNewReturnValue(INode type)
 			throws AnalysisException
 	{
 		assert false : "Can't getNumeric of a non-numeric";
@@ -150,7 +151,7 @@ public class NumericBasisChecker extends QuestionAnswerAdaptor<String, SNumericB
 	}
 
 	@Override
-	public SNumericBasicType createNewReturnValue(Object type, String fromModule)
+	public SNumericBasicType createNewReturnValue(Object type)
 			throws AnalysisException
 	{
 		assert false : "Can't getNumeric of a non-numeric";

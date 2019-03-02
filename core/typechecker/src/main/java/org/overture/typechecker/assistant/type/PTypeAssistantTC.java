@@ -133,7 +133,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getPTypeFunctionChecker(), fromModule);
+			return type.apply(af.getPTypeFunctionChecker(fromModule));
 		}
 		catch (AnalysisException e)
 		{

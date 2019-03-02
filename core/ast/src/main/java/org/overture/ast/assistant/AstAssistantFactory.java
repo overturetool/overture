@@ -22,7 +22,6 @@
 package org.overture.ast.assistant;
 
 import org.overture.ast.analysis.intf.IAnswer;
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
@@ -120,15 +119,15 @@ public class AstAssistantFactory implements IAstAssistantFactory
 	}
 
 	@Override
-	public IQuestionAnswer<String, Boolean> getNumericFinder()
+	public IAnswer<Boolean> getNumericFinder(String fromModule)
 	{
-		return new NumericFinder(this);
+		return new NumericFinder(this, fromModule);
 	}
 
 	@Override
-	public IQuestionAnswer<String, SNumericBasicType> getNumericBasisChecker()
+	public IAnswer<SNumericBasicType> getNumericBasisChecker(String fromModule)
 	{
-		return new NumericBasisChecker(this);
+		return new NumericBasisChecker(this, fromModule);
 	}
 
 	@Override

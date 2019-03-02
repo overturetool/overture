@@ -22,6 +22,7 @@
 package org.overture.ast.util.type;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.node.INode;
@@ -41,78 +42,79 @@ import org.overture.ast.types.SNumericBasicType;
  * @author gkanos
  */
 
-public class NumericFinder extends QuestionAnswerAdaptor<String, Boolean>
+public class NumericFinder extends AnswerAdaptor<Boolean>
 {
-	protected static IAstAssistantFactory af;
+	protected final IAstAssistantFactory af;
+	protected final String fromModule;
 
-	@SuppressWarnings("static-access")
-	public NumericFinder(IAstAssistantFactory af)
+	public NumericFinder(IAstAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
-	public Boolean defaultSBasicType(SBasicType type, String fromModule) throws AnalysisException
+	public Boolean defaultSBasicType(SBasicType type) throws AnalysisException
 	{
 		SBasicType bType = type;
 		return bType instanceof SNumericBasicType;
 	}
 
 	@Override
-	public Boolean caseABracketType(ABracketType type, String fromModule) throws AnalysisException
+	public Boolean caseABracketType(ABracketType type) throws AnalysisException
 	{
-		return type.getType().apply(THIS, fromModule);
+		return type.getType().apply(THIS);
 	}
 
 	@Override
-	public Boolean caseANamedInvariantType(ANamedInvariantType type, String fromModule)
+	public Boolean caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		if (isOpaque(type, fromModule)) return false;
-		return type.getType().apply(THIS, fromModule);
+		if (isOpaque(type)) return false;
+		return type.getType().apply(THIS);
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType type, String fromModule)
+	public Boolean defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		return false;
 	}
 
 	@Override
-	public Boolean caseAOptionalType(AOptionalType type, String fromModule)
+	public Boolean caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
-		return type.getType().apply(THIS, fromModule);
+		return type.getType().apply(THIS);
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
 		return af.createPTypeAssistant().getNumeric(type, fromModule) != null;
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType type, String fromModule) throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultPType(PType type, String fromModule) throws AnalysisException
+	public Boolean defaultPType(PType type) throws AnalysisException
 	{
 		return false;
 	}
 
 	@Override
-	public Boolean createNewReturnValue(INode node, String fromModule) throws AnalysisException
+	public Boolean createNewReturnValue(INode node) throws AnalysisException
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Boolean createNewReturnValue(Object node, String fromModule) throws AnalysisException
+	public Boolean createNewReturnValue(Object node) throws AnalysisException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -122,7 +124,7 @@ public class NumericFinder extends QuestionAnswerAdaptor<String, Boolean>
 	 * An invariant type is opaque to the caller if it is opaque (not struct exported) and
 	 * the module being used from is not the type's defining module.  
 	 */
-	protected boolean isOpaque(SInvariantType type, String fromModule)
+	protected boolean isOpaque(SInvariantType type)
 	{
 		return type.getOpaque() && fromModule != null && !type.getLocation().getModule().equals(fromModule);
 	}

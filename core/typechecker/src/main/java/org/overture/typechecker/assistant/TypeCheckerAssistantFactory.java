@@ -721,9 +721,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new UsedChecker(this);
 	}
 
-	@Override public IQuestionAnswer<String, Boolean> getPTypeFunctionChecker()
+	@Override public IAnswer<Boolean> getPTypeFunctionChecker(String fromModule)
 	{
-		return new PTypeFunctionChecker(this);
+		return new PTypeFunctionChecker(this, fromModule);
 	}
 
 	@Override public AnalysisAdaptor getUnusedChecker()

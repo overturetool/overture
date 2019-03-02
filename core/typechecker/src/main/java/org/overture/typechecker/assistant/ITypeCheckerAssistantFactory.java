@@ -304,7 +304,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<Boolean> getUsedChecker();
 
-	IQuestionAnswer<String, Boolean> getPTypeFunctionChecker();
+	IAnswer<Boolean> getPTypeFunctionChecker(String fromModule);
 
 	AnalysisAdaptor getUnusedChecker();
 
