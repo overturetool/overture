@@ -295,8 +295,8 @@ public class DefinitionTypeResolver extends
 	public void caseARenamedDefinition(ARenamedDefinition node,
 			NewQuestion question) throws AnalysisException
 	{
-		// NewQuestion newq = new NewQuestion(question.rootVisitor, question.question.newModule(node.getDef().getLocation().getModule()));
-		// node.getDef().apply(this, question);
+		NewQuestion newq = new NewQuestion(question.rootVisitor, question.question.newModule(node.getDef().getLocation().getModule()));
+		node.getDef().apply(this, newq);
 	}
 
 	@Override
