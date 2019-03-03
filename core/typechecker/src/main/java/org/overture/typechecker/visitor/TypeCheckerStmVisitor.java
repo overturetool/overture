@@ -94,6 +94,8 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASet1SetType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -196,15 +198,24 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			List<PDefinition> defs = getDefinitions(node.getPatternBind());
 			question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 			local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
-		} else
+			PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+
+			if (!(node.getSeqType() instanceof ASeq1SeqType))
+			{
+				// Add () to the return type, as we may not enter the loop at all
+				rt = AstFactory.newAUnionType(node.getLocation(), rt, AstFactory.newAVoidType(node.getLocation()));
+			}
+			
+			local.unusedCheck();
+			node.setType(rt);
+			return rt;
+		}
+		else
 		{
 			TypeCheckerErrors.report(3223, "Expecting sequence type after 'in'", node.getLocation(), node);
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
+			return node.getType();
 		}
-
-		PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-		local.unusedCheck();
-		node.setType(rt);
-		return rt;
 	}
 
 	@Override
@@ -740,6 +751,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 			PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			
+			if (!(st instanceof ASet1SetType))
+			{
+				// Add () to the return type, as we may not enter the loop at all
+				rt = AstFactory.newAUnionType(node.getLocation(), rt, AstFactory.newAVoidType(node.getLocation()));
+			}
+			
 			local.unusedCheck();
 			node.setType(rt);
 			return rt;
@@ -781,9 +799,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		PDefinition vardef = AstFactory.newALocalDefinition(node.getVar().getLocation(), node.getVar(), NameScope.LOCAL, ft);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, vardef, question.env, question.scope);
 		PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		AUnionType rtu = AstFactory.newAUnionType(node.getLocation(), rt, AstFactory.newAVoidType(node.getLocation()));
 		local.unusedCheck();
-		node.setType(rt);
-		return rt;
+		node.setType(rtu);
+		return rtu;
 	}
 
 	@Override
