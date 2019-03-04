@@ -200,7 +200,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 			PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 
-			if (!(node.getSeqType() instanceof ASeq1SeqType))
+			if (!(node.getSeqType() instanceof ASeq1SeqType) &&!(rt instanceof AVoidType))
 			{
 				// Add () to the return type, as we may not enter the loop at all
 				rt = AstFactory.newAUnionType(node.getLocation(), rt, AstFactory.newAVoidType(node.getLocation()));
@@ -752,7 +752,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 			PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 			
-			if (!(st instanceof ASet1SetType))
+			if (!(st instanceof ASet1SetType) &&!(rt instanceof AVoidType))
 			{
 				// Add () to the return type, as we may not enter the loop at all
 				rt = AstFactory.newAUnionType(node.getLocation(), rt, AstFactory.newAVoidType(node.getLocation()));
