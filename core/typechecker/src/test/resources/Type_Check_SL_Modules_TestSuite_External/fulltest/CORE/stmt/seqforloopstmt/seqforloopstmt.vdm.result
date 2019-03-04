@@ -4,7 +4,7 @@
 <message column="9" line="15" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="seqforloopstmt.vdm"/>
 <message column="27" line="16" message="Name 'SeqForLoopTest`a' is not in scope" messageType="error" number="3182" resource="seqforloopstmt.vdm"/>
 <message column="29" line="16" message="Right hand of and is not bool" messageType="error" number="3066" resource="seqforloopstmt.vdm"/>
+<message column="3" line="13" message="Operation returns void value" messageType="error" number="3313" resource="seqforloopstmt.vdm"/>
 <message column="5" line="34" message="Expecting sequence type after 'in'" messageType="error" number="3223" resource="seqforloopstmt.vdm"/>
-<message column="14" line="35" message="Name 'SeqForLoopTest`a' is not in scope" messageType="error" number="3182" resource="seqforloopstmt.vdm"/>
 <result/>
 </testResult>
