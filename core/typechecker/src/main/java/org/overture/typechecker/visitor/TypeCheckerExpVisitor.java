@@ -1297,7 +1297,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseAFieldExp(AFieldExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PType root = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+		PType root = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope).newModule(question.fromModule));
 
 		if (question.assistantFactory.createPTypeAssistant().isUnknown(root))
 		{

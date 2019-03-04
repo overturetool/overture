@@ -220,7 +220,7 @@ public class AbstractTypeCheckVisitor extends
 			{
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
-				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope).newModule(question.fromModule));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}
 		}

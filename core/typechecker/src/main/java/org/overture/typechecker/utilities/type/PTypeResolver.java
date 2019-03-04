@@ -678,8 +678,9 @@ public class PTypeResolver extends
 
 		if (def == null)
 		{
-			throw new TypeCheckException("Unable to resolve type name '"
-					+ type.getName() + "'", type.getLocation(), type);
+			throw new TypeCheckException((fromModule == null ? "" : "From module " + fromModule + ": ") +
+					"Unable to resolve type name '"	+ type.getName() + "'",
+					type.getLocation(), type);
 		}
 
 		if (def instanceof AImportedDefinition)

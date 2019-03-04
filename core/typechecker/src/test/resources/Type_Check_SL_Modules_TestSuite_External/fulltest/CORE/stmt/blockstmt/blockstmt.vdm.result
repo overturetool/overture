@@ -11,6 +11,6 @@
 <message column="3" line="67" message="Operation returns void value" messageType="error" number="3313" resource="blockstmt.vdm"/>
 <message column="5" line="85" message="Statement may return void value" messageType="error" number="3328" resource="blockstmt.vdm"/>
 <message column="3" line="83" message="Operation returns unexpected type" messageType="error" number="3027" resource="blockstmt.vdm"/>
-<message column="24" line="100" message="Unable to resolve type name 'Unknown'" messageType="error" number="3431" resource="blockstmt.vdm"/>
+<message column="24" line="100" message="From module BlockStmtTest: Unable to resolve type name 'Unknown'" messageType="error" number="3431" resource="blockstmt.vdm"/>
 <result/>
 </testResult>

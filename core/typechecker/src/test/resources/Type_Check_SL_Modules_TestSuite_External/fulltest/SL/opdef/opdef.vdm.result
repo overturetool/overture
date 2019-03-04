@@ -4,8 +4,8 @@
 <message column="7" line="53" message="a at 5:7 hidden by a" messageType="warning" number="5008" resource="opdef.vdm"/>
 <message column="7" line="5" message="Duplicate definition: a" messageType="warning" number="5007" resource="opdef.vdm"/>
 <message column="8" line="87" message="a at 5:7 hidden by a" messageType="warning" number="5008" resource="opdef.vdm"/>
-<message column="14" line="98" message="b at 6:7 hidden by b" messageType="warning" number="5008" resource="opdef.vdm"/>
 <message column="12" line="98" message="a at 5:7 hidden by a" messageType="warning" number="5008" resource="opdef.vdm"/>
+<message column="14" line="98" message="b at 6:7 hidden by b" messageType="warning" number="5008" resource="opdef.vdm"/>
 <message column="12" line="98" message="Definition 'a' not used" messageType="warning" number="5000" resource="opdef.vdm"/>
 <message column="8" line="103" message="a at 5:7 hidden by a" messageType="warning" number="5008" resource="opdef.vdm"/>
 <message column="3" line="14" message="Definition 'Op1' not used" messageType="warning" number="5000" resource="opdef.vdm"/>
