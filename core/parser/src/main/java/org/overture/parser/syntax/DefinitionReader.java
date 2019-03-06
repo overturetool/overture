@@ -442,7 +442,12 @@ public class DefinitionReader extends SyntaxReader
     					throwMessage(2332, "Duplicate inv clause");
     				}
     				
-        			nextToken();
+    				if (Settings.strict && (eqPattern1 != null || ordPattern1 != null))
+    				{
+    					warning(5026, "Strict: Order should be inv, eq, ord", lastToken().location);
+    				}
+
+    				nextToken();
         			invPattern = getPatternReader().readPattern();
         			checkFor(VDMToken.EQUALSEQUALS, 2087, "Expecting '==' after pattern in invariant");
         			invExpression = getExpressionReader().readExpression();
@@ -457,6 +462,11 @@ public class DefinitionReader extends SyntaxReader
     				if (eqPattern1 != null)
     				{
     					throwMessage(2332, "Duplicate eq clause");
+    				}
+
+    				if (Settings.strict && ordPattern1 != null)
+    				{
+    					warning(5026, "Strict: order should be inv, eq, ord", lastToken().location);
     				}
     				
         			nextToken();
@@ -679,7 +689,10 @@ public class DefinitionReader extends SyntaxReader
 
 				if (!newSection())
 				{
-					ignore(VDMToken.SEMICOLON); // Optional?
+					if (ignore(VDMToken.SEMICOLON) && Settings.strict)
+					{
+						warning(5028, "Strict: expecting semi-colon between traces", lastToken().location);
+					}
 				}
 			} catch (LocatedException e)
 			{
@@ -1055,6 +1068,11 @@ public class DefinitionReader extends SyntaxReader
 		// Be forgiving about the inv/init order
 		if (lastToken().is(VDMToken.INV) && invExpression == null)
 		{
+			if (Settings.strict)
+			{
+				warning(5027, "Strict: order should be inv, init", lastToken().location);
+			}
+			
 			nextToken();
 			invPattern = getPatternReader().readPattern();
 			checkFor(VDMToken.EQUALSEQUALS, 2098, "Expecting '==' after pattern in invariant");

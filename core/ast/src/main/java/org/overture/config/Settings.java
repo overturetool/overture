@@ -29,7 +29,6 @@ import org.overture.ast.lex.Dialect;
 /**
  * A class to hold global settings accessible throughout.
  */
-
 public class Settings
 {
 	public static Release release = Release.DEFAULT;
@@ -40,6 +39,7 @@ public class Settings
 	public static boolean dynamictypechecks = true;
 	public static boolean measureChecks = true;
 	public static boolean timingInvChecks = false;
+	public static boolean strict = false;
 
 	public static boolean usingDBGP = false;
 	public static boolean usingCmdLine = false;
