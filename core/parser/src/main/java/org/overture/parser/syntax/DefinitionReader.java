@@ -1796,6 +1796,13 @@ public class DefinitionReader extends SyntaxReader
 			case BRA:
 				nextToken();
 				List<ATraceDefinitionTerm> list = readTraceDefinitionList();
+				ILexLocation semi = lastToken().location;
+				
+				if (ignore(VDMToken.SEMICOLON) && Settings.strict)
+				{
+					warning(5029, "Strict: unexpected trailing semi-colon", semi);
+				}
+				
 				checkFor(VDMToken.KET, 2269, "Expecting '(trace definitions)'");
 				return AstFactory.newABracketedExpressionTraceCoreDefinition(token.location, list);
 
