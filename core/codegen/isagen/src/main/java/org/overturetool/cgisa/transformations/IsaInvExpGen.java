@@ -1,9 +1,6 @@
-package org.overturetool.cgisa.utils;
+package org.overturetool.cgisa.transformations;
 
 import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.PType;
 import org.overture.cgisa.isair.analysis.AnswerIsaAdaptor;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -13,7 +10,6 @@ import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.*;
 
-import java.util.List;
 import java.util.Map;
 
 /*
@@ -48,25 +44,22 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         STypeIR type = node.getType();
 
         // Find invariant function
-        AModuleDeclIR anc = node.getAncestor(AModuleDeclIR.class);
-        AFuncDeclIR f = null;
-        for (SDeclIR inv : anc.getDecls())
-        {
-            if (inv instanceof AFuncDeclIR){
-                AFuncDeclIR inv_ = (AFuncDeclIR) inv;
-                if(inv_.getName() == "isa_inv_VDMNat")
-                {
-                    f = inv_;
-                }
-            }
-        }
+        AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
 
+        // Create ref to function
+        AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
+        fInvIdentifier.setName(fInv.getName());
+        fInvIdentifier.setSourceNode(fInv.getSourceNode());
+        fInvIdentifier.setType(fInv.getMethodType());
+
+        // Crete apply expr
         AApplyExpIR exp = new AApplyExpIR();
         exp.setType(new ABoolBasicTypeIR());
         AIdentifierVarExpIR iVarExp = new AIdentifierVarExpIR();
-        iVarExp.setName(ps.getName());
+        iVarExp.setName(this.ps.getName());
         iVarExp.setType(this.methodType);
         exp.getArgs().add(iVarExp);
+        exp.setRoot(fInvIdentifier);
 
         return exp;
     }

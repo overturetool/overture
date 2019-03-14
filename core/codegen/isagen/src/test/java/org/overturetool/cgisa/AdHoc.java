@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
@@ -38,6 +39,7 @@ import org.overture.core.testing.ParseTcFacade;
 
 public class AdHoc
 {
+	@Ignore
 	@Test
 	public void testQuick() throws AnalysisException, org.overture.codegen.ir.analysis.AnalysisException
 	{

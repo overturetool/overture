@@ -1,4 +1,4 @@
-package org.overturetool.cgisa.utils;
+package org.overturetool.cgisa.transformations;
 
 import org.overture.cgisa.isair.analysis.AnswerIsaAdaptor;
 import org.overture.codegen.ir.INode;
@@ -6,9 +6,7 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
-import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 
 public class IsaDeclTypeGen extends AnswerIsaAdaptor<STypeIR> {
 

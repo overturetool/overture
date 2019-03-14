@@ -27,9 +27,12 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -60,6 +63,7 @@ public class IsaGenFileExpTest extends ParamFineGrainTest<CgIsaTestResult>
 
 	private static final String UPDATE = "tests.update.isagen";
 	private static final String EXPS_ROOT = "src/test/resources/exps";
+	private static final List<String> skippedTests = Arrays.asList("DivideExp.vdmsl","MinusExp.vdmsl","TimesExp.vdmsl","DivExp.vdmsl","GTExp.vdmsl","NotEqualsExp.vdmsl","PlusExp.vdmsl","Subset.vdmsl","EqualsExp.vdmsl","OrExp.vdmsl","ForAllUsesVar.vdmsl","ForAll2Vars1Type.vdmsl","ForAll2Vars2Types.vdmsl","ForAll1Var1Type.vdmsl","SeqEnumApply.vdmsl","StringApply.vdmsl","EmptySetEnum.vdmsl","BoolLiteralTrue.vdmsl","BoolLiteralFalse.vdmsl","IsIntExp.vdmsl","NotExp.vdmsl","LetExpSingle.vdmsl","TernaryIf.vdmsl","LetExpMulti.vdmsl");
 	
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
@@ -119,6 +123,15 @@ public class IsaGenFileExpTest extends ParamFineGrainTest<CgIsaTestResult>
 		}
 
 		return CgIsaTestResult.convert(result);
+	}
+
+	@Override
+	protected void checkAssumptions() {
+		Assume.assumeTrue("Test in skip list.",notSkipped());
+	}
+
+	private boolean notSkipped() {
+		return !skippedTests.contains(testName);
 	}
 
 }

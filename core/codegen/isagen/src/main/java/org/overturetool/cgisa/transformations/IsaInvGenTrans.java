@@ -1,24 +1,16 @@
 package org.overturetool.cgisa.transformations;
 
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.types.PType;
 import org.overture.cgisa.isair.analysis.DepthFirstAnalysisIsaAdaptor;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.*;
-import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overturetool.cgisa.utils.IsaDeclTypeGen;
-import org.overturetool.cgisa.utils.IsaInvExpGen;
 import org.overturetool.cgisa.utils.IsaInvNameFinder;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
@@ -60,31 +52,32 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
 
         if(invFun == null)
         {
+            // Invariant function
+            AFuncDeclIR invFun_ = new AFuncDeclIR();
+            invFun_.setName("inv_" + typeName);
 
-            // Define the signature type
+            // Define the type signature
+            //TODO: Type should be XTypeInt - correct?
             AMethodTypeIR methodType = new AMethodTypeIR();
             STypeIR t = IsaDeclTypeGen.apply(node.getDecl());
             methodType.getParams().add(t.clone());
             methodType.setResult(new ABoolBasicTypeIR());
-
-
-            AFuncDeclIR invFun_ = new AFuncDeclIR();
             invFun_.setMethodType(methodType);
-            invFun_.setName("inv_" + typeName);
 
             // Generate the pattern
-            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+            //TODO: Pattern should have type XTypeInt - correct?
             AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
             identifierPattern.setName("x");
+            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
             afp.setPattern(identifierPattern);
-            afp.setType(methodType.clone());
+            afp.setType(t.clone()); // Wrong to set entire methodType?
             invFun_.getFormalParams().add(afp);
 
             // Generate the expression
             SExpIR expr = IsaInvExpGen.apply(decl, identifierPattern, methodType.clone(), isaFuncDeclIRMap);
             invFun_.setBody(expr);
-            // Insert into AST
 
+            // Insert into AST
             AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
             if(encModule != null)
             {

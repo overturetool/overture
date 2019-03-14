@@ -1,7 +1,7 @@
 #if ( $node.namedInvType.name.name == "isa_VDMInt" )
 VDMInt
 #elseif ($node.namedInvType)
-$node.namedInvType.name.name
+($node.namedInvType.name.name)##
 #else
 
 Missing clause in AIntNumericBasicTypeIR

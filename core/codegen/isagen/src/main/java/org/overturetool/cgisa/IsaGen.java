@@ -125,15 +125,17 @@ public class IsaGen extends CodeGenBase {
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
 
 
-        // Add the VDMToolkit module
-        TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 = TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
+        // Typecheck the VDMToolkit module and generate the IR
+        TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 =
+                TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
         AModuleModules isaToolkit = listTypeCheckResult1.result.
                 stream().
                 filter(mod -> mod.getName().getName().equals("VDMToolkit")).
                 findAny().
                 orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit module"));
         super.genIrStatus(statuses, isaToolkit);
-        // Get all decls
+
+        // Get the VDMToolkit module IR
         IRStatus<PIR> vdmToolkitIR = statuses.stream().filter(x -> x.getIrNodeName().equals("VDMToolkit")).findAny().orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit IR node"));
         AModuleDeclIR vdmToolkitModuleIR = (AModuleDeclIR) vdmToolkitIR.getIrNode();
 
@@ -163,6 +165,8 @@ public class IsaGen extends CodeGenBase {
                         SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
                         generator.applyPartialTransformation(status, sortTrans);
                     }
+
+                    
                     // Transform all token types to isa_VDMToken
                     // Transform all nat types to isa_VDMNat
                     // Transform all nat1 types to isa_VDMNat

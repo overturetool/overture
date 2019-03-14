@@ -79,6 +79,7 @@ abstract public class ParamFineGrainTest<R> extends AbsResultTest<R>
 	@Test
 	public void testCase() throws ParserException, LexException, IOException
 	{
+		checkAssumptions();
 		R actual = processSource();
 		if (updateResult)
 		{
@@ -108,5 +109,7 @@ abstract public class ParamFineGrainTest<R> extends AbsResultTest<R>
 	 * @return a test result of type <code>R</code>
 	 */
 	abstract public R processSource();
+
+	protected void checkAssumptions() {};
 
 }

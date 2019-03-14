@@ -1,9 +1,10 @@
 #macro ( transIdentifiers $node )
-    #foreach($p in $node.FormalParams)
-        $Isa.trans($p.pattern)##
-    #end
+#foreach($p in $node.FormalParams)
+$Isa.trans($p.pattern)##
+#end
 #end
 
-$node.Name :: "$Isa.transTypeParams($node.MethodType.Params) \<RightArrow> $Isa.trans($node.MethodType.Result)"
-where
-"$node.Name #transIdentifiers($node) \<equiv> ##$Isa.trans($node.Body)"
+definition
+    $node.Name :: "$Isa.transTypeParams($node.MethodType.Params) \<RightArrow> $Isa.trans($node.MethodType.Result)"
+    where
+    "$node.Name #transIdentifiers($node) \<equiv> $Isa.trans($node.Body)"

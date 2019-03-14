@@ -1,7 +1,7 @@
 #set( $root = $Isa.trans($node.Root) )
 #set( $args = $Isa.transApplyParams($node.Args))
 #if ($Isa.isFunc($node.Root.Type) ) 
-${root}(${args})##
+${root} ${args}##
 #elseif ($Isa.isRootRec($node))
 ${root}[${args}]##
 #else 

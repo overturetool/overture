@@ -1,0 +1,6 @@
+types
+    XType = int
+    inv x == inv_XType(x);
+functions
+    inv_XType : XType -> bool
+    inv_XType(x) == true;
