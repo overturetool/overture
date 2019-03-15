@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.overture.ast.patterns.ATuplePattern;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.PIR;
 import org.overture.codegen.ir.SExpIR;
@@ -39,8 +38,22 @@ import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
-import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
 import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.APatternMatchRuntimeErrorExpIR;
+import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
+import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATupleCompatibilityExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.ABoolPatternIR;
 import org.overture.codegen.ir.patterns.ACharPatternIR;
@@ -62,7 +75,18 @@ import org.overture.codegen.ir.statements.AForAllStmIR;
 import org.overture.codegen.ir.statements.AIfStmIR;
 import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
 import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
-import org.overture.codegen.ir.types.*;
+import org.overture.codegen.ir.types.ABoolBasicTypeIR;
+import org.overture.codegen.ir.types.ACharBasicTypeIR;
+import org.overture.codegen.ir.types.AErrorTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
+import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
+import org.overture.codegen.ir.types.ATupleTypeIR;
+import org.overture.codegen.ir.types.AUnionTypeIR;
+import org.overture.codegen.ir.types.AUnknownTypeIR;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
@@ -89,6 +113,16 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		this.config = config;
 
 		this.casesExpNamePrefix = casesExpNamePrefix;
+	}
+	
+	@Override
+	public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
+
+		//TODO: currently values patterns are replaced by strings
+		if(node.getName().equals("-"))
+		{
+			node.setName(transAssistant.getInfo().getTempVarNameGen().nextVarName(config.getIgnorePatternPrefix()));
+		}
 	}
 
 	@Override

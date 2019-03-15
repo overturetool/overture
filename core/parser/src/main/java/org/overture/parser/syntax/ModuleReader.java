@@ -54,6 +54,7 @@ import org.overture.ast.modules.SValueImport;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.ClonableFile;
 import org.overture.ast.util.modules.ModuleList;
+import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.LocatedException;
@@ -169,9 +170,20 @@ public class ModuleReader extends SyntaxReader
 
 			if (imports == null && lastToken().is(VDMToken.IMPORTS))
 			{
+				if (Settings.strict)
+				{
+					warning(5024, "Strict: order should be imports then exports", lastToken().location);
+				}
+				
 				imports = readImports(name);
 			}
-		} catch (LocatedException e)
+			
+			if (Settings.strict && exports == null)
+			{
+				warning(5025, "Strict: expecting 'exports all' clause", lastToken().location);
+			}
+		}
+		catch (LocatedException e)
 		{
 			VDMToken[] after = { VDMToken.DEFINITIONS };
 			VDMToken[] upto = { VDMToken.END };
@@ -324,11 +336,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PExport> list = new Vector<PExport>();
 		list.add(readExportedType());
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().isNot(VDMToken.DEFINITIONS)
 				&& lastToken().isNot(VDMToken.USELIB) && !newType())
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5022, "Strict: expecting semi-colon between exports", lastToken().location);
+			}
+
 			list.add(readExportedType());
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -342,7 +361,6 @@ public class ModuleReader extends SyntaxReader
 			nextToken();
 		}
 		LexNameToken name = readNameToken("Expecting exported type name");
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newATypeExport(name, struct);
 	}
 
@@ -351,11 +369,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PExport> list = new Vector<PExport>();
 		list.add(readExportedValue());
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().isNot(VDMToken.DEFINITIONS)
 				&& lastToken().isNot(VDMToken.USELIB) && !newType())
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5022, "Strict: expecting semi-colon between exports", lastToken().location);
+			}
+
 			list.add(readExportedValue());
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -368,7 +393,6 @@ public class ModuleReader extends SyntaxReader
 		List<ILexNameToken> nameList = readIdList();
 		checkFor(VDMToken.COLON, 2175, "Expecting ':' after export name");
 		PType type = getTypeReader().readType();
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAValueExport(token.location, nameList, type);
 	}
 
@@ -377,11 +401,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PExport> list = new Vector<PExport>();
 		list.add(readExportedFunction());
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().is(VDMToken.IDENTIFIER)
 				|| lastToken().is(VDMToken.NAME))
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5022, "Strict: expecting semi-colon between exports", lastToken().location);
+			}
+
 			list.add(readExportedFunction());
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -395,7 +426,6 @@ public class ModuleReader extends SyntaxReader
 		List<ILexNameToken> typeParams = ignoreTypeParams();
 		checkFor(VDMToken.COLON, 2176, "Expecting ':' after export name");
 		PType type = getTypeReader().readType();
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAFunctionExport(token.location, nameList, type, typeParams);
 	}
 
@@ -404,11 +434,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PExport> list = new Vector<PExport>();
 		list.add(readExportedOperation());
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().is(VDMToken.IDENTIFIER)
 				|| lastToken().is(VDMToken.NAME))
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5022, "Strict: expecting semi-colon between exports", lastToken().location);
+			}
+
 			list.add(readExportedOperation());
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -421,7 +458,6 @@ public class ModuleReader extends SyntaxReader
 		List<ILexNameToken> nameList = readIdList();
 		checkFor(VDMToken.COLON, 2177, "Expecting ':' after export name");
 		PType type = getTypeReader().readOperationType();
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAOperationExport(token.location, nameList, type);
 	}
 
@@ -519,11 +555,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedType(from));
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().is(VDMToken.IDENTIFIER)
 				|| lastToken().is(VDMToken.NAME))
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5023, "Strict: expecting semi-colon between imports", lastToken().location);
+			}
+
 			list.add(readImportedType(from));
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -549,7 +592,6 @@ public class ModuleReader extends SyntaxReader
 				renamed = readNameToken("Expected renamed type name");
 			}
 
-			ignore(VDMToken.SEMICOLON);
 			return AstFactory.newATypeImport(def, renamed);
 		} catch (ParserException e)
 		{
@@ -566,7 +608,6 @@ public class ModuleReader extends SyntaxReader
 			renamed = readNameToken("Expected renamed type name");
 		}
 
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newATypeImport(defname, renamed);
 	}
 
@@ -575,11 +616,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedValue(from));
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().is(VDMToken.IDENTIFIER)
 				|| lastToken().is(VDMToken.NAME))
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5023, "Strict: expecting semi-colon between imports", lastToken().location);
+			}
+
 			list.add(readImportedValue(from));
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -605,7 +653,6 @@ public class ModuleReader extends SyntaxReader
 			renamed = readNameToken("Expected renamed value name");
 		}
 
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAValueValueImport(defname, type, renamed);
 	}
 
@@ -614,11 +661,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedFunction(from));
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().is(VDMToken.IDENTIFIER)
 				|| lastToken().is(VDMToken.NAME))
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5023, "Strict: expecting semi-colon between imports", lastToken().location);
+			}
+
 			list.add(readImportedFunction(from));
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -646,7 +700,6 @@ public class ModuleReader extends SyntaxReader
 			renamed = readNameToken("Expected renamed function name");
 		}
 
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAFunctionValueImport(defname, type, typeParams, renamed);
 	}
 
@@ -655,11 +708,18 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedOperation(from));
+		boolean semi = ignore(VDMToken.SEMICOLON);
 
 		while (lastToken().is(VDMToken.IDENTIFIER)
 				|| lastToken().is(VDMToken.NAME))
 		{
+			if (!semi && Settings.strict)
+			{
+				warning(5023, "Strict: expecting semi-colon between imports", lastToken().location);
+			}
+
 			list.add(readImportedOperation(from));
+			semi = ignore(VDMToken.SEMICOLON);
 		}
 
 		return list;
@@ -685,7 +745,6 @@ public class ModuleReader extends SyntaxReader
 			renamed = readNameToken("Expected renamed operation name");
 		}
 
-		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAOperationValueImport(defname, type, renamed);
 	}
 

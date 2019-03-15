@@ -48,7 +48,7 @@ public class Entry {
 
     final VDMSet xs = SetUtil.set(new A(), new B());
     {
-      for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext(); ) {
+      for (Iterator iterator_1 = ((Iterable) xs).iterator(); iterator_1.hasNext(); ) {
         Object x = (Object) iterator_1.next();
         Object apply_1 = null;
         if (x instanceof A) {

@@ -670,6 +670,44 @@ public class TypeAssistantIR extends AssistantBase
 
 		return type;
 	}
+	
+	public STypeIR reduceToSeq(STypeIR type)
+	{
+		if(type instanceof AUnionTypeIR)
+		{
+			AUnionTypeIR union = (AUnionTypeIR) type;
+			List<STypeIR> types = new LinkedList<>();
+			
+			if(!union.getTypes().isEmpty())
+			{
+				for(STypeIR t : union.getTypes())
+				{
+					if(t instanceof SSeqTypeIR)
+					{
+						types.add(t);
+					}
+				}
+				
+				if(types.size() == 1)
+				{
+					return types.get(0);
+				}
+				
+				AUnionTypeIR newType = union.clone();
+				newType.setTypes(types);
+				return newType;
+			}
+			else
+			{
+				log.error("Received union empty union types: " + type);
+				return type;
+			}
+		}
+		else
+		{
+			return type;
+		}
+	}
 
 	public SSeqTypeIR getSeqType(AUnionTypeIR unionType)
 	{

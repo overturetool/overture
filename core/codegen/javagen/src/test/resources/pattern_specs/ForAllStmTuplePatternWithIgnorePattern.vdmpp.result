@@ -8,7 +8,9 @@ public class Entry {
 
     Number result = 1L;
     for (Iterator iterator_1 =
-            SetUtil.set(Tuple.mk_(3L, 3L, 3L), Tuple.mk_(4L, 2L, 6L), Tuple.mk_(7L, 2L, 9L))
+            ((Iterable)
+                    SetUtil.set(
+                        Tuple.mk_(3L, 3L, 3L), Tuple.mk_(4L, 2L, 6L), Tuple.mk_(7L, 2L, 9L)))
                 .iterator();
         iterator_1.hasNext();
         ) {

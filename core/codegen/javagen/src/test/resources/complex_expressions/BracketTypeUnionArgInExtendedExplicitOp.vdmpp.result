@@ -1,0 +1,67 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  private Number op(final Object t) {
+
+    Number apply_1 = null;
+    if (t instanceof R) {
+      apply_1 = ((R) t).x;
+    } else {
+      throw new RuntimeException("Missing member: x");
+    }
+
+    return apply_1;
+  }
+
+  public static Object Run() {
+
+    return new Entry().op(new R(5L));
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class R implements Record {
+    public Number x;
+
+    public R(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R)) {
+        return false;
+      }
+
+      R other = ((R) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public R copy() {
+
+      return new R(x);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R" + Utils.formatFields(x);
+    }
+  }
+}
+
+##########

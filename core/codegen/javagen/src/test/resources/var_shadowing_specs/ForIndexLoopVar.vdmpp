@@ -6,9 +6,12 @@ public static Run :  () ==> ?
 Run () ==
 let i = 1
 in
+(
   for i = i to i do
     let i = i
     in
       return i;
+  return 0;
+)
 
 end Entry

@@ -23,7 +23,7 @@ public class VarRenamer
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 			throws AnalysisException
 	{
-		VarShadowingRenameCollector renamer = new VarShadowingRenameCollector(af, idDefs);
+		VarShadowingRenameCollector renamer = new VarShadowingRenameCollector(af, idDefs, nodes);
 
 		for (INode node : nodes)
 		{

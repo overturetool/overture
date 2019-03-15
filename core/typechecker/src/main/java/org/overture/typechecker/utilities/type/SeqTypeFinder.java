@@ -24,6 +24,7 @@ package org.overture.typechecker.utilities.type;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -78,17 +79,22 @@ public class SeqTypeFinder extends TypeUnwrapper<String, SSeqType>
 			type.setSeqDone(true); // Mark early to avoid recursion.
 			type.setSeqType(af.createPTypeAssistant().getSeq(AstFactory.newAUnknownType(type.getLocation()), fromModule));
 			PTypeSet set = new PTypeSet(af);
+			boolean allSeq1 = true;
 
 			for (PType t : type.getTypes())
 			{
 				if (af.createPTypeAssistant().isSeq(t, fromModule))
 				{
-					set.add(t.apply(THIS, fromModule).getSeqof());
+					SSeqType st = t.apply(THIS, fromModule);
+					set.add(st.getSeqof());
+					allSeq1 = allSeq1 && (st instanceof ASeq1SeqType);
 				}
 			}
 
-			type.setSeqType(set.isEmpty() ? null
-					: AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
+			type.setSeqType(set.isEmpty() ? null :
+					allSeq1 ?
+						AstFactory.newASeq1SeqType(type.getLocation(), set.getType(type.getLocation())) :		
+						AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
 		}
 
 		return type.getSeqType();

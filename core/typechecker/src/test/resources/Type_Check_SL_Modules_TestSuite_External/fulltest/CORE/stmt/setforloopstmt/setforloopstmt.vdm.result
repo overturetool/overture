@@ -4,7 +4,7 @@
 <message column="13" line="15" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="setforloopstmt.vdm"/>
 <message column="27" line="16" message="Name 'SetForLoopTest`a' is not in scope" messageType="error" number="3182" resource="setforloopstmt.vdm"/>
 <message column="29" line="16" message="Right hand of and is not bool" messageType="error" number="3066" resource="setforloopstmt.vdm"/>
-<message column="3" line="13" message="Operation returns unexpected type" messageType="error" number="3027" resource="setforloopstmt.vdm"/>
+<message column="3" line="13" message="Void operation returns non-void value" messageType="error" number="3312" resource="setforloopstmt.vdm"/>
 <message column="5" line="34" message="For all statement does not contain a set type" messageType="error" number="3219" resource="setforloopstmt.vdm"/>
 <result/>
 </testResult>

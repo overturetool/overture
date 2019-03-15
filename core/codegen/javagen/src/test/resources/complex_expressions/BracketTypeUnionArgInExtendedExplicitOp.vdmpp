@@ -1,0 +1,15 @@
+class Entry
+
+types
+	
+R :: x : nat;
+	
+operations
+
+op(t:(R | nat)) r : nat ==
+return t.x;
+
+public static Run : () ==> ?
+Run () == new Entry().op(mk_R(5));
+	
+end Entry

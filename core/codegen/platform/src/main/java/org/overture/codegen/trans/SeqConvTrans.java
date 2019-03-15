@@ -58,6 +58,11 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 		STypeIR nodeType = node.getType();
 		SExpIR initial = node.getInitial();
 
+		if(nodeType instanceof AStringTypeIR)
+		{
+			correctIfTemplateTypeCase(initial);
+		}
+		
 		handleVarExp(nodeType, initial);
 
 		if (initial == null)
@@ -88,6 +93,11 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 	{
 		STypeIR nodeType = node.getType();
 		SExpIR exp = node.getExp();
+		
+		if(nodeType instanceof AStringTypeIR)
+		{
+			correctIfTemplateTypeCase(exp);
+		}
 
 		handleVarExp(nodeType, exp);
 
@@ -103,6 +113,11 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 	public void caseAAssignToExpStmIR(AAssignToExpStmIR node)
 			throws AnalysisException
 	{
+		if(node.getTarget().getType() instanceof AStringTypeIR)
+		{
+			correctIfTemplateTypeCase(node.getExp());
+		}
+		
 		if (node.getExp() != null)
 		{
 			node.getExp().apply(this);
@@ -251,6 +266,40 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 
 		return methodType;
 	}
+	
+	private void correctIfTemplateTypeCase(SExpIR arg) throws AnalysisException {
+		
+		if (arg instanceof AApplyExpIR) {
+
+			AApplyExpIR node = (AApplyExpIR) arg;
+			
+			AMethodTypeIR methodType = getMethodType(node, new LinkedList<>());
+
+			if (methodType == null) {
+				return;
+			}
+
+			SExpIR root = node.getRoot();
+
+			if (root instanceof AMethodInstantiationExpIR) {
+				AMethodInstantiationExpIR inst = (AMethodInstantiationExpIR) root;
+
+				if (inst.getActualTypes().size() == 1) {
+					STypeIR actualType = inst.getActualTypes().get(0);
+
+					if (actualType instanceof ACharBasicTypeIR) {
+						STypeIR resultType = methodType.getResult();
+						if (resultType instanceof SSeqTypeIR) {
+							SSeqTypeIR seqType = (SSeqTypeIR) resultType;
+							if (seqType.getSeqOf() instanceof ATemplateTypeIR) {
+								correctExpToString(node);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public void caseAApplyExpIR(AApplyExpIR node) throws AnalysisException {
@@ -367,6 +416,8 @@ public class SeqConvTrans extends DepthFirstAnalysisAdaptor
 
 		if (methodType.getResult() instanceof AStringTypeIR)
 		{
+			correctIfTemplateTypeCase(exp);
+			
 			if (!(exp.getType() instanceof SSeqTypeIR))
 			{
 				return;

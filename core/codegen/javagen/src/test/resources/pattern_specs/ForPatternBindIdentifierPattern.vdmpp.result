@@ -7,7 +7,9 @@ public class Entry {
   public static Number Run() {
 
     Number result = 0L;
-    for (Iterator iterator_1 = SeqUtil.seq(5L, 10L, 15L).iterator(); iterator_1.hasNext(); ) {
+    for (Iterator iterator_1 = ((Iterable) SeqUtil.seq(5L, 10L, 15L)).iterator();
+        iterator_1.hasNext();
+        ) {
       Number x = (Number) iterator_1.next();
       result = result.longValue() + x.longValue();
     }

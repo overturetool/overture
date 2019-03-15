@@ -729,6 +729,8 @@ public class StmVisitorIR extends AbstractVisitorIR<IRInfo, SStmIR>
 		{
 			forAll.setExp(seqExpCg);
 		}
+		
+		seqExpCg.setType(question.getTypeAssistant().reduceToSeq(seqExpCg.getType()));
 
 		return forAll;
 	}
