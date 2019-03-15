@@ -1,0 +1,12 @@
+class Entry
+
+values
+
+- = 2;
+
+operations
+
+public static Run : () ==> ?
+Run () == return 52;
+
+end Entry

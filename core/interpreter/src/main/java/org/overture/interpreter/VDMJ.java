@@ -266,7 +266,10 @@ abstract public class VDMJ
 				{
 					usage("-baseDir option requires a folder name");
 				}
-			}  else if (arg.startsWith("-"))
+			} else if (arg.equals("-strict"))
+			{
+				Settings.strict = true;
+			} else if (arg.startsWith("-"))
 			{
 				usage("Unknown option " + arg);
 			} else

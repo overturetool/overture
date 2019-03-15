@@ -1,0 +1,70 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  private Number op(final R r) {
+
+    if (Utils.equals(1L, 1L)) {
+      for (Iterator iterator_1 = ((Iterable) r.x).iterator(); iterator_1.hasNext(); ) {
+        Number y = (Number) iterator_1.next();
+        return y;
+      }
+    }
+
+    return 1L;
+  }
+
+  public static Object Run() {
+
+    return new Entry().op(new R(SeqUtil.seq(5L, 10L, 15L)));
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class R implements Record {
+    public Object x;
+
+    public R(final Object _x) {
+
+      x = _x != null ? Utils.copy(_x) : null;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof R)) {
+        return false;
+      }
+
+      R other = ((R) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public R copy() {
+
+      return new R(x);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`R" + Utils.formatFields(x);
+    }
+  }
+}
+
+##########
+*Quotes*
+A
+##########

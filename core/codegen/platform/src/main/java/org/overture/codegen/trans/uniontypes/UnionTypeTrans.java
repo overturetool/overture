@@ -24,6 +24,8 @@ package org.overture.codegen.trans.uniontypes;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AParameterType;
@@ -55,7 +57,9 @@ import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
 import org.overture.codegen.ir.expressions.AElemsUnaryExpIR;
 import org.overture.codegen.ir.expressions.AFieldExpIR;
 import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AHeadUnaryExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIndicesUnaryExpIR;
 import org.overture.codegen.ir.expressions.AIntDivNumericBinaryExpIR;
 import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
 import org.overture.codegen.ir.expressions.ALenUnaryExpIR;
@@ -100,6 +104,8 @@ import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 {
+	protected Logger log = Logger.getLogger(this.getClass().getName());
+	
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
 	public static final String MISSING_MEMBER = "Missing member: ";
 
@@ -322,8 +328,24 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
+	public void caseAHeadUnaryExpIR(AHeadUnaryExpIR node) throws AnalysisException {
+		
+		processSeqUnaryExp(node);
+	}
+	
+	@Override
+	public void caseAIndicesUnaryExpIR(AIndicesUnaryExpIR node) throws AnalysisException {
+		
+		processSeqUnaryExp(node);
+	}
+	
+	@Override
 	public void caseALenUnaryExpIR(ALenUnaryExpIR node) throws AnalysisException
 	{
+		processSeqUnaryExp(node);
+	}
+
+	private void processSeqUnaryExp(SUnaryExpIR node) throws AnalysisException {
 		STypeIR type = node.getExp().getType();
 
 		if (type instanceof AUnionTypeIR)
@@ -389,7 +411,7 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		SExpIR object = node.getObject();
 		STypeIR objectType = object.getType();
 
-		if (!(objectType instanceof AUnionTypeIR))
+		if (!(objectType instanceof AUnionTypeIR) && !typeNarrowedByIsCheck(object))
 		{
 			object.apply(this);
 			return;
@@ -398,6 +420,40 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 		STypeIR resultType = getResultType(node, node.parent(), objectType, transAssistant.getInfo().getTypeAssistant());
 
 		handleFieldExp(node, node.getMemberName(), object, objectType, resultType);
+	}
+
+	private boolean typeNarrowedByIsCheck(SExpIR object) {
+		
+		if(object instanceof SVarExpIR)
+		{
+			org.overture.ast.node.INode vdmNode = AssistantBase.getVdmNode(object);
+		
+			if(vdmNode instanceof AVariableExp)
+			{
+				AVariableExp vdmVar = (AVariableExp) vdmNode;
+				
+				PDefinition varDef = vdmVar.getVardef();
+				
+				if(varDef != null)
+				{
+					if(varDef.getType() != null)
+					{
+						if (!varDef.getType().equals(vdmVar.getType())) {
+							// If the type of the variable expression is narrowed by an 'is_' check, e.g.
+							// is_(var, R1) then the type of this variable will be different from that of
+							// the variable definition.
+							return true;
+						}
+					}
+					else
+					{
+						log.warn("Type of variable definition '" + varDef + "' is null. Location: " + varDef.getLocation());
+					}
+				}
+			}			
+		}
+		
+		return false;
 	}
 
 	private void handleFieldExp(SExpIR node, String memberName, SExpIR subject,
@@ -451,7 +507,18 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			obj = subject.clone();
 		}
 
-		List<STypeIR> possibleTypes = ((AUnionTypeIR) fieldObjType).getTypes();
+		List<STypeIR> possibleTypes;
+		
+		if(fieldObjType instanceof AUnionTypeIR)
+		{
+			possibleTypes = ((AUnionTypeIR) fieldObjType).getTypes();
+		}
+		else
+		{
+			possibleTypes = new LinkedList<>();
+			possibleTypes.add(fieldObjType);
+		}
+		
 		possibleTypes = typeAssistant.clearDuplicates(possibleTypes);
 
 		AIfStmIR ifChecks = new AIfStmIR();
@@ -1127,7 +1194,18 @@ public class UnionTypeTrans extends DepthFirstAnalysisAdaptor
 			TypeAssistantIR typeAssistant)
 	{
 		List<STypeIR> fieldTypes = new LinkedList<STypeIR>();
-		List<STypeIR> types = ((AUnionTypeIR) objectType).getTypes();
+		
+		List<STypeIR> types;
+		
+		if(objectType instanceof AUnionTypeIR)
+		{
+			types = ((AUnionTypeIR) objectType).getTypes();
+		}
+		else
+		{
+			types = new LinkedList<>();
+			types.add(objectType);
+		}
 
 		for (STypeIR currentType : types)
 		{

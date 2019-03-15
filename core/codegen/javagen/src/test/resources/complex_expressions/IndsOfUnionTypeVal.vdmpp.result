@@ -1,0 +1,24 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    final Object xs = SeqUtil.seq(6L, 8L, 10L);
+    return SeqUtil.inds(((VDMSeq) xs));
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
+*Quotes*
+A
+##########

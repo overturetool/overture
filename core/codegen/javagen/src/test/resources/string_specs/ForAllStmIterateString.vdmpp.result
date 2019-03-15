@@ -7,7 +7,7 @@ public class Entry {
   private static String rev(final String s) {
 
     String res = "";
-    for (Iterator iterator_1 = SeqUtil.toSeq(s).iterator(); iterator_1.hasNext(); ) {
+    for (Iterator iterator_1 = ((Iterable) SeqUtil.toSeq(s)).iterator(); iterator_1.hasNext(); ) {
       Character c = (Character) iterator_1.next();
       res = new String(new char[] {c}) + res;
     }

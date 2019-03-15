@@ -159,11 +159,9 @@ public class SlStateAccessTrans extends DepthFirstAnalysisAdaptor
 		return matches;
 	}
 
-	private boolean isFieldRead(final AStateDeclIR stateDecl,
-			AIdentifierVarExpIR node)
-	{
-		return !info.isSlStateRead(node)
-				&& !node.getName().equals(stateDecl.getName());
+	private boolean isFieldRead(final AStateDeclIR stateDecl, AIdentifierVarExpIR node) {
+		return !info.isSlStateRead(node) && !node.getName().equals(stateDecl.getName())
+				&& !node.getName().equals("_" + stateDecl.getName());
 	}
 
 	private boolean isOldFieldRead(final AStateDeclIR stateDecl,

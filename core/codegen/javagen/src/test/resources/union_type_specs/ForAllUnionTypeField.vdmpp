@@ -1,0 +1,20 @@
+class Entry
+
+types
+
+R :: x : [<A> | seq of nat];
+
+operations
+
+op : R ==> nat
+op (r) ==
+(
+  if 1 = 1 then
+    for y in r.x do return y;
+  return 1;
+);
+
+public static Run : () ==> ?
+Run () == new Entry().op(mk_R([5,10,15]));
+
+end Entry

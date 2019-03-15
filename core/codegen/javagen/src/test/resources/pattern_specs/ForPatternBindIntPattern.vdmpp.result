@@ -7,7 +7,9 @@ public class Entry {
   public static Number Run() {
 
     Number result = 0L;
-    for (Iterator iterator_1 = SeqUtil.seq(5L, 10L, 15L, 10L).iterator(); iterator_1.hasNext(); ) {
+    for (Iterator iterator_1 = ((Iterable) SeqUtil.seq(5L, 10L, 15L, 10L)).iterator();
+        iterator_1.hasNext();
+        ) {
       Number intPattern_1 = (Number) iterator_1.next();
       Boolean success_1 = Utils.equals(intPattern_1, 10L);
       if (!(success_1)) {

@@ -3048,13 +3048,24 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
+		boolean set1 = false;
 
-		if (!question.assistantFactory.createPTypeAssistant().isSet(exp.apply(THIS, question.newConstraint(null))))
+		PType etype = exp.apply(THIS, question.newConstraint(null));
+
+		if (!question.assistantFactory.createPTypeAssistant().isSet(etype))
 		{
 			TypeCheckerErrors.report(3067, "Argument of 'card' is not a set", exp.getLocation(), exp);
 		}
+		else
+		{
+			PType st = question.assistantFactory.createPTypeAssistant().getSet(etype);
+			set1 = st instanceof ASet1SetType;
+		}
 
-		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
+		node.setType(set1 ?
+			AstFactory.newANatOneNumericBasicType(node.getLocation()) :
+			AstFactory.newANatNumericBasicType(node.getLocation()));
+
 		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 
@@ -3240,6 +3251,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
+		boolean seq1 = false;
 
 		PType etype = exp.apply(THIS, question.newConstraint(null));
 
@@ -3247,8 +3259,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeCheckerErrors.report(3116, "Argument to 'len' is not a sequence", node.getLocation(), node);
 		}
+		else
+		{
+			PType st = question.assistantFactory.createPTypeAssistant().getSeq(etype);
+			seq1 = st instanceof ASeq1SeqType;
+		}
 
-		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
+		node.setType(seq1 ?
+			AstFactory.newANatOneNumericBasicType(node.getLocation()) :
+			AstFactory.newANatNumericBasicType(node.getLocation()));
+
 		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 

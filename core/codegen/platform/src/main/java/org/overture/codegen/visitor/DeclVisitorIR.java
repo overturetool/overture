@@ -556,6 +556,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
+		//FIXME: patterns should be handled by transformations
 		String name = node.getPattern().toString();
 		boolean isStatic = true;
 		boolean isFinal = true;

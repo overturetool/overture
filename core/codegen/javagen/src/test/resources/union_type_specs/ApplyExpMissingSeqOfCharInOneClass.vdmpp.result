@@ -26,7 +26,7 @@ public class Entry {
     final VDMSeq xs = SeqUtil.seq(new A(), new A());
     {
       VDMSeq str = SeqUtil.seq();
-      for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext(); ) {
+      for (Iterator iterator_1 = ((Iterable) xs).iterator(); iterator_1.hasNext(); ) {
         Object x = (Object) iterator_1.next();
         Character apply_1 = null;
         if (x instanceof A) {

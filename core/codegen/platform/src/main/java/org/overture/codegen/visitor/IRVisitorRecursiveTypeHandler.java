@@ -52,31 +52,7 @@ public class IRVisitorRecursiveTypeHandler extends IRVisitor<STypeIR>
 	{
 		for (PType e : typeStack)
 		{
-			// Everything equals the unknown type according to the type equality
-			// checker so we give unknown types special treatment
-			if (type instanceof AUnknownType)
-			{
-				if (e instanceof AUnknownType)
-				{
-					return true;
-				} else
-				{
-					return false;
-				}
-			} else if (e instanceof AUnknownType)
-			{
-				if (type instanceof AUnknownType)
-				{
-					return true;
-				} else
-				{
-					return false;
-				}
-			}
-			// Now that we are sure that none of them are unknown types we use
-			// the type equality checker
-			else if (question.getTcFactory().createPTypeAssistant().equals(type, e)
-					&& question.getTcFactory().createPTypeAssistant().equals(e, type))
+			if(e == type)
 			{
 				return true;
 			}

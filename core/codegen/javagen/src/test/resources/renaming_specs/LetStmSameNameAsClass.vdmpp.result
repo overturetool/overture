@@ -1,0 +1,42 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class m {
+  public m() {}
+
+  public static Number f(final Number x) {
+
+    return x;
+  }
+
+  public String toString() {
+
+    return "m{}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    final Number m_1 = 0L;
+    final Number n = m.f(0L);
+    return n;
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
