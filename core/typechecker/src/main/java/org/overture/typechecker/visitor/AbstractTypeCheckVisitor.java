@@ -224,12 +224,12 @@ public class AbstractTypeCheckVisitor extends
 			{
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
-				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope).newModule(question.fromModule));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}
 		}
 
-		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null));
+		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null, question.fromModule));
 		local.unusedCheck(question.env);
 		return r;
 	}
@@ -265,7 +265,7 @@ public class AbstractTypeCheckVisitor extends
 		
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, qualified, question.env, question.scope);
 
-		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null);
+		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null, question.fromModule);
 
 		if (suchThat != null
 				&& !question.assistantFactory.createPTypeAssistant().isType(suchThat.apply(THIS, newInfo.newConstraint(null)), ABooleanBasicType.class))

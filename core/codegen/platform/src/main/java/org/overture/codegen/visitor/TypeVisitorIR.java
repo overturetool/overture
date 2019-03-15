@@ -103,24 +103,24 @@ public class TypeVisitorIR extends AbstractVisitorIR<IRInfo, STypeIR>
 
 		if (question.getTypeAssistant().isUnionOfType(node, SSetType.class, typeAssistant))
 		{
-			SSetType setType = typeAssistant.getSet(node);
+			SSetType setType = typeAssistant.getSet(node, null);
 
 			return setType.apply(question.getTypeVisitor(), question);
 
 		} else if (question.getTypeAssistant().isUnionOfType(node, SSeqType.class, typeAssistant))
 		{
-			SSeqType seqType = typeAssistant.getSeq(node);
+			SSeqType seqType = typeAssistant.getSeq(node, null);
 
 			return seqType.apply(question.getTypeVisitor(), question);
 
 		} else if (question.getTypeAssistant().isUnionOfType(node, SMapType.class, typeAssistant))
 		{
-			SMapType mapType = typeAssistant.getMap(node);
+			SMapType mapType = typeAssistant.getMap(node, null);
 
 			return mapType.apply(question.getTypeVisitor(), question);
 		} else if (question.getTypeAssistant().isProductOfSameSize(node, typeAssistant))
 		{
-			AProductType productType = typeAssistant.getProduct(node);
+			AProductType productType = typeAssistant.getProduct(node, null);
 
 			return productType.apply(question.getTypeVisitor(), question);
 		} else

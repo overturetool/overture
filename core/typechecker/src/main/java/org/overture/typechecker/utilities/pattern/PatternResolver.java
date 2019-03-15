@@ -52,9 +52,6 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 public class PatternResolver extends
 		QuestionAdaptor<PatternResolver.NewQuestion>
 {
-	/**
-	 * 
-	 */
 	public static class NewQuestion
 	{
 		IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
@@ -68,11 +65,13 @@ public class PatternResolver extends
 		}
 	}
 
-	protected ITypeCheckerAssistantFactory af;
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	public PatternResolver(ITypeCheckerAssistantFactory af)
+	public PatternResolver(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -94,7 +93,7 @@ public class PatternResolver extends
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}
@@ -120,7 +119,7 @@ public class PatternResolver extends
 			pattern.getExp().apply(new TypeCheckVisitor(), question.question);
 		} catch (TypeCheckException e)
 		{
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}
@@ -143,7 +142,7 @@ public class PatternResolver extends
 			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, question.rootVisitor, question.question));
 		} catch (TypeCheckException e)
 		{
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}
@@ -165,7 +164,7 @@ public class PatternResolver extends
 			af.createPPatternListAssistant().typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
 		} catch (TypeCheckException e)
 		{
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}
@@ -187,7 +186,7 @@ public class PatternResolver extends
 			af.createPPatternListAssistant().typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
 		} catch (TypeCheckException e)
 		{
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}
@@ -209,7 +208,7 @@ public class PatternResolver extends
 			af.createPPatternListAssistant().typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
 		} catch (TypeCheckException e)
 		{
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}
@@ -233,7 +232,7 @@ public class PatternResolver extends
 		} catch (TypeCheckException e)
 		{
 			// AUnionPatternAssistantTC.unResolve(pattern);
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}
@@ -308,7 +307,7 @@ public class PatternResolver extends
 		}
 		catch (TypeCheckException e)
 		{
-			af.createPPatternAssistant().unResolve(pattern);
+			af.createPPatternAssistant(fromModule).unResolve(pattern);
 			throw e;
 		}
 	}

@@ -51,7 +51,6 @@ import org.overture.ast.types.SNumericBasicType;
  */
 public interface IAstAssistantFactory
 {
-
 	/**
 	 * Creates a new {@link PAccessSpecifierAssistant}. This assistant provides functionality to check if an
 	 * PAccessSpecifier is a "static", "public" specifier, etc.
@@ -71,10 +70,11 @@ public interface IAstAssistantFactory
 	/**
 	 * Creates a new {@link PPatternAssistant}. This assistant provides functionality for extracting variable names from
 	 * the pattern.
+	 * @param fromModule TODO
 	 * 
 	 * @return the p pattern assistant
 	 */
-	PPatternAssistant createPPatternAssistant();
+	PPatternAssistant createPPatternAssistant(String fromModule);
 
 	/**
 	 * Creates a new {@link ABracketTypeAssistant}. This assistant does nothing and is probably a candidate for
@@ -146,24 +146,27 @@ public interface IAstAssistantFactory
 
 	/**
 	 * Returns the visitor for locating all variable names in a pattern.
+	 * @param fromModule TODO
 	 * 
 	 * @return the all variable name locator
 	 */
-	IAnswer<LexNameList> getAllVariableNameLocator();
+	IAnswer<LexNameList> getAllVariableNameLocator(String fromModule);
 
 	/**
 	 * Returns the visitor to check if a type is numeric. Probably needs a better name.
+	 * @param fromModule TODO
 	 * 
 	 * @return the numeric finder
 	 */
-	IAnswer<Boolean> getNumericFinder();
+	IAnswer<Boolean> getNumericFinder(String fromModule);
 
 	/**
 	 * Returns the visitor that, given a numeric type, gets the the actual {@link SNumericBasicType} associated with it.
+	 * @param fromModule TODO
 	 * 
 	 * @return the numeric basis checker
 	 */
-	IAnswer<SNumericBasicType> getNumericBasisChecker();
+	IAnswer<SNumericBasicType> getNumericBasisChecker(String fromModule);
 
 	/**
 	 * Return the visitor that gets the hashcode of a type.

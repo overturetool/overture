@@ -61,7 +61,7 @@ public class POCaseContext extends POContext
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
+		if (assistantFactory.createPPatternAssistant(null).isSimple(pattern))
 		{
 			PExp matching = patternToExp(pattern,assistantFactory,new UniqueNameGenerator(exp));
 			PExp premise = AstExpressionFactory.newAEqualsBinaryExp(matching.clone(), exp.clone());

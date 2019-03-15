@@ -91,7 +91,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation(), af);
 		this.assistantFactory = af;
 
-		stitch = generate(def.getPredef(), cloneListPatternList(assistantFactory.createAExplicitOperationDefinitionAssistant().getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone());
+		stitch = generate(def.getPredef(), cloneListPatternList(assistantFactory.createAExplicitOperationDefinitionAssistant(null).getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone());
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
@@ -138,7 +138,7 @@ public class ParameterPatternObligation extends ProofObligation
 					forallBindList.add(getMultipleTypeBind(atype, aname));
 					existsBindList.add(getMultipleTypeBind(atype, bname));
 
-					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(param, atype, NameScope.LOCAL))
+					for (PDefinition def : assistantFactory.createPPatternAssistant(null).getDefinitions(param, atype, NameScope.LOCAL))
 					{
 						if (def.getName() != null
 								&& !previousBindings.contains(def.getName()))

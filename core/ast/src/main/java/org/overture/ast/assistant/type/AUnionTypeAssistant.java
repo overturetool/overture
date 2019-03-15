@@ -82,12 +82,12 @@ public class AUnionTypeAssistant implements IAstAssistant
 
 	}
 
-	public boolean isNumeric(AUnionType type)
+	public boolean isNumeric(AUnionType type, String fromModule)
 	{
-		return getNumeric(type) != null;
+		return getNumeric(type, fromModule) != null;
 	}
 
-	public SNumericBasicType getNumeric(AUnionType type)
+	public SNumericBasicType getNumeric(AUnionType type, String fromModule)
 	{
 		if (!type.getNumDone())
 		{
@@ -97,9 +97,9 @@ public class AUnionTypeAssistant implements IAstAssistant
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isNumeric(t))
+				if (af.createPTypeAssistant().isNumeric(t, fromModule))
 				{
-					SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t);
+					SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t, fromModule);
 
 					if (af.createSNumericBasicTypeAssistant().getWeight(nt) > af.createSNumericBasicTypeAssistant().getWeight(type.getNumType()))
 					{

@@ -34,17 +34,19 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class APatternTypePairAssistant implements IAstAssistant
 {
-	protected ITypeCheckerAssistantFactory af;
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	public APatternTypePairAssistant(ITypeCheckerAssistantFactory af)
+	public APatternTypePairAssistant(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	public List<PDefinition> getDefinitions(APatternTypePair result)
 	{
 
-		return af.createPPatternAssistant().getDefinitions(result.getPattern(), result.getType(), NameScope.LOCAL);
+		return af.createPPatternAssistant(fromModule).getDefinitions(result.getPattern(), result.getType(), NameScope.LOCAL);
 	}
 
 	public void typeResolve(APatternTypePair result,

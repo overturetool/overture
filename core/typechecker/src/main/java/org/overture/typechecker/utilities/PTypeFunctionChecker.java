@@ -32,6 +32,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -41,12 +42,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 {
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	protected ITypeCheckerAssistantFactory af;
-
-	public PTypeFunctionChecker(ITypeCheckerAssistantFactory af)
+	public PTypeFunctionChecker(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -68,11 +70,8 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	{
 		if (node instanceof ANamedInvariantType)
 		{
-			if (node.getOpaque())
-			{
-				return false;
-			}
-			return ((ANamedInvariantType) node).getType().apply(THIS); // PTypeAssistantTC.isFunction(type.getType());
+			if (TypeChecker.isOpaque(node, fromModule)) return false;
+			return ((ANamedInvariantType) node).getType().apply(THIS);
 		}
 		else
 		{
@@ -84,7 +83,6 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAOptionalType(AOptionalType node)
 			throws AnalysisException
 	{
-
 		return node.getType().apply(THIS);
 	}
 

@@ -68,7 +68,7 @@ public class CompFunctionValue extends FunctionValue
 	{
 		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
 
-		if (assistant.isFunction(to))
+		if (assistant.isFunction(to, null))
 		{
 			if (type.equals(to) || assistant.isUnknown(to))
 			{

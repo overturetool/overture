@@ -20,9 +20,9 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC implements
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
-	public PPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	public PPatternAssistantInterpreter(IInterpreterAssistantFactory af, String fromModule)
 	{
-		super(af);
+		super(af, fromModule);
 		this.af = af;
 	}
 
@@ -32,7 +32,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC implements
 	public NameValuePairList getNamedValues(PPattern p, Value expval,
 			Context ctxt) throws AnalysisException
 	{
-		List<AIdentifierPattern> ids = af.createPPatternAssistant().findIdentifiers(p);
+		List<AIdentifierPattern> ids = af.createPPatternAssistant(fromModule).findIdentifiers(p);
 
 		// Go through the list of IDs, marking duplicate names as constrained. This is
 		// because we have to permute sets that contain duplicate variables, so that
@@ -75,7 +75,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC implements
 			Value expval, Context ctxt) throws AnalysisException
 	{
 
-		return pattern.apply(af.getAllNamedValuesLocator(), new AllNamedValuesLocator.Newquestion(expval, ctxt));
+		return pattern.apply(af.getAllNamedValuesLocator(fromModule), new AllNamedValuesLocator.Newquestion(expval, ctxt));
 	}
 
 	/**

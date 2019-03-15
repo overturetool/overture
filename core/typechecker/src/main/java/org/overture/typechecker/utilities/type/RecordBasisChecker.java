@@ -37,6 +37,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -44,7 +45,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class RecordBasisChecker extends TypeUnwrapper<Boolean>
+public class RecordBasisChecker extends TypeUnwrapper<String, Boolean>
 {
 
 	protected ITypeCheckerAssistantFactory af;
@@ -55,37 +56,32 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType type)
+	public Boolean defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return false;
+
 		if (type instanceof ANamedInvariantType)
 		{
-			if (type.getOpaque())
-			{
-				return false;
-			}
-			return ((ANamedInvariantType) type).getType().apply(THIS);
-		} else if (type instanceof ARecordInvariantType)
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else if (type instanceof ARecordInvariantType)
 		{
-			if (type.getOpaque())
-			{
-				return false;
-			}
 			return true;
-		} else
+		}
+		else
 		{
 			return false;
 		}
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
-		// return af.createAUnionTypeAssistant().getRecord(type) != null;
 		if (!type.getRecDone())
 		{
 			type.setRecDone(true); // Mark early to avoid recursion.
-			type.setRecType(af.createPTypeAssistant().getRecord(AstFactory.newAUnknownType(type.getLocation())));
+			type.setRecType(af.createPTypeAssistant().getRecord(AstFactory.newAUnknownType(type.getLocation()), fromModule));
 
 			// Build a record type with the common fields of the contained
 			// record types, making the field types the union of the original
@@ -96,11 +92,11 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isRecord(t))
+				if (af.createPTypeAssistant().isRecord(t, fromModule))
 				{
 					recordCount++;
 					
-					for (AFieldField f : af.createPTypeAssistant().getRecord(t).getFields())
+					for (AFieldField f : af.createPTypeAssistant().getRecord(t, fromModule).getFields())
 					{
 						List<PType> current = common.get(f.getTag());
 
@@ -156,9 +152,8 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean defaultPType(PType node) throws AnalysisException
+	public Boolean defaultPType(PType node, String fromModule) throws AnalysisException
 	{
 		return false;
 	}
-
 }

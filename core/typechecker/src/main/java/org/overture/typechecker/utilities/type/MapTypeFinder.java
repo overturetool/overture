@@ -30,6 +30,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -37,7 +38,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class MapTypeFinder extends TypeUnwrapper<SMapType>
+public class MapTypeFinder extends TypeUnwrapper<String, SMapType>
 {
 
 	protected ITypeCheckerAssistantFactory af;
@@ -48,21 +49,21 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 	}
 
 	@Override
-	public SMapType defaultSMapType(SMapType type) throws AnalysisException
+	public SMapType defaultSMapType(SMapType type, String fromModule) throws AnalysisException
 	{
-
 		return type;
 	}
 
 	@Override
-	public SMapType caseANamedInvariantType(ANamedInvariantType type)
+	public SMapType caseANamedInvariantType(ANamedInvariantType type, String fromModule)
 			throws AnalysisException
 	{
-		return type.getType().apply(THIS);
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
+		return type.getType().apply(THIS, fromModule);
 	}
 
 	@Override
-	public SMapType caseAUnionType(AUnionType type) throws AnalysisException
+	public SMapType caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
 		ILexLocation location = type.getLocation();
 
@@ -71,18 +72,16 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 			type.setMapDone(true); // Mark early to avoid recursion.
 			// type.setMapType(PTypeAssistantTC.getMap(AstFactory.newAUnknownType(location)));
 			// Rewritten in an none static form.
-			type.setMapType(af.createPTypeAssistant().getMap(AstFactory.newAUnknownType(location)));
+			type.setMapType(af.createPTypeAssistant().getMap(AstFactory.newAUnknownType(location), fromModule));
 			PTypeSet from = new PTypeSet(af);
 			PTypeSet to = new PTypeSet(af);
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isMap(t))
+				if (af.createPTypeAssistant().isMap(t, fromModule))
 				{
-					// from.add(PTypeAssistantTC.getMap(t).getFrom()); //Original Code
-					from.add(t.apply(THIS).getFrom()); // My change George.
-					// to.add(PTypeAssistantTC.getMap(t).getTo());//Original code.
-					to.add(t.apply(THIS).getTo());// My change George.
+					from.add(t.apply(THIS, fromModule).getFrom());
+					to.add(t.apply(THIS, fromModule).getTo());
 				}
 			}
 
@@ -94,14 +93,14 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 	}
 
 	@Override
-	public SMapType caseAUnknownType(AUnknownType type)
+	public SMapType caseAUnknownType(AUnknownType type, String fromModule)
 			throws AnalysisException
 	{
 		return AstFactory.newAMapMapType(type.getLocation()); // Unknown |-> Unknown
 	}
 
 	@Override
-	public SMapType defaultPType(PType node) throws AnalysisException
+	public SMapType defaultPType(PType node, String fromModule) throws AnalysisException
 	{
 		assert false : "Can't getMap of a non-map";
 		return null;

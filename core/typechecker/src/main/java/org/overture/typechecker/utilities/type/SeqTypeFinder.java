@@ -31,6 +31,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -39,9 +40,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * @author kel
  */
 
-public class SeqTypeFinder extends TypeUnwrapper<SSeqType>
+public class SeqTypeFinder extends TypeUnwrapper<String, SSeqType>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public SeqTypeFinder(ITypeCheckerAssistantFactory af)
@@ -50,42 +50,42 @@ public class SeqTypeFinder extends TypeUnwrapper<SSeqType>
 	}
 
 	@Override
-	public SSeqType defaultSSeqType(SSeqType type) throws AnalysisException
+	public SSeqType defaultSSeqType(SSeqType type, String fromModule) throws AnalysisException
 	{
 		return type;
 	}
 
 	@Override
-	public SSeqType defaultSInvariantType(SInvariantType type)
+	public SSeqType defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
+
 		if (type instanceof ANamedInvariantType)
 		{
-			// return PTypeAssistantTC.getSeq(type.getType());
-			return ((ANamedInvariantType) type).getType().apply(THIS);
-		} else
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return null;
 		}
 	}
 
 	@Override
-	public SSeqType caseAUnionType(AUnionType type) throws AnalysisException
+	public SSeqType caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
-		// return AUnionTypeAssistantTC.getSeq(type);
 		if (!type.getSeqDone())
 		{
 			type.setSeqDone(true); // Mark early to avoid recursion.
-			// type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
-			type.setSeqType(af.createPTypeAssistant().getSeq(AstFactory.newAUnknownType(type.getLocation())));
+			type.setSeqType(af.createPTypeAssistant().getSeq(AstFactory.newAUnknownType(type.getLocation()), fromModule));
 			PTypeSet set = new PTypeSet(af);
 			boolean allSeq1 = true;
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isSeq(t))
+				if (af.createPTypeAssistant().isSeq(t, fromModule))
 				{
-					SSeqType st = t.apply(THIS);
+					SSeqType st = t.apply(THIS, fromModule);
 					set.add(st.getSeqof());
 					allSeq1 = allSeq1 && (st instanceof ASeq1SeqType);
 				}
@@ -101,17 +101,16 @@ public class SeqTypeFinder extends TypeUnwrapper<SSeqType>
 	}
 
 	@Override
-	public SSeqType caseAUnknownType(AUnknownType type)
+	public SSeqType caseAUnknownType(AUnknownType type, String fromModule)
 			throws AnalysisException
 	{
 		return AstFactory.newASeqSeqType(type.getLocation()); // empty
 	}
 
 	@Override
-	public SSeqType defaultPType(PType type) throws AnalysisException
+	public SSeqType defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		assert false : "cannot getSeq from non-seq";
 		return null;
 	}
-
 }

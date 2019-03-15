@@ -92,14 +92,14 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = af.createPDefinitionAssistant().findType(module.getDefs(), name, module.getName().getName());
+		PDefinition def = af.createPDefinitionAssistant().findType(module.getDefs(), name, fromModule);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def = af.createPDefinitionAssistant().findType(module.getImportdefs(), name, module.getName().getName());
+		def = af.createPDefinitionAssistant().findType(module.getImportdefs(), name, fromModule);
 
 		if (def != null)
 		{

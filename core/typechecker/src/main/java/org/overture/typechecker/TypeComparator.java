@@ -45,6 +45,7 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASet1SetType;
+import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
@@ -121,6 +122,24 @@ public class TypeComparator
 		{
 			return a.hashCode() + b.hashCode();
 		}
+	}
+	
+	/**
+	 * The current module name. This is set as the type checker goes from module
+	 * to module, and is used to affect the processing of opaque "non-struct"
+	 * type exports.
+	 */
+	
+	private String currentModule = null;
+
+	public String getCurrentModule()
+	{
+		return currentModule;
+	}
+
+	public void setCurrentModule(String module)
+	{
+		currentModule = module;
 	}
 
 	/**
@@ -287,17 +306,27 @@ public class TypeComparator
 				continue;
 			}
 
-			if (to instanceof ANamedInvariantType)
-			{
-				to = ((ANamedInvariantType) to).getType();
-				continue;
-			}
+    		if (to instanceof SInvariantType)
+    		{
+    			SInvariantType ito =(SInvariantType)to;
+    			
+	    		if (to instanceof ANamedInvariantType && !TypeChecker.isOpaque(ito, currentModule))
+	    		{
+	    			to = ((ANamedInvariantType)to).getType();
+	    			continue;
+	    		}
+    		}
 
-			if (from instanceof ANamedInvariantType)
-			{
-				from = ((ANamedInvariantType) from).getType();
-				continue;
-			}
+    		if (from instanceof SInvariantType)
+    		{
+    			SInvariantType ifrom =(SInvariantType)from;
+    			
+	    		if (from instanceof ANamedInvariantType && !TypeChecker.isOpaque(ifrom, currentModule))
+	    		{
+	    			from = ((ANamedInvariantType)from).getType();
+	    			continue;
+	    		}
+    		}
 
 			if (to instanceof AOptionalType)
 			{

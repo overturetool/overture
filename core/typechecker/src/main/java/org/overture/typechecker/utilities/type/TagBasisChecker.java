@@ -26,6 +26,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -33,7 +34,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author ncb
  */
-public class TagBasisChecker extends TypeUnwrapper<Boolean>
+public class TagBasisChecker extends TypeUnwrapper<String, Boolean>
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -43,31 +44,28 @@ public class TagBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType type)
+	public Boolean defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
 		if (type instanceof ARecordInvariantType)
 		{
-			if (type.getOpaque())
-			{
-				return false;
-			}
-
+			if (TypeChecker.isOpaque(type, fromModule)) return false;
 			return true;
-		} else
+		}
+		else
 		{
 			return false;
 		}
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
 		return false;
 	}
 
 	@Override
-	public Boolean defaultPType(PType node) throws AnalysisException
+	public Boolean defaultPType(PType node, String fromModule) throws AnalysisException
 	{
 		return false;
 	}

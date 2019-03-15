@@ -497,8 +497,8 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			node.getSet().apply(this);
 		}
 
-		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
-		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
+		PType possibleType = af.createPPatternAssistant(null).getPossibleType(node.getPattern());
+		List<PDefinition> defs = af.createPPatternAssistant(null).getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
 
 		for (PDefinition d : defs)
 		{
@@ -712,7 +712,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			for (PPattern pattern : mb.getPlist())
 			{
-				defs.addAll(af.createPPatternAssistant().getDefinitions(pattern, af.createPMultipleBindAssistant().getPossibleType(mb), NameScope.LOCAL));
+				defs.addAll(af.createPPatternAssistant(null).getDefinitions(pattern, af.createPMultipleBindAssistant().getPossibleType(mb), NameScope.LOCAL));
 			}
 		}
 

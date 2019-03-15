@@ -100,7 +100,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			if (sourceNode != null && sourceNode.getVdmNode() instanceof PType)
 			{
 				PType vdmType = (PType) sourceNode.getVdmNode();
-				SSeqType seqType = info.getTcFactory().createPTypeAssistant().getSeq(vdmType);
+				SSeqType seqType = info.getTcFactory().createPTypeAssistant().getSeq(vdmType, null);
 				try
 				{
 					typeCg = seqType.apply(info.getTypeVisitor(), info);

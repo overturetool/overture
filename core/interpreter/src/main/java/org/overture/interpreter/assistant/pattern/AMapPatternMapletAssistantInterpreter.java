@@ -17,19 +17,21 @@ public class AMapPatternMapletAssistantInterpreter implements IAstAssistant
 
 {
 	protected static IInterpreterAssistantFactory af;
+	protected final String fromModule;
 
 	@SuppressWarnings("static-access")
-	public AMapPatternMapletAssistantInterpreter(IInterpreterAssistantFactory af)
+	public AMapPatternMapletAssistantInterpreter(IInterpreterAssistantFactory af, String fromModule)
 	{
 		// super(af);
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	public List<NameValuePairList> getAllNamedValues(AMapletPatternMaplet p,
 			Entry<Value, Value> maplet, Context ctxt) throws AnalysisException
 	{
-		List<NameValuePairList> flist = af.createPPatternAssistant().getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
-		List<NameValuePairList> tlist = af.createPPatternAssistant().getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
+		List<NameValuePairList> flist = af.createPPatternAssistant(fromModule).getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
+		List<NameValuePairList> tlist = af.createPPatternAssistant(fromModule).getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
 		List<NameValuePairList> results = new Vector<NameValuePairList>();
 
 		for (NameValuePairList f : flist)
@@ -50,8 +52,8 @@ public class AMapPatternMapletAssistantInterpreter implements IAstAssistant
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
-		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getFrom()));
-		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getTo()));
+		list.addAll(af.createPPatternAssistant(fromModule).findIdentifiers(p.getFrom()));
+		list.addAll(af.createPPatternAssistant(fromModule).findIdentifiers(p.getTo()));
 
 		return list;
 	}

@@ -30,7 +30,7 @@ public class MultipleEqualityChecker
 			return;        // eqdef will override others anyway
 		}
 
-		AUnionType members = question.assistantFactory.createPTypeAssistant().getUnion(node);
+		AUnionType members = question.assistantFactory.createPTypeAssistant().getUnion(node, question.fromModule);
 		List<PType> equality = new LinkedList<>();
 
 		for (PType m : members.getTypes())

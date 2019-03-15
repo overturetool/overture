@@ -32,6 +32,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -42,11 +43,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class PTypeExtendedChecker extends
 		QuestionAnswerAdaptor<Class<? extends PType>, Boolean>
 {
-	protected ITypeCheckerAssistantFactory af;
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	public PTypeExtendedChecker(ITypeCheckerAssistantFactory af)
+	public PTypeExtendedChecker(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -60,11 +63,7 @@ public class PTypeExtendedChecker extends
 	public Boolean caseANamedInvariantType(ANamedInvariantType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
-
-		if (type.getOpaque())
-		{
-			return false;
-		}
+		if (TypeChecker.isOpaque(type, fromModule)) return false;
 		return type.getType().apply(THIS, typeclass);
 	}
 

@@ -131,7 +131,7 @@ public class PTypeSet extends TreeSet<PType>
 				if (x instanceof SNumericBasicType)
 				{
 					// this is the only call that causes problem. gkanos
-					if (assistantFactory.createSNumericBasicTypeAssistant().getWeight(assistantFactory.createPTypeAssistant().getNumeric(x)) < assistantFactory.createSNumericBasicTypeAssistant().getWeight(assistantFactory.createPTypeAssistant().getNumeric(t)))
+					if (assistantFactory.createSNumericBasicTypeAssistant().getWeight(assistantFactory.createPTypeAssistant().getNumeric(x, null)) < assistantFactory.createSNumericBasicTypeAssistant().getWeight(assistantFactory.createPTypeAssistant().getNumeric(t, null)))
 					{
 						remove(x);
 						break;

@@ -63,7 +63,7 @@ public class PONotCaseContext extends POContext
 
 	private PExp getCaseExp()
 	{
-		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
+		if (assistantFactory.createPPatternAssistant(null).isSimple(pattern))
 		{
 			ANotUnaryExp notExp = new ANotUnaryExp();
 			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(patternToExp(pattern.clone(), assistantFactory, new UniqueNameGenerator(exp)), exp.clone());

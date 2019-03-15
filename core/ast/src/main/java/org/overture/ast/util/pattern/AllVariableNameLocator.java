@@ -44,12 +44,13 @@ import org.overture.ast.patterns.PPattern;
  */
 public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 {
-	protected static IAstAssistantFactory af;
+	protected final IAstAssistantFactory af;
+	protected final String fromModule;
 
-	@SuppressWarnings("static-access")
-	public AllVariableNameLocator(IAstAssistantFactory af)
+	public AllVariableNameLocator(IAstAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -58,8 +59,8 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 	{
 		LexNameList list = new LexNameList();
 
-		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getLeft()));
-		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getRight()));
+		list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(pattern.getLeft()));
+		list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(pattern.getRight()));
 
 		return list;
 	}
@@ -81,7 +82,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(p));
 		}
 
 		return list;
@@ -95,7 +96,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(p));
 		}
 
 		return list;
@@ -109,7 +110,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(p));
 		}
 
 		return list;
@@ -123,7 +124,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(p));
 		}
 
 		return list;
@@ -135,8 +136,8 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 	{
 		LexNameList list = new LexNameList();
 
-		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getLeft()));
-		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getRight()));
+		list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(pattern.getLeft()));
+		list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(pattern.getRight()));
 
 		return list;
 	}
@@ -149,7 +150,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (ANamePatternPair npp : pattern.getFields())
 		{
-			list.addAll(af.createPPatternAssistant().getAllVariableNames(npp.getPattern()));
+			list.addAll(af.createPPatternAssistant(fromModule).getAllVariableNames(npp.getPattern()));
 		}
 
 		return list;
