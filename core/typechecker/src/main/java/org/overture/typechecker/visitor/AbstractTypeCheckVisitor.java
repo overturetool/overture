@@ -134,6 +134,7 @@ public class AbstractTypeCheckVisitor extends
 		{
 			// If the else case is empty then it is a statement and its type is void
 			rtypes.add(AstFactory.newAVoidType(ifLocation));
+			question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, rtypes.getType(ifLocation), question.mandatory, ifLocation);
 		}
 
 		return rtypes.getType(ifLocation);
@@ -229,7 +230,7 @@ public class AbstractTypeCheckVisitor extends
 			}
 		}
 
-		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null, question.fromModule));
+		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null, question.fromModule, question.mandatory));
 		local.unusedCheck(question.env);
 		return r;
 	}
@@ -265,7 +266,7 @@ public class AbstractTypeCheckVisitor extends
 		
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, qualified, question.env, question.scope);
 
-		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null, question.fromModule);
+		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null, question.fromModule, question.mandatory);
 
 		if (suchThat != null
 				&& !question.assistantFactory.createPTypeAssistant().isType(suchThat.apply(THIS, newInfo.newConstraint(null)), ABooleanBasicType.class))

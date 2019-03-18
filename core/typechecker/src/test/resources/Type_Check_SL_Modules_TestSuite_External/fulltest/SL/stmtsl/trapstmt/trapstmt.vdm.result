@@ -12,6 +12,7 @@
 <message column="3" line="16" message="Definition 'Trap1' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
 <message column="3" line="38" message="Definition 'Trap4' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
 <message column="3" line="56" message="Definition 'Trap6' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
+<message column="5" line="36" message="Statement may return void value" messageType="error" number="3328" resource="trapstmt.vdm"/>
 <message column="3" line="29" message="Body of trap statement does not throw exceptions" messageType="error" number="3241" resource="trapstmt.vdm"/>
 <message column="33" line="30" message="Value is not of the right type" messageType="error" number="3327" resource="trapstmt.vdm"/>
 <message column="26" line="30" message="Constructor field 2 is of wrong type" messageType="error" number="3129" resource="trapstmt.vdm"/>
