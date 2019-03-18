@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
+import org.overture.ast.expressions.AAnnotatedUnaryExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADistIntersectUnaryExp;
@@ -24,6 +25,7 @@ import org.overture.ast.expressions.AReverseUnaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
+import org.overture.interpreter.annotations.INAnnotation;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -58,6 +60,27 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
+	}
+	
+	@Override
+	public Value caseAAnnotatedUnaryExp(AAnnotatedUnaryExp node, Context ctxt)
+			throws AnalysisException
+	{
+		if (node.getAnnotation().getImpl() instanceof INAnnotation)
+		{
+			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
+			impl.inBefore(node, ctxt);
+		}
+
+		Value result = node.getExp().apply(THIS, ctxt);
+		
+		if (node.getAnnotation().getImpl() instanceof INAnnotation)
+		{
+			INAnnotation impl = (INAnnotation)node.getAnnotation().getImpl();
+			impl.inAfter(node, result, ctxt);
+		}
+
+		return result;
 	}
 
 	@Override

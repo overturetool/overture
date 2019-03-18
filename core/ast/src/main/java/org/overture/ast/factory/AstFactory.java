@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.AAnnotationAnnotation;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -141,6 +143,7 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAnnotatedStm;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
@@ -348,6 +351,14 @@ public class AstFactory
 	/*
 	 * Constructors for each type
 	 */
+	
+	public static AAnnotationAnnotation newAAnnotationAnnotation(ILexIdentifierToken name, List<PExp> args)
+	{
+		AAnnotationAnnotation annotation = new AAnnotationAnnotation();
+		annotation.setName(name);
+		annotation.setArgs(args);
+		return annotation;
+	}
 
 	public static ADefPatternBind newADefPatternBind(ILexLocation location,
 			Object patternOrBind)
@@ -718,7 +729,7 @@ public class AstFactory
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
+		for (ILexNameToken var : af.createPPatternAssistant(p.getLocation().getModule()).getVariableNames(p))
 		{
 			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 		}
@@ -2616,6 +2627,17 @@ public class AstFactory
 		return result;
 	}
 
+	public static AAnnotatedStm newAAnnotatedStm(ILexLocation location,
+			PAnnotation annotation, PStm body)
+	{
+		AAnnotatedStm result = new AAnnotatedStm();
+		initStatement(result, location);
+		
+		result.setAnnotation(annotation);
+		result.setStmt(body);
+		return result;
+	}
+
 	public static ANonDeterministicSimpleBlockStm newANonDeterministicSimpleBlockStm(
 			ILexLocation token)
 	{
@@ -3381,6 +3403,15 @@ public class AstFactory
 	{
 		AAbsoluteUnaryExp result = new AAbsoluteUnaryExp();
 		initExpressionUnary(result, location, exp);
+		return result;
+	}
+
+	public static AAnnotatedUnaryExp newAAnnotatedUnaryExp(ILexLocation location,
+			PAnnotation annotation, PExp exp)
+	{
+		AAnnotatedUnaryExp result = new AAnnotatedUnaryExp();
+		initExpressionUnary(result, location, exp);
+		result.setAnnotation(annotation);
 		return result;
 	}
 

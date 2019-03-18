@@ -100,11 +100,11 @@ public class DefinitionFinder extends
 		// We can only find an import if it is being sought from the module that
 		// imports it.
 
-		if (question.fromModule != null
-				&& !node.getLocation().getModule().equals(question.fromModule))
-		{
-			return null; // Someone else's import
-		}
+//		if (question.fromModule != null
+//				&& !node.getLocation().getModule().equals(question.fromModule))
+//		{
+//			return null; // Someone else's import
+//		}
 
 		PDefinition def = af.createPDefinitionAssistant().findType(node.getDef(), question.sought, question.fromModule);
 
@@ -136,11 +136,11 @@ public class DefinitionFinder extends
 		// We can only find an import if it is being sought from the module that
 		// imports it.
 
-		if (question.fromModule != null
-				&& !node.getLocation().getModule().equals(question.fromModule))
-		{
-			return null; // Someone else's import
-		}
+//		if (question.fromModule != null
+//				&& !node.getLocation().getModule().equals(question.fromModule))
+//		{
+//			return null; // Someone else's import
+//		}
 
 		PDefinition renamed = af.createPDefinitionAssistant().findName(node, question.sought, NameScope.TYPENAME);
 

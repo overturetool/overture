@@ -37,6 +37,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -44,9 +45,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class OperationTypeFinder extends TypeUnwrapper<AOperationType>
+public class OperationTypeFinder extends TypeUnwrapper<String, AOperationType>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public OperationTypeFinder(ITypeCheckerAssistantFactory af)
@@ -55,48 +55,49 @@ public class OperationTypeFinder extends TypeUnwrapper<AOperationType>
 	}
 
 	@Override
-	public AOperationType defaultSInvariantType(SInvariantType type)
+	public AOperationType defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
+		
 		if (type instanceof ANamedInvariantType)
 		{
-			return ((ANamedInvariantType) type).getType().apply(THIS);
-		} else
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return null;
 		}
 	}
 
 	@Override
-	public AOperationType caseAOperationType(AOperationType type)
+	public AOperationType caseAOperationType(AOperationType type, String fromModule)
 			throws AnalysisException
 	{
 		return type;
 	}
 
 	@Override
-	public AOperationType caseAUnionType(AUnionType type)
+	public AOperationType caseAUnionType(AUnionType type, String fromModule)
 			throws AnalysisException
 	{
 		if (!type.getOpDone())
 		{
 			type.setOpDone(true);
-			// type.setOpType(PTypeAssistantTC.getOperation(AstFactory.newAUnknownType(type.getLocation())));
-			// non static call.
-			type.setOpType(af.createPTypeAssistant().getOperation(AstFactory.newAUnknownType(type.getLocation())));
+			type.setOpType(af.createPTypeAssistant().getOperation(AstFactory.newAUnknownType(type.getLocation()), fromModule));
 			PTypeSet result = new PTypeSet(af);
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
 			List<PDefinition> defs = new Vector<PDefinition>();
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isOperation(t))
+				if (af.createPTypeAssistant().isOperation(t, fromModule))
 				{
 					if (t.getDefinitions() != null)
 					{
 						defs.addAll(t.getDefinitions());
 					}
-					AOperationType op = t.apply(THIS);
+					AOperationType op = t.apply(THIS, fromModule);
 					result.add(op.getResult());
 
 					for (int p = 0; p < op.getParameters().size(); p++)
@@ -139,17 +140,16 @@ public class OperationTypeFinder extends TypeUnwrapper<AOperationType>
 	}
 
 	@Override
-	public AOperationType caseAUnknownType(AUnknownType type)
+	public AOperationType caseAUnknownType(AUnknownType type, String fromModule)
 			throws AnalysisException
 	{
 		return AstFactory.newAOperationType(type.getLocation(), new PTypeList(), AstFactory.newAUnknownType(type.getLocation()));
 	}
 
 	@Override
-	public AOperationType defaultPType(PType type) throws AnalysisException
+	public AOperationType defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		assert false : "Can't getOperation of a non-operation";
 		return null;
 	}
-
 }

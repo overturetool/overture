@@ -62,7 +62,7 @@ public class FuncIterationObligation extends ProofObligation
 		// forall n :T & P(X)
 		AForAllExp forAllExp = new AForAllExp();
 		ILexNameToken arg = getUnique("arg");
-		List<PMultipleBind> bindList = getMultipleTypeBindList(assistantFactory.createPTypeAssistant().getNumeric(exp.getRight().getType().clone()), arg);
+		List<PMultipleBind> bindList = getMultipleTypeBindList(assistantFactory.createPTypeAssistant().getNumeric(exp.getRight().getType().clone(), null), arg);
 		forAllExp.setBindList(bindList);
 		forAllExp.setPredicate(getPredicate(exp.clone(), preName.clone(), arg));
 

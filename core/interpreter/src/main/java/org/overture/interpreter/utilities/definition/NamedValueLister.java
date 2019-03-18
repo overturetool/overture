@@ -96,7 +96,7 @@ public class NamedValueLister extends
 		{
 			try
 			{
-				nvpl = af.createPPatternAssistant().getNamedValues(def.getPattern(), v, initialContext);
+				nvpl = af.createPPatternAssistant(def.getLocation().getModule()).getNamedValues(def.getPattern(), v, initialContext);
 			} catch (PatternMatchException e)
 			{
 				VdmRuntimeError.abort(e, initialContext);
@@ -107,7 +107,7 @@ public class NamedValueLister extends
 			try
 			{
 				Value converted = v.convertTo(def.getTypebind().getType(), initialContext);
-				nvpl = af.createPPatternAssistant().getNamedValues(def.getTypebind().getPattern(), converted, initialContext);
+				nvpl = af.createPPatternAssistant(def.getLocation().getModule()).getNamedValues(def.getTypebind().getPattern(), converted, initialContext);
 			} catch (PatternMatchException e)
 			{
 				VdmRuntimeError.abort(e, initialContext);
@@ -127,7 +127,7 @@ public class NamedValueLister extends
 					VdmRuntimeError.abort(def.getLocation(), 4002, "Expression value is not in set bind", initialContext);
 				}
 
-				nvpl = af.createPPatternAssistant().getNamedValues(def.getSetbind().getPattern(), v, initialContext);
+				nvpl = af.createPPatternAssistant(def.getLocation().getModule()).getNamedValues(def.getSetbind().getPattern(), v, initialContext);
 			}
 			catch (AnalysisException e)
 			{
@@ -153,7 +153,7 @@ public class NamedValueLister extends
 					VdmRuntimeError.abort(def.getLocation(), 4002, "Expression value is not in seq bind", initialContext);
 				}
 
-				nvpl = af.createPPatternAssistant().getNamedValues(def.getSeqbind().getPattern(), v, initialContext);
+				nvpl = af.createPPatternAssistant(def.getLocation().getModule()).getNamedValues(def.getSeqbind().getPattern(), v, initialContext);
 			}
 			catch (AnalysisException e)
 			{
@@ -495,7 +495,7 @@ public class NamedValueLister extends
 		{
 			// UpdatableValues are constantized as they cannot be updated.
 			v = def.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext).convertTo(af.createPDefinitionAssistant().getType(def), initialContext).getConstant();
-			return af.createPPatternAssistant().getNamedValues(def.getPattern(), v, initialContext);
+			return af.createPPatternAssistant(def.getLocation().getModule()).getNamedValues(def.getPattern(), v, initialContext);
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(def.getLocation(), e);

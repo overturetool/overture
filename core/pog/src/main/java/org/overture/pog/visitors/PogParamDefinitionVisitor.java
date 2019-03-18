@@ -57,7 +57,7 @@ import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.pog.utility.UniqueNameGenerator;
 
 public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IProofObligationList>
-		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
+		extends AbstractPogParamVisitor
 {
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
@@ -280,8 +280,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						&& !(pattern instanceof AIgnorePattern)
 						&& node.getExpType() instanceof AUnionType)
 				{
-					PType patternType = assistantFactory.createPPatternAssistant().getPossibleType(pattern); // With
-																												// unknowns
+					PType patternType = assistantFactory.createPPatternAssistant(null).getPossibleType(pattern);
 					AUnionType ut = (AUnionType) node.getExpType();
 					PTypeSet set = new PTypeSet(assistantFactory);
 
@@ -349,7 +348,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node.getAnnotations(), node, question);
 			LexNameList pids = new LexNameList();
 
 			AFunctionType ftype = (AFunctionType) node.getType();
@@ -363,7 +362,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				for (PPattern p : pltp.getPatterns())
 				{
-					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					for (PDefinition def : assistantFactory.createPPatternAssistant(null).getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 					{
 						pids.add(def.getName());
 					}
@@ -427,8 +426,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			question.pop();
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -448,7 +448,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			question.setGenerator(new UniqueNameGenerator(node));
 
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node.getAnnotations(), node, question);
 			LexNameList pids = new LexNameList();
 
 			Boolean precond = true;
@@ -467,7 +467,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			for (PPattern p : node.getParameterPatterns())
 			{
-				for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+				for (PDefinition def : assistantFactory.createPPatternAssistant(null).getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 				{
 					pids.add(def.getName());
 				}
@@ -514,8 +514,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			}
 			question.clearStateContexts();
 			question.pop();
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -572,7 +573,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node.getAnnotations(), node, question);
 			LexNameList pids = new LexNameList();
 
 			AOperationType otype = (AOperationType) node.getType();
@@ -584,7 +585,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				for (PPattern p : tp.getPatterns())
 				{
-					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					for (PDefinition def : assistantFactory.createPPatternAssistant(null).getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 					{
 						pids.add(def.getName());
 					}
@@ -648,8 +649,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			}
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -699,7 +701,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node.getAnnotations(), node, question);
 
 			PExp expression = node.getExpression();
 			PType type = node.getType();
@@ -716,8 +718,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			}
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -730,10 +733,12 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		try
 		{
 			question.push(new PONameContext(new LexNameList(node.getOpname())));
-			IProofObligationList list = node.getGuard().apply(rootVisitor, question);
+			IProofObligationList list = beforeAnnotations(node.getAnnotations(), node, question);
+			list.addAll(node.getGuard().apply(rootVisitor, question));
 			question.pop();
-			return list;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, list, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -745,7 +750,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList list = new ProofObligationList();
+			IProofObligationList list = beforeAnnotations(node.getAnnotations(), node, question);
 
 			if (node.getInvdef() != null)
 			{
@@ -753,8 +758,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				list.add(new SatisfiabilityObligation(node, question, assistantFactory));
 			}
 
-			return list;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, list, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -766,8 +772,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList list = new ProofObligationList();
-
+			IProofObligationList list = beforeAnnotations(node.getAnnotations(), node, question);
 			AExplicitFunctionDefinition invDef = node.getInvdef();
 
 			if (invDef != null)
@@ -789,8 +794,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			}
 
-			return list;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, list, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -802,7 +808,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList obligations = new ProofObligationList();
+			IProofObligationList obligations = beforeAnnotations(node.getAnnotations(), node, question);
 
 			PExp exp = node.getExpression();
 			obligations.addAll(exp.apply(rootVisitor, question));
@@ -812,10 +818,10 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (!(pattern instanceof AIdentifierPattern)
 					&& !(pattern instanceof AIgnorePattern)
-					&& assistantFactory.createPTypeAssistant().isUnion(type))
+					&& assistantFactory.createPTypeAssistant().isUnion(type, null))
 			{
-				PType patternType = assistantFactory.createPPatternAssistant().getPossibleType(pattern);
-				AUnionType ut = assistantFactory.createPTypeAssistant().getUnion(type);
+				PType patternType = assistantFactory.createPPatternAssistant(null).getPossibleType(pattern);
+				AUnionType ut = assistantFactory.createPTypeAssistant().getUnion(type, null);
 				PTypeSet set = new PTypeSet(assistantFactory);
 
 				for (PType u : ut.getTypes())
@@ -850,8 +856,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			}
 
-			return obligations;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, obligations, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -880,7 +887,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
-			IProofObligationList proofObligationList = new ProofObligationList();
+			IProofObligationList proofObligationList = beforeAnnotations(node.getAnnotations(), node, question);
 			question.setGenerator(new UniqueNameGenerator(node));
 
 			for (PDefinition def : node.getDefinitions())
@@ -891,8 +898,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				question.clearStateContexts();
 			}
 
-			return proofObligationList;
-		} catch (Exception e)
+			return afterAnnotations(node.getAnnotations(), node, proofObligationList, question);
+		}
+		catch (Exception e)
 		{
 			throw new POException(node, e.getMessage());
 		}
@@ -911,5 +919,4 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		return new ProofObligationList();
 	}
-
 }

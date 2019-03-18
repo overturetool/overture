@@ -45,12 +45,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 {
-	protected ITypeCheckerAssistantFactory af;
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
 	public AExplicitOperationDefinitionAssistantTC(
-			ITypeCheckerAssistantFactory af)
+			ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	public List<? extends PDefinition> getParamDefinitions(
@@ -62,7 +64,7 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 
 		for (PPattern p : node.getParameterPatterns())
 		{
-			defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
+			defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p, titer.next(), NameScope.LOCAL));
 		}
 
 		return af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs);

@@ -30,7 +30,6 @@ import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -1261,7 +1260,7 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			unfolded = ((AInheritedDefinition) unfolded).getSuperdef();
 		}
 
-		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type)
+		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type, null)
 				&& !(unfolded instanceof SFunctionDefinition)
 				// Renamed functions will still have function types and function definitions
 				&& !(unfolded instanceof ARenamedDefinition);
@@ -1453,11 +1452,11 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 
 		PType lType = node.getLeft().getType();
 
-		if(assist.isMap(lType))
+		if(assist.isMap(lType, null))
 		{
 			return question.getExpAssistant().handleBinaryExp(node, new AMapIterationBinaryExpIR(), question);
 		}
-		else if(assist.isFunction(lType))
+		else if(assist.isFunction(lType, null))
 		{
 			return question.getExpAssistant().handleBinaryExp(node, new AFuncIterationBinaryExpIR(), question);
 		}

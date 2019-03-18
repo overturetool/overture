@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -34,6 +35,7 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PAccess;
@@ -46,6 +48,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexToken;
@@ -442,7 +445,12 @@ public class DefinitionReader extends SyntaxReader
     					throwMessage(2332, "Duplicate inv clause");
     				}
     				
-        			nextToken();
+    				if (Settings.strict && (eqPattern1 != null || ordPattern1 != null))
+    				{
+    					warning(5026, "Strict: Order should be inv, eq, ord", lastToken().location);
+    				}
+
+    				nextToken();
         			invPattern = getPatternReader().readPattern();
         			checkFor(VDMToken.EQUALSEQUALS, 2087, "Expecting '==' after pattern in invariant");
         			invExpression = getExpressionReader().readExpression();
@@ -457,6 +465,11 @@ public class DefinitionReader extends SyntaxReader
     				if (eqPattern1 != null)
     				{
     					throwMessage(2332, "Duplicate eq clause");
+    				}
+
+    				if (Settings.strict && ordPattern1 != null)
+    				{
+    					warning(5026, "Strict: order should be inv, eq, ord", lastToken().location);
     				}
     				
         			nextToken();
@@ -505,9 +518,15 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				ATypeDefinition def = readTypeDefinition();
+				afterAnnotations(this, annotations, def);
+				def.setAnnotations(annotations);
+				def.setComments(comments);
 
 				// Force all type defs (invs) to be static
 				def.setAccess(access);
@@ -535,9 +554,15 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				access.setStatic(new TStatic());
 				PDefinition def = readValueDefinition(NameScope.GLOBAL);
+				afterAnnotations(this, annotations, def);
+				def.setAnnotations(annotations);
+				def.setComments(comments);
 
 				// Force all values to be static
 				def.setAccess(access);
@@ -575,8 +600,14 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false, false);
 				PDefinition def = readFunctionDefinition(NameScope.GLOBAL);
+				afterAnnotations(this, annotations, def);
+				def.setAnnotations(annotations);
+				def.setComments(comments);
 
 				if (Settings.release == Release.VDM_10)
 				{
@@ -613,8 +644,14 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT, true);
 				PDefinition def = readOperationDefinition();
+				afterAnnotations(this, annotations, def);
+				def.setAnnotations(annotations);
+				def.setComments(comments);
 				def.setAccess(access);
 				((AOperationType)def.getType()).setPure(access.getPure());
 				list.add(def);
@@ -649,7 +686,13 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				PDefinition def = readInstanceVariableDefinition();
+				afterAnnotations(this, annotations, def);
+				def.setAnnotations(annotations);
+				def.setComments(comments);
 				list.add(def);
 
 				if (!newSection())
@@ -674,12 +717,21 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				PDefinition def = readNamedTraceDefinition();
+				afterAnnotations(this, annotations, def);
+				def.setAnnotations(annotations);
+				def.setComments(comments);
 				list.add(def);
 
 				if (!newSection())
 				{
-					ignore(VDMToken.SEMICOLON); // Optional?
+					if (ignore(VDMToken.SEMICOLON) && Settings.strict)
+					{
+						warning(5028, "Strict: expecting semi-colon between traces", lastToken().location);
+					}
 				}
 			} catch (LocatedException e)
 			{
@@ -699,7 +751,13 @@ public class DefinitionReader extends SyntaxReader
 		{
 			try
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
 				PDefinition def = readPermissionPredicateDefinition();
+				afterAnnotations(this, annotations, def);
+				def.setAnnotations(annotations);
+				def.setComments(comments);
 				list.add(def);
 
 				if (!newSection())
@@ -1027,6 +1085,9 @@ public class DefinitionReader extends SyntaxReader
 	private PDefinition readStateDefinition() throws ParserException,
 			LexException
 	{
+		ILexCommentList comments = getComments();
+		List<PAnnotation> annotations = readAnnotations(comments);
+		beforeAnnotations(this, annotations);
 		LexIdentifierToken name = readIdToken("Expecting identifier after 'state' definition");
 		checkFor(VDMToken.OF, 2097, "Expecting 'of' after state name");
 		List<AFieldField> fieldList = getTypeReader().readFieldList();
@@ -1055,6 +1116,11 @@ public class DefinitionReader extends SyntaxReader
 		// Be forgiving about the inv/init order
 		if (lastToken().is(VDMToken.INV) && invExpression == null)
 		{
+			if (Settings.strict)
+			{
+				warning(5027, "Strict: order should be inv, init", lastToken().location);
+			}
+			
 			nextToken();
 			invPattern = getPatternReader().readPattern();
 			checkFor(VDMToken.EQUALSEQUALS, 2098, "Expecting '==' after pattern in invariant");
@@ -1063,7 +1129,11 @@ public class DefinitionReader extends SyntaxReader
 
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 
-		return AstFactory.newAStateDefinition(idToName(name), fieldList, invPattern, invExpression, initPattern, initExpression);
+		AStateDefinition def = AstFactory.newAStateDefinition(idToName(name), fieldList, invPattern, invExpression, initPattern, initExpression);
+		afterAnnotations(this, annotations, def);
+		def.setAnnotations(annotations);
+		def.setComments(comments);
+		return def;
 	}
 
 	private PDefinition readOperationDefinition() throws ParserException,
@@ -1778,6 +1848,13 @@ public class DefinitionReader extends SyntaxReader
 			case BRA:
 				nextToken();
 				List<ATraceDefinitionTerm> list = readTraceDefinitionList();
+				ILexLocation semi = lastToken().location;
+				
+				if (ignore(VDMToken.SEMICOLON) && Settings.strict)
+				{
+					warning(5029, "Strict: unexpected trailing semi-colon", semi);
+				}
+				
 				checkFor(VDMToken.KET, 2269, "Expecting '(trace definitions)'");
 				return AstFactory.newABracketedExpressionTraceCoreDefinition(token.location, list);
 

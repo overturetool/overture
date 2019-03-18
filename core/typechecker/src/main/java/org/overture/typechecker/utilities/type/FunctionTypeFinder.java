@@ -110,7 +110,7 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isFunction(t))
+				if (af.createPTypeAssistant().isFunction(t, null))
 				{
 					if (t.getDefinitions() != null)
 					{

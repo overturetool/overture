@@ -22,35 +22,34 @@
 package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AOptionalType;
 
-public abstract class TypeUnwrapper<A> extends AnswerAdaptor<A>
+public abstract class TypeUnwrapper<Q, A> extends QuestionAnswerAdaptor<Q, A>
 {
-
 	@Override
-	public A caseABracketType(ABracketType node) throws AnalysisException
+	public A caseABracketType(ABracketType node, Q question) throws AnalysisException
 	{
-		return node.getType().apply(THIS);
+		return node.getType().apply(THIS, question);
 	}
 
 	@Override
-	public A caseAOptionalType(AOptionalType node) throws AnalysisException
+	public A caseAOptionalType(AOptionalType node, Q question) throws AnalysisException
 	{
-		return node.getType().apply(THIS);
+		return node.getType().apply(THIS, question);
 	}
 
 	@Override
-	public A createNewReturnValue(INode node)
+	public A createNewReturnValue(INode node, Q question)
 	{
 		assert false : "should not happen";
 		return null;
 	}
 
 	@Override
-	public A createNewReturnValue(Object node)
+	public A createNewReturnValue(Object node, Q question)
 	{
 		assert false : "should not happen";
 		return null;

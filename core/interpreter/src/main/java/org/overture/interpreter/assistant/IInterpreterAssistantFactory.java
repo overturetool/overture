@@ -231,7 +231,7 @@ public interface IInterpreterAssistantFactory extends
 	//
 	// AMapPatternAssistantInterpreter createAMapPatternAssistant();
 	//
-	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant();
+	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant(String fromModule);
 
 	//
 	// AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
@@ -264,7 +264,7 @@ public interface IInterpreterAssistantFactory extends
 
 	PMultipleBindAssistantInterpreter createPMultipleBindAssistant();
 
-	PPatternAssistantInterpreter createPPatternAssistant();
+	PPatternAssistantInterpreter createPPatternAssistant(String fromModule);
 
 	//PPatternListAssistantInterpreter createPPatternListAssistant();
 
@@ -363,7 +363,7 @@ public interface IInterpreterAssistantFactory extends
 
 	IAnswer<Boolean> getConstrainedPatternChecker();
 
-	QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator();
+	QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator(String fromModule);
 
 	IQuestionAnswer<Context, NameValuePairList> getNamedValueLister();
 

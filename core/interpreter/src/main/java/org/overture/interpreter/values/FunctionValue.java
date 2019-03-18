@@ -345,7 +345,7 @@ public class FunctionValue extends Value
 
 			try
 			{
-				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant(from.getModule()).getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
@@ -724,7 +724,7 @@ public class FunctionValue extends Value
 	{
 		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
 
-		if (assistant.isFunction(to))
+		if (assistant.isFunction(to, null))
 		{
 			if (type.equals(to) || assistant.isUnknown(to))
 			{

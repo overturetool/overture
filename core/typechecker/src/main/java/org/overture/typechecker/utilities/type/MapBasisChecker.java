@@ -27,6 +27,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -34,9 +35,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class MapBasisChecker extends TypeUnwrapper<Boolean>
+public class MapBasisChecker extends TypeUnwrapper<String, Boolean>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public MapBasisChecker(ITypeCheckerAssistantFactory af)
@@ -45,38 +45,33 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean defaultSMapType(SMapType type) throws AnalysisException
+	public Boolean defaultSMapType(SMapType type, String fromModule) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean caseANamedInvariantType(ANamedInvariantType type)
+	public Boolean caseANamedInvariantType(ANamedInvariantType type, String fromModule)
 			throws AnalysisException
 	{
-		if (type.getOpaque())
-		{
-			return false;
-		}
-		return type.getType().apply(THIS);
+		if (TypeChecker.isOpaque(type, fromModule)) return false;
+		return type.getType().apply(THIS, fromModule);
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
-		// return AUnionTypeAssistantTC.getMap(type) != null; //static call
-		// return af.createAUnionTypeAssistant().getMap(type) != null;// non static call
-		return type.apply(af.getMapTypeFinder()) != null;
+		return type.apply(af.getMapTypeFinder(), fromModule) != null;
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType type, String fromModule)
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultPType(PType node) throws AnalysisException
+	public Boolean defaultPType(PType node, String fromModule) throws AnalysisException
 	{
 		return false;
 	}

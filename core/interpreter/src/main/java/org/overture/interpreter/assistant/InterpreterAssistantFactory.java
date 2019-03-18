@@ -66,29 +66,6 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		implements IInterpreterAssistantFactory, Serializable
 {
-
-	// definition
-
-	// public AApplyExpressionTraceCoreDefinitionAssistantInterpreter
-	// createAApplyExpressionTraceCoreDefinitionAssistant()
-	// {
-	// return new AApplyExpressionTraceCoreDefinitionAssistantInterpreter(this);
-	// }
-
-	// public AAssignmentDefinitionAssistantInterpreter createAAssignmentDefinitionAssistant()
-	// {
-	// return new AAssignmentDefinitionAssistantInterpreter(this);
-	// }
-
-	// public ABracketedExpressionTraceCoreDefinitionAssitantInterpreter
-	// createABracketedExpressionTraceCoreDefinitionAssitant()
-	// {
-	// return new ABracketedExpressionTraceCoreDefinitionAssitantInterpreter(this);
-	// }
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 //	public ABusClassDefinitionAssistantInterpreter createABusClassDefinitionAssitant()
@@ -534,9 +511,9 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	// return new AMapPatternAssistantInterpreter(this);
 	// }
 
-	public AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant()
+	public AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant(String fromModule)
 	{
-		return new AMapPatternMapletAssistantInterpreter(this);
+		return new AMapPatternMapletAssistantInterpreter(this, fromModule);
 	}
 
 	// public AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant()
@@ -614,9 +591,9 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new PMultipleBindAssistantInterpreter(this);
 	}
 
-	public PPatternAssistantInterpreter createPPatternAssistant()
+	public PPatternAssistantInterpreter createPPatternAssistant(String fromModule)
 	{
-		return new PPatternAssistantInterpreter(this);
+		return new PPatternAssistantInterpreter(this, fromModule);
 	}
 
 //	public PPatternListAssistantInterpreter createPPatternListAssistant()
@@ -861,9 +838,9 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 
 	@Override
-	public QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator()
+	public QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator(String fromModule)
 	{
-		return new AllNamedValuesLocator(this);
+		return new AllNamedValuesLocator(this, fromModule);
 	}
 
 	@Override

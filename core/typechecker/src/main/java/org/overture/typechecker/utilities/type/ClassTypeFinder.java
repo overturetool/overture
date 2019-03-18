@@ -46,6 +46,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
@@ -55,7 +56,7 @@ import org.overture.typechecker.util.LexNameTokenMap;
  * 
  * @author kel
  */
-public class ClassTypeFinder extends TypeUnwrapper<AClassType>
+public class ClassTypeFinder extends TypeUnwrapper<String, AClassType>
 {
 	public static final String UNION_CLASS_PREFIX = "*union";
 	
@@ -69,33 +70,36 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 	}
 
 	@Override
-	public AClassType caseAClassType(AClassType type) throws AnalysisException
+	public AClassType caseAClassType(AClassType type, String fromModule) throws AnalysisException
 	{
 		return type;
 	}
 
 	@Override
-	public AClassType defaultSInvariantType(SInvariantType type)
+	public AClassType defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
+
 		if (type instanceof ANamedInvariantType)
 		{
-			return ((ANamedInvariantType) type).getType().apply(THIS);
-		} else
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return null;
 		}
 	}
 
 	@Override
-	public AClassType caseAUnionType(AUnionType type) throws AnalysisException
+	public AClassType caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
 		if (!type.getClassDone())
 		{
 			type.setClassDone(true); // Mark early to avoid recursion.
 			// type.setClassType(PTypeAssistantTC.getClassType(AstFactory.newAUnknownType(type.getLocation())));
 			// Rewritten in non static way.
-			type.setClassType(af.createPTypeAssistant().getClassType(AstFactory.newAUnknownType(type.getLocation()), env));
+			type.setClassType(af.createPTypeAssistant().getClassType(AstFactory.newAUnknownType(type.getLocation()), env, fromModule));
 			// Build a class type with the common fields of the contained
 			// class types, making the field types the union of the original
 			// fields' types...
@@ -110,9 +114,9 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
     		for (PType t: type.getTypes())
     		{
-    			if (af.createPTypeAssistant().isClass(t, env))
+    			if (af.createPTypeAssistant().isClass(t, env, fromModule))
     			{
-    				found = t.apply(THIS);
+    				found = t.apply(THIS, fromModule);
     				classString = classString + "_" + found.getName().getName();	// eg. "*union_A_B"
     				count++;
     			}
@@ -133,9 +137,9 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isClass(t, env))
+				if (af.createPTypeAssistant().isClass(t, env, fromModule))
 				{
-					AClassType ct = t.apply(THIS);// PTypeAssistantTC.getClassType(t);
+					AClassType ct = t.apply(THIS, fromModule);
 
 					for (PDefinition f : af.createPDefinitionAssistant().getDefinitions(ct.getClassdef()))
 					{
@@ -199,14 +203,14 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
     			PType ptype = common.get(synthname).getType(type.getLocation());
     			ILexNameToken newname = null;
     			
-    			if (assistant.isOperation(ptype))
+    			if (assistant.isOperation(ptype, fromModule))
     			{
-    				AOperationType optype = assistant.getOperation(ptype);
+    				AOperationType optype = assistant.getOperation(ptype, fromModule);
     				optype.setPure(access.get(synthname).getPure());
     				ptype = optype;
     				newname = synthname.getModifiedName(optype.getParameters());
     			}
-    			else if (assistant.isFunction(ptype))
+    			else if (assistant.isFunction(ptype, fromModule))
     			{
     				AFunctionType ftype = assistant.getFunction(ptype);
     				newname = synthname.getModifiedName(ftype.getParameters());
@@ -228,7 +232,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 	}
 
 	@Override
-	public AClassType caseAUnknownType(AUnknownType type)
+	public AClassType caseAUnknownType(AUnknownType type, String fromModule)
 			throws AnalysisException
 	{
 
@@ -236,7 +240,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 	}
 
 	@Override
-	public AClassType defaultPType(PType tyoe) throws AnalysisException
+	public AClassType defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		assert false : "Can't getClass of a non-class";
 		return null;

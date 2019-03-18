@@ -40,27 +40,28 @@ public class PTypeAssistant implements IAstAssistant
 		this.af = af;
 	}
 
-	public boolean isNumeric(PType type)
+	public boolean isNumeric(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getNumericFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getNumericFinder(fromModule));
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public SNumericBasicType getNumeric(PType type)
+	public SNumericBasicType getNumeric(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getNumericBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getNumericBasisChecker(fromModule));
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
-
 	}
 
 	public int hashCode(PType type)

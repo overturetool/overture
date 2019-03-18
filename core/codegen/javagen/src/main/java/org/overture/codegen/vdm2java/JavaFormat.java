@@ -227,7 +227,7 @@ public class JavaFormat
 			{
 				PType vdmType = (PType) sourceNode.getVdmNode();
 
-				if (typeAssistant.isNumeric(vdmType))
+				if (typeAssistant.isNumeric(vdmType, null))
 				{
 					return DOUBLE_VALUE;
 				}

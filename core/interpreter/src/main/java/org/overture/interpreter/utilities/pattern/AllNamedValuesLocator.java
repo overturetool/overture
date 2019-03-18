@@ -71,11 +71,13 @@ public class AllNamedValuesLocator
 		}
 	}
 
-	protected IInterpreterAssistantFactory af;
+	protected final IInterpreterAssistantFactory af;
+	protected final String fromModule;
 
-	public AllNamedValuesLocator(IInterpreterAssistantFactory af)
+	public AllNamedValuesLocator(IInterpreterAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -136,8 +138,8 @@ public class AllNamedValuesLocator
 			VdmRuntimeError.patternFail(e, pattern.getLocation());
 		}
 
-		int llen = af.createPPatternAssistant().getLength(pattern.getLeft());
-		int rlen = af.createPPatternAssistant().getLength(pattern.getRight());
+		int llen = af.createPPatternAssistant(fromModule).getLength(pattern.getLeft());
+		int rlen = af.createPPatternAssistant(fromModule).getLength(pattern.getRight());
 		int size = values.size();
 
 		if (llen == PPatternAssistantInterpreter.ANY && rlen > size
@@ -234,11 +236,11 @@ public class AllNamedValuesLocator
 
 			try
 			{
-				List<NameValuePairList> lnvps = af.createPPatternAssistant().getAllNamedValues(pattern.getLeft(), new SeqValue(head), question.ctxt);
+				List<NameValuePairList> lnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(pattern.getLeft(), new SeqValue(head), question.ctxt);
 				nvplists.add(lnvps);
 				counts[0] = lnvps.size();
 
-				List<NameValuePairList> rnvps = af.createPPatternAssistant().getAllNamedValues(pattern.getRight(), new SeqValue(tail), question.ctxt);
+				List<NameValuePairList> rnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(pattern.getRight(), new SeqValue(tail), question.ctxt);
 				nvplists.add(rnvps);
 				counts[1] = rnvps.size();
 			} catch (PatternMatchException e)
@@ -416,7 +418,7 @@ public class AllNamedValuesLocator
 			{
 				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
-					List<NameValuePairList> pnvps = af.createAMapPatternMapletAssistant().getAllNamedValues(p, iter.next(), question.ctxt);
+					List<NameValuePairList> pnvps = af.createAMapPatternMapletAssistant(fromModule).getAllNamedValues(p, iter.next(), question.ctxt);
 					nvplists.add(pnvps);
 					counts[i++] = pnvps.size();
 				}
@@ -485,8 +487,8 @@ public class AllNamedValuesLocator
 			VdmRuntimeError.patternFail(e, pattern.getLocation());
 		}
 
-		int llen = af.createPPatternAssistant().getLength(pattern.getLeft());
-		int rlen = af.createPPatternAssistant().getLength(pattern.getRight());
+		int llen = af.createPPatternAssistant(fromModule).getLength(pattern.getLeft());
+		int rlen = af.createPPatternAssistant(fromModule).getLength(pattern.getRight());
 		int size = values.size();
 
 		if (llen == PPatternAssistantInterpreter.ANY && rlen > size
@@ -603,11 +605,11 @@ public class AllNamedValuesLocator
 
 				try
 				{
-					List<NameValuePairList> lnvps = af.createPPatternAssistant().getAllNamedValues(pattern.getLeft(), new MapValue(first), question.ctxt);
+					List<NameValuePairList> lnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(pattern.getLeft(), new MapValue(first), question.ctxt);
 					nvplists.add(lnvps);
 					counts[0] = lnvps.size();
 
-					List<NameValuePairList> rnvps = af.createPPatternAssistant().getAllNamedValues(pattern.getRight(), new MapValue(second), question.ctxt);
+					List<NameValuePairList> rnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(pattern.getRight(), new MapValue(second), question.ctxt);
 					nvplists.add(rnvps);
 					counts[1] = rnvps.size();
 				} catch (Exception e)
@@ -754,7 +756,7 @@ public class AllNamedValuesLocator
 
 		for (PPattern p : pattern.getPlist())
 		{
-			List<NameValuePairList> pnvps = af.createPPatternAssistant().getAllNamedValues(p, iter.next().value, question.ctxt);
+			List<NameValuePairList> pnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(p, iter.next().value, question.ctxt);
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}
@@ -837,7 +839,7 @@ public class AllNamedValuesLocator
 
 		for (PPattern p : pattern.getPlist())
 		{
-			List<NameValuePairList> pnvps = af.createPPatternAssistant().getAllNamedValues(p, iter.next(), question.ctxt);
+			List<NameValuePairList> pnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(p, iter.next(), question.ctxt);
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}
@@ -951,7 +953,7 @@ public class AllNamedValuesLocator
 			{
 				for (PPattern p : pattern.getPlist())
 				{
-					List<NameValuePairList> pnvps = af.createPPatternAssistant().getAllNamedValues(p, iter.next(), question.ctxt);
+					List<NameValuePairList> pnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(p, iter.next(), question.ctxt);
 					nvplists.add(pnvps);
 					counts[i++] = pnvps.size();
 				}
@@ -1053,7 +1055,7 @@ public class AllNamedValuesLocator
 
 		for (PPattern p : pattern.getPlist())
 		{
-			List<NameValuePairList> pnvps = af.createPPatternAssistant().getAllNamedValues(p, iter.next(), question.ctxt);
+			List<NameValuePairList> pnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(p, iter.next(), question.ctxt);
 
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
@@ -1118,8 +1120,8 @@ public class AllNamedValuesLocator
 			VdmRuntimeError.patternFail(e, pattern.getLocation());
 		}
 
-		int llen = af.createPPatternAssistant().getLength(pattern.getLeft());
-		int rlen = af.createPPatternAssistant().getLength(pattern.getRight());
+		int llen = af.createPPatternAssistant(fromModule).getLength(pattern.getLeft());
+		int rlen = af.createPPatternAssistant(fromModule).getLength(pattern.getRight());
 		int size = values.size();
 
 		if (llen == PPatternAssistantInterpreter.ANY && rlen > size
@@ -1235,11 +1237,11 @@ public class AllNamedValuesLocator
 
 				try
 				{
-					List<NameValuePairList> lnvps = af.createPPatternAssistant().getAllNamedValues(pattern.getLeft(), new SetValue(first), question.ctxt);
+					List<NameValuePairList> lnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(pattern.getLeft(), new SetValue(first), question.ctxt);
 					nvplists.add(lnvps);
 					counts[0] = lnvps.size();
 
-					List<NameValuePairList> rnvps = af.createPPatternAssistant().getAllNamedValues(pattern.getRight(), new SetValue(second), question.ctxt);
+					List<NameValuePairList> rnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(pattern.getRight(), new SetValue(second), question.ctxt);
 					nvplists.add(rnvps);
 					counts[1] = rnvps.size();
 				} catch (Exception e)
@@ -1327,7 +1329,7 @@ public class AllNamedValuesLocator
 				VdmRuntimeError.patternFail(4114, "Object type does not match pattern", pattern.getLocation());
 			}
 			
-			List<NameValuePairList> pnvps = af.createPPatternAssistant().getAllNamedValues(npp.getPattern(), fval, question.ctxt);
+			List<NameValuePairList> pnvps = af.createPPatternAssistant(fromModule).getAllNamedValues(npp.getPattern(), fval, question.ctxt);
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}

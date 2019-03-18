@@ -33,6 +33,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -42,12 +43,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 {
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	protected ITypeCheckerAssistantFactory af;
-
-	public PTypeFinder(ITypeCheckerAssistantFactory af)
+	public PTypeFinder(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -61,11 +63,7 @@ public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 	public PType caseANamedInvariantType(ANamedInvariantType type,
 			String typename) throws AnalysisException
 	{
-
-		if (type.getOpaque())
-		{
-			return null;
-		}
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
 		return type.getType().apply(THIS, typename);
 	}
 
@@ -73,10 +71,7 @@ public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 	public PType caseARecordInvariantType(ARecordInvariantType type,
 			String typename) throws AnalysisException
 	{
-		if (type.getOpaque())
-		{
-			return null;
-		}
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
 
 		if (typename.indexOf('`') > 0)
 		{

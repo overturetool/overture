@@ -49,12 +49,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class ProductExtendedTypeFinder extends
 		QuestionAnswerAdaptor<Integer, AProductType>
 {
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	protected ITypeCheckerAssistantFactory af;
-
-	public ProductExtendedTypeFinder(ITypeCheckerAssistantFactory af)
+	public ProductExtendedTypeFinder(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class ProductExtendedTypeFinder extends
 		if (type.getProdCard() != size)
 		{
 			type.setProdCard(size);
-			type.setProdType(af.createPTypeAssistant().getProduct(AstFactory.newAUnknownType(type.getLocation()), size));
+			type.setProdType(af.createPTypeAssistant().getProduct(AstFactory.newAUnknownType(type.getLocation()), size, fromModule));
 
 			// Build a N-ary product type, making the types the union of the
 			// original N-ary products' types...
@@ -109,10 +110,10 @@ public class ProductExtendedTypeFinder extends
 
 			for (PType t : type.getTypes())
 			{
-				if (size == 0 && af.createPTypeAssistant().isProduct(t)
-						|| af.createPTypeAssistant().isProduct(t, size))
+				if (size == 0 && af.createPTypeAssistant().isProduct(t, null)
+						|| af.createPTypeAssistant().isProduct(t, size, fromModule))
 				{
-					AProductType pt = af.createPTypeAssistant().getProduct(t, size);
+					AProductType pt = af.createPTypeAssistant().getProduct(t, size, fromModule);
 					int i = 0;
 
 					for (PType member : pt.getTypes())

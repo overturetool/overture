@@ -97,7 +97,7 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 		return type;
 	}
 
-	public AFunctionType getMeasureType(AFunctionType type, boolean isCurried, PType actual)
+	public AFunctionType getMeasureType(AFunctionType type, boolean isCurried, PType actual, String fromModule)
 	{
 		List<PType> cparams = new Vector<PType>();
 		cparams.addAll(type.getParameters());
@@ -115,13 +115,13 @@ public class AFunctionTypeAssistantTC implements IAstAssistant
 		
 		// Clean the return types to be precisely nat or nat-tuple.
 		
-		if (af.createPTypeAssistant().isNumeric(actual))
+		if (af.createPTypeAssistant().isNumeric(actual, fromModule))
 		{
 			actual = AstFactory.newANatNumericBasicType(type.getLocation());
 		}
-		else if (af.createPTypeAssistant().isProduct(actual))
+		else if (af.createPTypeAssistant().isProduct(actual, fromModule))
 		{
-			AProductType p = af.createPTypeAssistant().getProduct(actual);
+			AProductType p = af.createPTypeAssistant().getProduct(actual, fromModule);
 			List<PType> nats = new Vector<PType>();
 			
 			for (int i=0; i<p.getTypes().size(); i++)

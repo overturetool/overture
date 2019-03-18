@@ -58,13 +58,13 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 		PType type = node.getSet().apply(THIS, question);
 		PType result = AstFactory.newAUnknownType(node.getLocation());
 
-		if (!question.assistantFactory.createPTypeAssistant().isSet(type))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(type, question.fromModule))
 		{
 			TypeCheckerErrors.report(3197, "Expression matching set bind is not a set", node.getSet().getLocation(), node.getSet());
 			TypeCheckerErrors.detail("Actual type", type);
 		} else
 		{
-			SSetType st = question.assistantFactory.createPTypeAssistant().getSet(type);
+			SSetType st = question.assistantFactory.createPTypeAssistant().getSet(type, question.fromModule);
 
 			if (!st.getEmpty())
 			{
@@ -94,14 +94,14 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 		PType type = node.getSeq().apply(THIS, question);
 		PType result = AstFactory.newAUnknownType(node.getLocation());
 
-		if (!question.assistantFactory.createPTypeAssistant().isSeq(type))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(type, question.fromModule))
 		{
 			TypeCheckerErrors.report(3197, "Expression matching seq bind is not a sequence", node.getSeq().getLocation(), node.getSeq());
 			TypeCheckerErrors.detail("Actual type", type);
 		}
 		else
 		{
-			SSeqType st = question.assistantFactory.createPTypeAssistant().getSeq(type);
+			SSeqType st = question.assistantFactory.createPTypeAssistant().getSeq(type, question.fromModule);
 
 			if (!st.getEmpty())
 			{
@@ -146,7 +146,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 	{
 		PTypeAssistantTC typeAssistant = question.assistantFactory.createPTypeAssistant();
 		
-		if (!typeAssistant.isClass(pattern.getType(), question.env))
+		if (!typeAssistant.isClass(pattern.getType(), question.env, question.fromModule))
 		{
 			TypeCheckerErrors.report(3331, "obj_ expression is not an object type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Type", pattern.getType());
@@ -154,7 +154,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 		else
 		{
 			// Check whether the field access is permitted from here.
-			AClassType cls = typeAssistant.getClassType(pattern.getType(), question.env);
+			AClassType cls = typeAssistant.getClassType(pattern.getType(), question.env, question.fromModule);
 	
 			for (ANamePatternPair npp: pattern.getFields())
 			{

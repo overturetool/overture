@@ -72,7 +72,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getPTypeExtendedChecker(), typeclass);
+			return type.apply(af.getPTypeExtendedChecker(type.getLocation().getModule()), typeclass);
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -105,34 +105,37 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		return false;
 	}
 
-	public boolean isUnion(PType type)
+	public boolean isUnion(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getUnionBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getUnionBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public AUnionType getUnion(PType type)
+	public AUnionType getUnion(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getUnionTypeFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getUnionTypeFinder(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 	}
 
-	public boolean isFunction(PType type)
+	public boolean isFunction(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getPTypeFunctionChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getPTypeFunctionChecker(fromModule));
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
@@ -173,168 +176,183 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		}
 	}
 
-	public boolean isOperation(PType type)
+	public boolean isOperation(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getOperationBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getOperationBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public AOperationType getOperation(PType type)
+	public AOperationType getOperation(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getOperationTypeFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getOperationTypeFinder(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 
 	}
 
-	public boolean isSeq(PType type)
+	public boolean isSeq(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getSeqBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getSeqBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public SSeqType getSeq(PType type)
+	public SSeqType getSeq(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getSeqTypeFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getSeqTypeFinder(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 	}
 
-	public boolean isMap(PType type)
+	public boolean isMap(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getMapBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getMapBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public SMapType getMap(PType type)
+	public SMapType getMap(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getMapTypeFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getMapTypeFinder(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 	}
 
-	public boolean isSet(PType type)
+	public boolean isSet(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getSetBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getSetBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public SSetType getSet(PType type)
+	public SSetType getSet(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getSetTypeFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getSetTypeFinder(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 	}
 
-	public boolean isRecord(PType type)
+	public boolean isRecord(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getRecordBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getRecordBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public boolean isTag(PType type)
+	public boolean isTag(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getTagBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getTagBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public ARecordInvariantType getRecord(PType type)
+	public ARecordInvariantType getRecord(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getRecordTypeFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getRecordTypeFinder(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 	}
 
-	public boolean isClass(PType type, Environment env)
+	public boolean isClass(PType type, Environment env, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getClassBasisChecker(env));
-		} catch (AnalysisException e)
+			return type.apply(af.getClassBasisChecker(env), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public AClassType getClassType(PType type, Environment env)
+	public AClassType getClassType(PType type, Environment env, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getClassTypeFinder(env));
-		} catch (AnalysisException e)
+			return type.apply(af.getClassTypeFinder(env), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 	}
 
-	public AProductType getProduct(PType type)
+	public AProductType getProduct(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getProductTypeFinder());
-		} catch (AnalysisException e)
+			return type.apply(af.getProductTypeFinder(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
 
 	}
 
-	public boolean isProduct(PType type)
+	public boolean isProduct(PType type, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getProductBasisChecker());
-		} catch (AnalysisException e)
+			return type.apply(af.getProductBasisChecker(), fromModule);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
@@ -407,8 +425,9 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getPTypeFinder(), typename);
-		} catch (AnalysisException e)
+			return type.apply(af.getPTypeFinder(type.getLocation().getModule()), typename);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
@@ -425,23 +444,25 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		}
 	}
 
-	public boolean isProduct(PType type, int size)
+	public boolean isProduct(PType type, int size, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getProductExtendedChecker(), size);
-		} catch (AnalysisException e)
+			return type.apply(af.getProductExtendedChecker(fromModule), size);
+		}
+		catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
-	public AProductType getProduct(PType type, int size)
+	public AProductType getProduct(PType type, int size, String fromModule)
 	{
 		try
 		{
-			return type.apply(af.getProductExtendedTypeFinder(), size);
-		} catch (AnalysisException e)
+			return type.apply(af.getProductExtendedTypeFinder(fromModule), size);
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}

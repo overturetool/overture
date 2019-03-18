@@ -51,7 +51,7 @@ public class PMultipleBindAssistantTC implements IAstAssistant
 
 		for (PPattern p : mb.getPlist())
 		{
-			defs.addAll(af.createPPatternAssistant().getDefinitions(p, type, question.scope));
+			defs.addAll(af.createPPatternAssistant(mb.getLocation().getModule()).getDefinitions(p, type, question.scope));
 		}
 
 		return defs;

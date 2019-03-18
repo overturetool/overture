@@ -43,12 +43,13 @@ import org.overture.ast.types.SNumericBasicType;
  */
 public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 {
-	protected static IAstAssistantFactory af;
+	protected final IAstAssistantFactory af;
+	protected final String fromModule;
 
-	@SuppressWarnings("static-access")
-	public NumericBasisChecker(IAstAssistantFactory af)
+	public NumericBasisChecker(IAstAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -105,9 +106,9 @@ public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isNumeric(t))
+				if (af.createPTypeAssistant().isNumeric(t, fromModule))
 				{
-					SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t);
+					SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t, fromModule);
 
 					if (af.createSNumericBasicTypeAssistant().getWeight(nt) > af.createSNumericBasicTypeAssistant().getWeight(type.getNumType()))
 					{

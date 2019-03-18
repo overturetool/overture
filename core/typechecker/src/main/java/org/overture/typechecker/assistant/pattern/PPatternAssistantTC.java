@@ -41,11 +41,11 @@ import org.overture.typechecker.visitor.TypeCheckerPatternVisitor;
 
 public class PPatternAssistantTC extends PPatternAssistant implements IAstAssistant
 {
-	protected ITypeCheckerAssistantFactory af;
+	protected final ITypeCheckerAssistantFactory af;
 
-	public PPatternAssistantTC(ITypeCheckerAssistantFactory af)
+	public PPatternAssistantTC(ITypeCheckerAssistantFactory af, String fromModule)
 	{
-		super(af);
+		super(af, fromModule);
 		this.af = af;
 	}
 
@@ -62,21 +62,23 @@ public class PPatternAssistantTC extends PPatternAssistant implements IAstAssist
 			NameScope scope)
 	{
 		PDefinitionSet set = af.createPDefinitionSet();
-		set.addAll(af.createPPatternAssistant().getAllDefinitions(rp, ptype, scope));
+		set.addAll(af.createPPatternAssistant(fromModule).getAllDefinitions(rp, ptype, scope, fromModule));
 		List<PDefinition> result = new Vector<PDefinition>(set);
 		return result;
 	}
 
 	/**
 	 * Get a complete list of all definitions, including duplicates. This method should only be used only by PP
+	 * @param fromModule 
 	 */
 	private List<PDefinition> getAllDefinitions(PPattern pattern, PType ptype,
-			NameScope scope)
+			NameScope scope, String fromModule)
 	{
 		try
 		{
-			return pattern.apply(af.getAllDefinitionLocator(), new AllDefinitionLocator.NewQuestion(ptype, scope));
-		} catch (AnalysisException e)
+			return pattern.apply(af.getAllDefinitionLocator(fromModule), new AllDefinitionLocator.NewQuestion(ptype, scope));
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
@@ -89,7 +91,7 @@ public class PPatternAssistantTC extends PPatternAssistant implements IAstAssist
 	{
 		try
 		{
-			pattern.apply(af.getPatternResolver(), new PatternResolver.NewQuestion(rootVisitor, question));
+			pattern.apply(af.getPatternResolver(fromModule), new PatternResolver.NewQuestion(rootVisitor, question));
 		}
 		catch (AnalysisException e)
 		{
@@ -132,7 +134,7 @@ public class PPatternAssistantTC extends PPatternAssistant implements IAstAssist
 
 	public boolean matches(PPattern pattern, PType expType)
 	{
-		return af.getTypeComparator().compatible(af.createPPatternAssistant().getPossibleType(pattern), expType);
+		return af.getTypeComparator().compatible(af.createPPatternAssistant(fromModule).getPossibleType(pattern), expType);
 	}
 
 
@@ -151,7 +153,7 @@ public class PPatternAssistantTC extends PPatternAssistant implements IAstAssist
 	{
 		try
 		{
-			return pattern.apply(af.getAlwaysMatchingPatternChecker());
+			return pattern.apply(af.getAlwaysMatchingPatternChecker(fromModule));
 		} catch (AnalysisException e)
 		{
 			return false;

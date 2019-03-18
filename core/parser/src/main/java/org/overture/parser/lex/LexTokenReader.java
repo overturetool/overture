@@ -28,10 +28,12 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexCharacterToken;
+import org.overture.ast.lex.LexCommentList;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexKeywordToken;
@@ -80,6 +82,10 @@ public class LexTokenReader extends BacktrackInputReader
 	/** Added to fix location on the traces **/
 	private ILexLocation location = null;
 
+	/** Comments read since last getComments call */
+	private LexCommentList comments = new LexCommentList();
+
+	
 	/**
 	 * An inner class to hold all the position details that need to be saved and restored on push/pop.
 	 */
@@ -93,6 +99,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 		public char c;
 		public LexToken l;
+    	public LexCommentList co = new LexCommentList();
 
 		/**
 		 * Create a Position from the outer class' current position details.
@@ -105,6 +112,7 @@ public class LexTokenReader extends BacktrackInputReader
 			cc = charpos;
 			cr = charsread;
 			tr = tokensread;
+			co.addAll(comments);
 
 			c = ch;
 			l = last;
@@ -124,6 +132,8 @@ public class LexTokenReader extends BacktrackInputReader
 
 			ch = c;
 			last = l;
+			comments.clear();
+			comments.addAll(co);
 		}
 	}
 
@@ -260,9 +270,26 @@ public class LexTokenReader extends BacktrackInputReader
 	}
 
 	/**
+	 * Create a string based LexTokenReader, with the position details of another reader.
+	 */
+	public LexTokenReader(String content, ILexLocation location, LexTokenReader reader)
+	{
+		super(content);
+		this.currentModule = reader.currentModule;
+		this.file = location.getFile();
+		this.dialect = reader.dialect;
+		rdCh();
+		this.linecount = location.getStartLine();
+		this.charpos = location.getStartPos();
+		this.charsread = 0;
+		this.tokensread = 0;
+		this.last = null;
+		this.comments.clear();
+	}
+
+	/**
 	 * A string representation of the current location.
 	 */
-
 	@Override
 	public String toString()
 	{
@@ -281,6 +308,7 @@ public class LexTokenReader extends BacktrackInputReader
 		rdCh();
 		charsread = 0;
 		tokensread = 0;
+		comments.clear();
 	}
 
 	/**
@@ -385,14 +413,31 @@ public class LexTokenReader extends BacktrackInputReader
 	{
 		return charsread;
 	}
+	
+	/**
+	 * @return the comments read since last getComments(), and clear.
+	 */
+	public ILexCommentList getComments()
+	{
+		LexCommentList list = new LexCommentList(comments);
+		comments.clear();
+		return list;
+	}
 
 	/**
 	 * @return the number of tokens read since the last push().
 	 */
-
 	public int getTokensRead()
 	{
 		return tokensread;
+	}
+	
+	/**
+	 * @return the current location.
+	 */
+	public ILexLocation getLocation()
+	{
+		return new LexLocation(file, currentModule, linecount, charpos, 0, 0, 0, 0);
 	}
 
 	/**
@@ -629,16 +674,23 @@ public class LexTokenReader extends BacktrackInputReader
 			case '-':
 				if (rdCh() == '-')
 				{
+					StringBuilder sb = new StringBuilder();
+					ILexLocation here = location(linecount, charpos + 1, tokpos, tokOffset);
+					
 					while (ch != '\n' && ch != EOF)
 					{
+						sb.append(ch);
 						rdCh();
 					}
 
+					comments.add(here, sb.toString().substring(1), false);
 					return nextToken();
-				} else if (ch == '>')
+				}
+				else if (ch == '>')
 				{
 					type = VDMToken.ARROW;
-				} else
+				}
+				else
 				{
 					rdch = false;
 					type = VDMToken.MINUS;
@@ -873,24 +925,40 @@ public class LexTokenReader extends BacktrackInputReader
 			case '/':
 				if (rdCh() == '*') // Block comments
 				{
-					while (ch != '/' && ch != EOF)
+					StringBuilder sb = new StringBuilder();
+					rdCh();
+					ILexLocation here = location(linecount, charpos, tokline, tokpos);
+
+					while (ch != EOF)
 					{
-						while (ch != '*' && ch != EOF)
-						{
-							rdCh();
-						}
+					    while (ch != '*' && ch != EOF)
+					    {
+					    	sb.append(ch);
+					    	rdCh();
+					    }
 
-						if (ch == EOF)
-						{
-							throwMessage(1011, tokline, tokpos, "Unterminated block comment");
-						}
-
-						rdCh();
+					    if (ch == EOF)
+					    {
+					    	throwMessage(1011, tokline, tokpos, "Unterminated block comment");
+					    }
+					    else
+					    {
+						    if (rdCh() == '/')
+						    {
+						    	break;
+						    }
+						    else
+						    {
+						    	sb.append('*');
+						    }
+					    }
 					}
 
+					comments.add(here, sb.toString(), true);
 					rdCh();
 					return nextToken();
-				} else
+				}
+				else
 				{
 					type = VDMToken.DIVIDE;
 					rdch = false;

@@ -92,11 +92,13 @@ public class AllDefinitionLocator
 		}
 	}
 
-	protected ITypeCheckerAssistantFactory af;
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	public AllDefinitionLocator(ITypeCheckerAssistantFactory af)
+	public AllDefinitionLocator(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -176,8 +178,8 @@ public class AllDefinitionLocator
 			AConcatenationPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		List<PDefinition> list = af.createPPatternAssistant().getDefinitions(pattern.getLeft(), question.ptype, question.scope);
-		list.addAll(af.createPPatternAssistant().getDefinitions(pattern.getRight(), question.ptype, question.scope));
+		List<PDefinition> list = af.createPPatternAssistant(fromModule).getDefinitions(pattern.getLeft(), question.ptype, question.scope);
+		list.addAll(af.createPPatternAssistant(fromModule).getDefinitions(pattern.getRight(), question.ptype, question.scope));
 		return list;
 	}
 
@@ -189,14 +191,14 @@ public class AllDefinitionLocator
 
 		PType type = pattern.getType();
 
-		if (!af.createPTypeAssistant().isTag(type))		//.isRecord(type))
+		if (!af.createPTypeAssistant().isTag(type, pattern.getLocation().getModule()))
 		{
 			TypeCheckerErrors.report(3200, "Mk_ expression is not a record type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Type", type);
 			return defs;
 		}
 
-		ARecordInvariantType pattype = af.createPTypeAssistant().getRecord(type);
+		ARecordInvariantType pattype = af.createPTypeAssistant().getRecord(type, pattern.getLocation().getModule());
 		PType using = af.createPTypeAssistant().isType(question.ptype, pattype.getName().getFullName());
 
 		if (using == null || !(using instanceof ARecordInvariantType))
@@ -219,7 +221,7 @@ public class AllDefinitionLocator
 			{
 				AFieldField pf = patfi.next();
 				// defs.addAll(p.getDefinitions(usingrec.findField(pf.tag).type, scope));
-				defs.addAll(af.createPPatternAssistant().getDefinitions(p, pf.getType(), question.scope));
+				defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p, pf.getType(), question.scope));
 			}
 		}
 
@@ -232,17 +234,17 @@ public class AllDefinitionLocator
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!af.createPTypeAssistant().isSeq(question.ptype))
+		if (!af.createPTypeAssistant().isSeq(question.ptype, pattern.getLocation().getModule()))
 		{
 			TypeCheckerErrors.report(3203, "Sequence pattern is matched against "
 					+ question.ptype, pattern.getLocation(), pattern);
 		} else
 		{
-			PType elem = af.createPTypeAssistant().getSeq(question.ptype).getSeqof();
+			PType elem = af.createPTypeAssistant().getSeq(question.ptype, pattern.getLocation().getModule()).getSeqof();
 
 			for (PPattern p : pattern.getPlist())
 			{
-				defs.addAll(af.createPPatternAssistant().getDefinitions(p, elem, question.scope));
+				defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p, elem, question.scope));
 			}
 		}
 
@@ -256,19 +258,19 @@ public class AllDefinitionLocator
 		// return ASetPatternAssistantTC.getAllDefinitions(pattern, question.ptype, question.scope);
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!af.createPTypeAssistant().isSet(question.ptype))
+		if (!af.createPTypeAssistant().isSet(question.ptype, pattern.getLocation().getModule()))
 		{
 			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Actual type", question.ptype);
 		} else
 		{
-			SSetType set = af.createPTypeAssistant().getSet(question.ptype);
+			SSetType set = af.createPTypeAssistant().getSet(question.ptype, pattern.getLocation().getModule());
 
 			if (!set.getEmpty())
 			{
 				for (PPattern p : pattern.getPlist())
 				{
-					defs.addAll(af.createPPatternAssistant().getDefinitions(p, set.getSetof(), question.scope));
+					defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p, set.getSetof(), question.scope));
 				}
 			}
 		}
@@ -282,7 +284,7 @@ public class AllDefinitionLocator
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!af.createPTypeAssistant().isProduct(question.ptype, pattern.getPlist().size()))
+		if (!af.createPTypeAssistant().isProduct(question.ptype, pattern.getPlist().size(), fromModule))
 		{
 			TypeCheckerErrors.report(3205, "Matching expression is not a product of cardinality "
 					+ pattern.getPlist().size(), pattern.getLocation(), pattern);
@@ -290,12 +292,12 @@ public class AllDefinitionLocator
 			return defs;
 		}
 
-		AProductType product = af.createPTypeAssistant().getProduct(question.ptype, pattern.getPlist().size());
+		AProductType product = af.createPTypeAssistant().getProduct(question.ptype, pattern.getPlist().size(), fromModule);
 		Iterator<PType> ti = product.getTypes().iterator();
 
 		for (PPattern p : pattern.getPlist())
 		{
-			defs.addAll(af.createPPatternAssistant().getDefinitions(p, ti.next(), question.scope));
+			defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p, ti.next(), question.scope));
 		}
 
 		return defs;
@@ -307,13 +309,13 @@ public class AllDefinitionLocator
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!af.createPTypeAssistant().isSet(question.ptype))
+		if (!af.createPTypeAssistant().isSet(question.ptype, pattern.getLocation().getModule()))
 		{
 			TypeCheckerErrors.report(3206, "Matching expression is not a set type", pattern.getLocation(), pattern);
 		}
 
-		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getLeft(), question.ptype, question.scope));
-		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getRight(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(pattern.getLeft(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(pattern.getRight(), question.ptype, question.scope));
 
 		return defs;
 	}
@@ -324,13 +326,13 @@ public class AllDefinitionLocator
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!af.createPTypeAssistant().isMap(question.ptype))
+		if (!af.createPTypeAssistant().isMap(question.ptype, pattern.getLocation().getModule()))
 		{
 			TypeCheckerErrors.report(3315, "Matching expression is not a map type", pattern.getLocation(), pattern);
 		}
 
-		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getLeft(), question.ptype, question.scope));
-		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getRight(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(pattern.getLeft(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(pattern.getRight(), question.ptype, question.scope));
 
 		return defs;
 	}
@@ -341,13 +343,13 @@ public class AllDefinitionLocator
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!af.createPTypeAssistant().isMap(question.ptype))
+		if (!af.createPTypeAssistant().isMap(question.ptype, pattern.getLocation().getModule()))
 		{
 			TypeCheckerErrors.report(3314, "Map pattern is not matched against map type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Actual type", question.ptype);
 		} else
 		{
-			SMapType map = af.createPTypeAssistant().getMap(question.ptype);
+			SMapType map = af.createPTypeAssistant().getMap(question.ptype, pattern.getLocation().getModule());
 
 			if (!map.getEmpty())
 			{
@@ -368,8 +370,8 @@ public class AllDefinitionLocator
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 		PTypeAssistantTC typeAssistant = af.createPTypeAssistant();
-		AClassType pattype = typeAssistant.getClassType(pattern.getType(), null);
-		AClassType exptype = typeAssistant.getClassType(question.ptype, null);
+		AClassType pattype = typeAssistant.getClassType(pattern.getType(), null, pattern.getLocation().getModule());
+		AClassType exptype = typeAssistant.getClassType(question.ptype, null, pattern.getLocation().getModule());
 
 		if (exptype == null || !af.getTypeComparator().isSubType(pattype, exptype))
 		{
@@ -392,7 +394,7 @@ public class AllDefinitionLocator
 			
 			if (d instanceof AInstanceVariableDefinition)
 			{
-				defs.addAll(af.createPPatternAssistant().getDefinitions(npp.getPattern(), d.getType(), NameScope.LOCAL));
+				defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(npp.getPattern(), d.getType(), NameScope.LOCAL));
 			}
 			else
 			{
@@ -423,9 +425,9 @@ public class AllDefinitionLocator
 			AMapletPatternMaplet p, SMapType map, NameScope scope) {
 
 		List<PDefinition> list = new Vector<PDefinition>();
-		list.addAll(af.createPPatternAssistant().getDefinitions(p.getFrom(),
+		list.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p.getFrom(),
 				map.getFrom(), scope));
-		list.addAll(af.createPPatternAssistant().getDefinitions(p.getTo(),
+		list.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p.getTo(),
 				map.getTo(), scope));
 		return list;
 	}

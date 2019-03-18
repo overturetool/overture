@@ -104,7 +104,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				// resolve pattern such that it is resolved before it is cloned later in newAMultiBindListDefinition
 				if (node.getBind().getPattern() != null)
 				{
-					question.assistantFactory.createPPatternAssistant().typeResolve(node.getBind().getPattern(), THIS, question);
+					question.assistantFactory.createPPatternAssistant(question.fromModule).typeResolve(node.getBind().getPattern(), THIS, question);
 				}
 
 				if (!question.assistantFactory.getTypeComparator().compatible(typebind.getType(), type))
@@ -118,13 +118,13 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				ASetBind setbind = (ASetBind) node.getBind();
 				PType bindtype = setbind.getSet().apply(THIS, question);
 				
-				if (!question.assistantFactory.createPTypeAssistant().isSet(bindtype))
+				if (!question.assistantFactory.createPTypeAssistant().isSet(bindtype, question.fromModule))
 				{
 					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
 				}
 				else
 				{
-    				SSetType settype = question.assistantFactory.createPTypeAssistant().getSet(bindtype);
+    				SSetType settype = question.assistantFactory.createPTypeAssistant().getSet(bindtype, question.fromModule);
     				
     				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
     				{
@@ -138,13 +138,13 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				ASeqBind seqbind = (ASeqBind) node.getBind();
 				PType bindtype = seqbind.getSeq().apply(THIS, question);
 				
-				if (!question.assistantFactory.createPTypeAssistant().isSeq(bindtype))
+				if (!question.assistantFactory.createPTypeAssistant().isSeq(bindtype, question.fromModule))
 				{
 					TypeCheckerErrors.report(3199, "Seq bind not compatible with expression", node.getBind().getLocation(), node.getBind());
 				}
 				else
 				{
-    				SSeqType seqtype = question.assistantFactory.createPTypeAssistant().getSeq(bindtype);
+    				SSeqType seqtype = question.assistantFactory.createPTypeAssistant().getSeq(bindtype, question.fromModule);
     				
     				if (!question.assistantFactory.getTypeComparator().compatible(type, seqtype.getSeqof()))
     				{
@@ -164,8 +164,8 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		{
 			assert type != null : "Can't typecheck a pattern without a type";
 
-			question.assistantFactory.createPPatternAssistant().typeResolve(node.getPattern(), THIS, question);
-			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			question.assistantFactory.createPPatternAssistant(question.fromModule).typeResolve(node.getPattern(), THIS, question);
+			node.setDefs(question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 
 		return null;
@@ -178,13 +178,13 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		PType type = node.getObject().apply(THIS, question);
 		PTypeSet result = new PTypeSet(question.assistantFactory);
-		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
+		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type, question.fromModule);
 		ILexIdentifierToken field = node.getField();
 
-		if (question.assistantFactory.createPTypeAssistant().isRecord(type))
+		if (question.assistantFactory.createPTypeAssistant().isRecord(type, question.fromModule))
 		{
 
-			ARecordInvariantType rec = question.assistantFactory.createPTypeAssistant().getRecord(type);
+			ARecordInvariantType rec = question.assistantFactory.createPTypeAssistant().getRecord(type, question.fromModule);
 			AFieldField rf = question.assistantFactory.createARecordInvariantTypeAssistant().findField(rec, field.getName());
 
 			if (rf == null)
@@ -198,9 +198,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env, question.fromModule))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env, question.fromModule);
 			String cname = ctype.getName().getName();
 
 			node.setObjectfield(new LexNameToken(cname, field.getName(), node.getObject().getLocation()));
@@ -382,9 +382,9 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		PType rtype = node.getMapseq().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env));
 		PTypeSet result = new PTypeSet(question.assistantFactory);
 
-		if (question.assistantFactory.createPTypeAssistant().isMap(rtype))
+		if (question.assistantFactory.createPTypeAssistant().isMap(rtype, question.fromModule))
 		{
-			node.setMapType(question.assistantFactory.createPTypeAssistant().getMap(rtype));
+			node.setMapType(question.assistantFactory.createPTypeAssistant().getMap(rtype, question.fromModule));
 
 			if (!question.assistantFactory.getTypeComparator().compatible(node.getMapType().getFrom(), etype))
 			{
@@ -396,11 +396,11 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isSeq(rtype))
+		if (question.assistantFactory.createPTypeAssistant().isSeq(rtype, question.fromModule))
 		{
-			node.setSeqType(question.assistantFactory.createPTypeAssistant().getSeq(rtype));
+			node.setSeqType(question.assistantFactory.createPTypeAssistant().getSeq(rtype, question.fromModule));
 
-			if (!question.assistantFactory.createPTypeAssistant().isNumeric(etype))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(etype, question.fromModule))
 			{
 				TypeCheckerErrors.report(3243, "Seq index is not numeric", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", etype);
@@ -410,17 +410,17 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isFunction(rtype))
+		if (question.assistantFactory.createPTypeAssistant().isFunction(rtype, question.fromModule))
 		{
 			// Error case, but improves errors if we work out the return type
 			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(rtype);
 			result.add(ftype.getResult());
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isOperation(rtype))
+		if (question.assistantFactory.createPTypeAssistant().isOperation(rtype, question.fromModule))
 		{
 			// Error case, but improves errors if we work out the return type
-			AOperationType otype = question.assistantFactory.createPTypeAssistant().getOperation(rtype);
+			AOperationType otype = question.assistantFactory.createPTypeAssistant().getOperation(rtype, question.fromModule);
 			result.add(otype.getResult());
 		}
 
@@ -462,31 +462,31 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, argtypes));
-		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
+		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type, question.fromModule);
 		PTypeSet result = new PTypeSet(question.assistantFactory);
 
-		if (question.assistantFactory.createPTypeAssistant().isMap(type))
+		if (question.assistantFactory.createPTypeAssistant().isMap(type, question.fromModule))
 		{
-			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(type);
+			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(type, question.fromModule);
 			result.add(mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isSeq(type))
+		if (question.assistantFactory.createPTypeAssistant().isSeq(type, question.fromModule))
 		{
-			SSeqType seq = question.assistantFactory.createPTypeAssistant().getSeq(type);
+			SSeqType seq = question.assistantFactory.createPTypeAssistant().getSeq(type, question.fromModule);
 			result.add(seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, THIS, question));
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isFunction(type))
+		if (question.assistantFactory.createPTypeAssistant().isFunction(type, question.fromModule))
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
 			result.add(functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isOperation(type))
+		if (question.assistantFactory.createPTypeAssistant().isOperation(type, question.fromModule))
 		{
-			AOperationType ot = question.assistantFactory.createPTypeAssistant().getOperation(type);
+			AOperationType ot = question.assistantFactory.createPTypeAssistant().getOperation(type, question.fromModule);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
 			result.add(operationApply(node, ot, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
@@ -523,11 +523,11 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, question.qualifiers));
 		PTypeSet result = new PTypeSet(question.assistantFactory);
-		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
+		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type, question.fromModule);
 
-		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env))
+		if (question.assistantFactory.createPTypeAssistant().isClass(type, question.env, question.fromModule))
 		{
-			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env);
+			AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(type, question.env, question.fromModule);
 
 			if (node.getClassName() == null)
 			{
@@ -559,11 +559,11 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (question.assistantFactory.createPTypeAssistant().isRecord(type))
+		if (question.assistantFactory.createPTypeAssistant().isRecord(type, question.fromModule))
 		{
 			String sname = node.getFieldName() != null ? node.getFieldName().getName()
 					: node.getClassName().toString();
-			ARecordInvariantType rec = question.assistantFactory.createPTypeAssistant().getRecord(type);
+			ARecordInvariantType rec = question.assistantFactory.createPTypeAssistant().getRecord(type, question.fromModule);
 			AFieldField rf = question.assistantFactory.createARecordInvariantTypeAssistant().findField(rec, sname);
 
 			if (rf == null)
@@ -625,7 +625,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, env, scope));
 
-		if (!env.af.createPTypeAssistant().isNumeric(argtype))
+		if (!env.af.createPTypeAssistant().isNumeric(argtype, question.fromModule))
 		{
 			TypeCheckerErrors.concern(unique, 3253, "Sequence argument is not numeric", node.getLocation(), node);
 			TypeCheckerErrors.detail(unique, "Type", argtype);

@@ -51,7 +51,7 @@ public class CombinedDefaultModule extends AModuleModules
 	@SuppressWarnings("deprecation")
 	public CombinedDefaultModule(Set<AModuleModules> modules)
 	{
-		super(null, null, null, new Vector<PDefinition>(), new Vector<ClonableFile>(), true, false);
+		super(null, null, null, new Vector<PDefinition>(), new Vector<ClonableFile>(), true, false, null, null);
 		this.modules.addAll(modules);
 
 		if (getDefs().isEmpty())

@@ -120,7 +120,7 @@ public class Vdm2UmlAssociationUtil
 		}
 		try
 		{
-			return Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null)
+			return Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null, null)
 					&& !type.apply(unknownDetector).hasUnknown;
 		} catch (AnalysisException e)
 		{
@@ -183,7 +183,7 @@ public class Vdm2UmlAssociationUtil
 			return false;
 		}
 
-		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null))
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null, null))
 		{
 			return true;
 		}
@@ -194,7 +194,7 @@ public class Vdm2UmlAssociationUtil
 	private static boolean validMapType(PType type)
 	{
 		if (isSimpleType(type)
-				|| Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null))
+				|| Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null, null))
 		{
 			return true;
 		}
@@ -242,7 +242,7 @@ public class Vdm2UmlAssociationUtil
 		{
 			type = ((AOptionalType) type).getType();
 		}
-		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null))
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type, null, null))
 		{
 			return getType(classes, type);
 		}
