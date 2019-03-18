@@ -1,1 +1,1 @@
-["Error 3313: if-20.vdm at 11:3 Operation returns void value"]
+["Error 3328: if-20.vdm at 13:5 Statement may return void value","Error 3313: if-20.vdm at 11:3 Operation returns void value"]

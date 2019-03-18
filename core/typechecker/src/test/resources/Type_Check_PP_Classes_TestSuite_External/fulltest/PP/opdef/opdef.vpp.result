@@ -5,8 +5,8 @@
 <message column="7" line="49" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp"/>
 <message column="7" line="4" message="Duplicate definition: a" messageType="warning" number="5007" resource="opdef.vpp"/>
 <message column="8" line="83" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp"/>
-<message column="12" line="94" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp"/>
 <message column="14" line="94" message="b at 5:7 hidden by b" messageType="warning" number="5008" resource="opdef.vpp"/>
+<message column="12" line="94" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp"/>
 <message column="12" line="94" message="Definition 'a' not used" messageType="warning" number="5000" resource="opdef.vpp"/>
 <message column="8" line="99" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp"/>
 <message column="8" line="107" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp"/>
@@ -21,6 +21,7 @@
 <message column="4" line="84" message="Value is not of the right type" messageType="error" number="3327" resource="opdef.vpp"/>
 <message column="3" line="82" message="Operation returns unexpected type" messageType="error" number="3027" resource="opdef.vpp"/>
 <message column="9" line="109" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vpp"/>
+<message column="4" line="108" message="Statement may return void value" messageType="error" number="3328" resource="opdef.vpp"/>
 <message column="3" line="107" message="Operation returns unexpected type" messageType="error" number="3035" resource="opdef.vpp"/>
 <message column="15" line="110" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vpp"/>
 <result/>

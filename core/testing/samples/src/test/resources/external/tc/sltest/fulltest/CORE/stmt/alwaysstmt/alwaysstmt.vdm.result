@@ -1,1 +1,1 @@
-["Error 3327: alwaysstmt.vdm at 26:46 Value is not of the right type","Error 3129: alwaysstmt.vdm at 26:26 Constructor field 2 is of wrong type","Error 3027: alwaysstmt.vdm at 24:3 Operation returns unexpected type"]
+["Error 3327: alwaysstmt.vdm at 26:46 Value is not of the right type","Error 3129: alwaysstmt.vdm at 26:26 Constructor field 2 is of wrong type","Error 3328: alwaysstmt.vdm at 32:5 Statement may return void value","Error 3027: alwaysstmt.vdm at 24:3 Operation returns unexpected type"]
