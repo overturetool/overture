@@ -751,7 +751,7 @@ public abstract class SyntaxReader
 	protected ASTAnnotation loadAnnotationImpl(LexIdentifierToken name)
 			throws ParserException, LexException
 	{
-		String classpath = System.getProperty("overture.annotations", "org.overture.annotations;annotations");
+		String classpath = System.getProperty("overture.annotations", "org.overture.annotations;annotations;org.overture.annotations.examples;org.overture.annotations.provided");
 		String[] packages = classpath.split(";|:");
 
 		for (String pack: packages)
