@@ -6,6 +6,8 @@ import org.overture.codegen.ir.declarations.*;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
+import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 import java.util.Map;
@@ -21,7 +23,9 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
     private final AModuleDeclIR vdmToolkitModuleIR;
     private final IRInfo info;
     private final static String isa_VDMInt = "isa_VDMInt";
+    private final static String isa_VDMToken = "isa_VDMToken";
     private final static String isa_VDMNat1 = "isa_VDMNat1";
+    private final static String isa_VDMNat = "isa_VDMNat";
 
     public IsaBasicTypesConv(IRInfo info, TransAssistantIR t, AModuleDeclIR vdmToolkitModuleIR) {
         this.t = t;
@@ -38,7 +42,7 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
                 }).map(d -> (ATypeDeclIR) d)
                 .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
     }
-
+    
     //Transform int to isa_VDMInt
     public void caseAIntNumericBasicTypeIR(AIntNumericBasicTypeIR x){
         if(x.getNamedInvType() == null)
@@ -63,6 +67,22 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             System.out.println(t.getNamedInvType().toString());
         }
 
+    }
+    
+    public void caseANatNumericBasicTypeIR(ANatNumericBasicTypeIR t) {
+    	if(t.getNamedInvType() == null)
+        {
+            ANatNumericBasicTypeIR a = new ANatNumericBasicTypeIR();
+            // Retrieve isa_VDMInt from VDMToolkit
+            ATypeDeclIR isa_td = isaTypeDeclIRMap.get(this.isa_VDMNat);
+
+            t.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+            System.out.println(t.getNamedInvType().toString());
+        }
+    }
+    
+    public void caseATokenBasicTypeIR(ATokenBasicTypeIR t) {
+    	//for now unsure about token invariants
     }
     
     

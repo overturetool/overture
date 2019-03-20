@@ -1,1 +1,8 @@
-@nat
+#if ( $node.namedInvType.name.name == "isa_VDMNat" )
+VDMNat
+#elseif ($node.namedInvType)
+($node.namedInvType.name.name)##
+#else
+
+Missing clause in ANatNumericBasicTypeIR
+#end
