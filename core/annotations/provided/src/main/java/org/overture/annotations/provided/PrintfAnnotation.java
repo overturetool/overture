@@ -26,7 +26,6 @@ import org.overture.parser.annotations.ASTAnnotationAdapter;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.annotations.TCAnnotation;
-import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class PrintfAnnotation extends ASTAnnotationAdapter implements TCAnnotation, INAnnotation
 {
@@ -81,26 +80,9 @@ public class PrintfAnnotation extends ASTAnnotationAdapter implements TCAnnotati
 		{
 			TypeChecker.report(6008, "@Printf must srart with a string argument", ast.getName().getLocation());
 		}
-		else
+		else if (!(ast.getArgs().get(0) instanceof AStringLiteralExp))
 		{
-			if (ast.getArgs().get(0) instanceof AStringLiteralExp)
-			{
-				for (PExp arg: ast.getArgs())
-				{
-					try
-					{
-						arg.apply(new TypeCheckVisitor(), question);
-					}
-					catch (AnalysisException e)
-					{
-						// Ignore?
-					}
-				}
-			}
-			else
-			{
-				TypeChecker.report(6008, "@Printf must start with a string argument", ast.getName().getLocation());
-			}
+			TypeChecker.report(6008, "@Printf must start with a string argument", ast.getName().getLocation());
 		}
 	}
 
