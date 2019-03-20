@@ -10,6 +10,8 @@
 
 package org.overture.annotations.provided;
 
+import java.util.Arrays;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -83,6 +85,23 @@ public class PrintfAnnotation extends ASTAnnotationAdapter implements TCAnnotati
 		else if (!(ast.getArgs().get(0) instanceof AStringLiteralExp))
 		{
 			TypeChecker.report(6008, "@Printf must start with a string argument", ast.getName().getLocation());
+		}
+		else
+		{
+			AStringLiteralExp str = (AStringLiteralExp)ast.getArgs().get(0);
+			String format = str.getValue().getValue();
+			
+			try
+			{
+				// Try to format with string arguments to check they are all %s (up to 20)
+				Object[] args = new String[20];
+				Arrays.fill(args, "A string");
+				String.format(format, args);
+			}
+			catch (IllegalArgumentException e)
+			{
+				TypeChecker.report(6008, "@Printf must use %[arg$][width]s conversions", ast.getName().getLocation());
+			}
 		}
 	}
 
