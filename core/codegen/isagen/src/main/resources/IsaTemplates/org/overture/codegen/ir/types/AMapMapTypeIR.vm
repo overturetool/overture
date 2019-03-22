@@ -1,1 +1,1 @@
-@map $Isa.trans($node.From) to $Isa.trans($node.To)
+$Isa.trans($node.From) \<rightharpoonup> $Isa.trans($node.To)

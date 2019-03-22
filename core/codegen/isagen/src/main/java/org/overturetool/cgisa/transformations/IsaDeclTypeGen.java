@@ -19,6 +19,7 @@ public class IsaDeclTypeGen extends AnswerIsaAdaptor<STypeIR> {
     {
         AIntNumericBasicTypeIR a = new AIntNumericBasicTypeIR();
         a.setNamedInvType(n.clone());
+        //System.out.println(a);
         return a;
     }
 

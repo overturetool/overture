@@ -1,1 +1,1 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\ndefinition \"t \u003d \\\u003cparallel\u003e@rat \\\u003cparallel\u003e\"\ndeclare t_def [eval,evalp]\n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"\\<rat>\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightArrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t x \\\u003cequiv\u003e isa_invTrue x\"\n\nend","errors":false}

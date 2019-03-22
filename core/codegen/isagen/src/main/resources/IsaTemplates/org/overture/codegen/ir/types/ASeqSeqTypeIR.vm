@@ -1,1 +1,1 @@
-"$Isa.trans($node.SeqOf) VDMSeq"
+$Isa.trans($node.SeqOf) VDMSeq

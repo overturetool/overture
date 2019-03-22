@@ -1,1 +1,1 @@
-@set of $Isa.trans($node.SetOf)
+$Isa.trans($node.SetOf) VDMSet
