@@ -6,6 +6,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.AssistantBase;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
@@ -116,13 +117,15 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
             {
                 AExplicitVarExpIR ev = (AExplicitVarExpIR) func;
 
-                STypeIR classType = ev.getClassType();
+                STypeIR type = ev.getClassType();
 
-                if(classType instanceof AClassTypeIR)
+                if(type instanceof AClassTypeIR)
                 {
-                    if(assist.getInfo().getDeclAssistant().isLibraryName(((AClassTypeIR) classType).getName()))
+                    AClassTypeIR classType = (AClassTypeIR) type;
+					if(assist.getInfo().getDeclAssistant().isLibraryName(classType.getName())
+							&& !isSeqOfChar2Val(ev, classType))
                     {
-                        // Libraries don't expect type arguments
+                        // Most libraries don't expect type arguments
                         return;
                     }
                 }
@@ -158,6 +161,11 @@ public class PolyFuncTrans extends DepthFirstAnalysisAdaptor {
             }
         }
     }
+
+	private boolean isSeqOfChar2Val(AExplicitVarExpIR ev, AClassTypeIR classType) {
+		return classType.getName().equals(IRConstants.VDMUTIL_LIB) && 
+				ev.getName().equals(IRConstants.SEQ_OF_CHAR2VAL);
+	}
 
 	private SExpIR consTypeArg(AMethodInstantiationExpIR methodInst, STypeIR type) {
 		SExpIR expToAdd = null;

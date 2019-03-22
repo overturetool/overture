@@ -42,6 +42,8 @@ public class IRConstants
 	public static final String IO_LIB = "IO";
 	public static final String MATH_LIB = "MATH";
 	public static final String VDMUTIL_LIB = "VDMUtil";
+	
+	public static final String SEQ_OF_CHAR2VAL = "seq_of_char2val";
 
 	public static final String[] CLASS_NAMES_USED_IN_SL = {CSV_LIB, IO_LIB,  MATH_LIB, VDMUTIL_LIB};
 

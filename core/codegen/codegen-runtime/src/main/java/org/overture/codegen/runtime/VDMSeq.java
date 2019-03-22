@@ -71,20 +71,7 @@ public class VDMSeq extends ArrayList implements ValueType
 
 		if (seqOfChar)
 		{
-			StringBuilder sb = new StringBuilder();
-
-			iterator = this.iterator();
-
-			while (iterator.hasNext())
-			{
-				Object element = iterator.next();
-
-				// Do not use Utils.toString(..) to avoid single quotes
-				// around the chars
-				sb.append(element);
-			}
-
-			return sb.toString();
+			return toStr(this.iterator());
 
 		} else
 		{
@@ -110,5 +97,20 @@ public class VDMSeq extends ArrayList implements ValueType
 
 			return sb.toString();
 		}
+	}
+
+	public static String toStr(Iterator iterator) {
+		StringBuilder sb = new StringBuilder();
+
+		while (iterator.hasNext())
+		{
+			Object element = iterator.next();
+
+			// Do not use Utils.toString(..) to avoid single quotes
+			// around the chars
+			sb.append(element);
+		}
+
+		return sb.toString();
 	}
 }
