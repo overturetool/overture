@@ -28,7 +28,7 @@ public class IOTest
 	{
 		String filename = "target/path/to/file";
 
-		new IO().fecho(filename, "Some message", null /* Works like passing <start> */);
+		IO.fecho(filename, "Some message", null /* Works like passing <start> */);
 
 		File file = new File(filename);
 		Assert.assertTrue("Expected " + file.getAbsolutePath()

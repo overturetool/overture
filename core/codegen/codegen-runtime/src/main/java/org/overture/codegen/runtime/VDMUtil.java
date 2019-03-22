@@ -34,6 +34,7 @@ public class VDMUtil
 		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
 	}
 
+	@SuppressWarnings("unused")
 	private static Tuple seq_of_char2val_(Object s)
 	{
 		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
