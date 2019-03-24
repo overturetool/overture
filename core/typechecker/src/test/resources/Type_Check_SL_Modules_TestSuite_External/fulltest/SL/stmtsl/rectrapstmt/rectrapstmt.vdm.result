@@ -4,12 +4,12 @@
 <message column="9" line="19" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
 <message column="19" line="19" message="a at 19:9 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
 <message column="9" line="24" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
-<message column="9" line="24" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="13" line="24" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
+<message column="9" line="24" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="9" line="25" message="stid at 11:3 hidden by stid" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
 <message column="20" line="25" message="Definition 's' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
-<message column="17" line="44" message="Definition 'c' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="9" line="44" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
+<message column="17" line="44" message="Definition 'c' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="9" line="45" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
 <message column="5" line="56" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
 <message column="5" line="56" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
