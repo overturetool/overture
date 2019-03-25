@@ -1,1 +1,8 @@
+#if ( $node.namedInvType.name.name == "isa_VDMToken" )
 VDMToken
+#elseif ($node.namedInvType)
+($node.namedInvType.name.name)##
+#else
+
+Missing clause in ATokenBasicTypeIR
+#end

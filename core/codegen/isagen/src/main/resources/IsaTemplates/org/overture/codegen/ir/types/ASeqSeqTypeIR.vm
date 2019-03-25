@@ -1,1 +1,8 @@
+#if ( $node.namedInvType.name.name == "isa_VDMSeq" )
 $Isa.trans($node.SeqOf) VDMSeq
+#elseif ($node.namedInvType)
+($node.namedInvType.name.name)##
+#else
+
+Missing clause in ASeqSeqTypeIR
+#end

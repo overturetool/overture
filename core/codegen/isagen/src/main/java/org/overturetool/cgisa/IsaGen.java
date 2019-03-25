@@ -174,6 +174,9 @@ public class IsaGen extends CodeGenBase {
 
                     IsaBasicTypesConv invConv = new IsaBasicTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invConv);
+                    
+                    IsaTypeTypesConv invSSConv = new IsaTypeTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invSSConv);
 
                     IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invTrans);
