@@ -1,0 +1,1 @@
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMInt\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightArrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e (isa_invTrue t \\<and> (t > 0))\"\n\nend","errors":false}

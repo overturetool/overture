@@ -1,1 +1,1 @@
-($Isa.trans($node.Left) and $Isa.trans($node.Right))
+($Isa.trans($node.Left) \<and> $Isa.trans($node.Right))

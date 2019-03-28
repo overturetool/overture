@@ -41,6 +41,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.*;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneratedData;
@@ -158,14 +159,18 @@ public class IsaGen extends CodeGenBase {
                     // transform away any recursion cycles
                     GroupMutRecs groupMR = new GroupMutRecs();
                     generator.applyTotalTransformation(status, groupMR);
-
+                    
                     if (status.getIrNode() instanceof AModuleDeclIR) {
+                    	
                         AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
+                        
                         // then sort remaining dependencies
                         SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
                         generator.applyPartialTransformation(status, sortTrans);
                     }
-
+                    
+                  //  IsaValueConv valConv = new IsaValueConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                   // generator.applyPartialTransformation(status, valConv);
                     
                     // Transform all token types to isa_VDMToken
                     // Transform all nat types to isa_VDMNat
@@ -174,6 +179,9 @@ public class IsaGen extends CodeGenBase {
 
                     IsaBasicTypesConv invConv = new IsaBasicTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invConv);
+                    
+                    
+                    // Transform Seq and Set types into isa_VDMSeq and isa_VDMSet
                     
                     IsaTypeTypesConv invSSConv = new IsaTypeTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invSSConv);
