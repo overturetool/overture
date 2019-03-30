@@ -5,6 +5,6 @@ $Isa.trans($p.pattern)##
 #end
 
 definition
-    $node.Name :: "$Isa.transTypeParams($node.MethodType.Params) \<RightArrow> $Isa.trans($node.MethodType.Result)"
+    $node.Name :: "$Isa.transTypeParams($node.MethodType.Params) \<Rightarrow> $Isa.trans($node.MethodType.Result)"
     where
     "$node.Name #transIdentifiers($node) \<equiv> $Isa.trans($node.Body)"
