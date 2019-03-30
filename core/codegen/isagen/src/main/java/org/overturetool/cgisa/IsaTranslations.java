@@ -53,7 +53,7 @@ import org.overturetool.cgisa.utils.IsSeqOfCharTypeVisitor;
 public class IsaTranslations {
 
     private static final String TEMPLATE_CALLABLE_NAME = "Isa";
-    private static final String TYPE_PARAM_SEP = " and ";
+    private static final String TYPE_PARAM_SEP = " \\<Rightarrow> ";
     private static final String LIST_SEP = ", ";
     private static final String TUPLE_TYPE_SEPARATOR = "*";
     private static final String ISA_TEMPLATE_ROOT = "IsaTemplates";
@@ -109,7 +109,6 @@ public class IsaTranslations {
         StringBuilder sb = new StringBuilder();
 
         Iterator<? extends INode> it = params.iterator();
-
         while (it.hasNext()) {
             StringWriter writer = new StringWriter();
             it.next().apply(mergeVisitor, writer);
@@ -355,6 +354,8 @@ public class IsaTranslations {
     public String genInvariantsForRecordDecl(ARecordDeclIR node)
     {
         List<String> invs = new ArrayList<>();
+        
+    		
         for (AFieldDeclIR f : node.getFields())
         {
             Object type = f.getType();

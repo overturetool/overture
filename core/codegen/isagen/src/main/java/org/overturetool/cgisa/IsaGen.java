@@ -27,27 +27,24 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.velocity.Template;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.*;
-import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overturetool.cgisa.transformations.*;
+import org.overturetool.cgisa.utils.IsaFuncDeclConv;
 
 /**
  * Main facade class for VDM 2 Isabelle IR
@@ -67,7 +64,7 @@ public class IsaGen extends CodeGenBase {
     public static void addInvTrueMacro(){
         StringBuilder sb = new StringBuilder("#macro ( invTrue $node )\n" +
                 "    definition\n" +
-                "        inv_$node.Name :: $node.Name \\<RightArrow> \\<bool>\n" +
+                "        inv_$node.Name :: $node.Name \\<Rightarrow> \\<bool>\n" +
                 "        where\n" +
                 "        \"inv_$node.Name \\<equiv> inv_True\"\n" +
                 "#end");
@@ -169,23 +166,25 @@ public class IsaGen extends CodeGenBase {
                         generator.applyPartialTransformation(status, sortTrans);
                     }
                     
-                  //  IsaValueConv valConv = new IsaValueConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
-                   // generator.applyPartialTransformation(status, valConv);
+//                    IsaValueConv valConv = new IsaValueConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+//                    generator.applyPartialTransformation(status, valConv);
                     
                     // Transform all token types to isa_VDMToken
                     // Transform all nat types to isa_VDMNat
                     // Transform all nat1 types to isa_VDMNat
                     // Transform all int types to isa_VDMInt
-
                     IsaBasicTypesConv invConv = new IsaBasicTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invConv);
                     
                     
                     // Transform Seq and Set types into isa_VDMSeq and isa_VDMSet
-                    
                     IsaTypeTypesConv invSSConv = new IsaTypeTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invSSConv);
 
+                    //for no parameter function types
+                    IsaFuncDeclConv invFuncTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invFuncTrans);
+                    
                     IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invTrans);
                 }
