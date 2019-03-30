@@ -44,7 +44,6 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overturetool.cgisa.transformations.*;
-import org.overturetool.cgisa.utils.IsaFuncDeclConv;
 
 /**
  * Main facade class for VDM 2 Isabelle IR

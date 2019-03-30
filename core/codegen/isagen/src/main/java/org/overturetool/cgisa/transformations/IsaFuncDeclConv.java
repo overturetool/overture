@@ -1,4 +1,4 @@
-package org.overturetool.cgisa.utils;
+package org.overturetool.cgisa.transformations;
 
 import org.overture.cgisa.isair.analysis.DepthFirstAnalysisIsaAdaptor;
 import org.overture.codegen.ir.*;
@@ -32,8 +32,14 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
                 .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
     }
     
-   //transform AFuncDeclIR
+   // Transform AFuncDeclIR
     public void caseAFuncDeclIR(AFuncDeclIR x) {
+    	// If no parameter function set params to null to make this more concrete for velocity
+    	if (x.getFormalParams().size() == 0) 
+    	{
+    		x.getMethodType().setParams(null);
+    	}
+    	
        /*	This puts a space between different parameters in the Isabelle function body
     	, xy is misinterpreted as one variable whereas x y is correctly interpreted as two
     	*/
