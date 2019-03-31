@@ -1,1 +1,17 @@
-{"translation":"theory A\n  imports vdm_sl\nbegin\n\nvdmefun f\n  inp x :: \"@int\"\n  out \"@int\"\n  post \"true\"\n  is \"0\" \n\nend","errors":false}
+{"translation":"theory A\n  imports VDMToolkit\nbegin
+\n\n
+definition 
+\n
+f :: \"VDMInt \\<Rightarrow> VDMInt\"
+\n
+where 
+\n
+\"f x \\<equiv> 0\" 
+\n\n 
+definition 
+\n
+post_f :: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"
+\n
+where \n\"post_f x RESULT \\<equiv> true\" 
+\n\n 
+end","errors":false}

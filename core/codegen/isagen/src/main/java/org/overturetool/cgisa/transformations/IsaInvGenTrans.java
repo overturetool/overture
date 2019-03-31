@@ -61,7 +61,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         AMethodTypeIR methodType = new AMethodTypeIR();
         STypeIR t = IsaDeclTypeGen.apply(node.getDecl());
         
-        
+        //TODO How on earth to get rid of NPE here??
         methodType.getParams().add(t.clone());
     	methodType.setResult(new ABoolBasicTypeIR());
         invFun_.setMethodType(methodType);
