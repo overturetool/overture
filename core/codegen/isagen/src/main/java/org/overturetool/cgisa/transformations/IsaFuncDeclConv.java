@@ -86,6 +86,16 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
             System.out.println("Pre condition has been added");
     	}
     	
+    	transformPostConditions(x);
+    }
+    /*
+    UNDER CONSTRUCTION, first draft.
+    TODO A lot, int invariant, clean up the substring search to find the invariants if possible, feels a bit hacky,
+    also fix the foreach loop to be able to handle more than one parameter, unfortunately this will have to be done recursively
+    so that we can keep adding more and clauses. Finally figure out a way to get this post condition into the AST,
+    confused as to why --Got-- is empty after running this method even though postCond sysout shows everything with postCond is correct.*/
+    //dig around the ast to generate post condition invariant checks
+    private void transformPostConditions (AFuncDeclIR x) {
     	// Transform post conditions
     	if (x.getPostCond() != null) 
     	{
@@ -104,9 +114,12 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     		{//TODO where is int invariant? sysout isaFuncDeclIRMap and see no isa_VDMInt
     			if (!p.getType().getNamedInvType().getName().getName().contains("Int")) 
     			{
+    				//set the body as an and expression of one being the provided post condition and one being the apply expression
+    	    		
+    				
     				AIdentifierVarExpIR root = new AIdentifierVarExpIR();
     				root.setName("isa_inv"+p.getType().getNamedInvType()
-	    					.getName().getName().substring(4));
+	    					.getName().getName().substring(4));//TODO substring a bit hacky?
     				root.setType(isaFuncDeclIRMap.get("isa_inv"+p.getType().getNamedInvType()
 	    					.getName().getName().substring(4)).getMethodType());
     				aa.setRoot(root);
@@ -127,12 +140,13 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 
     		System.out.println(mcp.getLeft());
     		System.out.println(mcp.getRight());
-    		//Asdoes this returns true \<and> isa_invVDMNat(x ), TODO why not being translated??
+    		//As does this, returns:  true \<and> isa_invVDMNat(x ) - TODO why not being translated??
     		
     		postCond.setBody(mcp);
-    		System.out.println(postCond);//This also appears to be correct
+    		System.out.println(postCond);//This has been set up correctly by the method
     		x.setPostCond(postCond);
     		// Insert into AST 
+    		System.out.println(x);
             AModuleDeclIR encModule = x.getAncestor(AModuleDeclIR.class);
             if(encModule != null)
             {
