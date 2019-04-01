@@ -4,9 +4,16 @@ import org.overture.cgisa.isair.analysis.DepthFirstAnalysisIsaAdaptor;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.*;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -17,7 +24,8 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     private final TransAssistantIR t;
     private final AModuleDeclIR vdmToolkitModuleIR;
     private final IRInfo info;
-
+    private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
+    
     public IsaFuncDeclConv(IRInfo info, TransAssistantIR t, AModuleDeclIR vdmToolkitModuleIR) {
         this.t = t;
         this.info = info;
@@ -32,11 +40,30 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
                         return false;
                 }).map(d -> (ATypeDeclIR) d)
                 .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
+        
+        this.isaFuncDeclIRMap = this.vdmToolkitModuleIR.getDecls().stream().filter(d ->
+        {
+            if (d instanceof AFuncDeclIR)
+                return true;
+            else
+                return false;
+        }).map(d -> (AFuncDeclIR) d).collect(Collectors.toMap(x -> x.getName(), x -> x));
+
+        
     }
     
    
    // Transform AFuncDeclIR
     public void caseAFuncDeclIR(AFuncDeclIR x) {
+//    	AIdentifierVarExpIR d = (AIdentifierVarExpIR) ((AApplyExpIR) (x.getBody())).getRoot();
+//    	System.out.println(d.getType().getClass());	//root node type of aapplyexpir is a method type IR	
+    	//root node type of aapplyexpir is a method type IR	as is args a list of them
+    	
+    	
+//    	AIdentifierVarExpIR d = (AIdentifierVarExpIR) ((AApplyExpIR) (x.getBody())).getArgs().get(0);
+//    	System.out.println(d.getType());	//root node type of aapplyexpir is a method type IR	
+    		
+    			
     	// If no parameter function set params to null to make this more concrete for velocity
     	if (x.getFormalParams().size() == 0) 
     	{
@@ -60,9 +87,51 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     	}
     	
     	// Transform post conditions
-    	if (x.getPostCond() != null) {
+    	if (x.getPostCond() != null) 
+    	{
     		AFuncDeclIR postCond = (AFuncDeclIR) x.getPostCond();
     		formatIdentifierPatternVars(postCond);
+    		
+    		AAndBoolBinaryExpIR mcp = new AAndBoolBinaryExpIR();
+    		mcp.setLeft(postCond.getBody());//Provided post condition
+    		
+    		//set the body as an and expression of one being the provided post condition and one being the apply expression
+    		AApplyExpIR aa = new AApplyExpIR();
+    		postCond.getFormalParams().forEach
+    		
+    		( p -> 
+    		
+    		{//TODO where is int invariant? sysout isaFuncDeclIRMap and see no isa_VDMInt
+    			if (!p.getType().getNamedInvType().getName().getName().contains("Int")) 
+    			{
+    				AIdentifierVarExpIR root = new AIdentifierVarExpIR();
+    				root.setName("isa_inv"+p.getType().getNamedInvType()
+	    					.getName().getName().substring(4));
+    				root.setType(isaFuncDeclIRMap.get("isa_inv"+p.getType().getNamedInvType()
+	    					.getName().getName().substring(4)).getMethodType());
+    				aa.setRoot(root);
+    				
+    				List<AIdentifierVarExpIR> args = new LinkedList<AIdentifierVarExpIR>();
+    				AIdentifierVarExpIR arg = new AIdentifierVarExpIR();
+    				arg.setName(p.getPattern().toString());
+    				arg.setType(postCond.getMethodType());
+    				args.add(arg);
+    				aa.setArgs(args);
+    			}
+	    			
+    		}
+	    	);
+
+			System.out.println(aa); //this works! Returns isa_invVDMNat(x )
+    		mcp.setRight(aa);//The invariants of param types
+
+    		System.out.println(mcp.getLeft());
+    		System.out.println(mcp.getRight());
+    		//Asdoes this returns true \<and> isa_invVDMNat(x ), TODO why not being translated??
+    		
+    		postCond.setBody(mcp);
+    		System.out.println(postCond);//This also appears to be correct
+    		x.setPostCond(postCond);
     		// Insert into AST 
             AModuleDeclIR encModule = x.getAncestor(AModuleDeclIR.class);
             if(encModule != null)

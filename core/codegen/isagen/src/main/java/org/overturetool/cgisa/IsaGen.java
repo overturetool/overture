@@ -180,12 +180,14 @@ public class IsaGen extends CodeGenBase {
                     IsaTypeTypesConv invSSConv = new IsaTypeTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invSSConv);
 
-                    //for no parameter function types
-                    IsaFuncDeclConv invFuncTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
-                    generator.applyPartialTransformation(status, invFuncTrans);
                     
                     IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invTrans);
+                    
+                    
+                    IsaFuncDeclConv invFuncTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invFuncTrans);
+                    
                 }
             }
 
