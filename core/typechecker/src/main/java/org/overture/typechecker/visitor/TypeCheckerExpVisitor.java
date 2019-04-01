@@ -2740,6 +2740,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeCheckerErrors.report(3176, "Subsequence range end is not a number", node.getLocation(), node);
 		}
+		
+		// "12345"(1,...,0) is seq not seq1, so convert here
+		stype = question.assistantFactory.createPTypeAssistant().isSeq(stype, question.fromModule) ?
+				AstFactory.newASeqSeqType(node.getLocation(), question.assistantFactory.createPTypeAssistant().getSeq(stype, question.fromModule).getSeqof()) :
+				stype;
+
 		node.setType(stype);
 		return stype;
 	}
