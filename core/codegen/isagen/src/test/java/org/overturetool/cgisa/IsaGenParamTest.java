@@ -61,28 +61,34 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
 
     private static final String UPDATE = "tests.update.isagen";
     private static final String CGISA_ROOT = "src/test/resources/modules";
-    private static final List<String> skippedTests = Arrays.asList("NoParamPrePost.vdmsl","2ParamsPrePost.vdmsl","NoParamNoPre.vdmsl",
-    		"1ParamNoPre.vdmsl","1ParamPrePost.vdmsl","FuncPrePost.vdmsl","NotYetSpecified.vdmsl",//"FuncPre.vdmsl",
+    private static final List<String> skippedTests = Arrays.asList("NoParamPrePost.vdmsl",
+    		"2ParamsPrePost.vdmsl",
+    		"NoParamNoPre.vdmsl",
+    		"1ParamNoPre.vdmsl","1ParamPrePost.vdmsl",
+    		//"FuncPrePost.vdmsl",
+    		"NotYetSpecified.vdmsl","FuncPre.vdmsl",
     		"FuncApply3Params.vdmsl",
-    		//"FuncDecl2Params.vdmsl",
-    		//"FuncDeclNoParam.vdmsl",
-    		//"FuncDepSimple.vdmsl",
+    		"FuncDecl2Params.vdmsl",
+    		"FuncDeclNoParam.vdmsl",
+    		"FuncDepSimple.vdmsl",
     		"FuncApplyNoParam.vdmsl",
-    		//"FuncPost.vdmsl",
+    		"FuncPost.vdmsl",
     		"FuncApply1Param.vdmsl",
-    		//"FuncDecl1Param.vdmsl",
+    		"FuncDecl1Param.vdmsl",
     		"EqualsInit.vdmsl","PredicateInit.vdmsl","IntExpVarExp.vdmsl","ExplicitInt.vdmsl","ExplicitNat.vdmsl","ExplicitNat1.vdmsl",
-    		"ExplicitReal.vdmsl","IndependentDefsOrder.vdmsl","ImplicitNumericExp.vdmsl","VarExp.vdmsl","BoolType.vdmsl",
+    		"ExplicitReal.vdmsl","IndependentDefsOrder.vdmsl","ImplicitNumericExp.vdmsl",//"VarExp.vdmsl",
+    		"SeqNat.vdmsl",//A test for another day...
+    		//"BoolType.vdmsl",
     		//"InvSet.vdmsl",
     		"InvRecordDummyInv.vdmsl",
     		//"InvInt.vdmsl",
-    		"Rec2Fields.vdmsl",//"SeqInt.vdmsl","Real.vdmsl","CharSeqIntSetTuple.vdmsl",//"IntIntTuple.vdmsl",
+    		"Rec2Fields.vdmsl",//"SeqInt.vdmsl","Real.vdmsl","CharSeqIntSetTuple.vdmsl","IntIntTuple.vdmsl",
     		//"MapIntChar.vdmsl",
     		//"Char.vdmsl",
     		"Rec1Field.vdmsl",
-    		//"IntCharTuple.vdmsl",//"Token.vdmsl",
-    		//"CharNatTokenTuple.vdmsl",//"Rat.vdmsl",//"SetInt.vdmsl",//"Nat.vdmsl",//"Nat1.vdmsl",
-    		"Rec2FieldsDiffTypes.vdmsl");//"MapIntInt.vdmsl");
+    		//"IntCharTuple.vdmsl","Token.vdmsl",
+    		//"CharNatTokenTuple.vdmsl","Rat.vdmsl","SetInt.vdmsl","Nat.vdmsl","Nat1.vdmsl",
+    		"Rec2FieldsDiffTypes.vdmsl");//,// "MapIntInt.vdmsl");
 
     @Override
     public CgIsaTestResult processModel(List<INode> ast) {

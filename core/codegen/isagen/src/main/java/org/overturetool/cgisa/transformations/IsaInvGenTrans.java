@@ -5,6 +5,8 @@ import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.*;
 import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
+import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
@@ -115,6 +117,59 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
    
     
     }
+    
+    
+    @Override
+    public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
+        super.caseAFieldDeclIR(node);
+        
+        
+       // AFieldDeclIR node = n.clone();//cloning the node adds some things to the AST just not the inv we want!
+        STypeIR t = node.getType();
+        if (t.getNamedInvType() != null) {
+        	
+        	
+            // Invariant function
+            AFuncDeclIR invFun_ = new AFuncDeclIR();
+            invFun_.setName("inv_" + node.getName());
+            
+            System.out.println(invFun_.getChildren(true));
+            AMethodTypeIR mt = new AMethodTypeIR();
+            
+        	mt.setResult(new ABoolBasicTypeIR()); //set return type to bool
+            invFun_.setMethodType(mt.clone());
+          
+            
+
+            AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+            identifierPattern.setName(invFun_.getName());
+            
+            
+            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+            afp.setPattern(identifierPattern);
+            afp.setType(t.clone()); 
+            invFun_.getFormalParams().add(afp);
+        	
+            
+            SExpIR expr = IsaInvExpGen.apply(node, identifierPattern, mt.clone(), isaFuncDeclIRMap);
+            
+        	invFun_.setBody(expr);
+        	System.out.println(invFun_);
+            // Insert into AST
+            AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+            if(encModule != null)
+            {
+                encModule.getDecls().add(invFun_);
+            }
+            System.out.println("HERE"+encModule.getDecls());
+            System.out.println("Invariant function has been added");
+
+       
+	
+	   
+        }
+    }
+    
     
     public AIdentifierPatternIR setIdentifierPattern(AFuncDeclIR inv, STypeIR t){
     	//set pattern to that used in invariant

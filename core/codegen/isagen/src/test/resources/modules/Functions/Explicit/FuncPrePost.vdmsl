@@ -3,7 +3,7 @@ module A
 definitions
 
 functions
-f : int -> int
+f : nat -> int
 f (x) == 0
 pre true
 post true

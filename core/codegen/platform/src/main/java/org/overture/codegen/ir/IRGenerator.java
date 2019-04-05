@@ -104,8 +104,9 @@ public class IRGenerator
 		}
 
 		codeGenInfo.clearTransformationWarnings();
-
+		//System.out.println("----Before IsaFuncDeclCov--"+status.getIrNode().getChildren(true));
 		status.getIrNode().apply(transformation);
+		//System.out.println("----After IsaFuncDeclCov--"+status.getIrNode().getChildren(true)); also shows that post in AST
 		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
 
 		status.addTransformationWarnings(transformationWarnings);

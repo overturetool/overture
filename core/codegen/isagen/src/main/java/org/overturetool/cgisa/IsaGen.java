@@ -184,9 +184,11 @@ public class IsaGen extends CodeGenBase {
                     IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invTrans);
                     
-                    
-                    IsaFuncDeclConv invFuncTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
-                    generator.applyPartialTransformation(status, invFuncTrans);
+                   
+                    IsaFuncDeclConv funcTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, funcTrans);
+                   // System.out.println(status.getIrNode().getChildren(true));//even shows correctly here, 
+                    //Post Functions are being added to the AST, why does it not appear???
                     
                 }
             }
