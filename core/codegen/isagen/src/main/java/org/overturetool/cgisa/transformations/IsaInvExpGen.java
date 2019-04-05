@@ -9,6 +9,7 @@ import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.*;
+import org.overturetool.cgisa.utils.IsaInvNameFinder;
 
 import java.util.Map;
 
@@ -42,10 +43,9 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     @Override
     public SExpIR caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
         STypeIR type = node.getType();
-
+        
         // Find invariant function
         AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
-
         // Create ref to function
         AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
         fInvIdentifier.setName(fInv.getName());
@@ -64,6 +64,36 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         return exp;
     }
 
+    
+    @Override
+    public SExpIR caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
+        STypeIR type = node.getType();
+        
+        String typeName = IsaInvNameFinder.findName(node.getType().getNamedInvType()).substring(4);
+        AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
+        
+        // Create ref to function
+        AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
+        fInvIdentifier.setName(fInv.getName());
+        fInvIdentifier.setSourceNode(fInv.getSourceNode());
+        fInvIdentifier.setType(fInv.getMethodType());
+        
+
+        // Crete apply expr
+        AApplyExpIR exp = new AApplyExpIR();
+        exp.setType(new ABoolBasicTypeIR());
+        AIdentifierVarExpIR iVarExp = new AIdentifierVarExpIR();
+        iVarExp.setName(this.ps.getName());
+        iVarExp.setType(this.methodType);
+        exp.getArgs().add(iVarExp);
+        exp.setRoot(fInvIdentifier);
+        
+        return exp;
+    }
+    
+    
+    
+    
     @Override
     public SExpIR caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
         throw new AnalysisException();
