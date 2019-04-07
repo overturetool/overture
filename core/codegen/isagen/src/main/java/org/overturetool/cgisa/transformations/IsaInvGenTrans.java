@@ -142,7 +142,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
             
 
             AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
-            identifierPattern.setName(invFun_.getName());
+            identifierPattern.setName("");//abbreviations have no params so do not use identifier pattern
             
             
             AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();

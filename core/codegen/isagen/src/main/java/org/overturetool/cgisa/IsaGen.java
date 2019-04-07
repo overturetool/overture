@@ -52,6 +52,8 @@ import org.overturetool.cgisa.transformations.*;
  */
 public class IsaGen extends CodeGenBase {
 
+	
+	
     public IsaGen()
     {
         this.addInvTrueMacro();
@@ -120,8 +122,8 @@ public class IsaGen extends CodeGenBase {
      */
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
-
-
+    	
+    	
         // Typecheck the VDMToolkit module and generate the IR
         TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 =
                 TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
@@ -185,8 +187,8 @@ public class IsaGen extends CodeGenBase {
                     generator.applyPartialTransformation(status, invTrans);
                     
                    
-                    IsaFuncDeclConv funcTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
-                    generator.applyPartialTransformation(status, funcTrans);
+//                    IsaFuncDeclConv funcTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+  //                  generator.applyPartialTransformation(status, funcTrans);
                    // System.out.println(status.getIrNode().getChildren(true));//even shows correctly here, 
                     //Post Functions are being added to the AST, why does it not appear???
                     
@@ -218,9 +220,11 @@ public class IsaGen extends CodeGenBase {
     private List<GeneratedModule> prettyPrint(List<IRStatus<PIR>> statuses)
             throws org.overture.codegen.ir.analysis.AnalysisException {
         // Apply merge visitor to pretty print Isabelle syntax
+    	
         IsaTranslations isa = new IsaTranslations();
         MergeVisitor pp = isa.getMergeVisitor();
-
+        
+       
         List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 
         for (IRStatus<PIR> status : statuses) {
@@ -231,7 +235,6 @@ public class IsaGen extends CodeGenBase {
             }
 
         }
-
         // Return syntax
         return generated;
     }

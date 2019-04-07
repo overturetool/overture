@@ -67,34 +67,59 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     
     @Override
     public SExpIR caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
-        STypeIR type = node.getType();
+        STypeIR t = node.getType();
         
-        String typeName = IsaInvNameFinder.findName(node.getType().getNamedInvType()).substring(4);
-        AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
+        AApplyExpIR completeExp = new AApplyExpIR();
+        AApplyExpIR typeExp = new AApplyExpIR();
+    	if (t instanceof ASeqSeqTypeIR) 
+    	{
+    		//do stuff...
+    	}
+    	else if (t instanceof ASetSetTypeIR) 
+    	{
+    		ASetSetTypeIR set = (ASetSetTypeIR) t.clone();
+    		
+    		AIdentifierVarExpIR setOfInv = buildInvForType(set.getSetOf().getNamedInvType().clone());
+    		AIdentifierVarExpIR setInv = buildInvForType(set.getNamedInvType().clone());
+    		// Create type types invariant apply to expression e.g isa_VDMSet isa_VDMSeq isaVDMNat1
+            typeExp = new AApplyExpIR();
+            typeExp.setType(new ABoolBasicTypeIR());
+            typeExp.getArgs().add(setOfInv);
+            typeExp.setRoot(setInv);
+            
+            // Crete apply to the inv_ expr e.g inv_x inv_y
+            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+            invExp.setName("inv_"+node.getName());
+            invExp.setType(this.methodType);
+            
+            //string together in one bug apply exp
+            completeExp = new AApplyExpIR();
+            completeExp.setType(new ABoolBasicTypeIR());
+            completeExp.getArgs().add(invExp);
+            completeExp.setRoot(typeExp);
+    	}
+       
         
-        // Create ref to function
+        
+        return completeExp;
+    }
+    
+     
+    
+    
+    private AIdentifierVarExpIR buildInvForType(ANamedTypeDeclIR invariantNode) throws AnalysisException {
+    	String typeName = IsaInvNameFinder.findName(invariantNode).substring(4);
+    	AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
+         // Create ref to function
         AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
         fInvIdentifier.setName(fInv.getName());
         fInvIdentifier.setSourceNode(fInv.getSourceNode());
-        fInvIdentifier.setType(fInv.getMethodType());
+        fInvIdentifier.setType(fInv.getMethodType().clone());//Must always clone
         
+		return fInvIdentifier;
+	}
 
-        // Crete apply expr
-        AApplyExpIR exp = new AApplyExpIR();
-        exp.setType(new ABoolBasicTypeIR());
-        AIdentifierVarExpIR iVarExp = new AIdentifierVarExpIR();
-        iVarExp.setName(this.ps.getName());
-        iVarExp.setType(this.methodType);
-        exp.getArgs().add(iVarExp);
-        exp.setRoot(fInvIdentifier);
-        
-        return exp;
-    }
-    
-    
-    
-    
-    @Override
+	@Override
     public SExpIR caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
         throw new AnalysisException();
     }
