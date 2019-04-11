@@ -1,1 +1,12 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\ndefinition \"x \u003d +|1 : @nat|+\"\ndeclare x_def [eval,evalp]\n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ x \:\: VDMNat where 
+\" x \\<equiv> 1 \" 
+
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invVDMNat inv_x\"
+\n\n
+end","errors":false}

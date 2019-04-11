@@ -1,1 +1,28 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\ndefinition \"a \u003d +|10 : @nat1|+\"\ndeclare a_def [eval,evalp]\n\ndefinition \"b \u003d +|20 : @nat1|+\"\ndeclare b_def [eval,evalp]\n\ndefinition \"c \u003d +|30 : @nat1|+\"\ndeclare c_def [eval,evalp]\n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ a \:\: VDMNat1 where 
+\" a \\<equiv> 10 \" 
+\n
+abbreviation
+ b \:\: VDMNat1 where 
+\" b \\<equiv> 20 \" 
+\n
+abbreviation
+ c \:\: VDMNat1 where 
+\" c \\<equiv> 30 \" 
+\n\n
+definition
+inv_a \:\: \"\\<bool>\" where
+\"inv_a \\<equiv> isa_invVDMNat1 inv_a\"
+\n
+definition
+inv_b \:\: \"\\<bool>\" where
+\"inv_b \\<equiv> isa_invVDMNat1 inv_b\"
+\n
+definition
+inv_c \:\: \"\\<bool>\" where
+\"inv_c \\<equiv> isa_invVDMNat1 inv_c\"
+\n\n
+end","errors":false}

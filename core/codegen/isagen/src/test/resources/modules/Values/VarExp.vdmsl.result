@@ -9,11 +9,11 @@ abbreviation
 \" y \\<equiv> x \" 
 
 definition
-inv_x \:\: \\<bool> where
-\"inv_x \\<equiv> VDMNat1 x\"
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invVDMNat1 inv_x\"
 
 definition
-inv_y \:\: \\<bool> where
-\"inv_y \\<equiv> VDMNat1 y inv_x y\"
+inv_y \:\: \"\\<bool>\" where
+\"inv_y \\<equiv> isa_invVDMNat1 inv_y\"
 
 end","errors":false}

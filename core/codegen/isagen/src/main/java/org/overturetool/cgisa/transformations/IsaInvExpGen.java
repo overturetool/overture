@@ -26,7 +26,10 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 
     AIdentifierPatternIR ps;
     AMethodTypeIR methodType;
+    
     private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
+	private AIdentifierVarExpIR targetIP;
+	private ANamedTypeDeclIR currNamedInv;
 
     public IsaInvExpGen(AIdentifierPatternIR ps, AMethodTypeIR methodType, Map<String, AFuncDeclIR> isaFuncDeclIRMap)
     {
@@ -70,35 +73,38 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         STypeIR t = node.getType();
         
         AApplyExpIR completeExp = new AApplyExpIR();
-        AApplyExpIR typeExp = new AApplyExpIR();
-    	if (t instanceof ASeqSeqTypeIR) 
+    	
+    	if (t instanceof ASetSetTypeIR || t instanceof ASeqSeqTypeIR) 
     	{
-    		//do stuff...
-    	}
-    	else if (t instanceof ASetSetTypeIR) 
-    	{
-    		ASetSetTypeIR set = (ASetSetTypeIR) t.clone();
-    		
-    		AIdentifierVarExpIR setOfInv = buildInvForType(set.getSetOf().getNamedInvType().clone());
-    		AIdentifierVarExpIR setInv = buildInvForType(set.getNamedInvType().clone());
-    		// Create type types invariant apply to expression e.g isa_VDMSet isa_VDMSeq isaVDMNat1
-            typeExp = new AApplyExpIR();
-            typeExp.setType(new ABoolBasicTypeIR());
-            typeExp.getArgs().add(setOfInv);
-            typeExp.setRoot(setInv);
-            
             // Crete apply to the inv_ expr e.g inv_x inv_y
             AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
             invExp.setName("inv_"+node.getName());
             invExp.setType(this.methodType);
-            
-            //string together in one bug apply exp
-            completeExp = new AApplyExpIR();
+            this.targetIP = invExp;
+			
             completeExp.setType(new ABoolBasicTypeIR());
-            completeExp.getArgs().add(invExp);
-            completeExp.setRoot(typeExp);
+            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+           
+			completeExp = buildInvForType(t.clone());
+			
     	}
-       
+    	else
+    	{
+    		STypeIR type = t.clone();
+    		
+    		// Create apply to the inv_ expr e.g inv_x inv_y
+            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+            invExp.setName("inv_"+node.getName());
+            invExp.setType(this.methodType);
+            this.targetIP = invExp;
+			
+            completeExp.setType(new ABoolBasicTypeIR());
+            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+           
+			completeExp = buildInvForType(type);
+    	}
+    	
+    	       
         
         
         return completeExp;
@@ -106,17 +112,40 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     
      
     
-    
-    private AIdentifierVarExpIR buildInvForType(ANamedTypeDeclIR invariantNode) throws AnalysisException {
-    	String typeName = IsaInvNameFinder.findName(invariantNode).substring(4);
+    //build curried invariant
+    private AApplyExpIR buildInvForType(STypeIR seqtNode) throws AnalysisException {
+    	
+    	String typeName = IsaInvNameFinder.findName(seqtNode);
     	AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
+    	
          // Create ref to function
-        AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
-        fInvIdentifier.setName(fInv.getName());
-        fInvIdentifier.setSourceNode(fInv.getSourceNode());
-        fInvIdentifier.setType(fInv.getMethodType().clone());//Must always clone
+        AIdentifierVarExpIR curriedInv = new AIdentifierVarExpIR();
+        curriedInv.setName(fInv.getName());
+        curriedInv.setSourceNode(fInv.getSourceNode());
+        curriedInv.setType(fInv.getMethodType().clone());//Must always clone
+    	
+    	AApplyExpIR accum = new AApplyExpIR();
+    	accum.setRoot(curriedInv);
+    	
+    	//if this type is not the last in the nested types, then keep rescursing until we get to the final nested type
+    	if ( seqtNode instanceof ASetSetTypeIR && ((ASetSetTypeIR) seqtNode).getSetOf() != null )
+    	{
+    		
+    		accum.getArgs().add(buildInvForType(((ASetSetTypeIR) seqtNode).getSetOf().clone()));
+    	}
+    	else if (seqtNode instanceof ASeqSeqTypeIR && ((ASeqSeqTypeIR) seqtNode).getSeqOf() != null)
+    	{
+    		
+    		accum.getArgs().add(buildInvForType(((ASeqSeqTypeIR) seqtNode).getSeqOf().clone()));
+    	}
+    	else if (seqtNode.getNamedInvType() != null)
+    	{
+    		accum.getArgs().add(targetIP);
+    	}
+    	//if not populate args with inv_x
+    	
+    	return accum;
         
-		return fInvIdentifier;
 	}
 
 	@Override

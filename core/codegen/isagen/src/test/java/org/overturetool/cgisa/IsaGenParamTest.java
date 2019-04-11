@@ -75,8 +75,9 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
     		"FuncPost.vdmsl",
     		"FuncApply1Param.vdmsl",
     		"FuncDecl1Param.vdmsl",
-    		"EqualsInit.vdmsl","PredicateInit.vdmsl","IntExpVarExp.vdmsl","ExplicitInt.vdmsl","ExplicitNat.vdmsl","ExplicitNat1.vdmsl",
-    		"ExplicitReal.vdmsl","IndependentDefsOrder.vdmsl","ImplicitNumericExp.vdmsl",//"VarExp.vdmsl",
+    		"EqualsInit.vdmsl","PredicateInit.vdmsl",//"IntExpVarExp.vdmsl","ExplicitInt.vdmsl","ExplicitNat.vdmsl","ExplicitNat1.vdmsl",
+    		//"ExplicitReal.vdmsl",//"IndependentDefsOrder.vdmsl",
+    		//"ImplicitNumericExp.vdmsl",//"VarExp.vdmsl",
     		"SeqNat.vdmsl",//A test for another day...
     		//"BoolType.vdmsl",
     		//"InvSet.vdmsl",

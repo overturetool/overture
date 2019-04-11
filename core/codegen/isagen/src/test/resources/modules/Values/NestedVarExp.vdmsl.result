@@ -1,0 +1,19 @@
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ x \:\: VDMSet VDMSeq VDMNat1 where 
+\" x \\<equiv> {[1]} \" 
+\nabbreviation
+ y \:\: VDMSet VDMSeq VDMNat1 where 
+\" y \\<equiv> x \" 
+
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 inv_x\"
+
+definition
+inv_y \:\: \"\\<bool>\" where
+\"inv_y \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 inv_y\"
+
+end","errors":false}

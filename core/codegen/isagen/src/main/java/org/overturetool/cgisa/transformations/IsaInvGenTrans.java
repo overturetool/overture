@@ -123,17 +123,15 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
         super.caseAFieldDeclIR(node);
         
-        
-       // AFieldDeclIR node = n.clone();//cloning the node adds some things to the AST just not the inv we want!
+       
         STypeIR t = node.getType();
-        if (t.getNamedInvType() != null) {
+        if (t.getNamedInvType() != null) {//then an invariant exists that can be generated
         	
         	
             // Invariant function
             AFuncDeclIR invFun_ = new AFuncDeclIR();
             invFun_.setName("inv_" + node.getName());
             
-            System.out.println(invFun_.getChildren(true));
             AMethodTypeIR mt = new AMethodTypeIR();
             
         	mt.setResult(new ABoolBasicTypeIR()); //set return type to bool
@@ -171,7 +169,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     }
     
     
-    public AIdentifierPatternIR setIdentifierPattern(AFuncDeclIR inv, STypeIR t){
+    private AIdentifierPatternIR setIdentifierPattern(AFuncDeclIR inv, STypeIR t){
     	//set pattern to that used in invariant
     	AIdentifierPatternIR ip = new AIdentifierPatternIR();
     	

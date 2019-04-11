@@ -1,1 +1,7 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\ndefinition \"x \u003d +|1.2 : @real|+\"\ndeclare x_def [eval,evalp]\n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ x \:\: \\<real> where 
+\" x \\<equiv> 1.2 \" 
+end","errors":false}
