@@ -4,4 +4,9 @@ begin
 abbreviation
  x \:\: \\<real> where 
 \" x \\<equiv> 1.2 \" 
+
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invTrue x\"
+\n\n
 end","errors":false}

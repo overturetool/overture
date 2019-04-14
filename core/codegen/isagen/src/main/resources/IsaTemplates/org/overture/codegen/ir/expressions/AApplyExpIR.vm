@@ -3,7 +3,7 @@
 #if ($Isa.isFunc($node.Root.Type) ) 
 ${root} ${args}##
 #elseif ($Isa.isRootRec($node))
-${root}[${args}]##
+${root}${args}##
 #else 
 $root<$args>##
 #end

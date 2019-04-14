@@ -1,1 +1,8 @@
-{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\nabbreviation\n x \:\: \\<bool>\nwhere \" x \\<equiv> true \" \n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\nabbreviation\n x \:\: \\<bool>\nwhere \" x \\<equiv> true \"\n
+
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invTrue x\"
+\n\n
+
+ \n\nend","errors":false}

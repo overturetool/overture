@@ -5,12 +5,15 @@ import org.overture.cgisa.isair.analysis.AnswerIsaAdaptor;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.*;
+import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.*;
 import org.overturetool.cgisa.utils.IsaInvNameFinder;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 /*
@@ -29,7 +32,8 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     
     private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
 	private AIdentifierVarExpIR targetIP;
-	private ANamedTypeDeclIR currNamedInv;
+	private final LinkedList<ANamedTypeDeclIR> invArr = new LinkedList<ANamedTypeDeclIR>();
+
 
     public IsaInvExpGen(AIdentifierPatternIR ps, AMethodTypeIR methodType, Map<String, AFuncDeclIR> isaFuncDeclIRMap)
     {
@@ -45,7 +49,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 
     @Override
     public SExpIR caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
-        STypeIR type = node.getType();
+        node.getType();
         
         // Find invariant function
         AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
@@ -71,14 +75,12 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     @Override
     public SExpIR caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
         STypeIR t = node.getType();
-        
         AApplyExpIR completeExp = new AApplyExpIR();
-    	
     	if (t instanceof ASetSetTypeIR || t instanceof ASeqSeqTypeIR) 
     	{
             // Crete apply to the inv_ expr e.g inv_x inv_y
             AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
-            invExp.setName("inv_"+node.getName());
+            invExp.setName(node.getName());
             invExp.setType(this.methodType);
             this.targetIP = invExp;
 			
@@ -87,6 +89,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
            
 			completeExp = buildInvForType(t.clone());
 			
+			
     	}
     	else
     	{
@@ -94,7 +97,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     		
     		// Create apply to the inv_ expr e.g inv_x inv_y
             AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
-            invExp.setName("inv_"+node.getName());
+            invExp.setName(node.getName());
             invExp.setType(this.methodType);
             this.targetIP = invExp;
 			
@@ -104,33 +107,101 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 			completeExp = buildInvForType(type);
     	}
     	
-    	       
-        
-        
+    	
         return completeExp;
     }
     
+    
+    @Override
+    public SExpIR caseAFuncDeclIR(AFuncDeclIR node) throws AnalysisException {
+        LinkedList<AFormalParamLocalParamIR> t = node.getFormalParams();
+        node.setMethodType(this.methodType);
+        LinkedList<AApplyExpIR> paramInvariants = new LinkedList<AApplyExpIR>();
+        
+        for (int i = 0; i < node.getFormalParams().size(); i++) {
+        	STypeIR type = t.get(i).getType();      
+        	AApplyExpIR completeExp = new AApplyExpIR();
+        	
+        	// Create apply to the inv_ expr e.g inv_x inv_y
+            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+            invExp.setName(node.getFormalParams().get(i).getPattern().toString());
+            invExp.setType(this.methodType);
+            this.targetIP = invExp;
+			
+            completeExp.setType(new ABoolBasicTypeIR());
+            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+           
+			try {
+				completeExp = buildInvForType(type);
+			} catch (AnalysisException e) {
+				e.printStackTrace();
+			}
+    	
+			paramInvariants.add(completeExp);
+			        
+        		
+        }
+        
+        
+        // Link numerous apply expressions together in an and expression
+        if (paramInvariants.size() >= 2)
+        	return genAnd(paramInvariants);
+        else
+        // Just one parameter return it as an apply expression
+        	return paramInvariants.get(0);
+        
+        
+    	
+    }
      
     
-    //build curried invariant
-    private AApplyExpIR buildInvForType(STypeIR seqtNode) throws AnalysisException {
+    private SExpIR genAnd(LinkedList<AApplyExpIR> paramInvariants) {
+    	
+    	AAndBoolBinaryExpIR and = new AAndBoolBinaryExpIR();
+    	
+    	//base case
+		if (paramInvariants.size() == 2)
+	    	{
+				and.setLeft(paramInvariants.get(0));
+				and.setRight(paramInvariants.get(1));
+	    	}
+		else
+			{
+				and.setLeft(paramInvariants.get(0));
+				paramInvariants.remove(0);
+				and.setRight( genAnd(paramInvariants) );
+			}
+	    System.out.println(and.getLeft());
+	    System.out.println(and.getRight());
+		return and;
+		
+	}
+
+	//build curried invariant
+    public AApplyExpIR buildInvForType(STypeIR seqtNode) throws AnalysisException {
     	
     	String typeName = IsaInvNameFinder.findName(seqtNode);
     	AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
     	
+    	ATypeNameIR t = new ATypeNameIR();
+    	t.setName("isa_"+typeName);
+    	ANamedTypeDeclIR n = new ANamedTypeDeclIR();
+    	n.setName(t);
+    	n.setType(fInv.getMethodType().clone());
+    	n.setSourceNode(fInv.getSourceNode());
+    	seqtNode.setNamedInvType(n.clone());
          // Create ref to function
         AIdentifierVarExpIR curriedInv = new AIdentifierVarExpIR();
         curriedInv.setName(fInv.getName());
         curriedInv.setSourceNode(fInv.getSourceNode());
         curriedInv.setType(fInv.getMethodType().clone());//Must always clone
-    	
     	AApplyExpIR accum = new AApplyExpIR();
     	accum.setRoot(curriedInv);
+    	
     	
     	//if this type is not the last in the nested types, then keep rescursing until we get to the final nested type
     	if ( seqtNode instanceof ASetSetTypeIR && ((ASetSetTypeIR) seqtNode).getSetOf() != null )
     	{
-    		
     		accum.getArgs().add(buildInvForType(((ASetSetTypeIR) seqtNode).getSetOf().clone()));
     	}
     	else if (seqtNode instanceof ASeqSeqTypeIR && ((ASeqSeqTypeIR) seqtNode).getSeqOf() != null)
@@ -138,12 +209,10 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     		
     		accum.getArgs().add(buildInvForType(((ASeqSeqTypeIR) seqtNode).getSeqOf().clone()));
     	}
-    	else if (seqtNode.getNamedInvType() != null)
+    	else
     	{
     		accum.getArgs().add(targetIP);
     	}
-    	//if not populate args with inv_x
-    	
     	return accum;
         
 	}
@@ -163,31 +232,10 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
             return null;
     }
 
-
-    public SExpIR caseASeqSeqType(ASeqSeqTypeIR node)
-            throws AnalysisException {
-        if(node.getSeqOf().getTag()!= null)
-        {
-            Object t = node.getSeqOf().getTag();
-
-            // We are referring to another type, and therefore we stop here. This is the instantiation of the polymorphic function.
-            /*
-            For VDM:
-
-
-             */
-            // Return expression corresponding to: isa_invSeqElemens[token](isa_true[token], p)
-        }
-        else {
-            //We need to keep going
-        }
-        throw new AnalysisException();
-    }
-
     public SExpIR caseATokenBasicTypeIR(ATokenBasicTypeIR n) throws AnalysisException
     {
 
-        AApplyExp e = new AApplyExp();
+        new AApplyExp();
 
         throw new AnalysisException();
 

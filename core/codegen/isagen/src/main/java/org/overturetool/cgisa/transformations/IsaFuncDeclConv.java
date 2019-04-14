@@ -11,6 +11,8 @@ import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+import org.overturetool.cgisa.utils.IsaInvNameFinder;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,7 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     }
     
    
-   // Transform AFuncDeclIR
+    // Transform AFuncDeclIR
     @Override
     public void caseAFuncDeclIR(AFuncDeclIR x) throws AnalysisException {
     	super.caseAFuncDeclIR(x);
@@ -69,107 +71,80 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     
     
     
-    /*
-    UNDER CONSTRUCTION, first draft.
-    TODO A lot, int invariant, clean up the substring search to find the invariants if possible, feels a bit hacky,
-    also be able to handle more than one parameter, unfortunately this will have to be done recursively
-    so that we can keep adding more \<and> clauses. Finally figure out a way to get this post condition into the AST,
-    confused as to why --Got-- is empty after running this method even though postCond sysout shows everything with postCond is correct.*/
-    //dig around the ast to generate post condition invariant checks
-    private void transformPostConditions (AFuncDeclIR xo) {
-    	AFuncDeclIR x = xo.clone();
-    	
-    	// Transform post conditions
-    	if (x.getPostCond() != null) 
-    	{
-    		
-    		AFuncDeclIR postCond = (AFuncDeclIR) x.getPostCond();
-    		AMethodTypeIR methodType = new AMethodTypeIR(); //post condiiton method type
-    		AFormalParamLocalParamIR afplp = new AFormalParamLocalParamIR(); //postCondition formal parameters
-	        
-    	        
-    		AAndBoolBinaryExpIR mcp = new AAndBoolBinaryExpIR();
-    		mcp.setLeft(( (AFuncDeclIR) (x.getPostCond()) ).getBody());//Provided post condition
-    		
-    		//set the body as an and expression of one being the provided post condition and one being the apply expression
-    		AApplyExpIR aa = new AApplyExpIR();
-    		
-    		AIdentifierVarExpIR root = new AIdentifierVarExpIR();
-			root.setName("isa_inv"+x.getFormalParams().get(0).getType().getNamedInvType()
-					.getName().getName().substring(4));//TODO substring a bit hacky?
-			
-			//TODO for some reason int does not have a VDMInt invariant in the function mapping
-			if(!x.getFormalParams().get(0).getType().getNamedInvType().getName().getName().contains("Int"))
-				root.setType(isaFuncDeclIRMap.get("isa_inv"+x.getFormalParams().get(0).getType().getNamedInvType()
-						.getName().getName().substring(4)).getMethodType());
-			
-			aa.setRoot(root);
-			
-			List<AIdentifierVarExpIR> args = new LinkedList<AIdentifierVarExpIR>();
-			AIdentifierVarExpIR arg = new AIdentifierVarExpIR();
-			arg.setName("RESULT");
-			arg.setType(postCond.getMethodType());
-			args.add(arg);
-			aa.setArgs(args);
-    			
+    
+    private void transformPostConditions (AFuncDeclIR node) throws AnalysisException {
+    	AMethodTypeIR mt = node.getMethodType().clone();
+    	// Post condition function
+        AFuncDeclIR postCond = new AFuncDeclIR();
+        // Set post_[function name] as post function name
+        postCond.setName("post_" + node.getName()); 
+        
+    	// Set up method type for post condition
+        AMethodTypeIR type = new AMethodTypeIR();
+        type.setResult(new ABoolBasicTypeIR());
+        List<STypeIR> params = mt.getParams();
+        params.add(mt.getResult());
+		type.setParams(params);
+        postCond.setMethodType(type);
+        
+        
+        // Provide post condition for functions without them
+        AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+        identifierPattern.setName("");
+        if (node.getFormalParams() != null && !node.getFormalParams().isEmpty())
+        {
+        	for (int i = 0; i < node.getFormalParams().size(); i++)
+        	{
+        		identifierPattern = new AIdentifierPatternIR();
+    	        identifierPattern.setName(node.getFormalParams().get(i).getPattern().toString());
+		        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+		        afp.setPattern(identifierPattern);
+		        afp.setType(node.getFormalParams().get(i).getType()); 
+		        postCond.getFormalParams().add(afp);
+        	}
+        }
+        
+        // Add RESULT pattern
+        if (mt.getResult() != null)
+        {
+	        identifierPattern = new AIdentifierPatternIR();
+	        identifierPattern.setName("RESULT");
+	        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+	        afp.setPattern(identifierPattern);
+	        afp.setType(mt.getResult()); 
+	        postCond.getFormalParams().add(afp);
+        }
+		//an and expression of all of the parameter invariants
+        SExpIR expr = IsaInvExpGen.apply(postCond.clone(), identifierPattern, postCond.getMethodType().clone(), isaFuncDeclIRMap);
+        postCond.setBody(expr);
+        
+     	// Translation for already written post conditions
+        if (node.getPostCond() != null)
+        {
+        	//No need to add formal params again they're all already put there above
+        	AFuncDeclIR postCond_ = (AFuncDeclIR) node.getPostCond();
+        	
+        	AAndBoolBinaryExpIR andExisting = new AAndBoolBinaryExpIR();
+        	andExisting.setLeft(expr);
+        	andExisting.setRight(postCond_.getBody());
+        	postCond.setBody(andExisting);
+        } 
+     	
+        
+        formatIdentifierPatternVars(postCond);
+        // Insert into AST
+        AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+        if(encModule != null)
+        {
+            encModule.getDecls().add(postCond);
+        }
 
-    		
-    		mcp.setRight(aa);//The invariants of param types
-    		//set post condition method type
-    		methodType.getParams().add(x.getFormalParams().get(0).getType());
-    		methodType.getParams().add(x.getMethodType().getResult());
-    		//methodType.getParams().add(x.getFormalParams().get(1).getType());
- 	    	methodType.setResult(new ABoolBasicTypeIR());
-    		postCond.setMethodType(methodType);
-    		
-    		
-    		//set formal params
-    		
-        	AIdentifierPatternIR ip = new AIdentifierPatternIR();
-        	
-        	
-        	//set param pattern
-            x.getFormalParams().forEach
-            ( 
-            		(p) -> 
-            		{
-            			ip.setName(p.getPattern().toString()); 
-	            		afplp.setPattern(ip);
-	                    afplp.setType(p.getType());
-	                    postCond.getFormalParams().add(afplp);
-            		}
-            );
-            
-            //set RESULT patterns
-            ip.setName("RESULT");
-        	afplp.setPattern(ip);
-        	afplp.setType(x.getMethodType().getResult());
-            postCond.getFormalParams().add(afplp);
-            
-            
-            
-            //Polish postCondition 
- 	    	postCond.setBody(mcp);
-    		postCond.setAccess(x.getAccess());
-    		postCond.setName("post_"+x.getName());
-    		formatIdentifierPatternVars(postCond);
-    		x.setPostCond(postCond);
-    		
-    	//Broken? For some reason doing this results in a completely empty --Got-- output in junit
-            AModuleDeclIR encModule = x.getAncestor(AModuleDeclIR.class);
-            if(encModule != null)
-            {
-    			//encModule.getDecls().clear();//clearing first will show the post condition in the --Got-- output not sure why
-                encModule.getDecls().add(postCond);
-                
-            }
-          
-            System.out.println("Post condition has been added");
-         
-    	}
-    	
-    	//add clause for if no post condition TODO
+        System.out.println("Post condition has been added");
+
+   
     }
+    
+  
     
     private void transformPreConditions(AFuncDeclIR x) {
     	// Transform pre conditions

@@ -1,7 +1,10 @@
 package org.overturetool.cgisa.utils;
 
+import java.util.Arrays;
+
 import org.overture.cgisa.isair.analysis.AnswerIsaAdaptor;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
@@ -19,77 +22,32 @@ import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 
-public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
+public class IsaSymbolFinder extends AnswerIsaAdaptor<String>
 {
-    public static String findName(INode node) throws AnalysisException {
-        IsaInvNameFinder finder = new IsaInvNameFinder();
+    private static String val;
+
+	public static String findSymbol(INode node, String value) throws AnalysisException {
+    	val =  value;
+        IsaSymbolFinder finder = new IsaSymbolFinder();
         return node.apply(finder);
     }
-
-    @Override
-    public String caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
-        return node.getName().getName();
-    }
-    
-    @Override
+ @Override
     public String caseASetSetTypeIR(ASetSetTypeIR node) throws AnalysisException {
-        return "VDMSet";
+        return "{" + val + "}";
     }
     
     @Override
     public String caseASeqSeqTypeIR(ASeqSeqTypeIR node) throws AnalysisException {
-    	ANamedTypeDeclIR n = new ANamedTypeDeclIR();
-    	return "VDMSeq";
+    	
+    	return "[" + val + "]";
     }
-    @Override
-    public String caseANatNumericBasicTypeIR(ANatNumericBasicTypeIR node) throws AnalysisException {
-    	return "VDMNat";
-    }
-    
-    @Override
-    public String caseAIntNumericBasicTypeIR(AIntNumericBasicTypeIR node) throws AnalysisException {
-    	return "True";
-    }
-    
-    @Override
-    public String caseARealNumericBasicTypeIR(ARealNumericBasicTypeIR node) throws AnalysisException {
-    	return "True";
-    }
-    
-    @Override
-    public String caseARatNumericBasicTypeIR(ARatNumericBasicTypeIR node) throws AnalysisException {
-    	return "True";
-    }
-    
-    
-    @Override
-    public String caseABoolBasicTypeIR(ABoolBasicTypeIR node) throws AnalysisException {
-    	return "True";
-    }
-    
+   
     @Override
     public String caseACharBasicTypeIR(ACharBasicTypeIR node) throws AnalysisException {
-    	return "True";
+    	return "\"" + val +  "\"";
     }
     
-    @Override
-    public String caseAMapMapTypeIR(AMapMapTypeIR node) throws AnalysisException {
-    	return "True";
-    }
-    
-    @Override
-    public String caseATokenBasicTypeIR(ATokenBasicTypeIR node) throws AnalysisException {
-    	return "VDMToken";
-    }
-    
-    @Override
-    public String caseANat1NumericBasicTypeIR(ANat1NumericBasicTypeIR node) throws AnalysisException {
-    	return "VDMNat1";
-    }
-    
-    
-    
-    
+   
     @Override
     public String caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
         return node.getName();

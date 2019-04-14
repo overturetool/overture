@@ -123,49 +123,38 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
         super.caseAFieldDeclIR(node);
         
-       
-        STypeIR t = node.getType();
-        if (t.getNamedInvType() != null) {//then an invariant exists that can be generated
-        	
-        	
-            // Invariant function
-            AFuncDeclIR invFun_ = new AFuncDeclIR();
-            invFun_.setName("inv_" + node.getName());
-            
-            AMethodTypeIR mt = new AMethodTypeIR();
-            
-        	mt.setResult(new ABoolBasicTypeIR()); //set return type to bool
-            invFun_.setMethodType(mt.clone());
-          
-            
+        STypeIR t = node.getType();// Invariant function
+        AFuncDeclIR invFun_ = new AFuncDeclIR();
+        invFun_.setName("inv_" + node.getName());
+        
+        AMethodTypeIR mt = new AMethodTypeIR();
+        
+    	mt.setResult(new ABoolBasicTypeIR()); //set return type to bool
+        invFun_.setMethodType(mt.clone());
+      
+        
 
-            AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
-            identifierPattern.setName("");//abbreviations have no params so do not use identifier pattern
-            
-            
-            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
-            afp.setPattern(identifierPattern);
-            afp.setType(t.clone()); 
-            invFun_.getFormalParams().add(afp);
-        	
-            
-            SExpIR expr = IsaInvExpGen.apply(node, identifierPattern, mt.clone(), isaFuncDeclIRMap);
-            
-        	invFun_.setBody(expr);
-        	System.out.println(invFun_);
-            // Insert into AST
-            AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
-            if(encModule != null)
-            {
-                encModule.getDecls().add(invFun_);
-            }
-            System.out.println("HERE"+encModule.getDecls());
-            System.out.println("Invariant function has been added");
-
-       
-	
-	   
+        AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+        identifierPattern.setName("");//abbreviations have no params so do not use identifier pattern
+        
+        
+        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+        afp.setPattern(identifierPattern);
+        afp.setType(t.clone()); 
+        invFun_.getFormalParams().add(afp);
+    	
+        
+        SExpIR expr = IsaInvExpGen.apply(node, identifierPattern, mt.clone(), isaFuncDeclIRMap);
+        
+    	invFun_.setBody(expr);
+        // Insert into AST
+        AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+        if(encModule != null)
+        {
+            encModule.getDecls().add(invFun_);
         }
+        System.out.println("Invariant function has been added");
+        
     }
     
     

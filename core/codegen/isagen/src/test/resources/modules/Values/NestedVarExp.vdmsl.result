@@ -2,18 +2,18 @@
 begin
 
 abbreviation
- x \:\: VDMSet VDMSeq VDMNat1 where 
+ x \:\: VDMNat1 VDMSeq VDMSet  where 
 \" x \\<equiv> {[1]} \" 
 \nabbreviation
- y \:\: VDMSet VDMSeq VDMNat1 where 
+ y \:\: VDMNat1 VDMSeq VDMSet where 
 \" y \\<equiv> x \" 
 
 definition
 inv_x \:\: \"\\<bool>\" where
-\"inv_x \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 inv_x\"
+\"inv_x \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 x\"
 
 definition
 inv_y \:\: \"\\<bool>\" where
-\"inv_y \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 inv_y\"
+\"inv_y \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 y\"
 
 end","errors":false}

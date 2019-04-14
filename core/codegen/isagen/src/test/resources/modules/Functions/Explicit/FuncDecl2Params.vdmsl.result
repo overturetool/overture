@@ -1,1 +1,9 @@
-{"translation":"theory A\n  imports VDMToolkit\nbegin\n\ndefinition \nf :: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> VDMNat\"\nwhere \n\"f x y \\<equiv> x\" \n\nend","errors":false}
+{"translation":"theory A\n  imports VDMToolkit\nbegin\n\ndefinition \n
+f :: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> VDMNat\"\n
+where \n
+\"f x y \\<equiv> x\" \n
+definition\n
+post_f \:\: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f x y RESULT \\<equiv> isa_invVDMNat y \\<and> isa_invVDMNat RESULT\"\n
+\nend","errors":false}

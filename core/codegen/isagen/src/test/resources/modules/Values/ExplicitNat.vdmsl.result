@@ -7,6 +7,6 @@ abbreviation
 
 definition
 inv_x \:\: \"\\<bool>\" where
-\"inv_x \\<equiv> isa_invVDMNat inv_x\"
+\"inv_x \\<equiv> isa_invVDMNat x\"
 \n\n
 end","errors":false}

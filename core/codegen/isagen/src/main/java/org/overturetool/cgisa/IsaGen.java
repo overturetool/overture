@@ -167,8 +167,6 @@ public class IsaGen extends CodeGenBase {
                         generator.applyPartialTransformation(status, sortTrans);
                     }
                     
-//                    IsaValueConv valConv = new IsaValueConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
-//                    generator.applyPartialTransformation(status, valConv);
                     
                     // Transform all token types to isa_VDMToken
                     // Transform all nat types to isa_VDMNat
@@ -183,14 +181,14 @@ public class IsaGen extends CodeGenBase {
                     generator.applyPartialTransformation(status, invSSConv);
 
                     
+                    IsaFuncDeclConv funcConv = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, funcConv);
+                    
+                    
+                    
                     IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invTrans);
                     
-                   
-//                    IsaFuncDeclConv funcTrans = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
-  //                  generator.applyPartialTransformation(status, funcTrans);
-                   // System.out.println(status.getIrNode().getChildren(true));//even shows correctly here, 
-                    //Post Functions are being added to the AST, why does it not appear???
                     
                 }
             }
@@ -239,6 +237,8 @@ public class IsaGen extends CodeGenBase {
         return generated;
     }
 
+    
+    //feed to velocity monster
     private GeneratedModule prettyPrint(IRStatus<? extends INode> status)
             throws org.overture.codegen.ir.analysis.AnalysisException {
         // Apply merge visitor to pretty print Isabelle syntax
