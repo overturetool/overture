@@ -73,9 +73,35 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 	    	
 	    	formatIdentifierPatternVars(x);
     	}
+    	
+    	if (x.getImplicit()) removeFromAST(x);
+    	
+    	
     }
     
-    private void transformPreConditions (AFuncDeclIR node) throws AnalysisException {
+    private void removeFromAST(AFuncDeclIR x) {
+    	// Insert into AST
+        AModuleDeclIR encModule = x.getAncestor(AModuleDeclIR.class);
+        if(encModule != null)
+        {
+            encModule.getDecls().remove(x);
+        }
+		
+	}
+
+    private void addToAST(INode node, INode parent) {
+    	// Insert into AST
+        AModuleDeclIR encModule = parent.getAncestor(AModuleDeclIR.class);
+        if(encModule != null)
+        {
+            encModule.getDecls().add((SDeclIR) node);
+        }
+
+		
+	}
+    
+
+	private void transformPreConditions (AFuncDeclIR node) throws AnalysisException {
     	AMethodTypeIR mt = node.getMethodType().clone();
     	
     	/*The final pre condition that will be populated with a generated pre condition,
@@ -142,7 +168,7 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     }
     
     
-    
+
     
     private void transformPostConditions (AFuncDeclIR node) throws AnalysisException {
     	AMethodTypeIR mt = node.getMethodType().clone();
@@ -166,12 +192,14 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     	// If there are pre written post conditions and one was generated add them both
         if (node.getPostCond() != null && generatedPost != null)
         {
-        	AFuncDeclIR postCond_ = (AFuncDeclIR) node.getPostCond();
+        	AFuncDeclIR postCond_ = (AFuncDeclIR) node.getPostCond();   
+        	
         	
         	AAndBoolBinaryExpIR andExisting = new AAndBoolBinaryExpIR();
         	andExisting.setLeft(generatedPost.getBody());
         	andExisting.setRight(postCond_.getBody());
         	finalPostCondition.setBody(andExisting);
+        	
         }
         
         //If there is only a pre written post condition add that
@@ -210,16 +238,7 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     }
     
   
-    private void addToAST(INode node, INode parent) {
-    	// Insert into AST
-        AModuleDeclIR encModule = parent.getAncestor(AModuleDeclIR.class);
-        if(encModule != null)
-        {
-            encModule.getDecls().add((SDeclIR) node);
-        }
-
-		
-	}
+    
 
 
     private AFuncDeclIR createPre(AFuncDeclIR node) throws AnalysisException {
@@ -300,7 +319,11 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
         if (mt.getResult() != null)
         {
 	        identifierPattern = new AIdentifierPatternIR();
-	        identifierPattern.setName("RESULT");
+	        if (node.getPostCond() != null)
+	        	identifierPattern.setName(((AFuncDeclIR) 
+	        			node.getPostCond()).getFormalParams().getLast().getPattern().toString());
+	        else
+	        	identifierPattern.setName("RESULT");
 	        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
 	        afp.setPattern(identifierPattern);
 	        afp.setType(mt.getResult()); 
