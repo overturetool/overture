@@ -1,1 +1,15 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\nvdmifun f\n  inp x :: \"@int\" and y :: \"@int\"\n  out r :: \"@int\"\n  pre \"(^y^ \u003c\u003e 0)\"\n  post \"((^x^ / ^y^) \u003d ^r^)\"\n\n\nend","errors":false}
+{"translation":"theory A\n  imports VDMToolkit\nbegin\n\n
+
+definition \n
+pre_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
+where \n
+\"pre_f x y \\<equiv> ((isa_invTrue x \\<and> isa_invTrue y) \\<and> y <> 0)\"\n
+
+definition\n
+post_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f x y RESULT \\<equiv> ( ((isa_invTrue x \\<and> isa_invTrue y) \\<and> isa_invTrue RESULT) \\<and> (x / y = RESULT))\"\n
+
+
+
+\n\nend","errors":false}

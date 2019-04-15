@@ -8,10 +8,16 @@ where
 \n
 \"f x \\<equiv> 0\" 
 \n\n 
-definition 
-\n
-post_f :: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"
-\n
-where \n\"post_f x RESULT \\<equiv> true\" 
+
+definition \n
+pre_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
+where \n
+\"pre_f x \\<equiv> isa_invTrue x\"\n
+
+definition\n
+post_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f x RESULT \\<equiv> ((isa_invTrue x \\<and> isa_invTrue RESULT) \\<and> true)\"\n
+
 \n\n 
 end","errors":false}

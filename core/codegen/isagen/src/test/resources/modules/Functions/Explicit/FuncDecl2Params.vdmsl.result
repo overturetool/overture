@@ -1,9 +1,19 @@
 {"translation":"theory A\n  imports VDMToolkit\nbegin\n\ndefinition \n
+
 f :: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> VDMNat\"\n
 where \n
 \"f x y \\<equiv> x\" \n
+
+
+definition \n
+pre_f \:\: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> \\<bool>\"\n
+where \n
+\"pre_f x y \\<equiv> (isa_invVDMNat x \\<and> isa_invVDMNat y)\"\n
+
 definition\n
 post_f \:\: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> \\<bool>\"\n
 where\n
-\" post_f x y RESULT \\<equiv> isa_invVDMNat y \\<and> isa_invVDMNat RESULT\"\n
+\" post_f x y RESULT \\<equiv> (isa_invVDMNat x \\<and> (isa_invVDMNat y \\<and> isa_invVDMNat RESULT))\"\n
+
+
 \nend","errors":false}

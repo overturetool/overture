@@ -1,1 +1,19 @@
-{"translation":"theory A\n  imports VDMToolkit\nbegin\n\ndefinition \nf :: \"VDMNat \\<Rightarrow> VDMNat\"\nwhere \n\"f x \\<equiv> x\" \n\nend","errors":false}
+{"translation":"theory A\n  imports VDMToolkit\n
+begin\n\n
+definition \n
+f :: \"VDMNat \\<Rightarrow> VDMNat\"\n
+where \n
+\"f x \\<equiv> x\"\n
+
+definition \n
+pre_f \:\: \"VDMNat \\<Rightarrow> \\<bool>\"\n
+where \n
+\"pre_f x \\<equiv> isa_invVDMNat x\"\n
+
+definition\n
+post_f \:\: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f x RESULT \\<equiv> (isa_invVDMNat x \\<and> isa_invVDMNat RESULT)\"\n
+
+ 
+\n\nend","errors":false}

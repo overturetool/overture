@@ -1,1 +1,15 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\nvdmifun f\n  inp x :: \"@int\"\n  out r :: \"@int\"\n  pre \"true\"\n  post \"(^r^ \u003d ^x^)\"\n\n\nend","errors":false}
+{"translation":"theory A\n  imports VDMToolkit\nbegin\n\n
+
+definition \n
+pre_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
+where \n
+\"pre_f x \\<equiv> (isa_invTrue x \\<and> true)\"\n
+
+definition\n
+post_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f x RESULT \\<equiv> ((isa_invTrue x \\<and> isa_invTrue RESULT) \\<and> (RESULT = x))\"\n
+
+
+
+\n\nend","errors":false}
