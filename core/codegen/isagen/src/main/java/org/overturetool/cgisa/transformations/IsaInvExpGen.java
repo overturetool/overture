@@ -171,8 +171,6 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 				paramInvariants.remove(0);
 				and.setRight( genAnd(paramInvariants) );
 			}
-	    System.out.println(and.getLeft());
-	    System.out.println(and.getRight());
 		return and;
 		
 	}
