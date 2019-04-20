@@ -1,4 +1,4 @@
-{"translation":"theory A\n  imports VDMToolkit\nbegin\n\n
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\n
 
 definition \n
 pre_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
@@ -8,7 +8,7 @@ where \n
 definition\n
 post_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
 where\n
-\" post_f x RESULT \\<equiv> ( (isa_invTrue x \\<and> isa_invTrue RESULT) \\<and> (RESULT = x) )\"\n
+\"post_f x r \\<equiv> ((isa_invTrue x \\<and> isa_invTrue r) \\<and> (r = x))\"
 
 
 

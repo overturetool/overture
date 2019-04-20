@@ -1,1 +1,27 @@
-{"translation":"theory A\n  imports VDMToolkit\nbegin\n\ndefinition \nf :: \"VDMNat\"\nwhere \n\"f \\<equiv> 0\" \n\nend","errors":false}
+{"translation":"
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+	f \:\: \"VDMNat
+\"
+    where
+    \"f  \\<equiv> 0\"
+
+
+definition
+	unimplemented_pre_f \:\: \"\\<bool>\"
+    where
+    \"unimplemented_pre_f  \\<equiv> undef\"
+
+
+definition
+	unimplemented_post_f \:\: \"VDMNat
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"unimplemented_post_f  \\<equiv> undef\"
+
+end
+","errors":false}

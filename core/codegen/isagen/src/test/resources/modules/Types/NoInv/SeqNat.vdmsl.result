@@ -1,1 +1,1 @@
-{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMNat VDMSeq\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t x \\\u003cequiv\u003e isa_invTrue x\"\n\nend","errors":false}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMNat VDMSeq\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e isa_invTrue t\"\n\nend","errors":false}

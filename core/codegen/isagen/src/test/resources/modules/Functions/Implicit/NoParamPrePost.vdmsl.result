@@ -1,15 +1,20 @@
-{"translation":"theory A\n  imports VDMToolkit\nbegin\n\n
-
-definition \n
-pre_f \:\: \"\\<bool>\"\n
-where \n
-\"pre_f \\<equiv> true\"\n
-
-definition\n
-post_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
-where\n
-\" post_f RESULT \\<equiv> (isa_invTrue RESULT \\<and> true)\"\n
+{"translation":"
+theory DEFAULT
+  imports VDMToolkit
+begin
 
 
+definition
+	pre_f \:\: \"\\<bool>\"
+    where
+    \"pre_f  \\<equiv> true\"
 
-\n\nend","errors":false}
+
+definition
+	post_f \:\: \"VDMInt
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"post_f r  \\<equiv> true\"
+
+end
+","errors":false}

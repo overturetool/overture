@@ -86,7 +86,7 @@ public class IsaTranslations {
 
 	public String transApplyParams(List<SExpIR> params)
             throws AnalysisException {
-        return transNodeList(params, LIST_SEP);
+        return transNodeList(params, " ");
     }
 
     public String transTypeParams(List<AFormalParamLocalParamIR> params)
@@ -255,7 +255,7 @@ public class IsaTranslations {
     }
 
     public String initial(SExpIR node) throws AnalysisException {
-    	
+    	System.out.println(node);
     	if (node.getClass() != AIdentifierVarExpIR.class && 
     			(node.getType() instanceof ASetSetTypeIR || node.getType() instanceof ASeqSeqTypeIR))
     	{
@@ -265,7 +265,7 @@ public class IsaTranslations {
     	}
     	else 
     	{
-    		return node.toString();
+    		return trans(node);
     	}
     	
     }
@@ -307,6 +307,7 @@ public class IsaTranslations {
     }
 
     public boolean isFunc(STypeIR node) throws AnalysisException {
+    	
         return node.apply(new IsMethodTypeVisitor());
     }
 

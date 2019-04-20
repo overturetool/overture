@@ -1,1 +1,40 @@
-{"translation":"theory A\n  imports vdm_sl\nbegin\n\nvdmefun f\n  inp x :: \"@int\"\n  out \"@int\"\n  is \"0\" \n\ndefinition \"x \u003d +|f(1) : @int|+\"\ndeclare x_def [eval,evalp]\n\nend","errors":false}
+{"translation":"theory A
+  imports VDMToolkit
+begin
+
+
+definition
+	f \:\: \"VDMInt
+ \\<Rightarrow> VDMInt
+\"
+    where
+    \"f x  \\<equiv> 0\"
+
+abbreviation
+ x \:\: VDMInt
+ where
+\"x \\<equiv> f 1\"
+
+
+definition
+	pre_f \:\: \"VDMInt
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"pre_f x  \\<equiv> isa_invTrue x\"
+
+
+definition
+	post_f \:\: \"VDMInt
+ \\<Rightarrow> VDMInt
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"post_f x RESULT  \\<equiv> (isa_invTrue x \\<and> isa_invTrue RESULT)\"
+
+
+definition
+	inv_x \:\: \"\\<bool>\"
+    where
+    \"inv_x  \\<equiv> isa_invTrue x\"
+
+end
+","errors":false}

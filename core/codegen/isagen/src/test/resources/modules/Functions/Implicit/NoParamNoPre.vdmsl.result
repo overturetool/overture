@@ -1,1 +1,15 @@
-{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ndefinition \npost_f :: \"VDMInt \\<Rightarrow> \\<bool>\"\nwhere \n\"post_f r \\<equiv> true\" \n\n end","errors":false}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\n
+
+definition \n
+unimplemented_pre_f \:\: \"\\<bool>\"\n
+where \n
+\"unimplemented_pre_f \\<equiv> undef\"\n
+
+definition\n
+post_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f r \\<equiv> true\"\n
+
+
+
+\n\n end","errors":false}

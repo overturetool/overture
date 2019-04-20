@@ -1,12 +1,18 @@
 package org.overturetool.cgisa.transformations;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.overture.cgisa.isair.analysis.AnswerIsaAdaptor;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
+import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 
 public class IsaDeclTypeGen extends AnswerIsaAdaptor<STypeIR> {
 
@@ -23,10 +29,15 @@ public class IsaDeclTypeGen extends AnswerIsaAdaptor<STypeIR> {
     }
 
 
-
-    public STypeIR caseARecordTypeDeclIR(ARecordDeclIR n)
+    
+    public STypeIR caseARecordDeclIR(ARecordDeclIR n)
     {
-        return null;
+    	ARecordTypeIR a = new ARecordTypeIR();
+    	ATypeNameIR o = new ATypeNameIR();
+    	o.setName(n.getName());
+    	a.setName(o);
+        return a;
+    	
     }
 
     @Override

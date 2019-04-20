@@ -16,6 +16,8 @@ import org.overturetool.cgisa.utils.IsaInvNameFinder;
 import java.util.LinkedList;
 import java.util.Map;
 
+import javax.xml.crypto.NodeSetData;
+
 /*
 Generates the expression for an invariant.
 Example:
@@ -50,7 +52,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     @Override
     public SExpIR caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
         node.getType();
-        
+        //TODO make for different types invariants
         // Find invariant function
         AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
         // Create ref to function
@@ -71,6 +73,67 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         return exp;
     }
 
+    @Override
+    public SExpIR caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
+    	//TODO e.g. where "inv_recType r \<equiv> isa_invVDMSeq isa_invVDMNat1 (x r) etc. 
+    	LinkedList<AFieldDeclIR> fields = new LinkedList<AFieldDeclIR>();
+		node.getFields().forEach(f -> fields.add(f.clone()));
+        AApplyExpIR completeExp = new AApplyExpIR();
+        LinkedList<AApplyExpIR> fieldInvariants = new LinkedList<AApplyExpIR>();
+        
+        for (int i = 0; i < fields.size(); i++) 
+	        {
+        		STypeIR type = fields.get(i).getType();
+		    	if (type instanceof ASetSetTypeIR || type instanceof ASeqSeqTypeIR) 
+		    	{
+		            // Crete apply to the inv_ expr e.g inv_x inv_y
+		            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+		            invExp.setName(node.getName());
+		            invExp.setType(this.methodType);
+		            this.targetIP = invExp;
+					
+		            completeExp.setType(new ABoolBasicTypeIR());
+		            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+		           
+					try {
+						fieldInvariants.add(buildInvForType(type.clone()));
+					} catch (AnalysisException e) {
+						e.printStackTrace();
+					}
+					
+					
+		    	}
+		    	else
+		    	{
+		    		
+		    		// Create apply to the inv_ expr e.g inv_x inv_y
+		            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+		            invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
+		            		node.getName().toString().substring(1, node.getName().toString().length())+"_"+
+		            		fields.get(i).getName()+" "+this.ps.toString()+")");
+		            invExp.setType(this.methodType);
+		            this.targetIP = invExp;
+					
+		            completeExp.setType(new ABoolBasicTypeIR());
+		            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+		           
+		            try {
+						fieldInvariants.add(buildInvForType(type.clone()));
+					} catch (AnalysisException e) {
+						e.printStackTrace();
+					}
+		    	}
+	        }
+    	
+     // Link numerous apply expressions together in an and expression
+        if (fieldInvariants.size() >= 2)
+        	return genAnd(fieldInvariants);
+        else
+        // Just one field return it as an apply expression
+        	return fieldInvariants.get(0);
+    }
+    
+    
     
     @Override
     public SExpIR caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
@@ -215,10 +278,6 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         
 	}
 
-	@Override
-    public SExpIR caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
-        throw new AnalysisException();
-    }
 
     @Override
     public SExpIR createNewReturnValue(INode node) throws AnalysisException {

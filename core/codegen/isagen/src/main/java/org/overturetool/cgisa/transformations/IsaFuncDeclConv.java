@@ -154,7 +154,11 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 	    	ANotImplementedExpIR n = new ANotImplementedExpIR();
 	    	n.setTag("TODO");
 	    	finalPreCondition.setBody(n);
-	    	finalPreCondition.setMethodType(mt);
+	    	// Set up method type for post condition
+	        AMethodTypeIR mty = new AMethodTypeIR();
+	        mty.setResult(new ABoolBasicTypeIR());
+			mty.setParams(null);
+	        finalPreCondition.setMethodType(mty);
 	    	finalPreCondition.setName("unimplemented_pre_"+node.getName());
 	    }
 	 	
@@ -225,7 +229,11 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
         	ANotImplementedExpIR n = new ANotImplementedExpIR();
         	n.setTag("TODO");
         	finalPostCondition.setBody(n);
-        	finalPostCondition.setMethodType(mt);
+       
+	        AMethodTypeIR mty = new AMethodTypeIR();
+	        mty.setResult(new ABoolBasicTypeIR());
+			mty.getParams().add(mt.getResult());
+	        finalPostCondition.setMethodType(mty);
         	finalPostCondition.setName("unimplemented_post_"+node.getName());
         }
      	

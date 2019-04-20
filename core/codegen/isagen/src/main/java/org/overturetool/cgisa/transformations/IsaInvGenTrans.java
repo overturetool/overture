@@ -46,14 +46,26 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     }
 
     
+   
+    
     @Override
     public void caseATypeDeclIR(ATypeDeclIR node) throws AnalysisException {
         super.caseATypeDeclIR(node);
-       
+        
+        /*We do not want invariants built for each type declaration field
+        instead we would like one invariant for the whole declaration type
+        we skip subsequent record fields so that we do not get
+        inv_field1 inv_field2 inv_record instead we get inv_record which accesses
+        field1 and field2.*/
         
         String typeName = IsaInvNameFinder.findName(node.getDecl());
-        SDeclIR decl = node.getDecl();
-        SDeclIR invFun = node.getInv();
+        SDeclIR decl = node.getDecl().clone();
+         
+        SDeclIR invFun;
+        if (node.getDecl() instanceof ARecordDeclIR)
+        	invFun = ( (ARecordDeclIR) decl).getInvariant();
+        else
+        	invFun = node.getInv();
         // Invariant function
         AFuncDeclIR invFun_ = new AFuncDeclIR();
         invFun_.setName("inv_" + typeName); //inv_t
@@ -61,63 +73,82 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         // Define the type signature
         //TODO: Type should be XTypeInt - correct?
         AMethodTypeIR methodType = new AMethodTypeIR();
-        STypeIR t = IsaDeclTypeGen.apply(node.getDecl());
         
-        //TODO How on earth to get rid of NPE here??
+        STypeIR t = IsaDeclTypeGen.apply(decl);
         methodType.getParams().add(t.clone());
+        
+	        
     	methodType.setResult(new ABoolBasicTypeIR());
         invFun_.setMethodType(methodType);
-       
-        
-        
-
+	       
+	        
+	        
+	
         // Translation for VDMToolkit and modeller written invariants
         if (invFun != null)
         {
         	AFuncDeclIR inv = (AFuncDeclIR) invFun;//cast invariant function declaration to AFuncDeclIR
         	AAndBoolBinaryExpIR multipleInvs = new AAndBoolBinaryExpIR();
         	
-        	AFormalParamLocalParamIR afplp = new AFormalParamLocalParamIR();
-            afplp.setPattern(setIdentifierPattern(inv, t));
-            afplp.setType(t.clone());
-            invFun_.getFormalParams().add(afplp);
-            
-        	multipleInvs.setRight(inv.getBody());
+        	for (int i = 0; i < inv.getMethodType().getParams().size(); i++)
+        	{
+	        	AFormalParamLocalParamIR afplp = new AFormalParamLocalParamIR();
+	            afplp.setPattern(inv.getFormalParams().get(i).getPattern());
+	            afplp.setType(inv.getMethodType().getParams().get(i).clone());
+	            invFun_.getFormalParams().add(afplp);
+        	}
         	
-        	SExpIR expr = IsaInvExpGen.apply(decl, setIdentifierPattern(inv, t), methodType.clone(), isaFuncDeclIRMap);
-        	multipleInvs.setLeft(expr);
+        	//change (a_c a) to (c A) for Isabelle field access
+            //if (decl instanceof ARecordDeclIR) formatExistingRecordInvExp(inv.getBody());
+        	
+            multipleInvs.setRight(inv.getBody());
+        	
+			AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+			identifierPattern.setName(typeName.substring(0, 1));
+			SExpIR expr = IsaInvExpGen.apply(decl.clone(), 
+					identifierPattern , 
+					methodType.clone(), isaFuncDeclIRMap);
+        	
+			multipleInvs.setLeft(expr);
         	
         	invFun_.setBody(multipleInvs);
         } 
-        //translation for no inv types TODO not sure if to translate across type invs like: isa_invVDMInt for VDMInt types
+        //translation for no inv types 
         else 
         {
-        	// Generate the pattern
-            //TODO: Pattern should have type XTypeInt - correct?
-            AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
-            identifierPattern.setName("x ");
-            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
-            afp.setPattern(identifierPattern);
-            afp.setType(t.clone()); // Wrong to set entire methodType?
-            invFun_.getFormalParams().add(afp);
-        	SExpIR expr = IsaInvExpGen.apply(decl, identifierPattern, methodType.clone(), isaFuncDeclIRMap);
+        	SExpIR expr;
+			AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+	        identifierPattern.setName(typeName.substring(0, 1));
+	        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+	        afp.setPattern(identifierPattern);
+	        afp.setType(t.clone()); 
+	        invFun_.getFormalParams().add(afp);
+	        expr = IsaInvExpGen.apply(decl.clone(), identifierPattern, methodType.clone(), isaFuncDeclIRMap);
+        	
+        	
         	invFun_.setBody(expr);
         }
         
 
-        // Insert into AST
+        // Insert into AST and get rid of 
         AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+        if (decl instanceof ARecordDeclIR) encModule.getDecls().removeIf(
+        		d -> d instanceof AFuncDeclIR && d.getChildren(true).get("_name").toString().contains("inv"));
+        
         if(encModule != null)
         {
+        	
             encModule.getDecls().add(invFun_);
         }
 
         System.out.println("Invariant function has been added");
 
-   
-    
+        
     }
-    
+    //TODO 
+//    private void formatExistingRecordInvExp(SExpIR exp) {
+//    	exp.get
+//    }
     
     @Override
     public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
@@ -165,7 +196,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     	//if there are more than one inv parameters
         inv.getFormalParams().forEach
         ( 
-        		(p) -> ip.setName(p.getPattern().toString()) 
+        		p -> ip.setName(p.getPattern().toString()) 
         ); 
         
         return ip;
