@@ -73,6 +73,49 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         return exp;
     }
 
+    
+    @Override
+    public SExpIR caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
+    	//TODO e.g. where "inv_recType r \<equiv> isa_invVDMSeq isa_invVDMNat1 (x r) etc. 
+    	LinkedList<AFieldDeclIR> fields = new LinkedList<AFieldDeclIR>();
+		node.getFields().forEach(f -> fields.add(f.clone()));
+        AApplyExpIR completeExp = new AApplyExpIR();
+        LinkedList<AApplyExpIR> fieldInvariants = new LinkedList<AApplyExpIR>();
+        
+        for (int i = 0; i < fields.size(); i++) 
+	        {
+        		STypeIR type = fields.get(i).getType();
+		    	AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+	            invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
+	            		node.getName().toString().substring(1, node.getName().toString().length())+"_"+
+	            		fields.get(i).getName()+" "+this.ps.toString()+")");
+	            invExp.setType(this.methodType);
+	            this.targetIP = invExp;
+				
+	            completeExp.setType(new ABoolBasicTypeIR());
+	            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+	           
+	            try {
+					fieldInvariants.add(buildInvForType(type.clone()));
+				} catch (AnalysisException e) {
+					e.printStackTrace();
+				}
+		    	
+	        }
+    	
+     // Link numerous apply expressions together in an and expression
+        if (fieldInvariants.size() >= 2)
+        	return genAnd(fieldInvariants);
+        else
+        // Just one field return it as an apply expression
+        	return fieldInvariants.get(0);
+    }
+    
+    
+    
+    
+    
+    
     @Override
     public SExpIR caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
     	//TODO e.g. where "inv_recType r \<equiv> isa_invVDMSeq isa_invVDMNat1 (x r) etc. 

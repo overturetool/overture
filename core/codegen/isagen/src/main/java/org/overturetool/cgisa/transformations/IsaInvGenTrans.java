@@ -46,6 +46,85 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     }
 
     
+    @Override
+    public void caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
+    	super.caseAStateDeclIR(node);
+    	String typeName = IsaInvNameFinder.findName(node.clone());
+        
+    	SExpIR invExp = node.getInvExp();
+        // Invariant function
+        AFuncDeclIR invFun_ = new AFuncDeclIR();
+        invFun_.setName("inv_" + typeName); //inv_t
+
+        AMethodTypeIR methodType = new AMethodTypeIR();
+        
+        STypeIR t = IsaDeclTypeGen.apply(node.clone());
+        methodType.getParams().add(t.clone());
+        
+	        
+    	methodType.setResult(new ABoolBasicTypeIR());
+        invFun_.setMethodType(methodType);
+	       
+	        
+	        
+	
+        // Translation for VDMToolkit and modeller written invariants
+        if (invExp != null)
+        {
+        	AAndBoolBinaryExpIR multipleInvs = new AAndBoolBinaryExpIR();
+        	//change (a_c a) to (c A) for Isabelle field access
+            //if (decl instanceof ARecordDeclIR) formatExistingRecordInvExp(inv.getBody());
+        	
+            multipleInvs.setRight(invExp);
+        	
+			AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+			identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
+			
+			//set Inv pattern if one does not exist
+			if (node.getInvPattern() != null) node.setInvPattern(identifierPattern);
+			
+			SExpIR expr = IsaInvExpGen.apply(node, 
+					identifierPattern , 
+					methodType.clone(), isaFuncDeclIRMap);
+        	
+			multipleInvs.setLeft(expr);
+        	
+        	invFun_.setBody(multipleInvs);
+        	node.setInvExp(multipleInvs);
+        } 
+        //translation for no inv types 
+        else 
+        {
+        	SExpIR expr;
+			AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+	        identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
+	        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+	        afp.setPattern(identifierPattern);
+	        afp.setType(t.clone()); 
+	        
+	        node.setInvPattern(identifierPattern);
+	        
+	        invFun_.getFormalParams().add(afp);
+	        expr = IsaInvExpGen.apply(node.clone(), identifierPattern, methodType.clone(), isaFuncDeclIRMap);
+        	
+        	
+        	invFun_.setBody(expr.clone());
+        	node.setInvExp(expr);
+        }
+        node.setInvDecl(invFun_.clone());
+        
+
+        // Insert into AST and get rid of existing invariant functions forEach field in record type
+        AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+        encModule.getDecls().removeIf( d -> d instanceof AFuncDeclIR && d.getChildren(true).get("_name").toString().contains("inv"));
+        if(encModule != null)
+        {
+        	
+            encModule.getDecls().add(invFun_);
+        }
+
+        System.out.println("Invariant function has been added");
+    }
    
     
     @Override
@@ -145,10 +224,6 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
 
         
     }
-    //TODO 
-//    private void formatExistingRecordInvExp(SExpIR exp) {
-//    	exp.get
-//    }
     
     @Override
     public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {

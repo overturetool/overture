@@ -6,6 +6,7 @@ import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
@@ -29,6 +30,11 @@ public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
     @Override
     public String caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
         return node.getName().getName();
+    }
+    
+    @Override
+    public String caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
+        return node.getName();
     }
     
     @Override
