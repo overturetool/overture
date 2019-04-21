@@ -40,6 +40,7 @@ import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AFuncDeclIR;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
+import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
@@ -75,15 +76,22 @@ public class IsaTranslations {
         return mergeVisitor;
     }
 
+    public void transState(AStateDeclIR state) throws AnalysisException {
+    	/*Invocation of method 'trans' in  class org.overturetool.cgisa.IsaTranslations 
+    	threw exception java.lang.NullPointerException*/
+    	trans(state.getInvDecl());
+    }
+    
     // Translations
 
     public String trans(INode node) throws AnalysisException {
         StringWriter writer = new StringWriter();
         node.apply(mergeVisitor, writer);
-        
         return writer.toString();
     }
 
+   
+    
 	public String transApplyParams(List<SExpIR> params)
             throws AnalysisException {
         return transNodeList(params, " ");

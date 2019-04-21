@@ -87,7 +87,7 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
     		"Rec2Fields.vdmsl","SeqInt.vdmsl","Real.vdmsl","CharSeqIntSetTuple.vdmsl","IntIntTuple.vdmsl",
     		"MapIntChar.vdmsl",
     		"Char.vdmsl",
-    		"Rec1Field.vdmsl",
+    		//"Rec1Field.vdmsl",
     		"IntCharTuple.vdmsl","Token.vdmsl",
     		"CharNatTokenTuple.vdmsl","Rat.vdmsl","SetInt.vdmsl","Nat.vdmsl","Nat1.vdmsl",
     		"Rec2FieldsDiffTypes.vdmsl");//,// "MapIntInt.vdmsl");

@@ -56,7 +56,9 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     public void caseAFuncDeclIR(AFuncDeclIR x) throws AnalysisException {
     	super.caseAFuncDeclIR(x);
     	
-    	
+    	if (x.parent() instanceof AStateDeclIR)
+    	{}
+    	else {
     	//we need to stop post conditions of postconditions of post conditions... being formed
     	if (!x.getName().contains("inv") && 
     			!x.getName().contains("post") && !x.getName().contains("pre"))
@@ -76,7 +78,7 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     	
     	if (x.getImplicit()) removeFromAST(x);
     	
-    	
+    	}
     }
     
     private void removeFromAST(AFuncDeclIR x) {

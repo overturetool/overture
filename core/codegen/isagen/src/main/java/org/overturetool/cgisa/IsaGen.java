@@ -150,10 +150,6 @@ public class IsaGen extends CodeGenBase {
                 } else {
 
 
-                    // make init expression an op
-                    StateInit stateInit = new StateInit(getInfo());
-                    generator.applyPartialTransformation(status, stateInit);
-
                     // transform away any recursion cycles
                     GroupMutRecs groupMR = new GroupMutRecs();
                     generator.applyTotalTransformation(status, groupMR);
