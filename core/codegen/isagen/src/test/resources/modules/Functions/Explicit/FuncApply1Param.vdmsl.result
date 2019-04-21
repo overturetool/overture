@@ -17,6 +17,11 @@ abbreviation
 
 
 definition
+	inv_x \:\: \"\\<bool>\"
+    where
+    \"inv_x  \\<equiv> isa_invTrue x\"
+
+definition
 	pre_f \:\: \"VDMInt
  \\<Rightarrow> \\<bool>\"
     where
@@ -31,10 +36,6 @@ definition
     \"post_f x RESULT  \\<equiv> (isa_invTrue x \\<and> isa_invTrue RESULT)\"
 
 
-definition
-	inv_x \:\: \"\\<bool>\"
-    where
-    \"inv_x  \\<equiv> isa_invTrue x\"
 
 end
 ","errors":false}

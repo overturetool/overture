@@ -6,6 +6,7 @@ import org.overture.codegen.ir.declarations.*;
 import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+import org.overturetool.cgisa.IsaGen;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,6 +50,7 @@ public class IsaTypeTypesConv extends DepthFirstAnalysisIsaAdaptor {
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaTypeTypesConv.isa_VDMSeq);
 
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+            
         }
     }
   //transform set into VDMSet

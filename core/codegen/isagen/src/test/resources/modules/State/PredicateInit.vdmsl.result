@@ -1,0 +1,29 @@
+{"translation":"
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record S =
+        s_x \:\: VDMNat
+
+    
+
+definition
+	inv_S \:\: \"S \\<Rightarrow> \\<bool>\"
+    where
+    \"inv_S s \\<equiv> isa_invVDMNat (s_x s)\"
+
+
+definition
+	init_S \:\: \"S \\<Rightarrow> \\<bool>\"
+    where
+    \"init_S s \\<equiv> ((s_x s) > 0)\"
+
+
+definition
+	post_init_S \:\: \"VDMNat
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"post_init_S  \\<equiv> inv_S init_S\"
+
+end","errors":false}

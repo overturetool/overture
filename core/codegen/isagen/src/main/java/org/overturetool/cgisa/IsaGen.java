@@ -26,8 +26,10 @@ import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.runtime.RuntimeServices;
@@ -38,7 +40,9 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.*;
+import org.overture.codegen.ir.declarations.AFuncDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -52,7 +56,9 @@ import org.overturetool.cgisa.transformations.*;
  */
 public class IsaGen extends CodeGenBase {
 
-	
+
+	public static Map<String, AFuncDeclIR> funcGenHistoryMap = new HashMap<>();;
+	public static Map<String, STypeIR> typeGenHistoryMap = new HashMap<>();;
 	
     public IsaGen()
     {
@@ -176,13 +182,13 @@ public class IsaGen extends CodeGenBase {
                     IsaTypeTypesConv invSSConv = new IsaTypeTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invSSConv);
                     
+                   
+                    IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invTrans);
+                    
                     IsaFuncDeclConv funcConv = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, funcConv);
                     
-                    
-                    
-                    IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
-                    generator.applyPartialTransformation(status, invTrans);
                     
                     
                 }

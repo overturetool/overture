@@ -1,1 +1,29 @@
-{"translation":"theory DEFAULT\n  imports vdm_sl\nbegin\n\nvdmefun f\n  inp x :: \"@int\"\n  out \"@token\"\n  is \"undef\" \n\nend","errors":false}
+{"translation":"
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+	f \:\: \"VDMInt
+ \\<Rightarrow> VDMToken
+\"
+    where
+    \"f x  \\<equiv> undef\"
+
+
+definition
+	pre_f \:\: \"VDMInt
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"pre_f x  \\<equiv> isa_invTrue x\"
+
+
+definition
+	post_f \:\: \"VDMInt
+ \\<Rightarrow> VDMToken
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"post_f x RESULT  \\<equiv> (isa_invTrue x \\<and> isa_invTrue RESULT)\"
+
+end","errors":false}

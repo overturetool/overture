@@ -6,13 +6,16 @@ import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.*;
 import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
 import org.overture.codegen.ir.expressions.SVarExpBase;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+import org.overturetool.cgisa.IsaGen;
 import org.overturetool.cgisa.utils.IsaInvNameFinder;
 
 import java.util.LinkedList;
@@ -55,33 +58,71 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     @Override
     public void caseAFuncDeclIR(AFuncDeclIR x) throws AnalysisException {
     	super.caseAFuncDeclIR(x);
-    	
-    	if (x.parent() instanceof AStateDeclIR)
-    	{}
-    	else {
     	//we need to stop post conditions of postconditions of post conditions... being formed
     	if (!x.getName().contains("inv") && 
     			!x.getName().contains("post") && !x.getName().contains("pre"))
     	{
-	    	transformPreConditions(x);
 	    	
-	    	transformPostConditions(x);
-	    	
-	    	// If no parameter function set params to null to make this more concrete for velocity
-	    	if (x.getFormalParams().size() == 0) 
+	    	if (x.parent() instanceof AStateDeclIR)
 	    	{
-	    		x.getMethodType().setParams(null);
+	    		transStateInit(x);
+	    		
 	    	}
-	    	
-	    	formatIdentifierPatternVars(x);
-    	}
+	    	else 
+	    	{
+	    		transformPreConditions(x);
+		    	
+		    	transformPostConditions(x);
+		    	
+		    	// If no parameter function set params to null to make this more concrete for velocity
+		    	if (x.getFormalParams().size() == 0) 
+		    	{
+		    		x.getMethodType().setParams(null);
+		    	}
+		    	
+		    	formatIdentifierPatternVars(x);
+		    	if (x.getImplicit()) removeFromAST(x);
+	    	}
     	
-    	if (x.getImplicit()) removeFromAST(x);
+    	
     	
     	}
     }
     
-    private void removeFromAST(AFuncDeclIR x) {
+    private void transStateInit(AFuncDeclIR node) {
+    	AStateDeclIR st = node.getAncestor(AStateDeclIR.class);
+    	
+    	AMethodTypeIR methodType = new AMethodTypeIR();
+    	
+    	
+    	st.getFields().forEach(f -> methodType.getParams().add(f.getType().clone()));
+    	methodType.setResult(new ABoolBasicTypeIR());
+    	
+    	AFuncDeclIR postInit = new AFuncDeclIR();
+    	postInit.setMethodType(methodType.clone());    	
+    	postInit.setName("post_"+node.getName());
+    	
+    	AApplyExpIR app = new AApplyExpIR();
+    	AIdentifierVarExpIR root = new AIdentifierVarExpIR();
+    	root.setName("inv_"+st.getName());
+    	System.out.println(IsaGen.funcGenHistoryMap.keySet());
+    	root.setType(IsaGen.funcGenHistoryMap.get("inv_"+st.getName()).getMethodType().clone());
+    	app.setRoot(root);
+    	
+    	AIdentifierVarExpIR arg = new AIdentifierVarExpIR();
+    	arg.setName(node.getName());
+    	arg.setType(node.getMethodType().clone());
+    	app.getArgs().add(arg);
+    	
+    	postInit.setBody(app);
+        addToAST(postInit, node);
+
+        System.out.println("Post condition has been added");
+		
+	}
+
+
+	private void removeFromAST(AFuncDeclIR x) {
     	// Insert into AST
         AModuleDeclIR encModule = x.getAncestor(AModuleDeclIR.class);
         if(encModule != null)
@@ -166,9 +207,9 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 	 	
 	    formatIdentifierPatternVars(finalPreCondition);
 	    node.setPreCond(finalPreCondition);
-	    
+	    IsaGen.funcGenHistoryMap.put(finalPreCondition.getName(), finalPreCondition.clone());
 	    addToAST(finalPreCondition, node);
-	
+	    
 	    System.out.println("Pre condition has been added");
    
     }
@@ -241,7 +282,7 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
      	
         formatIdentifierPatternVars(finalPostCondition);
         node.setPostCond(finalPostCondition);
-        
+	    IsaGen.funcGenHistoryMap.put(finalPostCondition.getName(), finalPostCondition.clone());
         addToAST(finalPostCondition, node);
 
         System.out.println("Post condition has been added");
@@ -283,9 +324,8 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 		        preCond.getFormalParams().add(afp);
         	}
         }
-		//an and expression of all of the parameter invariants
-        expr = IsaInvExpGen.apply(preCond.clone(), identifierPattern, preCond.getMethodType().clone(), isaFuncDeclIRMap);
-        preCond.setBody(expr);
+		expr = IsaInvExpGen.apply(preCond.clone(), identifierPattern, preCond.getMethodType().clone(), isaFuncDeclIRMap);
+	    preCond.setBody(expr);
         return preCond;
     }
     
@@ -339,11 +379,14 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 	        afp.setType(mt.getResult()); 
 	        postCond.getFormalParams().add(afp);
         }
-		//an and expression of all of the parameter invariants
+		//an and expression of all of the parameter invariants do nothing if the body is not implemented
         expr = IsaInvExpGen.apply(postCond.clone(), identifierPattern, postCond.getMethodType().clone(), isaFuncDeclIRMap);
         postCond.setBody(expr);
+        
+        
         return postCond;
-    }
+	}
+    
     
    
     private AFuncDeclIR formatIdentifierPatternVars (AFuncDeclIR node) {

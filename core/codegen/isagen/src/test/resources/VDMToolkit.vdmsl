@@ -10,7 +10,7 @@ exports all
 		 that during code generation to Isabelle, AST transformations can be type checked. This is achieved by implicitly
 		 importing all definitions from here. Their sole purpose is to allow the on-the-fly (IR) spec to be albe to check
 		 for type correctness. Definitions of such functions are provided for/by Isabelle fine-tuned automation choices
-		 for VDM mathematical toolkit (e.g. list_all instead of a explict forall for inv_SeqElems).
+		 for VDM mathematical toolkit (e.g. list_all instead of a explict forall for isa_invSeqElems).
 
 		 By convention, evrery bridged name will start with the "isa_" keyword.
 */

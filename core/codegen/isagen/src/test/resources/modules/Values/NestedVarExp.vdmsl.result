@@ -10,10 +10,10 @@ abbreviation
 
 definition
 inv_x \:\: \"\\<bool>\" where
-\"inv_x \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 x\"
+\"inv_x \\<equiv> isa_invSetElems isa_invSeqElems isa_invVDMNat1 x\"
 
 definition
 inv_y \:\: \"\\<bool>\" where
-\"inv_y \\<equiv> isa_invVDMSet isa_invVDMSeq isa_invVDMNat1 y\"
+\"inv_y \\<equiv> isa_invSetElems isa_invSeqElems isa_invVDMNat1 y\"
 
 end","errors":false}

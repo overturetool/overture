@@ -44,6 +44,7 @@ import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.*;
 import org.overture.codegen.ir.SourceNode;
@@ -97,6 +98,19 @@ public class IsaTranslations {
         return transNodeList(params, " ");
     }
 
+	public String transMkArgs(ANewExpIR node) {
+		String str = new String();
+		List<SExpIR> args = new ArrayList();
+		args = node.getArgs();
+		List<AFieldDeclIR> f = node.getAncestor(AStateDeclIR.class).getFields();
+		for (int i = 0; i < f.size(); i++)
+		{
+			str = str + (f.get(i).getName() + " = " + args.get(i).toString());
+			if (i < f.size() - 1) str.concat(", ");
+		}
+		return str;
+	}
+	
     public String transTypeParams(List<AFormalParamLocalParamIR> params)
             throws AnalysisException {
         String result = transNodeList(params, TYPE_PARAM_SEP);
@@ -347,7 +361,7 @@ public class IsaTranslations {
                 if(node_.getSeqOf() instanceof SBasicTypeBase)
                 {
                     // In this case it is a seq of a basic type.
-                    inv= "inv_SeqElems inv_True";
+                    inv= "isa_invSeqElems inv_True";
                 }
             }
 
@@ -401,7 +415,7 @@ public class IsaTranslations {
     {
         if(node instanceof ASeqSeqTypeIR){
             ASeqSeqTypeIR node_ = (ASeqSeqTypeIR) node;
-            return concreteTypeInvariantForUnaryTypeConstructorInvariant(node_.getSeqOf(),"inv_SeqElems ");
+            return concreteTypeInvariantForUnaryTypeConstructorInvariant(node_.getSeqOf(),"isa_invSeqElems ");
         }
         if(node instanceof ASetSetTypeIR)
         {

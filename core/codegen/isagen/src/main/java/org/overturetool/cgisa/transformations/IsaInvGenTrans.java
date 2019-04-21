@@ -10,6 +10,7 @@ import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
+import org.overturetool.cgisa.IsaGen;
 import org.overturetool.cgisa.utils.IsaInvNameFinder;
 
 import java.util.Map;
@@ -52,7 +53,6 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     	
     	SDeclIR decl = node.clone();
     	String typeName = IsaInvNameFinder.findName(node.clone());
-        
     	SExpIR invExp = node.getInvExp();
         // Invariant function
         AFuncDeclIR invFun_ = new AFuncDeclIR();
@@ -116,7 +116,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         }
         node.setInvDecl(invFun_.clone());
         
-        
+        IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_.clone());
         System.out.println("Invariant function has been added");
         }
         
@@ -218,6 +218,8 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
             encModule.getDecls().add(invFun_);
         }
 
+        IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_.clone());
+        
         System.out.println("Invariant function has been added");
 
         
@@ -252,11 +254,12 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         SExpIR expr = IsaInvExpGen.apply(node, identifierPattern, mt.clone(), isaFuncDeclIRMap);
         
     	invFun_.setBody(expr);
+    	IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_);
         // Insert into AST
         AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
         if(encModule != null)
         {
-            encModule.getDecls().add(invFun_);
+            encModule.getDecls().add(invFun_.clone());
         }
         System.out.println("Invariant function has been added");
         }

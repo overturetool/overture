@@ -11,6 +11,7 @@ import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
+import org.overturetool.cgisa.IsaGen;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
              ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMInt);
 
              x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+             IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
          }
 
     }
@@ -65,6 +67,7 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMNat1);
 
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+            IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
         }
 
     }
@@ -76,6 +79,7 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMNat);
 
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+            IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
         }
     }
   //transform token to isa_VDMToken
@@ -86,6 +90,7 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMToken);
 
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+            IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
         }
     }
 

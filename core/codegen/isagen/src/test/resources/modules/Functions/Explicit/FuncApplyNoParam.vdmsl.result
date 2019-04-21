@@ -15,6 +15,12 @@ abbreviation
 \"x \\<equiv> f \"
 
 
+
+definition
+	inv_x \:\: \"\\<bool>\"
+    where
+    \"inv_x  \\<equiv> isa_invTrue x\"
+
 definition
 	unimplemented_pre_f \:\: \"\\<bool>\"
     where
@@ -26,11 +32,5 @@ definition
  \\<Rightarrow> \\<bool>\"
     where
     \"unimplemented_post_f  \\<equiv> undef\"
-
-
-definition
-	inv_x \:\: \"\\<bool>\"
-    where
-    \"inv_x  \\<equiv> isa_invTrue x\"
 
 end","errors":false}

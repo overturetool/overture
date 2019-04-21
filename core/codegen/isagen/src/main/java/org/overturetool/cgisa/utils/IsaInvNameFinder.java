@@ -7,6 +7,7 @@ import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AStateDeclIR;
+import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
@@ -33,19 +34,25 @@ public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
     }
     
     @Override
+    public String caseANotImplementedExpIR(ANotImplementedExpIR node) {
+		return "True";
+    	
+    }
+    
+    @Override
     public String caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
         return node.getName();
     }
     
     @Override
     public String caseASetSetTypeIR(ASetSetTypeIR node) throws AnalysisException {
-        return "VDMSet";
+        return "SetElems";
     }
     
     @Override
     public String caseASeqSeqTypeIR(ASeqSeqTypeIR node) throws AnalysisException {
     	ANamedTypeDeclIR n = new ANamedTypeDeclIR();
-    	return "VDMSeq";
+    	return "SeqElems";
     }
     @Override
     public String caseANatNumericBasicTypeIR(ANatNumericBasicTypeIR node) throws AnalysisException {
@@ -85,7 +92,7 @@ public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
     
     @Override
     public String caseATokenBasicTypeIR(ATokenBasicTypeIR node) throws AnalysisException {
-    	return "VDMToken";
+    	return "True";
     }
     
     @Override
