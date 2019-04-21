@@ -84,45 +84,22 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         for (int i = 0; i < fields.size(); i++) 
 	        {
         		STypeIR type = fields.get(i).getType();
-		    	if (type instanceof ASetSetTypeIR || type instanceof ASeqSeqTypeIR) 
-		    	{
-		            // Crete apply to the inv_ expr e.g inv_x inv_y
-		            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
-		            invExp.setName(node.getName());
-		            invExp.setType(this.methodType);
-		            this.targetIP = invExp;
-					
-		            completeExp.setType(new ABoolBasicTypeIR());
-		            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
-		           
-					try {
-						fieldInvariants.add(buildInvForType(type.clone()));
-					} catch (AnalysisException e) {
-						e.printStackTrace();
-					}
-					
-					
-		    	}
-		    	else
-		    	{
-		    		
-		    		// Create apply to the inv_ expr e.g inv_x inv_y
-		            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
-		            invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
-		            		node.getName().toString().substring(1, node.getName().toString().length())+"_"+
-		            		fields.get(i).getName()+" "+this.ps.toString()+")");
-		            invExp.setType(this.methodType);
-		            this.targetIP = invExp;
-					
-		            completeExp.setType(new ABoolBasicTypeIR());
-		            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
-		           
-		            try {
-						fieldInvariants.add(buildInvForType(type.clone()));
-					} catch (AnalysisException e) {
-						e.printStackTrace();
-					}
-		    	}
+		    	AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+	            invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
+	            		node.getName().toString().substring(1, node.getName().toString().length())+"_"+
+	            		fields.get(i).getName()+" "+this.ps.toString()+")");
+	            invExp.setType(this.methodType);
+	            this.targetIP = invExp;
+				
+	            completeExp.setType(new ABoolBasicTypeIR());
+	            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+	           
+	            try {
+					fieldInvariants.add(buildInvForType(type.clone()));
+				} catch (AnalysisException e) {
+					e.printStackTrace();
+				}
+		    	
 	        }
     	
      // Link numerous apply expressions together in an and expression

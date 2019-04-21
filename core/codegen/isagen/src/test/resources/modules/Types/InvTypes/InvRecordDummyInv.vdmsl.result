@@ -1,0 +1,21 @@
+{"translation":"theory DEFAULT
+  imports VDMToolkit
+begin
+
+record A =
+        a_b \:\: char VDMSeq
+
+        a_c \:\: VDMInt
+
+    
+
+
+
+definition
+	inv_A \:\: \"A \\<Rightarrow> \\<bool>\"
+    where
+    \"inv_A a \\<equiv> ((isa_invVDMSeq isa_invTrue (a_b a) \\<and> isa_invTrue (a_c a)) \\<and> ((a_c a) > 1))\"
+
+end
+
+","errors":false}

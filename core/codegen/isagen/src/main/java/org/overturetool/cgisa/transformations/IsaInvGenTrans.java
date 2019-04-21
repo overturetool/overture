@@ -104,7 +104,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
             multipleInvs.setRight(inv.getBody());
         	
 			AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
-			identifierPattern.setName(typeName.substring(0, 1));
+			identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
 			SExpIR expr = IsaInvExpGen.apply(decl.clone(), 
 					identifierPattern , 
 					methodType.clone(), isaFuncDeclIRMap);
@@ -118,7 +118,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         {
         	SExpIR expr;
 			AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
-	        identifierPattern.setName(typeName.substring(0, 1));
+	        identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
 	        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
 	        afp.setPattern(identifierPattern);
 	        afp.setType(t.clone()); 
@@ -130,7 +130,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         }
         
 
-        // Insert into AST and get rid of 
+        // Insert into AST and get rid of existing invariant functions forEach field in record type
         AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
         if (decl instanceof ARecordDeclIR) encModule.getDecls().removeIf(
         		d -> d instanceof AFuncDeclIR && d.getChildren(true).get("_name").toString().contains("inv"));
