@@ -11,10 +11,12 @@ import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.*;
+import org.overturetool.cgisa.IsaGen;
 import org.overturetool.cgisa.utils.IsaInvNameFinder;
 
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.crypto.NodeSetData;
 
@@ -261,8 +263,36 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 	//build curried invariant
     public AApplyExpIR buildInvForType(STypeIR seqtNode) throws AnalysisException {
     	
+    	
     	String typeName = IsaInvNameFinder.findName(seqtNode);
-    	AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
+    	//if not a toolkit type
+    	if (typeName == null)
+    	{
+    		//get the type name corresponding to the type passed in
+    		typeName = IsaGen.typeGenHistoryMap.get(
+    				IsaGen.typeGenHistoryMap.keySet().stream().filter(v -> v.equals(seqtNode))
+    		        .collect(Collectors.toList())
+    		        .get(0));
+    	}
+    	AFuncDeclIR fInv;
+    	if (this.isaFuncDeclIRMap.get("isa_inv"+typeName) != null)
+    	{
+    		fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
+    	}
+    	else
+    	{
+    		fInv = IsaGen.funcGenHistoryMap.get(typeName);
+    		//If no invariant can still not be found then just set invTrue
+    		if (fInv == null)
+    			fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
+    	}
+    	if (fInv.getMethodType() == null)
+    	{
+    		AMethodTypeIR mt = new AMethodTypeIR();
+    		mt.setResult(new ABoolBasicTypeIR());
+    		mt.getParams().add(seqtNode);
+    		fInv.setMethodType(mt.clone());
+    	}
     	
     	ATypeNameIR t = new ATypeNameIR();
     	t.setName("isa_"+typeName);

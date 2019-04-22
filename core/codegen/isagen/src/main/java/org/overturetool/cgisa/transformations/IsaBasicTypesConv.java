@@ -55,7 +55,6 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
              ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMInt);
 
              x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
-             IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
          }
 
     }
@@ -67,7 +66,6 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMNat1);
 
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
-            IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
         }
 
     }
@@ -79,7 +77,6 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMNat);
 
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
-            IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
         }
     }
   //transform token to isa_VDMToken
@@ -90,7 +87,6 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMToken);
 
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
-            IsaGen.typeGenHistoryMap.put(x.getNamedInvType().getName().getName(), x);
         }
     }
 

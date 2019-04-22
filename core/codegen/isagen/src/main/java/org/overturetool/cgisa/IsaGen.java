@@ -58,7 +58,7 @@ public class IsaGen extends CodeGenBase {
 
 
 	public static Map<String, AFuncDeclIR> funcGenHistoryMap = new HashMap<>();;
-	public static Map<String, STypeIR> typeGenHistoryMap = new HashMap<>();;
+	public static Map<STypeIR, String> typeGenHistoryMap = new HashMap<>();;
 	
     public IsaGen()
     {
