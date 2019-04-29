@@ -144,6 +144,10 @@ public class IsaTranslations {
         }
         return sb.toString();
     }
+    
+//    public String transTemplate(ATemplateTypeIR node){
+//    	
+//    }
 
     public String transString(List<SExpIR> args) throws AnalysisException {
         StringBuilder sb = new StringBuilder();

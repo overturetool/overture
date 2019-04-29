@@ -1,1 +1,15 @@
-{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym XType \u003d\"VDMInt\"\n\n\n\n\ndefinition\n    inv_XType :: \"(XType) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_XType x \\\u003cequiv\u003e isa_invTrue x\"\n\nend","errors":false}
+{"translation":"theory DEFAULT
+imports VDMToolkit
+begin
+
+type_synonym XType \= \"VDMInt\"
+
+
+
+
+definition
+    inv_XType :: \"(XType) \\<Rightarrow> \\<bool> \"
+    where
+    \"inv_XType x \\<equiv> isa_invTrue x\"
+
+end","errors":false}

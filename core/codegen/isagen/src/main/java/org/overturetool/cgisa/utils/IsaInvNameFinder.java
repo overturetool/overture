@@ -110,11 +110,21 @@ public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
 
     @Override
     public String createNewReturnValue(INode node) throws AnalysisException {
-        return null;
+    	String typeName;
+        STypeIR n = (STypeIR) node;
+        //if not a toolkit or IR node type
+    	if (n.getNamedInvType() == null) typeName = "True";
+    	else typeName = n.getNamedInvType().getName().getName();
+    	return typeName;	
     }
 
     @Override
     public String createNewReturnValue(Object node) throws AnalysisException {
-        return null;
+    	String typeName;
+        STypeIR n = (STypeIR) node;
+        //if not a toolkit or IR node type
+    	if (n.getNamedInvType() == null) typeName = "True";
+    	else typeName = n.getNamedInvType().getName().getName();
+    	return typeName;	
     }
 }

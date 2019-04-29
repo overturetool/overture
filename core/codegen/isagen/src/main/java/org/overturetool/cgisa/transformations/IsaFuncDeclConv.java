@@ -388,7 +388,8 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 	}
     
     
-   
+   /*space out identifier variables, e.g. for two variable t and x we should have t x not tx. 
+	    "inv_t t x \<equiv> isa_invTrue t \<and> isa_invTrue x"*/
     private AFuncDeclIR formatIdentifierPatternVars (AFuncDeclIR node) {
     	/*	This puts a space between different parameters in the Isabelle function body
     	, xy is misinterpreted as one variable whereas x y is correctly interpreted as two

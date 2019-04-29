@@ -159,41 +159,22 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     
     @Override
     public SExpIR caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
-        STypeIR t = node.getType();
+        STypeIR t = node.getType().clone();
         AApplyExpIR completeExp = new AApplyExpIR();
-    	if (t instanceof ASetSetTypeIR || t instanceof ASeqSeqTypeIR) 
-    	{
-            // Crete apply to the inv_ expr e.g inv_x inv_y
-            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
-            invExp.setName(node.getName());
-            invExp.setType(this.methodType);
-            this.targetIP = invExp;
+        // Crete apply to the inv_ expr e.g inv_x inv_y
+        AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+        invExp.setName(node.getName());
+        invExp.setType(this.methodType);
+        this.targetIP = invExp;
+		
+        completeExp.setType(new ABoolBasicTypeIR());
+        //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+       
+		completeExp = buildInvForType(t);
 			
-            completeExp.setType(new ABoolBasicTypeIR());
-            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
-           
-			completeExp = buildInvForType(t.clone());
-			
-			
-    	}
-    	else
-    	{
-    		STypeIR type = t.clone();
-    		
-    		// Create apply to the inv_ expr e.g inv_x inv_y
-            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
-            invExp.setName(node.getName());
-            invExp.setType(this.methodType);
-            this.targetIP = invExp;
-			
-            completeExp.setType(new ABoolBasicTypeIR());
-            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
-           
-			completeExp = buildInvForType(type);
-    	}
     	
     	
-        return completeExp;
+		return completeExp;
     }
     
     
@@ -263,28 +244,17 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 	//build curried invariant
     public AApplyExpIR buildInvForType(STypeIR seqtNode) throws AnalysisException {
     	
-    	
     	String typeName = IsaInvNameFinder.findName(seqtNode);
-    	//if not a toolkit type
-    	if (typeName == null)
-    	{
-    		//get the type name corresponding to the type passed in
-    		typeName = IsaGen.typeGenHistoryMap.get(
-    				IsaGen.typeGenHistoryMap.keySet().stream().filter(v -> v.equals(seqtNode))
-    		        .collect(Collectors.toList())
-    		        .get(0));
-    	}
+    	
     	AFuncDeclIR fInv;
     	if (this.isaFuncDeclIRMap.get("isa_inv"+typeName) != null)
     	{
-    		fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName);
+    		fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName).clone();
     	}
     	else
     	{
-    		fInv = IsaGen.funcGenHistoryMap.get(typeName);
-    		//If no invariant can still not be found then just set invTrue
-    		if (fInv == null)
-    			fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
+    		fInv = IsaGen.funcGenHistoryMap.get("inv_"+typeName).clone();
+    		
     	}
     	if (fInv.getMethodType() == null)
     	{
@@ -294,13 +264,6 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     		fInv.setMethodType(mt.clone());
     	}
     	
-    	ATypeNameIR t = new ATypeNameIR();
-    	t.setName("isa_"+typeName);
-    	ANamedTypeDeclIR n = new ANamedTypeDeclIR();
-    	n.setName(t);
-    	n.setType(fInv.getMethodType().clone());
-    	n.setSourceNode(fInv.getSourceNode());
-    	seqtNode.setNamedInvType(n.clone());
          // Create ref to function
         AIdentifierVarExpIR curriedInv = new AIdentifierVarExpIR();
         curriedInv.setName(fInv.getName());

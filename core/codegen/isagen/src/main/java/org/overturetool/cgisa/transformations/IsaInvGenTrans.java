@@ -228,7 +228,9 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     @Override
     public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
         super.caseAFieldDeclIR(node);
-        if (node.parent() instanceof AStateDeclIR){}
+        if (node.parent() instanceof AStateDeclIR){
+        	System.out.println("Redirecting State Invariants...");
+        }
         else {
         STypeIR t = node.getType();// Invariant function
         AFuncDeclIR invFun_ = new AFuncDeclIR();
@@ -265,20 +267,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         }
     }
     
-    
-    private AIdentifierPatternIR setIdentifierPattern(AFuncDeclIR inv, STypeIR t){
-    	//set pattern to that used in invariant
-    	AIdentifierPatternIR ip = new AIdentifierPatternIR();
-    	
-    	//if there are more than one inv parameters
-        inv.getFormalParams().forEach
-        ( 
-        		p -> ip.setName(p.getPattern().toString()) 
-        ); 
-        
-        return ip;
-        
-    }
+   
 
     public String GenInvTypeDefinition(String arg){
         return "Definition\n" +

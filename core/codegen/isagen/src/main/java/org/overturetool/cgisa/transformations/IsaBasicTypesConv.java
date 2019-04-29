@@ -83,6 +83,7 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
     public void caseATokenBasicTypeIR(ATokenBasicTypeIR x) {
     	if(x.getNamedInvType() == null)
         {
+    		System.out.println(isaTypeDeclIRMap.toString());
             // Retrieve isa_VDMToken from VDMToolkit
             ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaBasicTypesConv.isa_VDMToken);
 
