@@ -1,0 +1,171 @@
+%%
+%% This is file `vdmlisting.sty',
+%%
+%% 
+%% Please read the software license in vdmlisting.pdf.
+%%
+%% (w)(c) 2010--2013 Kenneth Lausdahl and/or any other author listed
+%% elsewhere in this file.
+%% (c) 2013 Kenneth Lausdahl
+%%
+%%
+\def\filedate{2013/04/10}
+\def\fileversion{1.0}
+\NeedsTeXFormat{LaTeX2e}
+\AtEndOfPackage{\ProvidesPackage{vdmlisting}
+             [\filedate\space\fileversion\space(Kenneth Lausdahl)]}
+\def\lst@CheckVersion#1{\edef\reserved@a{#1}%
+    \ifx\lst@version\reserved@a \expandafter\@gobble
+                          \else \expandafter\@firstofone \fi}
+\let\lst@version\fileversion
+
+\RequirePackage{listings}
+
+%define load option flags
+\newif\ifnotimes
+\newif\ifenablecolors
+
+\DeclareOption{notimes}{
+ 	\notimestrue
+}
+
+\DeclareOption{color}{
+ 	\enablecolorstrue
+}
+
+\ProcessOptions\relax
+
+\ifnotimes
+%
+\else
+ 	\RequirePackage{times}
+\fi
+
+\ifenablecolors
+ 	\RequirePackage{color}
+ 	\definecolor{notovered}{rgb}{1,0,0}  %red
+% Custom macro used to color uncoverage model parts in listings
+	\newcommand{\vdmnotcovered}[1]{\textcolor{notovered}{#1}}
+\else
+\newcommand{\vdmnotcovered}[1]{#1}
+\fi
+
+%
+%configure listing style and language
+%
+
+\lstdefinelanguage{VDM_SL}
+  {morekeywords={RESULT, abs, all, always, and, as, be, be st, bool, by, card, cases, char, comp, compose, 
+conc, dcl, def, definitions, dinter, div, dlmodule, do, dom, dunion, elems, else, elseif, end,
+ error, errs, exists, exists1, exit, exports, ext, false, floor, for, for all, forall, from, 
+ functions, hd, if, imports, in, in set, inds, init, inmap, int, inter, inv, inverse, iota, 
+ is not yet specified, lambda, len, let, map, measure, merge, mod, module, mu, munion, nat, nat1,
+  nil, not, not in set, of, operations, or, others, post, power, pre, psubset, rat, rd, real, rem, 
+  renamed, return, reverse, rng, seq, seq1, set, skip, specified, st, state, struct, subset, then,
+   tixe, tl, to, token, traces, trap, true, types, undefined, union, uselib, values, while, with, wr,
+    yet,mk\_ },
+   sensitive,
+   morecomment=[l]--,
+   morestring=[b]",
+   morestring=[b]',
+  }[keywords,comments,strings]
+
+\lstdefinelanguage{VDM_PP}
+  {morekeywords={\#act, \#active, \#fin, \#req, \#waiting, 
+ RESULT, abs, all, always, and, async, atomic, be, be st, bool, by, card, cases, char, class, 
+ comp, compose, conc, dcl, def, dinter, div, do, dom, dunion, elems, else, elseif, end, error, 
+ errs, exists, exists1, exit, ext, false, floor, for, for all, forall, from, functions, hd, if, 
+ in, in set, inds, inmap, instance, instance variables, int, inter, inv, inverse, iota, is, 
+ is not yet specified, is subclass of, is subclass responsibility, isofbaseclass, isofclass, 
+ lambda, len, let, map, measure, merge, mod, mu, munion, mutex, nat, nat1, new, nil, not, not in set, 
+ of, operations, or, others, per, periodic, post, power, pre, private, protected, psubset, public, rat,
+  rd, real, rem, responsibility, return, reverse, rng, samebaseclass, sameclass, self, seq, seq1, set,
+   skip, specified, st, start, startlist, static, subclass, subset, sync, then, thread, threadid, tixe,
+    tl, to, token, traces, trap, true, types, undefined, union, values, variables, while, with, wr, yet,mk\_ },
+   sensitive,
+   morecomment=[l]--,
+   morestring=[b]",
+   morestring=[b]',
+  }[keywords,comments,strings]
+  
+\lstdefinelanguage{VDM_RT}
+  {morekeywords={\#act, \#active, \#fin, \#req, \#waiting, 
+RESULT, abs, all, always, and, async, atomic, be, be st, bool, by, card, cases, 
+char, class, comp, compose, conc, cycles, dcl, def, dinter, div, do, dom, dunion, 
+duration, elems, else, elseif, end, error, errs, exists, exists1, exit, ext, false, 
+floor, for, for all, forall, from, functions, hd, if, in, in set, inds, inmap, instance,
+ instance variables, int, inter, inv, inverse, iota, is, is not yet specified, is subclass of, 
+ is subclass responsibility, isofbaseclass, isofclass, lambda, len, let, map, measure, merge, mod,
+  mu, munion, mutex, nat, nat1, new, nil, not, not in set, of, operations, or, others, per, periodic,
+   post, power, pre, private, protected, psubset, public, rat, rd, real, rem, responsibility, return,
+    reverse, rng, samebaseclass, sameclass, self, seq, seq1, set, skip, specified, st, start, startlist,
+     static, subclass, subset, sync, system, then, thread, threadid, time, tixe, tl, to, token, traces,
+      trap, true, types, undefined, union, values, variables, while, with, wr, yet,mk\_ },
+   sensitive,
+   morecomment=[l]--,
+   morestring=[b]",
+   morestring=[b]',
+  }[keywords,comments,strings]
+
+
+%
+% Define  listing for the VDM language
+%
+\lstdefinestyle{overtureLanguageStyle}{basicstyle=\footnotesize\ttfamily,
+			frame=trBL, 
+			tabsize=2, 
+			linewidth=\textwidth,
+			showstringspaces=false, 
+			captionpos=b,
+			frameround=fttt, 
+			aboveskip=5mm,
+			belowskip=5mm,
+			framexleftmargin=0mm, 
+			framexrightmargin=0mm,
+			escapeinside={(*@}{@*)},
+			language=VDM_SL}
+
+
+% define listing environments
+
+
+
+% Environment definition for VDM blocks
+%  The listing environment vdm_al is reset to the default overture style and default dialect each time one of the overture listing environments are used.
+% All listing environments are defined to take an optional parameter of the type \lstset which is applied as the last on in the environment allowing the user to change the defaults if desired:
+%\begin{vdm_al}[\lstset{numbers=left}]
+
+%Default VDM  Listing: language is set by the project from which it has been generated from. 
+\lstnewenvironment{vdm_al}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=VDM_RT}\lstset{#1}}
+{}
+
+\lstnewenvironment{vdmsl}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=VDM_SL}\lstset{#1}}
+{}
+
+\lstnewenvironment{vdmpp}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=VDM_PP}\lstset{#1}}
+{}
+
+\lstnewenvironment{vdmrt}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=VDM_RT}\lstset{#1}}
+{}
+
+% Environment definition for test coverage use by VDM Tools
+\lstnewenvironment{vdmrealtimeinfo}{}
+{}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\endinput

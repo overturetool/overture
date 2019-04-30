@@ -1,0 +1,2697 @@
+\begin{appendices}
+\chapter{Tool Code Before Development} \label{beforecode}
+\section{Transformations} \label{transformationsbefore}
+
+\subsection{IsaBasicTypesConv} \label{IsaBasicTypesConvbefore}
+\begin{lstlisting}
+package org.overturetool.cgisa.transformations;
+
+import org.overture.cgisa.isair.analysis.DepthFirstAnalysisIsaAdaptor;
+import org.overture.codegen.ir.*;
+import org.overture.codegen.ir.declarations.*;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.trans.assistants.TransAssistantIR;
+
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/***
+ * Visitor to convert basic VDM types to VDMToolkit types
+ */
+public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
+
+    private final Map<String, ATypeDeclIR> isaTypeDeclIRMap;
+    private final TransAssistantIR t;
+    private final AModuleDeclIR vdmToolkitModuleIR;
+    private final IRInfo info;
+    private final static String isa_VDMInt = "isa_VDMInt";
+
+    public IsaBasicTypesConv(IRInfo info, TransAssistantIR t, AModuleDeclIR vdmToolkitModuleIR) {
+        this.t = t;
+        this.info = info;
+        this.vdmToolkitModuleIR = vdmToolkitModuleIR;
+
+        this.isaTypeDeclIRMap = this.vdmToolkitModuleIR.getDecls()
+                .stream()
+                .filter(d -> {
+                    if (d instanceof ATypeDeclIR)
+                        return true;
+                    else
+                        return false;
+                }).map(d -> (ATypeDeclIR) d)
+                .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
+    }
+
+    //Transform int to isa_VDMInt
+    public void caseAIntNumericBasicTypeIR(AIntNumericBasicTypeIR x){
+        if(x.getNamedInvType() == null)
+        {
+            AIntNumericBasicTypeIR a = new AIntNumericBasicTypeIR();
+            // Retrieve isa_VDMInt from VDMToolkit
+            ATypeDeclIR isa_td = isaTypeDeclIRMap.get(this.isa_VDMInt);
+
+            x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+        }
+
+    }
+}
+\end{lstlisting}
+\subsection{IsaInvGenTrans.java} \label{IsaInvGenTransbefore}
+\begin{lstlisting}[language=Java]
+
+
+public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
+
+    private final AModuleDeclIR vdmToolkitModule;
+    private final Map<String, ATypeDeclIR> isaTypeDeclIRMap;
+    private IRInfo info;
+    private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
+
+    public IsaInvGenTrans(IRInfo info, AModuleDeclIR vdmToolkitModuleIR) {
+        this.info = info;
+        this.vdmToolkitModule = vdmToolkitModuleIR;
+
+        this.isaFuncDeclIRMap = this.vdmToolkitModule.getDecls().stream().filter(d ->
+        {
+            if (d instanceof AFuncDeclIR)
+                return true;
+            else
+                return false;
+        }).map(d -> (AFuncDeclIR) d).collect(Collectors.toMap(x -> x.getName(), x -> x));
+
+        this.isaTypeDeclIRMap = this.vdmToolkitModule.getDecls().stream().filter(d -> {
+            if (d instanceof ATypeDeclIR)
+                return true;
+            else
+                return false;
+        }).map(d -> (ATypeDeclIR) d).collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
+
+
+    }
+
+    @Override
+    public void caseATypeDeclIR(ATypeDeclIR node) throws AnalysisException {
+        super.caseATypeDeclIR(node);
+
+        String typeName = IsaInvNameFinder.findName(node.getDecl());
+        SDeclIR decl = node.getDecl();
+        SDeclIR invFun = node.getInv();
+
+        if(invFun == null)
+        {
+            // Invariant function
+            AFuncDeclIR invFun_ = new AFuncDeclIR();
+            invFun_.setName("inv_" + typeName);
+
+            // Define the type signature
+            //TODO: Type should be XTypeInt - correct?
+            AMethodTypeIR methodType = new AMethodTypeIR();
+            STypeIR t = IsaDeclTypeGen.apply(node.getDecl());
+            methodType.getParams().add(t.clone());
+            methodType.setResult(new ABoolBasicTypeIR());
+            invFun_.setMethodType(methodType);
+
+            // Generate the pattern
+            AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+            identifierPattern.setName("x");
+            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+            afp.setPattern(identifierPattern);
+            afp.setType(t.clone()); // Wrong to set entire methodType?
+            invFun_.getFormalParams().add(afp);
+
+            // Generate the expression
+            SExpIR expr = IsaInvExpGen.apply(decl, identifierPattern, methodType.clone(), isaFuncDeclIRMap);
+            invFun_.setBody(expr);
+
+            // Insert into AST
+            AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+            if(encModule != null)
+            {
+                encModule.getDecls().add(invFun_);
+            }
+
+            System.out.println("Invariant function has been added");
+
+        }
+    }
+
+    public String GenInvTypeDefinition(String arg){
+        return "Definition\n" +
+                "   inv_" + arg+ " :: \"" + arg + " \\<Rightarrow> \\<bool>\"\n" +
+                "   where\n" +
+                "";
+    }
+
+}
+\end{lstlisting}
+
+\subsection{IsaBasicTypesConv} \label{IsaBasicTypesConvbefore}
+\begin{lstlisting}
+
+/***
+ * Visitor to convert basic VDM types to VDMToolkit types
+ */
+public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
+
+    private final Map<String, ATypeDeclIR> isaTypeDeclIRMap;
+    private final TransAssistantIR t;
+    private final AModuleDeclIR vdmToolkitModuleIR;
+    private final IRInfo info;
+    private final static String isa_VDMInt = "isa_VDMInt";
+
+    public IsaBasicTypesConv(IRInfo info, TransAssistantIR t, AModuleDeclIR vdmToolkitModuleIR) {
+        this.t = t;
+        this.info = info;
+        this.vdmToolkitModuleIR = vdmToolkitModuleIR;
+
+        this.isaTypeDeclIRMap = this.vdmToolkitModuleIR.getDecls()
+                .stream()
+                .filter(d -> {
+                    if (d instanceof ATypeDeclIR)
+                        return true;
+                    else
+                        return false;
+                }).map(d -> (ATypeDeclIR) d)
+                .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
+    }
+
+    //Transform int to isa_VDMInt
+    public void caseAIntNumericBasicTypeIR(AIntNumericBasicTypeIR x){
+        if(x.getNamedInvType() == null)
+        {
+            AIntNumericBasicTypeIR a = new AIntNumericBasicTypeIR();
+            // Retrieve isa_VDMInt from VDMToolkit
+            ATypeDeclIR isa_td = isaTypeDeclIRMap.get(this.isa_VDMInt);
+
+            x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+        }
+
+    }
+}
+\end{lstlisting}
+\subsection{IsaDeclTypeGen} \label{IsaDeclTypeGenbefore}
+\begin{lstlisting}
+public class IsaDeclTypeGen extends AnswerIsaAdaptor<STypeIR> {
+
+    public static STypeIR apply(INode node) throws AnalysisException {
+        IsaDeclTypeGen finder = new IsaDeclTypeGen();
+        return node.apply(finder);
+    }
+
+    public STypeIR caseANamedTypeDeclIR(ANamedTypeDeclIR n)
+    {
+        AIntNumericBasicTypeIR a = new AIntNumericBasicTypeIR();
+        a.setNamedInvType(n.clone());
+        return a;
+    }
+
+
+
+    public STypeIR caseARecordTypeDeclIR(ARecordDeclIR n)
+    {
+        return null;
+    }
+
+    @Override
+    public STypeIR createNewReturnValue(INode node) throws AnalysisException {
+        return null;
+    }
+
+    @Override
+    public STypeIR createNewReturnValue(Object node) throws AnalysisException {
+        return null;
+    }
+}
+
+\end{lstlisting}
+\subsection{IsaInvExpGen} \label{IsaInvExpGenbefore}
+\begin{lstlisting}
+
+/*
+Generates the expression for an invariant.
+Example:
+    VDM spec:   types
+                test = nat
+    Invariant expression: isa_inv_VDMNat i
+    where i is a parameter to this visitor.
+ */
+public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
+
+    AIdentifierPatternIR ps;
+    AMethodTypeIR methodType;
+    private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
+
+    public IsaInvExpGen(AIdentifierPatternIR ps, AMethodTypeIR methodType, Map<String, AFuncDeclIR> isaFuncDeclIRMap)
+    {
+        this.ps = ps;
+        this.methodType = methodType;
+        this.isaFuncDeclIRMap = isaFuncDeclIRMap;
+    }
+
+    public static SExpIR apply(SDeclIR decl, AIdentifierPatternIR afp, AMethodTypeIR methodType, Map<String, AFuncDeclIR> isaFuncDeclIRMap) throws AnalysisException {
+        IsaInvExpGen finder = new IsaInvExpGen(afp, methodType, isaFuncDeclIRMap);
+        return decl.apply(finder);
+    }
+
+    @Override
+    public SExpIR caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
+        STypeIR type = node.getType();
+
+        // Find invariant function
+        AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
+
+        // Create ref to function
+        AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
+        fInvIdentifier.setName(fInv.getName());
+        fInvIdentifier.setSourceNode(fInv.getSourceNode());
+        fInvIdentifier.setType(fInv.getMethodType());
+
+        // Crete apply expr
+        AApplyExpIR exp = new AApplyExpIR();
+        exp.setType(new ABoolBasicTypeIR());
+        AIdentifierVarExpIR iVarExp = new AIdentifierVarExpIR();
+        iVarExp.setName(this.ps.getName());
+        iVarExp.setType(this.methodType);
+        exp.getArgs().add(iVarExp);
+        exp.setRoot(fInvIdentifier);
+
+        return exp;
+    }
+
+    @Override
+    public SExpIR caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
+        throw new AnalysisException();
+    }
+
+    @Override
+    public SExpIR createNewReturnValue(INode node) throws AnalysisException {
+        return null;
+    }
+
+    @Override
+    public SExpIR createNewReturnValue(Object node) throws AnalysisException {
+            return null;
+    }
+
+
+    public SExpIR caseASeqSeqType(ASeqSeqTypeIR node)
+            throws AnalysisException {
+        if(node.getSeqOf().getTag()!= null)
+        {
+            Object t = node.getSeqOf().getTag();
+
+            // We are referring to another type, and therefore we stop here. This is the instantiation of the polymorphic function.
+            /*
+            For VDM:
+             */
+            // Return expression corresponding to: isa_invSeqElemens[token](isa_true[token], p)
+        }
+        else {
+            //We need to keep going
+        }
+        throw new AnalysisException();
+    }
+
+    public SExpIR caseATokenBasicTypeIR(ATokenBasicTypeIR n) throws AnalysisException
+    {
+
+        AApplyExp e = new AApplyExp();
+
+        throw new AnalysisException();
+
+    }
+
+
+    public SExpIR caseASetSetTypeIR(ASetSetTypeIR node) throws AnalysisException {
+        throw new AnalysisException();
+
+    }
+
+
+}
+\end{lstlisting}
+
+\subsection{IsaInvNameFinder} \label{IsaInvNameFinderbefore}
+\begin{lstlisting}
+public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
+{
+    public static String findName(INode node) throws AnalysisException {
+        IsaInvNameFinder finder = new IsaInvNameFinder();
+        return node.apply(finder);
+    }
+
+    @Override
+    public String caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
+        return node.getName().getName();
+    }
+
+    @Override
+    public String caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
+        return node.getName();
+    }
+
+    @Override
+    public String createNewReturnValue(INode node) throws AnalysisException {
+        return null;
+    }
+
+    @Override
+    public String createNewReturnValue(Object node) throws AnalysisException {
+        return null;
+    }
+}
+\end{lstlisting}
+
+\section{CodeGen Platform}
+\section{IsaGen} \label{IsaGenbefore}
+\begin{lstlisting}
+/*
+ * #%~
+ * VDM to Isabelle Translation
+ * %%
+ * Copyright (C) 2008 - 2015 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
+
+package org.overturetool.cgisa;
+
+import java.io.File;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.runtime.RuntimeServices;
+import org.apache.velocity.runtime.RuntimeSingleton;
+import org.apache.velocity.runtime.parser.ParseException;
+import org.apache.velocity.runtime.parser.node.SimpleNode;
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.codegen.ir.*;
+import org.overture.codegen.ir.declarations.AModuleDeclIR;
+import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overturetool.cgisa.transformations.*;
+
+/**
+ * Main facade class for VDM 2 Isabelle IR
+ *
+ * @author ldc
+ */
+public class IsaGen extends CodeGenBase {
+
+    public IsaGen()
+    {
+        this.addInvTrueMacro();
+
+        this.getSettings().setAddStateInvToModule(false);
+        this.getSettings().setGenerateInvariants(true);
+    }
+    //TODO: Auto load files in macro directory
+    public static void addInvTrueMacro(){
+        StringBuilder sb = new StringBuilder("#macro ( invTrue $node )\n" +
+                "    definition\n" +
+                "        inv_$node.Name :: $node.Name \\<RightArrow> \\<bool>\n" +
+                "        where\n" +
+                "        \"inv_$node.Name \\<equiv> inv_True\"\n" +
+                "#end");
+        addMacro("invTrue",new StringReader(sb.toString()));
+        Template template = new Template();
+    }
+
+    public static void addMacro(String name, StringReader reader){
+        try {
+            Template template = new Template();
+            RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
+
+            SimpleNode simpleNode = runtimeServices.parse(reader, name);
+            template.setRuntimeServices(runtimeServices);
+            template.setData(simpleNode);
+            template.initDocument();
+        } catch (ParseException e)
+        {
+            System.out.println("Failed with: " + e);
+        }
+    }
+
+    public static String vdmExp2IsaString(PExp exp) throws AnalysisException,
+            org.overture.codegen.ir.analysis.AnalysisException {
+        IsaGen ig = new IsaGen();
+        GeneratedModule r = ig.generateIsabelleSyntax(exp);
+        if (r.hasMergeErrors()) {
+            throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                    + " cannot be generated. Merge errors:"
+                    + r.getMergeErrors().toString());
+        }
+        if (r.hasUnsupportedIrNodes()) {
+            throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                    + " cannot be generated. Unsupported in IR:"
+                    + r.getUnsupportedInIr().toString());
+        }
+        if (r.hasUnsupportedTargLangNodes()) {
+            throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                    + " cannot be generated. Unsupported in TargLang:"
+                    + r.getUnsupportedInTargLang().toString());
+        }
+
+        return r.getContent();
+    }
+
+
+    /**
+     * Main entry point into the Isabelle Translator component. Takes an AST and returns corresponding Isabelle Syntax.
+     *
+     * @param statuses The IR statuses holding the nodes to be code generated.
+     * @return The generated Isabelle syntax
+     * @throws AnalysisException
+     *
+     */
+    @Override
+    protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
+
+
+        // Typecheck the VDMToolkit module and generate the IR
+        TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 =
+                TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
+        AModuleModules isaToolkit = listTypeCheckResult1.result.
+                stream().
+                filter(mod -> mod.getName().getName().equals("VDMToolkit")).
+                findAny().
+                orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit module"));
+        super.genIrStatus(statuses, isaToolkit);
+
+        // Get the VDMToolkit module IR
+        IRStatus<PIR> vdmToolkitIR = statuses.stream().filter(x -> x.getIrNodeName().equals("VDMToolkit")).findAny().orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit IR node"));
+        AModuleDeclIR vdmToolkitModuleIR = (AModuleDeclIR) vdmToolkitIR.getIrNode();
+
+
+        GeneratedData r = new GeneratedData();
+        try {
+
+
+            // Apply transformations
+            for (IRStatus<PIR> status : statuses) {
+                if(status.getIrNodeName().equals("VDMToolkit")){
+                    System.out.println("Skipping VDMToolkit transformations");
+                } else {
+
+
+                    // make init expression an op
+                    StateInit stateInit = new StateInit(getInfo());
+                    generator.applyPartialTransformation(status, stateInit);
+
+                    // transform away any recursion cycles
+                    GroupMutRecs groupMR = new GroupMutRecs();
+                    generator.applyTotalTransformation(status, groupMR);
+
+                    if (status.getIrNode() instanceof AModuleDeclIR) {
+                        AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
+                        // then sort remaining dependencies
+                        SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
+                        generator.applyPartialTransformation(status, sortTrans);
+                    }
+
+                    
+                    // Transform all token types to isa_VDMToken
+                    // Transform all nat types to isa_VDMNat
+                    // Transform all nat1 types to isa_VDMNat
+                    // Transform all int types to isa_VDMInt
+
+                    IsaBasicTypesConv invConv = new IsaBasicTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invConv);
+
+                    IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invTrans);
+                }
+            }
+
+            r.setClasses(prettyPrint(statuses));
+        } catch (org.overture.codegen.ir.analysis.AnalysisException e) {
+            throw new AnalysisException(e);
+        }
+        return r;
+
+    }
+
+    public GeneratedModule generateIsabelleSyntax(PExp exp)
+            throws AnalysisException,
+            org.overture.codegen.ir.analysis.AnalysisException {
+        IRStatus<SExpIR> status = this.generator.generateFrom(exp);
+
+        if (status.canBeGenerated()) {
+            return prettyPrint(status);
+        }
+
+        throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                + " cannot be code-generated");
+    }
+
+
+    private List<GeneratedModule> prettyPrint(List<IRStatus<PIR>> statuses)
+            throws org.overture.codegen.ir.analysis.AnalysisException {
+        // Apply merge visitor to pretty print Isabelle syntax
+        IsaTranslations isa = new IsaTranslations();
+        MergeVisitor pp = isa.getMergeVisitor();
+
+        List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
+
+        for (IRStatus<PIR> status : statuses) {
+            if(status.getIrNodeName().equals("VDMToolkit")){
+                System.out.println("Skipping VDMToolkit transformations");
+            } else {
+                generated.add(prettyPrintNode(pp, status));
+            }
+
+        }
+
+        // Return syntax
+        return generated;
+    }
+
+    private GeneratedModule prettyPrint(IRStatus<? extends INode> status)
+            throws org.overture.codegen.ir.analysis.AnalysisException {
+        // Apply merge visitor to pretty print Isabelle syntax
+        IsaTranslations isa = new IsaTranslations();
+        MergeVisitor pp = isa.getMergeVisitor();
+        return prettyPrintNode(pp, status);
+    }
+
+    private GeneratedModule prettyPrintNode(MergeVisitor pp,
+                                            IRStatus<? extends INode> status)
+            throws org.overture.codegen.ir.analysis.AnalysisException {
+        INode irClass = status.getIrNode();
+
+        StringWriter sw = new StringWriter();
+
+        irClass.apply(pp, sw);
+
+        if (pp.hasMergeErrors()) {
+            return new GeneratedModule(status.getIrNodeName(), irClass, pp.getMergeErrors(), false);
+        } else if (pp.hasUnsupportedTargLangNodes()) {
+            return new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), pp.getUnsupportedInTargLang(), false);
+        } else {
+            // Code can be generated. Ideally, should format it
+            GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), irClass, sw.toString(), false);
+            generatedModule.setTransformationWarnings(status.getTransformationWarnings());
+            return generatedModule;
+        }
+    }
+}
+\end{lstlisting}
+
+\chapter{Tool Code After Development} \label{aftercode}
+\section{Transformations} \label{transformationsafter}
+
+\subsection{IsaInvNameFinder} \label{IsaInvNameFinderafter}
+\begin{lstlisting}
+public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
+{
+    public static String findName(INode node) throws AnalysisException {
+        IsaInvNameFinder finder = new IsaInvNameFinder();
+        return node.apply(finder);
+    }
+
+    @Override
+    public String caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
+        return node.getName().getName();
+    }
+    
+    @Override
+    public String caseANotImplementedExpIR(ANotImplementedExpIR node) {
+    return "True";
+      
+    }
+    
+    @Override
+    public String caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
+        return node.getName();
+    }
+    
+    @Override
+    public String caseASetSetTypeIR(ASetSetTypeIR node) throws AnalysisException {
+        return "SetElems";
+    }
+    
+    @Override
+    public String caseASeqSeqTypeIR(ASeqSeqTypeIR node) throws AnalysisException {
+      ANamedTypeDeclIR n = new ANamedTypeDeclIR();
+      return "SeqElems";
+    }
+    @Override
+    public String caseANatNumericBasicTypeIR(ANatNumericBasicTypeIR node) throws AnalysisException {
+      return "VDMNat";
+    }
+    
+    @Override
+    public String caseAIntNumericBasicTypeIR(AIntNumericBasicTypeIR node) throws AnalysisException {
+      return "True";
+    }
+    
+    @Override
+    public String caseARealNumericBasicTypeIR(ARealNumericBasicTypeIR node) throws AnalysisException {
+      return "True";
+    }
+    
+    @Override
+    public String caseARatNumericBasicTypeIR(ARatNumericBasicTypeIR node) throws AnalysisException {
+      return "True";
+    }
+    
+    
+    @Override
+    public String caseABoolBasicTypeIR(ABoolBasicTypeIR node) throws AnalysisException {
+      return "True";
+    }
+    
+    @Override
+    public String caseACharBasicTypeIR(ACharBasicTypeIR node) throws AnalysisException {
+      return "True";
+    }
+    
+    @Override
+    public String caseAMapMapTypeIR(AMapMapTypeIR node) throws AnalysisException {
+      return "True";
+    }
+    
+    @Override
+    public String caseATokenBasicTypeIR(ATokenBasicTypeIR node) throws AnalysisException {
+      return "True";
+    }
+    
+    @Override
+    public String caseANat1NumericBasicTypeIR(ANat1NumericBasicTypeIR node) throws AnalysisException {
+      return "VDMNat1";
+    }
+    
+    
+    
+    
+    @Override
+    public String caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
+        return node.getName();
+    }
+
+    @Override
+    public String createNewReturnValue(INode node) throws AnalysisException {
+      String typeName;
+        STypeIR n = (STypeIR) node;
+        //if not a toolkit or IR node type
+      if (n.getNamedInvType() == null) typeName = "True";
+      else typeName = n.getNamedInvType().getName().getName();
+      return typeName;  
+    }
+
+    @Override
+    public String createNewReturnValue(Object node) throws AnalysisException {
+      String typeName;
+        STypeIR n = (STypeIR) node;
+        //if not a toolkit or IR node type
+      if (n.getNamedInvType() == null) typeName = "True";
+      else typeName = n.getNamedInvType().getName().getName();
+      return typeName;  
+    }
+}
+\end{lstlisting}
+
+\subsection{IsaFuncDeclConv} \label{IsaFuncDeclConv}
+\begin{lstlisting}
+public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
+
+
+    private final AModuleDeclIR vdmToolkitModuleIR;
+    private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
+    
+    public IsaFuncDeclConv(IRInfo info, TransAssistantIR t, AModuleDeclIR vdmToolkitModuleIR) {
+        this.vdmToolkitModuleIR = vdmToolkitModuleIR;
+
+        this.vdmToolkitModuleIR.getDecls()
+                .stream()
+                .filter(d -> {
+                    if (d instanceof ATypeDeclIR)
+                        return true;
+                    else
+                        return false;
+                }).map(d -> (ATypeDeclIR) d)
+                .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
+        
+        this.isaFuncDeclIRMap = this.vdmToolkitModuleIR.getDecls().stream().filter(d ->
+        {
+            if (d instanceof AFuncDeclIR)
+                return true;
+            else
+                return false;
+        }).map(d -> (AFuncDeclIR) d).collect(Collectors.toMap(x -> x.getName(), x -> x));
+
+        
+    }
+    
+   
+    // Transform AFuncDeclIR
+    @Override
+    public void caseAFuncDeclIR(AFuncDeclIR x) throws AnalysisException {
+      super.caseAFuncDeclIR(x);
+      //we need to stop post conditions of postconditions of post conditions... being formed
+      if (!x.getName().contains("inv") && 
+          !x.getName().contains("post") && !x.getName().contains("pre"))
+      {
+        
+        if (x.parent() instanceof AStateDeclIR)
+        {
+          transStateInit(x);
+          
+        }
+        else 
+        {
+          transformPreConditions(x);
+          
+          transformPostConditions(x);
+          
+          // If no parameter function set params to null to make this more concrete for velocity
+          if (x.getFormalParams().size() == 0) 
+          {
+            x.getMethodType().setParams(null);
+          }
+          
+          formatIdentifierPatternVars(x);
+          if (x.getImplicit()) removeFromAST(x);
+        }
+      
+      
+      
+      }
+    }
+    
+    private void transStateInit(AFuncDeclIR node) {
+      AStateDeclIR st = node.getAncestor(AStateDeclIR.class);
+      
+      AMethodTypeIR methodType = new AMethodTypeIR();
+      
+      
+      st.getFields().forEach(f -> methodType.getParams().add(f.getType().clone()));
+      methodType.setResult(new ABoolBasicTypeIR());
+      
+      AFuncDeclIR postInit = new AFuncDeclIR();
+      postInit.setMethodType(methodType.clone());     
+      postInit.setName("post_"+node.getName());
+      
+      AApplyExpIR app = new AApplyExpIR();
+      AIdentifierVarExpIR root = new AIdentifierVarExpIR();
+      root.setName("inv_"+st.getName());
+      System.out.println(IsaGen.funcGenHistoryMap.keySet());
+      root.setType(IsaGen.funcGenHistoryMap.get("inv_"+st.getName()).getMethodType().clone());
+      app.setRoot(root);
+      
+      AIdentifierVarExpIR arg = new AIdentifierVarExpIR();
+      arg.setName(node.getName());
+      arg.setType(node.getMethodType().clone());
+      app.getArgs().add(arg);
+      
+      postInit.setBody(app);
+        addToAST(postInit, node);
+
+        System.out.println("Post condition has been added");
+    
+  }
+
+
+  private void removeFromAST(AFuncDeclIR x) {
+      // Insert into AST
+        AModuleDeclIR encModule = x.getAncestor(AModuleDeclIR.class);
+        if(encModule != null)
+        {
+            encModule.getDecls().remove(x);
+        }
+    
+  }
+
+    private void addToAST(INode node, INode parent) {
+      // Insert into AST
+        AModuleDeclIR encModule = parent.getAncestor(AModuleDeclIR.class);
+        if(encModule != null)
+        {
+            encModule.getDecls().add((SDeclIR) node);
+        }
+
+    
+  }
+    
+
+  private void transformPreConditions (AFuncDeclIR node) throws AnalysisException {
+      AMethodTypeIR mt = node.getMethodType().clone();
+      
+      /*The final pre condition that will be populated with a generated pre condition,
+      a modeller written pre condition or both or neither.*/
+      AFuncDeclIR finalPreCondition = null;
+      
+      //Generated pre condition will be populated if one can be generated
+      AFuncDeclIR generatedPre = null;
+      
+        // If there are parameters with which to build a pre condition then build one
+      if (!mt.getParams().isEmpty())
+      {
+        generatedPre = createPre(node.clone());     
+        //Copy across all generated properties into final pre condition.
+        finalPreCondition = generatedPre;
+        
+      }
+        
+        // If there are pre written pre conditions and one was generated add them both
+      if (node.getPreCond() != null && generatedPre != null)
+      {
+        AFuncDeclIR preCond_ = (AFuncDeclIR) node.getPreCond();
+        
+        AAndBoolBinaryExpIR andExisting = new AAndBoolBinaryExpIR();
+        andExisting.setLeft(generatedPre.getBody());
+        andExisting.setRight(preCond_.getBody());
+        finalPreCondition.setBody(andExisting);
+      }
+      
+      //If there is only a pre written pre condition add that
+      else if (node.getPreCond() != null && generatedPre == null)
+      {
+        //Copy across all pre written properties into final pre condition.
+        finalPreCondition = new AFuncDeclIR();
+        
+        //No need to add formal params again they're all already put there above
+        AFuncDeclIR preCond_ = (AFuncDeclIR) node.getPreCond();
+        finalPreCondition.setBody(preCond_.getBody());
+        finalPreCondition.setFormalParams(preCond_.getFormalParams());
+        finalPreCondition.setMethodType(preCond_.getMethodType());
+        finalPreCondition.setName(preCond_.getName());
+      }
+       /* If no pre condition is written, none has been generated then
+        there are no parameter types to use as invariant checks and no relevant checks provided
+        by modeller, so pre condition is added but left empty as a reminder to the modeller to add one      later.*/
+      else if (node.getPreCond() == null && generatedPre == null)
+      {
+        //Copy across all pre written properties into final pre condition.
+        finalPreCondition = new AFuncDeclIR();
+        ANotImplementedExpIR n = new ANotImplementedExpIR();
+        n.setTag("TODO");
+        finalPreCondition.setBody(n);
+        // Set up method type for post condition
+          AMethodTypeIR mty = new AMethodTypeIR();
+          mty.setResult(new ABoolBasicTypeIR());
+      mty.setParams(null);
+          finalPreCondition.setMethodType(mty);
+        finalPreCondition.setName("unimplemented_pre_"+node.getName());
+      }
+    
+      formatIdentifierPatternVars(finalPreCondition);
+      node.setPreCond(finalPreCondition);
+      IsaGen.funcGenHistoryMap.put(finalPreCondition.getName(), finalPreCondition.clone());
+      addToAST(finalPreCondition, node);
+      
+      System.out.println("Pre condition has been added");
+   
+    }
+    
+    
+
+    
+    private void transformPostConditions (AFuncDeclIR node) throws AnalysisException {
+      AMethodTypeIR mt = node.getMethodType().clone();
+      
+      /*The final post condition that will be populated with a generated post condition,
+      a modeller written post condition or both or neither.*/
+      AFuncDeclIR finalPostCondition = null;
+      
+      //Generated post condition will be populated if one can be generated
+      AFuncDeclIR generatedPost = null;
+      
+        // If there are parameters and results with which to build a post condition then build one
+      if (!mt.getParams().isEmpty() && mt.getResult() != null)
+      {
+        generatedPost = createPost(node.clone()); 
+        //Copy across all generated properties into final post condition.
+          finalPostCondition = generatedPost;
+          
+      }
+      
+      // If there are pre written post conditions and one was generated add them both
+        if (node.getPostCond() != null && generatedPost != null)
+        {
+          AFuncDeclIR postCond_ = (AFuncDeclIR) node.getPostCond();   
+          
+          
+          AAndBoolBinaryExpIR andExisting = new AAndBoolBinaryExpIR();
+          andExisting.setLeft(generatedPost.getBody());
+          andExisting.setRight(postCond_.getBody());
+          finalPostCondition.setBody(andExisting);
+          
+        }
+        
+        //If there is only a pre written post condition add that
+        else if (node.getPostCond() != null && generatedPost == null)
+        {
+          //Copy across all pre written properties into final post condition.
+          finalPostCondition = new AFuncDeclIR();
+          
+          //No need to add formal params again they're all already put there above
+          AFuncDeclIR postCond_ = (AFuncDeclIR) node.getPostCond();
+          finalPostCondition.setBody(postCond_.getBody());
+          finalPostCondition.setFormalParams(postCond_.getFormalParams());
+          finalPostCondition.setMethodType(postCond_.getMethodType());
+          finalPostCondition.setName(postCond_.getName());
+        }
+       /* If no post condition is written, none has been generated then
+        there are no parameter types to use as invariant checks and no relevant checks provided
+        by modeller, so post condition is added but left empty as a reminder to the modeller to add one later.*/
+        else if (node.getPostCond() == null && generatedPost == null)
+        {
+          //Copy across all pre written properties into final post condition.
+          finalPostCondition = new AFuncDeclIR();
+          ANotImplementedExpIR n = new ANotImplementedExpIR();
+          n.setTag("TODO");
+          finalPostCondition.setBody(n);
+       
+          AMethodTypeIR mty = new AMethodTypeIR();
+          mty.setResult(new ABoolBasicTypeIR());
+      mty.getParams().add(mt.getResult());
+          finalPostCondition.setMethodType(mty);
+          finalPostCondition.setName("unimplemented_post_"+node.getName());
+        }
+      
+        formatIdentifierPatternVars(finalPostCondition);
+        node.setPostCond(finalPostCondition);
+      IsaGen.funcGenHistoryMap.put(finalPostCondition.getName(), finalPostCondition.clone());
+        addToAST(finalPostCondition, node);
+
+        System.out.println("Post condition has been added");
+    }
+    
+  
+    
+
+
+    private AFuncDeclIR createPre(AFuncDeclIR node) throws AnalysisException {
+      // Post condition function
+        AFuncDeclIR preCond = new AFuncDeclIR();
+      AMethodTypeIR mt = node.getMethodType();
+        SExpIR expr;
+        
+       // Set post_[function name] as post function name
+      preCond.setName("pre_" + node.getName()); 
+        
+      // Set up method type for post condition
+        AMethodTypeIR type = new AMethodTypeIR();
+        type.setResult(new ABoolBasicTypeIR());
+    type.setParams(mt.getParams());
+        preCond.setMethodType(type);
+        
+        
+        
+        AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+        identifierPattern.setName("");
+        if (node.getFormalParams() != null && !node.getFormalParams().isEmpty())
+        {
+          // Loop through all but result type
+          for (int i = 0; i < preCond.getMethodType().getParams().size(); i++)
+          {
+            identifierPattern = new AIdentifierPatternIR();
+              identifierPattern.setName(node.getFormalParams().get(i).getPattern().toString());
+            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+            afp.setPattern(identifierPattern);
+            afp.setType(preCond.getMethodType().getParams().get(i).clone()); 
+            preCond.getFormalParams().add(afp);
+          }
+        }
+    expr = IsaInvExpGen.apply(preCond.clone(), identifierPattern, preCond.getMethodType().clone(), isaFuncDeclIRMap);
+      preCond.setBody(expr);
+        return preCond;
+    }
+    
+    
+  private AFuncDeclIR createPost(AFuncDeclIR node) throws AnalysisException {
+      // Post condition function
+        AFuncDeclIR postCond = new AFuncDeclIR();
+      AMethodTypeIR mt = node.getMethodType();
+        SExpIR expr;
+        
+       // Set post_[function name] as post function name
+      postCond.setName("post_" + node.getName()); 
+        
+      // Set up method type for post condition
+        AMethodTypeIR type = new AMethodTypeIR();
+        type.setResult(new ABoolBasicTypeIR());
+        List<STypeIR> params = mt.getParams();
+        params.add(mt.getResult().clone());
+    type.setParams(params);
+        postCond.setMethodType(type);
+        
+        
+        
+        AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+        identifierPattern.setName("");
+        if (node.getFormalParams() != null && !node.getFormalParams().isEmpty())
+        {
+          // Loop through all but result type
+          for (int i = 0; i < postCond.getMethodType().getParams().size() -1; i++)
+          {
+            identifierPattern = new AIdentifierPatternIR();
+              identifierPattern.setName(node.getFormalParams().get(i).getPattern().toString());
+            AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+            afp.setPattern(identifierPattern);
+            afp.setType(postCond.getMethodType().getParams().get(i).clone()); 
+            postCond.getFormalParams().add(afp);
+          }
+        }
+        
+        // Add RESULT pattern if the function has a result
+        if (mt.getResult() != null)
+        {
+          identifierPattern = new AIdentifierPatternIR();
+          if (node.getPostCond() != null)
+            identifierPattern.setName(((AFuncDeclIR) 
+                node.getPostCond()).getFormalParams().getLast().getPattern().toString());
+          else
+            identifierPattern.setName("RESULT");
+          AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+          afp.setPattern(identifierPattern);
+          afp.setType(mt.getResult()); 
+          postCond.getFormalParams().add(afp);
+        }
+    //an and expression of all of the parameter invariants do nothing if the body is not implemented
+        expr = IsaInvExpGen.apply(postCond.clone(), identifierPattern, postCond.getMethodType().clone(), isaFuncDeclIRMap);
+        postCond.setBody(expr);
+        
+        
+        return postCond;
+  }
+    
+    
+   /*space out identifier variables, e.g. for two variable t and x we should have t x not tx. 
+      "inv_t t x \<equiv> isa_invTrue t \<and> isa_invTrue x"*/
+    private AFuncDeclIR formatIdentifierPatternVars (AFuncDeclIR node) {
+      /*  This puts a space between different parameters in the Isabelle function body
+      , xy is misinterpreted as one variable whereas x y is correctly interpreted as two
+      */
+      node.getFormalParams().forEach
+      (   
+          p -> { 
+            
+            AIdentifierPatternIR ip = new AIdentifierPatternIR();
+            ip.setName(p.getPattern().toString() + " ");
+            p.setPattern(ip);
+            
+          }
+      );
+      
+      return node;
+    }
+    
+}
+\end{lstlisting}
+
+\subsection{IsaBasicTypesConv} \label{IsaBasicTypesConvafter}
+\begin{lstlisting}
+/***
+ * Visitor to convert sequence or set VDM types to VDMToolkit types
+ */
+public class IsaTypeTypesConv extends DepthFirstAnalysisIsaAdaptor {
+
+    private final Map<String, ATypeDeclIR> isaTypeDeclIRMap;
+    private final TransAssistantIR t;
+    private final AModuleDeclIR vdmToolkitModuleIR;
+    private final IRInfo info;
+
+    private final static String isa_VDMSet = "isa_VDMSet";
+
+    private final static String isa_VDMSeq = "isa_VDMSeq";
+
+    public IsaTypeTypesConv(IRInfo info, TransAssistantIR t, AModuleDeclIR vdmToolkitModuleIR) {
+        this.t = t;
+        this.info = info;
+        this.vdmToolkitModuleIR = vdmToolkitModuleIR;
+
+        this.isaTypeDeclIRMap = this.vdmToolkitModuleIR.getDecls()
+                .stream()
+                .filter(d -> {
+                    if (d instanceof ATypeDeclIR)
+                        return true;
+                    else
+                        return false;
+                }).map(d -> (ATypeDeclIR) d)
+                .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
+    }
+    
+   //transform seq into VDMSeq
+    public void caseASeqSeqTypeIR(ASeqSeqTypeIR x) {
+      if(x.getNamedInvType() == null)
+        {
+            
+            // Retrieve isa_VDMSeq from VDMToolkit
+            ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaTypeTypesConv.isa_VDMSeq);
+
+            x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+            
+        }
+    }
+  //transform set into VDMSet
+    public void caseASetSetTypeIR(ASetSetTypeIR x) {
+      if(x.getNamedInvType() == null)
+        {
+            
+            // Retrieve isa_VDMSet from VDMToolkit
+            ATypeDeclIR isa_td = isaTypeDeclIRMap.get(IsaTypeTypesConv.isa_VDMSet);
+
+            x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
+        }
+    }
+    
+    
+    
+    
+}
+\end{lstlisting}
+\subsection{IsaTypeTypesConv} \label{IsaTypeTypesConv}
+
+\subsection{IsaInvExpGen} \label{IsaInvExpGenafter}
+\begin{lstlisting}
+/*
+Generates the expression for an invariant.
+Example:
+    VDM spec:   types
+                test = nat
+    Invariant expression: isa_inv_VDMNat i
+    where i is a parameter to this visitor.
+
+ */
+public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
+
+    AIdentifierPatternIR ps;
+    AMethodTypeIR methodType;
+    
+    private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
+  private AIdentifierVarExpIR targetIP;
+  private final LinkedList<ANamedTypeDeclIR> invArr = new LinkedList<ANamedTypeDeclIR>();
+
+
+    public IsaInvExpGen(AIdentifierPatternIR ps, AMethodTypeIR methodType, Map<String, AFuncDeclIR> isaFuncDeclIRMap)
+    {
+        this.ps = ps;
+        this.methodType = methodType;
+        this.isaFuncDeclIRMap = isaFuncDeclIRMap;
+    }
+
+    public static SExpIR apply(SDeclIR decl, AIdentifierPatternIR afp, AMethodTypeIR methodType, Map<String, AFuncDeclIR> isaFuncDeclIRMap) throws AnalysisException {
+        IsaInvExpGen finder = new IsaInvExpGen(afp, methodType, isaFuncDeclIRMap);
+        return decl.apply(finder);
+    }
+
+    @Override
+    public SExpIR caseANamedTypeDeclIR(ANamedTypeDeclIR node) throws AnalysisException {
+        node.getType();
+        //TODO make for different types invariants
+        // Find invariant function
+        AFuncDeclIR fInv = this.isaFuncDeclIRMap.get("isa_invTrue");
+        // Create ref to function
+        AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
+        fInvIdentifier.setName(fInv.getName());
+        fInvIdentifier.setSourceNode(fInv.getSourceNode());
+        fInvIdentifier.setType(fInv.getMethodType());
+
+        // Crete apply expr
+        AApplyExpIR exp = new AApplyExpIR();
+        exp.setType(new ABoolBasicTypeIR());
+        AIdentifierVarExpIR iVarExp = new AIdentifierVarExpIR();
+        iVarExp.setName(this.ps.getName());
+        iVarExp.setType(this.methodType);
+        exp.getArgs().add(iVarExp);
+        exp.setRoot(fInvIdentifier);
+
+        return exp;
+    }
+
+    
+    @Override
+    public SExpIR caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
+      //TODO e.g. where "inv_recType r \<equiv> isa_invVDMSeq isa_invVDMNat1 (x r) etc. 
+      LinkedList<AFieldDeclIR> fields = new LinkedList<AFieldDeclIR>();
+    node.getFields().forEach(f -> fields.add(f.clone()));
+        AApplyExpIR completeExp = new AApplyExpIR();
+        LinkedList<AApplyExpIR> fieldInvariants = new LinkedList<AApplyExpIR>();
+        
+        for (int i = 0; i < fields.size(); i++) 
+          {
+            STypeIR type = fields.get(i).getType();
+          AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+              invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
+                  node.getName().toString().substring(1, node.getName().toString().length())+"_"+
+                  fields.get(i).getName()+" "+this.ps.toString()+")");
+              invExp.setType(this.methodType);
+              this.targetIP = invExp;
+        
+              completeExp.setType(new ABoolBasicTypeIR());
+              //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+             
+              try {
+          fieldInvariants.add(buildInvForType(type.clone()));
+        } catch (AnalysisException e) {
+          e.printStackTrace();
+        }
+          
+          }
+      
+     // Link numerous apply expressions together in an and expression
+        if (fieldInvariants.size() >= 2)
+          return genAnd(fieldInvariants);
+        else
+        // Just one field return it as an apply expression
+          return fieldInvariants.get(0);
+    }
+    
+    
+    
+    
+    
+    
+    @Override
+    public SExpIR caseARecordDeclIR(ARecordDeclIR node) throws AnalysisException {
+      //TODO e.g. where "inv_recType r \<equiv> isa_invVDMSeq isa_invVDMNat1 (x r) etc. 
+      LinkedList<AFieldDeclIR> fields = new LinkedList<AFieldDeclIR>();
+    node.getFields().forEach(f -> fields.add(f.clone()));
+        AApplyExpIR completeExp = new AApplyExpIR();
+        LinkedList<AApplyExpIR> fieldInvariants = new LinkedList<AApplyExpIR>();
+        
+        for (int i = 0; i < fields.size(); i++) 
+          {
+            STypeIR type = fields.get(i).getType();
+          AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+              invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
+                  node.getName().toString().substring(1, node.getName().toString().length())+"_"+
+                  fields.get(i).getName()+" "+this.ps.toString()+")");
+              invExp.setType(this.methodType);
+              this.targetIP = invExp;
+        
+              completeExp.setType(new ABoolBasicTypeIR());
+              //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+             
+              try {
+          fieldInvariants.add(buildInvForType(type.clone()));
+        } catch (AnalysisException e) {
+          e.printStackTrace();
+        }
+          
+          }
+      
+     // Link numerous apply expressions together in an and expression
+        if (fieldInvariants.size() >= 2)
+          return genAnd(fieldInvariants);
+        else
+        // Just one field return it as an apply expression
+          return fieldInvariants.get(0);
+    }
+    
+    
+    
+    @Override
+    public SExpIR caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
+        STypeIR t = node.getType().clone();
+        AApplyExpIR completeExp = new AApplyExpIR();
+        // Crete apply to the inv_ expr e.g inv_x inv_y
+        AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+        invExp.setName(node.getName());
+        invExp.setType(this.methodType);
+        this.targetIP = invExp;
+    
+        completeExp.setType(new ABoolBasicTypeIR());
+        //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+       
+    completeExp = buildInvForType(t);
+      
+      
+      
+    return completeExp;
+    }
+    
+    
+    @Override
+    public SExpIR caseAFuncDeclIR(AFuncDeclIR node) throws AnalysisException {
+        LinkedList<AFormalParamLocalParamIR> t = node.getFormalParams();
+        node.setMethodType(this.methodType);
+        LinkedList<AApplyExpIR> paramInvariants = new LinkedList<AApplyExpIR>();
+        
+        for (int i = 0; i < node.getFormalParams().size(); i++) {
+          STypeIR type = t.get(i).getType();      
+          AApplyExpIR completeExp = new AApplyExpIR();
+          
+          // Create apply to the inv_ expr e.g inv_x inv_y
+            AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
+            invExp.setName(node.getFormalParams().get(i).getPattern().toString());
+            invExp.setType(this.methodType);
+            this.targetIP = invExp;
+      
+            completeExp.setType(new ABoolBasicTypeIR());
+            //Recursively build curried inv function e.g.  (inv_VDMSet (inv_VDMSet inv_Nat1)) inv_x
+           
+      try {
+        completeExp = buildInvForType(type);
+      } catch (AnalysisException e) {
+        e.printStackTrace();
+      }
+      
+      paramInvariants.add(completeExp);
+              
+            
+        }
+        
+        
+        // Link numerous apply expressions together in an and expression
+        if (paramInvariants.size() >= 2)
+          return genAnd(paramInvariants);
+        else
+        // Just one parameter return it as an apply expression
+          return paramInvariants.get(0);
+        
+        
+      
+    }
+     
+    
+    private SExpIR genAnd(LinkedList<AApplyExpIR> paramInvariants) {
+      
+      AAndBoolBinaryExpIR and = new AAndBoolBinaryExpIR();
+      
+      //base case
+    if (paramInvariants.size() == 2)
+        {
+        and.setLeft(paramInvariants.get(0));
+        and.setRight(paramInvariants.get(1));
+        }
+    else
+      {
+        and.setLeft(paramInvariants.get(0));
+        paramInvariants.remove(0);
+        and.setRight( genAnd(paramInvariants) );
+      }
+    return and;
+    
+  }
+
+  //build curried invariant
+    public AApplyExpIR buildInvForType(STypeIR seqtNode) throws AnalysisException {
+      
+      String typeName = IsaInvNameFinder.findName(seqtNode);
+      
+      AFuncDeclIR fInv;
+      if (this.isaFuncDeclIRMap.get("isa_inv"+typeName) != null)
+      {
+        fInv = this.isaFuncDeclIRMap.get("isa_inv"+typeName).clone();
+      }
+      else
+      {
+        fInv = IsaGen.funcGenHistoryMap.get("inv_"+typeName).clone();
+        
+      }
+      if (fInv.getMethodType() == null)
+      {
+        AMethodTypeIR mt = new AMethodTypeIR();
+        mt.setResult(new ABoolBasicTypeIR());
+        mt.getParams().add(seqtNode);
+        fInv.setMethodType(mt.clone());
+      }
+      
+         // Create ref to function
+        AIdentifierVarExpIR curriedInv = new AIdentifierVarExpIR();
+        curriedInv.setName(fInv.getName());
+        curriedInv.setSourceNode(fInv.getSourceNode());
+        curriedInv.setType(fInv.getMethodType().clone());//Must always clone
+      AApplyExpIR accum = new AApplyExpIR();
+      accum.setRoot(curriedInv);
+      
+      
+      //if this type is not the last in the nested types, then keep rescursing until we get to the final nested type
+      if ( seqtNode instanceof ASetSetTypeIR && ((ASetSetTypeIR) seqtNode).getSetOf() != null )
+      {
+        accum.getArgs().add(buildInvForType(((ASetSetTypeIR) seqtNode).getSetOf().clone()));
+      }
+      else if (seqtNode instanceof ASeqSeqTypeIR && ((ASeqSeqTypeIR) seqtNode).getSeqOf() != null)
+      {
+        
+        accum.getArgs().add(buildInvForType(((ASeqSeqTypeIR) seqtNode).getSeqOf().clone()));
+      }
+      else
+      {
+        accum.getArgs().add(targetIP);
+      }
+      return accum;
+        
+  }
+
+
+    @Override
+    public SExpIR createNewReturnValue(INode node) throws AnalysisException {
+        return null;
+    }
+
+    @Override
+    public SExpIR createNewReturnValue(Object node) throws AnalysisException {
+            return null;
+    }
+
+    public SExpIR caseATokenBasicTypeIR(ATokenBasicTypeIR n) throws AnalysisException
+    {
+
+        new AApplyExp();
+
+        throw new AnalysisException();
+
+    }
+
+
+    public SExpIR caseASetSetTypeIR(ASetSetTypeIR node) throws AnalysisException {
+        throw new AnalysisException();
+
+    }
+
+
+}
+\end{lstlisting}
+
+\subsection{IsaDeclTypeGen} \label{IsaDeclTypeGenafter}
+\begin{lstlisting}
+public class IsaDeclTypeGen extends AnswerIsaAdaptor<STypeIR> {
+
+    public static STypeIR apply(INode node) throws AnalysisException {
+        IsaDeclTypeGen finder = new IsaDeclTypeGen();
+        return node.apply(finder);
+    }
+
+    public STypeIR caseANamedTypeDeclIR(ANamedTypeDeclIR n)
+    {
+      IsaGen.typeGenHistoryMap.put(n.getType(), n.getName().toString());
+        AIntNumericBasicTypeIR a = new AIntNumericBasicTypeIR();
+        a.setNamedInvType(n.clone());
+        return a;
+    }
+
+    public STypeIR caseAStateDeclIR(AStateDeclIR n)
+    {
+      ARecordTypeIR a = new ARecordTypeIR();
+      ATypeNameIR o = new ATypeNameIR();
+      o.setName(n.getName());
+      a.setName(o);
+        return a;
+      
+    }
+    
+    public STypeIR caseARecordDeclIR(ARecordDeclIR n)
+    {
+      ARecordTypeIR a = new ARecordTypeIR();
+      ATypeNameIR o = new ATypeNameIR();
+      o.setName(n.getName());
+      a.setName(o);
+        return a;
+      
+    }
+
+    @Override
+    public STypeIR createNewReturnValue(INode node) throws AnalysisException {
+        return null;
+    }
+
+    @Override
+    public STypeIR createNewReturnValue(Object node) throws AnalysisException {
+        return null;
+    }
+}
+\end{lstlisting}
+
+\subsection{IsaInvGenTrans} \label{IsaInvGenTransafter}
+\begin{lstlisting}
+public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
+
+    private final AModuleDeclIR vdmToolkitModule;
+    private final Map<String, ATypeDeclIR> isaTypeDeclIRMap;
+    private IRInfo info;
+    private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
+    
+    public IsaInvGenTrans(IRInfo info, AModuleDeclIR vdmToolkitModuleIR) {
+        this.info = info;
+        this.vdmToolkitModule = vdmToolkitModuleIR;
+
+        this.isaFuncDeclIRMap = this.vdmToolkitModule.getDecls().stream().filter(d ->
+        {
+            if (d instanceof AFuncDeclIR)
+                return true;
+            else
+                return false;
+        }).map(d -> (AFuncDeclIR) d).collect(Collectors.toMap(x -> x.getName(), x -> x));
+
+        this.isaTypeDeclIRMap = this.vdmToolkitModule.getDecls().stream().filter(d -> {
+            if (d instanceof ATypeDeclIR)
+                return true;
+            else
+                return false;
+        }).map(d -> (ATypeDeclIR) d).collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
+
+
+    }
+
+    
+    @Override
+    public void caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
+      super.caseAStateDeclIR(node);
+      
+      SDeclIR decl = node.clone();
+      String typeName = IsaInvNameFinder.findName(node.clone());
+      SExpIR invExp = node.getInvExp();
+        // Invariant function
+        AFuncDeclIR invFun_ = new AFuncDeclIR();
+        invFun_.setName("inv_" + typeName); //inv_t
+
+        AMethodTypeIR methodType = new AMethodTypeIR();
+        
+        STypeIR t = IsaDeclTypeGen.apply(decl.clone());
+        methodType.getParams().add(t.clone());
+        
+          
+      methodType.setResult(new ABoolBasicTypeIR());
+        invFun_.setMethodType(methodType);
+         
+          
+          
+  
+        // Translation for VDMToolkit and modeller written invariants
+        if (invExp != null)
+        {
+          AAndBoolBinaryExpIR multipleInvs = new AAndBoolBinaryExpIR();
+          //change (a_c a) to (c A) for Isabelle field access
+            //if (decl instanceof ARecordDeclIR) formatExistingRecordInvExp(inv.getBody());
+          
+            multipleInvs.setRight(invExp);
+          
+      AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+      identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
+      
+      //set Inv pattern if one does not exist
+      if (node.getInvPattern() != null) node.setInvPattern(identifierPattern);
+      
+      SExpIR expr = IsaInvExpGen.apply(decl, 
+          identifierPattern , 
+          methodType.clone(), isaFuncDeclIRMap);
+          
+      multipleInvs.setLeft(expr);
+          
+          invFun_.setBody(multipleInvs);
+          node.setInvExp(multipleInvs);
+        } 
+        //translation for no inv types 
+        else 
+        {
+        
+          SExpIR expr;
+      AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+          identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
+          AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+          afp.setPattern(identifierPattern.clone());
+          afp.setType(t.clone()); 
+          
+          node.setInvPattern(identifierPattern);
+          
+          invFun_.getFormalParams().add(afp);
+          expr = IsaInvExpGen.apply(decl.clone(), identifierPattern, methodType.clone(), isaFuncDeclIRMap);
+          
+          
+          invFun_.setBody(expr.clone());
+          node.setInvExp(expr);
+        }
+        node.setInvDecl(invFun_.clone());
+        
+        IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_.clone());
+        System.out.println("Invariant function has been added");
+        }
+        
+    
+    
+    
+    
+  
+    @Override
+    public void caseATypeDeclIR(ATypeDeclIR node) throws AnalysisException {
+        super.caseATypeDeclIR(node);
+        
+        /*We do not want invariants built for each type declaration field
+        instead we would like one invariant for the whole declaration type
+        we skip subsequent record fields so that we do not get
+        inv_field1 inv_field2 inv_record instead we get inv_record which accesses
+        field1 and field2.*/
+        
+        String typeName = IsaInvNameFinder.findName(node.getDecl());
+        SDeclIR decl = node.getDecl().clone();
+         
+        SDeclIR invFun;
+        if (node.getDecl() instanceof ARecordDeclIR)
+          invFun = ( (ARecordDeclIR) decl).getInvariant();
+        else
+          invFun = node.getInv();
+        // Invariant function
+        AFuncDeclIR invFun_ = new AFuncDeclIR();
+        invFun_.setName("inv_" + typeName); //inv_t
+
+        // Define the type signature
+        //TODO: Type should be XTypeInt - correct?
+        AMethodTypeIR methodType = new AMethodTypeIR();
+        
+        STypeIR t = IsaDeclTypeGen.apply(decl);
+        methodType.getParams().add(t.clone());
+        
+          
+      methodType.setResult(new ABoolBasicTypeIR());
+        invFun_.setMethodType(methodType);
+         
+          
+          
+  
+        // Translation for VDMToolkit and modeller written invariants
+        if (invFun != null)
+        {
+          AFuncDeclIR inv = (AFuncDeclIR) invFun;//cast invariant function declaration to AFuncDeclIR
+          AAndBoolBinaryExpIR multipleInvs = new AAndBoolBinaryExpIR();
+          
+          for (int i = 0; i < inv.getMethodType().getParams().size(); i++)
+          {
+            AFormalParamLocalParamIR afplp = new AFormalParamLocalParamIR();
+              afplp.setPattern(inv.getFormalParams().get(i).getPattern());
+              afplp.setType(inv.getMethodType().getParams().get(i).clone());
+              invFun_.getFormalParams().add(afplp);
+          }
+          
+          //change (a_c a) to (c A) for Isabelle field access
+            //if (decl instanceof ARecordDeclIR) formatExistingRecordInvExp(inv.getBody());
+          
+            multipleInvs.setRight(inv.getBody());
+          
+      AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+      identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
+      SExpIR expr = IsaInvExpGen.apply(decl.clone(), 
+          identifierPattern , 
+          methodType.clone(), isaFuncDeclIRMap);
+          
+      multipleInvs.setLeft(expr);
+          
+          invFun_.setBody(multipleInvs);
+        } 
+        //translation for no inv types 
+        else 
+        {
+          SExpIR expr;
+      AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+          identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
+          AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+          afp.setPattern(identifierPattern);
+          afp.setType(t.clone()); 
+          invFun_.getFormalParams().add(afp);
+          expr = IsaInvExpGen.apply(decl.clone(), identifierPattern, methodType.clone(), isaFuncDeclIRMap);
+          
+          
+          invFun_.setBody(expr);
+        }
+        
+
+        // Insert into AST and get rid of existing invariant functions forEach field in record type
+        AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+        if (decl instanceof ARecordDeclIR) encModule.getDecls().removeIf(
+            d -> d instanceof AFuncDeclIR && d.getChildren(true).get("_name").toString().contains("inv"));
+        
+        if(encModule != null)
+        {
+          
+            encModule.getDecls().add(invFun_);
+        }
+
+        IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_.clone());
+        
+        System.out.println("Invariant function has been added");
+
+        
+    }
+    
+    @Override
+    public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
+        super.caseAFieldDeclIR(node);
+        if (node.parent() instanceof AStateDeclIR){
+          System.out.println("Redirecting State Invariants...");
+        }
+        else {
+        STypeIR t = node.getType();// Invariant function
+        AFuncDeclIR invFun_ = new AFuncDeclIR();
+        invFun_.setName("inv_" + node.getName());
+        
+        AMethodTypeIR mt = new AMethodTypeIR();
+        
+      mt.setResult(new ABoolBasicTypeIR()); //set return type to bool
+        invFun_.setMethodType(mt.clone());
+      
+        
+
+        AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
+        identifierPattern.setName("");//abbreviations have no params so do not use identifier pattern
+        
+        
+        AFormalParamLocalParamIR afp = new AFormalParamLocalParamIR();
+        afp.setPattern(identifierPattern);
+        afp.setType(t.clone()); 
+        invFun_.getFormalParams().add(afp);
+      
+        
+        SExpIR expr = IsaInvExpGen.apply(node, identifierPattern, mt.clone(), isaFuncDeclIRMap);
+        
+      invFun_.setBody(expr);
+      IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_);
+        // Insert into AST
+        AModuleDeclIR encModule = node.getAncestor(AModuleDeclIR.class);
+        if(encModule != null)
+        {
+            encModule.getDecls().add(invFun_.clone());
+        }
+        System.out.println("Invariant function has been added");
+        }
+    }
+    
+   
+
+    public String GenInvTypeDefinition(String arg){
+        return "Definition\n" +
+                "   inv_" + arg+ " :: \"" + arg + " \\<Rightarrow> \\<bool>\"\n" +
+                "   where\n" +
+                "";
+    }
+
+}
+\end{lstlisting}
+
+\subsection{IsaGen} \label{IsaGenafter}
+\begin{lstlisting}
+
+/**
+ * Main facade class for VDM 2 Isabelle IR
+ *
+ * @author ldc
+ */
+public class IsaGen extends CodeGenBase {
+
+
+  public static Map<String, AFuncDeclIR> funcGenHistoryMap = new HashMap<>();;
+  public static Map<STypeIR, String> typeGenHistoryMap = new HashMap<>();;
+  
+    public IsaGen()
+    {
+        this.addInvTrueMacro();
+
+        this.getSettings().setAddStateInvToModule(false);
+        this.getSettings().setGenerateInvariants(true);
+    }
+    //TODO: Auto load files in macro directory
+    public static void addInvTrueMacro(){
+        StringBuilder sb = new StringBuilder("#macro ( invTrue $node )\n" +
+                "    definition\n" +
+                "        inv_$node.Name :: $node.Name \\<Rightarrow> \\<bool>\n" +
+                "        where\n" +
+                "        \"inv_$node.Name \\<equiv> inv_True\"\n" +
+                "#end");
+        addMacro("invTrue",new StringReader(sb.toString()));
+        Template template = new Template();
+    }
+
+    public static void addMacro(String name, StringReader reader){
+        try {
+            Template template = new Template();
+            RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
+
+            SimpleNode simpleNode = runtimeServices.parse(reader, name);
+            template.setRuntimeServices(runtimeServices);
+            template.setData(simpleNode);
+            template.initDocument();
+        } catch (ParseException e)
+        {
+            System.out.println("Failed with: " + e);
+        }
+    }
+
+    public static String vdmExp2IsaString(PExp exp) throws AnalysisException,
+            org.overture.codegen.ir.analysis.AnalysisException {
+        IsaGen ig = new IsaGen();
+        GeneratedModule r = ig.generateIsabelleSyntax(exp);
+        if (r.hasMergeErrors()) {
+            throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                    + " cannot be generated. Merge errors:"
+                    + r.getMergeErrors().toString());
+        }
+        if (r.hasUnsupportedIrNodes()) {
+            throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                    + " cannot be generated. Unsupported in IR:"
+                    + r.getUnsupportedInIr().toString());
+        }
+        if (r.hasUnsupportedTargLangNodes()) {
+            throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                    + " cannot be generated. Unsupported in TargLang:"
+                    + r.getUnsupportedInTargLang().toString());
+        }
+
+        return r.getContent();
+    }
+
+
+    /**
+     * Main entry point into the Isabelle Translator component. Takes an AST and returns corresponding Isabelle Syntax.
+     *
+     * @param statuses The IR statuses holding the nodes to be code generated.
+     * @return The generated Isabelle syntax
+     * @throws AnalysisException
+     *
+     */
+    @Override
+    protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
+      
+      
+        // Typecheck the VDMToolkit module and generate the IR
+        TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 =
+                TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
+        AModuleModules isaToolkit = listTypeCheckResult1.result.
+                stream().
+                filter(mod -> mod.getName().getName().equals("VDMToolkit")).
+                findAny().
+                orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit module"));
+        super.genIrStatus(statuses, isaToolkit);
+
+        // Get the VDMToolkit module IR
+        IRStatus<PIR> vdmToolkitIR = statuses.stream().filter(x -> x.getIrNodeName().equals("VDMToolkit")).findAny().orElseThrow(() -> new AnalysisException("Failed to find VDMToolkit IR node"));
+        AModuleDeclIR vdmToolkitModuleIR = (AModuleDeclIR) vdmToolkitIR.getIrNode();
+
+
+        GeneratedData r = new GeneratedData();
+        try {
+
+
+            // Apply transformations
+            for (IRStatus<PIR> status : statuses) {
+                if(status.getIrNodeName().equals("VDMToolkit")){
+                    System.out.println("Skipping VDMToolkit transformations");
+                } else {
+
+
+                    // transform away any recursion cycles
+                    GroupMutRecs groupMR = new GroupMutRecs();
+                    generator.applyTotalTransformation(status, groupMR);
+                    
+                    if (status.getIrNode() instanceof AModuleDeclIR) {
+                      
+                        AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
+                        
+                        // then sort remaining dependencies
+                        SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
+                        generator.applyPartialTransformation(status, sortTrans);
+                    }
+                    
+                    
+                    // Transform all token types to isa_VDMToken
+                    // Transform all nat types to isa_VDMNat
+                    // Transform all nat1 types to isa_VDMNat
+                    // Transform all int types to isa_VDMInt
+                    IsaBasicTypesConv invConv = new IsaBasicTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invConv);
+                    
+                    
+                    // Transform Seq and Set types into isa_VDMSeq and isa_VDMSet
+                    IsaTypeTypesConv invSSConv = new IsaTypeTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invSSConv);
+                    
+                    
+                    IsaInvGenTrans invTrans = new IsaInvGenTrans(getInfo(), vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, invTrans);
+                    
+                    IsaFuncDeclConv funcConv = new IsaFuncDeclConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
+                    generator.applyPartialTransformation(status, funcConv);
+                    
+                    
+                    
+                }
+            }
+
+            r.setClasses(prettyPrint(statuses));
+        } catch (org.overture.codegen.ir.analysis.AnalysisException e) {
+            throw new AnalysisException(e);
+        }
+        return r;
+
+    }
+
+    public GeneratedModule generateIsabelleSyntax(PExp exp)
+            throws AnalysisException,
+            org.overture.codegen.ir.analysis.AnalysisException {
+        IRStatus<SExpIR> status = this.generator.generateFrom(exp);
+
+        if (status.canBeGenerated()) {
+            return prettyPrint(status);
+        }
+
+        throw new org.overture.codegen.ir.analysis.AnalysisException(exp.toString()
+                + " cannot be code-generated");
+    }
+
+
+    private List<GeneratedModule> prettyPrint(List<IRStatus<PIR>> statuses)
+            throws org.overture.codegen.ir.analysis.AnalysisException {
+        // Apply merge visitor to pretty print Isabelle syntax
+      
+        IsaTranslations isa = new IsaTranslations();
+        MergeVisitor pp = isa.getMergeVisitor();
+        
+       
+        List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
+
+        for (IRStatus<PIR> status : statuses) {
+            if(status.getIrNodeName().equals("VDMToolkit")){
+                System.out.println("Skipping VDMToolkit transformations");
+            } else {
+                generated.add(prettyPrintNode(pp, status));
+            }
+
+        }
+        // Return syntax
+        return generated;
+    }
+
+    
+    //feed to velocity monster
+    private GeneratedModule prettyPrint(IRStatus<? extends INode> status)
+            throws org.overture.codegen.ir.analysis.AnalysisException {
+        // Apply merge visitor to pretty print Isabelle syntax
+        IsaTranslations isa = new IsaTranslations();
+        MergeVisitor pp = isa.getMergeVisitor();
+        return prettyPrintNode(pp, status);
+    }
+
+    private GeneratedModule prettyPrintNode(MergeVisitor pp,
+                                            IRStatus<? extends INode> status)
+            throws org.overture.codegen.ir.analysis.AnalysisException {
+        INode irClass = status.getIrNode();
+
+        StringWriter sw = new StringWriter();
+
+        irClass.apply(pp, sw);
+
+        if (pp.hasMergeErrors()) {
+            return new GeneratedModule(status.getIrNodeName(), irClass, pp.getMergeErrors(), false);
+        } else if (pp.hasUnsupportedTargLangNodes()) {
+            return new GeneratedModule(status.getIrNodeName(), new HashSet<VdmNodeInfo>(), pp.getUnsupportedInTargLang(), false);
+        } else {
+            // Code can be generated. Ideally, should format it
+            GeneratedModule generatedModule = new GeneratedModule(status.getIrNodeName(), irClass, sw.toString(), false);
+            generatedModule.setTransformationWarnings(status.getTransformationWarnings());
+            return generatedModule;
+        }
+    }
+}
+\end{lstlisting}
+
+
+
+\chapter{Testing} \label{testing}
+\begin{lstlisting}
+/**
+ * Main parameterized test class. Runs tests on modules with minimal
+ * definitions to exercise the translation with a single construct
+ * at a time.
+ *
+ * @author ldc
+ */
+@RunWith(Parameterized.class)
+public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
+
+    public IsaGenParamTest(String nameParameter, String inputParameter,
+                           String resultParameter) {
+        super(nameParameter, inputParameter, resultParameter);
+    }
+
+    private static final String UPDATE = "tests.update.isagen";
+    private static final String CGISA_ROOT = "src/test/resources/modules";
+    private static final List<String> skippedTests = Arrays.asList();//"NoParamPrePost.vdmsl",
+//        "2ParamsPrePost.vdmsl",
+//        "NoParamNoPre.vdmsl",
+//        "1ParamNoPre.vdmsl","1ParamPrePost.vdmsl",
+//        "FuncPrePost.vdmsl",
+////        "NotYetSpecified.vdmsl",
+//        "FuncPre.vdmsl",
+//        "FuncApply3Params.vdmsl",
+//        "FuncDecl2Params.vdmsl",
+//        "FuncDeclNoParam.vdmsl",
+//        "FuncDepSimple.vdmsl",
+//        "FuncApplyNoParam.vdmsl",
+//        "FuncPost.vdmsl",
+//        "FuncApply1Param.vdmsl",
+//        "FuncDecl1Param.vdmsl",
+//        "EqualsInit.vdmsl","PredicateInit.vdmsl",
+//        "IntExpVarExp.vdmsl","ExplicitInt.vdmsl","ExplicitNat.vdmsl","ExplicitNat1.vdmsl",
+//        "ExplicitReal.vdmsl","IndependentDefsOrder.vdmsl",
+//        "ImplicitNumericExp.vdmsl","VarExp.vdmsl",
+//        "SeqNat.vdmsl",
+//        "BoolType.vdmsl",
+//        "InvSet.vdmsl",
+//        "InvRecordDummyInv.vdmsl",
+//        "InvInt.vdmsl",
+//        "Rec2Fields.vdmsl","SeqInt.vdmsl","Real.vdmsl","CharSeqIntSetTuple.vdmsl","IntIntTuple.vdmsl",
+//        "MapIntChar.vdmsl",
+//        "Char.vdmsl",
+//        "Rec1Field.vdmsl",
+//        "IntCharTuple.vdmsl","Token.vdmsl",
+//        "CharNatTokenTuple.vdmsl","Rat.vdmsl","SetInt.vdmsl","Nat.vdmsl","Nat1.vdmsl",
+//        "Rec2FieldsDiffTypes.vdmsl");//,// "MapIntInt.vdmsl");
+
+    @Override
+    public CgIsaTestResult processModel(List<INode> ast) {
+        IsaGen gen = new IsaGen();
+        GeneratedData genData = null;
+
+        try {
+            genData = gen.generate(ast);
+        } catch (AnalysisException e) {
+            fail("Could not process test file " + testName);
+        }
+
+        List<AModuleModules> classes = new LinkedList<>();
+        for (INode n : ast) {
+            classes.add((AModuleModules) n);
+        }
+
+        List<GeneratedModule> result = null;
+            result = genData.getClasses();
+            if (!result.get(0).canBeGenerated()) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(result.get(0).getMergeErrors());
+                sb.append(result.get(0).getUnsupportedInIr());
+                sb.append(result.get(0).getUnsupportedInTargLang());
+                fail(sb.toString());
+            }
+
+        return CgIsaTestResult.convert(result);
+    }
+
+    @Parameters(name = "{index} : {0}")
+    public static Collection<Object[]> testData() {
+        return PathsProvider.computePaths(CGISA_ROOT);
+    }
+
+    @Override
+    public Type getResultType() {
+        Type resultType = new TypeToken<CgIsaTestResult>() {
+        }.getType();
+        return resultType;
+    }
+
+    @Override
+    protected String getUpdatePropertyString() {
+        return UPDATE;
+    }
+
+    @Override
+    public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected) {
+        assertTrue("\n --- Expected: ---\n" + expected.translation
+                + "\n --- Got: ---\n" + actual.translation, expected.compare(actual));
+        if(expected.compare(actual))
+        {
+            System.out.println("\n --- Got: ---\n" + actual.translation);
+        }
+
+    }
+
+    @Override
+    protected void checkAssumptions() {
+        Assume.assumeTrue("Test in skip list.",notSkipped());
+    }
+
+    private boolean notSkipped() {
+        return !skippedTests.contains(testName);
+    }
+}
+
+\end{lstlisting}
+
+\section{vdmsl} \label{vdmsl}
+\subsection{FuncDecl1Param.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+module A
+
+definitions
+
+functions
+
+f : nat -> nat
+f(x) == x;
+
+end A
+\end{lstlisting}
+\hfill\break
+\begin{lstlisting}
+{"translation":"theory A\n  imports VDMToolkit\n
+begin\n\n
+definition \n
+f :: \"VDMNat \\<Rightarrow> VDMNat\"\n
+where \n
+\"f x \\<equiv> x\"\n
+
+definition \n
+pre_f \:\: \"VDMNat \\<Rightarrow> \\<bool>\"\n
+where \n
+\"pre_f x \\<equiv> isa_invVDMNat x\"\n
+
+definition\n
+post_f \:\: \"VDMNat \\<Rightarrow> VDMNat \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f x RESULT \\<equiv> (isa_invVDMNat x \\<and> isa_invVDMNat RESULT)\"\n
+
+ 
+\n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{FuncApply3Params.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+module A
+
+definitions
+
+functions
+f : int * int * int -> int
+f (x,y,z) == 0;
+
+values
+x = f(1,2,3);
+
+end A
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"\ntheory A\nimports VDMToolkit\nbegin
+
+definition\nf \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> VDMInt\"\nwhere\n\"f x y z  \\<equiv> 0\"\n\nabbreviation\n x \:\: VDMInt\n where\n\"x \\<equiv> f 1 2 3\"
+
+definition\ninv_x \:\: \"\\<bool>\"\nwhere\n\"inv_x  \\<equiv> isa_invTrue x\"\n\ndefinition\n    pre_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\nwhere\n\"pre_f x y z  \\<equiv> (isa_invTrue x \\<and> (isa_invTrue y \\<and> isa_invTrue z))\"\n\ndefinition\npost_f \:\: \"VDMInt\\<Rightarrow> VDMInt\\<Rightarrow> VDMInt\\<Rightarrow> VDMInt\\<Rightarrow> \\<bool>\"\nwhere\n\"post_f x y z RESULT  \\<equiv> (isa_invTrue x \\<and> (isa_invTrue y \\<and> (isa_invTrue z \\<and> isa_invTrue RESULT)))\"\n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{NotYetSpecified.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+functions
+
+f : int -> token
+f (x) == is not yet specified
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+    f \:\: \"VDMInt
+ \\<Rightarrow> VDMToken
+\"
+    where
+    \"f x  \\<equiv> undef\"
+
+
+definition
+    pre_f \:\: \"VDMInt
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"pre_f x  \\<equiv> isa_invTrue x\"
+
+
+definition
+    post_f \:\: \"VDMInt
+ \\<Rightarrow> VDMToken
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"post_f x RESULT  \\<equiv> (isa_invTrue x \\<and> isa_invTrue RESULT)\"
+
+end","errors":false}
+\end{lstlisting}
+
+\subsection{1ParamNoPre.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+functions
+
+f (x:int) r: int
+post r = x
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\n
+
+definition \n
+pre_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
+where \n
+\"pre_f x \\<equiv> isa_invTrue x \"\n
+
+definition\n
+post_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
+where\n
+\"post_f x r \\<equiv> ((isa_invTrue x \\<and> isa_invTrue r) \\<and> (r = x))\"
+
+
+
+\n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{NoParamNoPre.vdmsl / .vmdsl.result}
+\begin{lstlisting}
+functions
+
+f () r: int
+post true
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\n
+
+definition \n
+unimplemented_pre_f \:\: \"\\<bool>\"\n
+where \n
+\"unimplemented_pre_f \\<equiv> undef\"\n
+
+definition\n
+post_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
+where\n
+\" post_f r \\<equiv> true\"\n
+
+
+
+\n\n end","errors":false}
+\end{lstlisting}
+
+\subsection{PredicateInit.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+state S of
+  x : nat
+  init s == s.x >0
+end
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record S =
+        s_x \:\: VDMNat
+
+    
+
+definition
+    inv_S \:\: \"S \\<Rightarrow> \\<bool>\"
+    where
+    \"inv_S s \\<equiv> isa_invVDMNat (s_x s)\"
+
+
+definition
+    init_S \:\: \"S \\<Rightarrow> \\<bool>\"
+    where
+    \"init_S s \\<equiv> ((s_x s) > 0)\"
+
+
+definition
+    post_init_S \:\: \"VDMNat
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"post_init_S  \\<equiv> inv_S init_S\"
+
+end","errors":false}
+\end{lstlisting}
+
+\subsection{EqualsInit.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+state S of
+  x : nat
+  init s == s = mk_S(0)
+end
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record S =
+        s_x \:\: VDMNat
+
+    
+
+definition
+    inv_S \:\: \"S \\<Rightarrow> \\<bool>\"
+    where
+    \"inv_S s \\<equiv> isa_invVDMNat (s_x s)\"
+
+
+definition
+    init_S \:\: \"S \\<Rightarrow> \\<bool>\"
+    where
+    \"init_S s \\<equiv> (s = (| x = 0 |))\"
+
+
+definition
+    post_init_S \:\: \"VDMNat
+ \\<Rightarrow> \\<bool>\"
+    where
+    \"post_init_S  \\<equiv> inv_S init_S\"
+
+end","errors":false}
+\end{lstlisting}
+
+\subsection{InvSet.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+types
+
+t = set of int
+inv t == t <> {}
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMInt VDMSet\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e (isa_invTrue t \\<and> (t <> {}))\"\n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{InvRecordDummyInv.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+types
+    A :: b : seq of char
+         c : int
+    inv a == a.c > 1
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT
+  imports VDMToolkit
+begin
+
+record A =
+        a_b \:\: char VDMSeq
+
+        a_c \:\: VDMInt
+
+    
+
+
+
+definition
+    inv_A \:\: \"A \\<Rightarrow> \\<bool>\"
+    where
+    \"inv_A a \\<equiv> ((isa_invSeqElems isa_invTrue (a_b a) \\<and> isa_invTrue (a_c a)) \\<and> ((a_c a) > 1))\"
+
+end
+
+","errors":false}
+\end{lstlisting}
+
+\subsection{Token.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+types
+
+t = token
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMToken\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e isa_invTrue t\"\n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{SeqNat.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+types
+
+t = seq of nat
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMNat VDMSeq\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e isa_invTrue t\"\n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{Rec2FieldsDiffTypes.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+types
+
+RecType :: x : char
+           y: realR
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record RecType =
+        recType_x \:\: VDMNat
+
+        recType_y \:\: VDMNat
+
+    
+
+
+
+definition
+    inv_RecType \:\: \"RecType \\<Rightarrow> \\<bool>\"
+    where
+    \"inv_RecType r \\<equiv> (isa_invVDMNat (recType_x r) \\<and> isa_invVDMNat (recType_y r))\"
+
+end","errors":false}
+\end{lstlisting}
+
+\subsection{CharNatTokenTuple.vdmsl / .vdmsl.result} \label{charnat}
+\begin{lstlisting}
+types
+t = char * nat * token
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"char * VDMNat * VDMToken\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e isa_invTrue t\"\n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{NestedVarExp.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+values
+x = {[1]};
+y = x;
+
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ x \:\: VDMNat1 VDMSeq VDMSet  where 
+\" x \\<equiv> {[1]} \" 
+\nabbreviation
+ y \:\: VDMNat1 VDMSeq VDMSet where 
+\" y \\<equiv> x \" 
+
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invSetElems isa_invSeqElems isa_invVDMNat1 x\"
+
+definition
+inv_y \:\: \"\\<bool>\" where
+\"inv_y \\<equiv> isa_invSetElems isa_invSeqElems isa_invVDMNat1 y\"
+
+end","errors":false}
+\end{lstlisting}
+
+\subsection{IndependentDefsOrder.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+values
+a = 10;
+b = 20;
+c = 30;
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ a \:\: VDMNat1 where 
+\" a \\<equiv> 10 \" 
+\n
+abbreviation
+ b \:\: VDMNat1 where 
+\" b \\<equiv> 20 \" 
+\n
+abbreviation
+ c \:\: VDMNat1 where 
+\" c \\<equiv> 30 \" 
+\n\n
+definition
+inv_a \:\: \"\\<bool>\" where
+\"inv_a \\<equiv> isa_invVDMNat1 a\"
+\n
+definition
+inv_b \:\: \"\\<bool>\" where
+\"inv_b \\<equiv> isa_invVDMNat1 b\"
+\n
+definition
+inv_c \:\: \"\\<bool>\" where
+\"inv_c \\<equiv> isa_invVDMNat1 c\"
+\n\n
+end","errors":false}
+\end{lstlisting}
+
+\subsection{ImplicitNumericExp.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+values
+x = 1;
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ x \:\: VDMNat1 where 
+\" x \\<equiv> 1 \" 
+\n
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invVDMNat1 x\"
+\n\n
+end","errors":false}
+\end{lstlisting}
+
+\subsection{ExplicitNat.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+values
+x : nat = 1;
+
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit
+begin
+
+abbreviation
+ x \:\: VDMNat where 
+\" x \\<equiv> 1 \" 
+
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invVDMNat x\"
+\n\n
+end","errors":false}
+\end{lstlisting}
+
+\subsection{BoolType.vdmsl / .vdmsl.result}
+\begin{lstlisting}
+values
+x : bool = true;
+
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\nabbreviation\n x \:\: \\<bool>\nwhere \" x \\<equiv> true \"\n
+
+definition
+inv_x \:\: \"\\<bool>\" where
+\"inv_x \\<equiv> isa_invTrue x\"
+\n\n
+
+ \n\nend","errors":false}
+\end{lstlisting}
+
+\subsection{MapIntChar.vdmsl / .vdmsl.result} \label{mapintchar}
+\begin{lstlisting}
+types
+
+t = map int to char
+\end{lstlisting}
+
+\begin{lstlisting}
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMInt \\<rightharpoonup> char\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e isa_invTrue t\"\n\nend","errors":false}
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+
+
+\chapter{Apache Velocity} \label{velocity}
+\section{Velocity Before Development} \label{Velocitybefore}
+\subsection{AFuncDeclIR}
+\begin{lstlisting}[language=Velocity]
+#macro ( transIdentifiers $node )
+#foreach($p in $node.FormalParams)
+$Isa.trans($p.pattern)##
+#end
+#end
+
+definition
+    $node.Name :: "$Isa.transTypeParams($node.MethodType.Params) \<RightArrow> $Isa.trans($node.MethodType.Result)"
+    where
+    "$node.Name #transIdentifiers($node) \<equiv> $Isa.trans($node.Body)"
+
+\end{lstlisting}
+\section{Velocity After Development} \label{Velocityafter}
+\subsection{AFuncDeclIR}
+\begin{lstlisting}[language=Java]
+#macro ( transIdentifiers $node )
+#foreach($p in $node.FormalParams)
+$Isa.trans($p.pattern)##
+#end
+#end
+
+definition
+#if ("$Isa.transTypeParams($node.MethodType.Params)" == "")
+  $node.Name :: "$Isa.trans($node.MethodType.Result)"
+#else
+  $node.Name :: "$Isa.transTypeParams($node.MethodType.Params) \<Rightarrow> $Isa.trans($node.MethodType.Result)"
+#end
+    where
+    "$node.Name #transIdentifiers($node) \<equiv> $Isa.trans($node.Body)"
+\end{lstlisting}
+
+
+\end{appendices}

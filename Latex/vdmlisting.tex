@@ -1,0 +1,142 @@
+
+
+\documentclass[times]{article}
+
+\usepackage{vdmlisting}
+\usepackage{hyperref}
+\usepackage{vdm}
+\def\vdmlisting{\texttt{vdmlisting}}
+\def\envvdmsl{\texttt{vdmsl}}
+\def\envvdmpp{\texttt{vdmpp}}
+\def\envvdmrt{\texttt{vdmrt}}
+
+\title{The \textbf{\vdmlisting} Package}
+\author{Kenneth Lausdahl\\
+Dept. of Engineering\\
+Aarhus University\\
+Denmark.\\
+\texttt{lausdahl@cs.au.dk}}
+\date{10 April 2013 \\
+Version 1.0}
+
+
+
+
+\begin{document}
+
+
+\maketitle
+\begin{abstract}
+The \vdmlisting package is a Vienna Development Method (VDM) source code printer for \LaTeX . The package uses the listings package and provides a number of new listing environments for the three VDM dialects: VDM-SL,VDM-PP and VDM-RT. If one wants to typeset VDM with a mathematical syntax instead of the ASCII syntax used here then use the \texttt{vdm} package instead.
+\end{abstract}
+
+\tableofcontents
+
+\section{Getting started}
+
+Before using the \vdmlisting package, you should be familiar with the \LaTeX typesetting system and the listings package which this packages depends upon. 
+
+\subsection{A minimal example}
+Here is a minimal file for \vdmlisting showing a VDM function:
+
+
+\begin{verbatim}
+  \documentstyle{article}
+  \usepackage{vdmlisting}
+	
+  \begin{document}
+    \begin{vdmsl}
+        add : int * int ->
+       add(a,b) == a+b;
+    \end{vdmsl}
+  \end{document}
+\end{verbatim}
+
+
+
+\subsection{Typesetting VDM with listings}
+This package defined three listing environments that can be used to typeset VDM. The environments are defined as:
+
+\begin{verbatim}
+\begin{listing-name}[options]
+  VDM specification
+\end{listing-name}
+\end{verbatim}
+
+\noindent The \texttt{options} are parsed directly to the \texttt{lstlisting} environment and could be used to e.g. set the label or caption like \texttt{label=lst:mymodel,caption=My special specification}. The \texttt{listing-name} may be any of the following:
+
+\begin{description}
+\item[\envvdmsl] The \envvdmsl environment configures the listing environment to use the VDM-SL language definition:
+
+\begin{verbatim}
+\begin{vdmsl}[label=lst:mymodule,caption=My module]
+  module MyModule
+  end MyModule
+\end{vdmsl}
+\end{verbatim}
+ it typesets as follows:
+
+\begin{vdmsl}[label=lst:mymodule,caption=My module]
+  module MyModule
+  end MyModule
+\end{vdmsl}
+
+\item[\envvdmpp] The \envvdmpp environment configures the listing environment to use the VDM-PP language definition:
+
+\begin{verbatim}
+\begin{vdmpp}[label=lst:myclass,caption=My Class]
+  class MyClass
+  end MyClass
+\end{vdmpp}
+\end{verbatim}
+ it typesets as follows:
+
+\begin{vdmpp}[label=lst:myclass,caption=My Class]
+  class MyClass
+  end MyClass
+\end{vdmpp}
+
+\item[\envvdmrt] The \envvdmrt environment configures the listing environment to use the VDM-RT language definition:
+
+\begin{verbatim}
+\begin{vdmrt}[label=lst:myclass,caption=My System]
+  system MySystem
+  end MySystem
+\end{vdmrt}
+\end{verbatim}
+ it typesets as follows:
+
+\begin{vdmrt}[label=lst:myclass,caption=My System]
+  system MySystem
+  end MySystem
+\end{vdmrt}
+
+
+\end{description}
+
+Furthermore, the environments are configured with \texttt{escapeinside=\{(*@\}\{@*)\}} enabling the command \texttt{\textbackslash vdmnotcovered\{ VDM specification\}} to be used to mark execution coverage for the VDM specification displayed.
+
+\section{Package loading}
+As usual in \LaTeX, the package is loaded by \texttt{\textbackslash usepackage[optionsi]\{vdmlisting\}},
+where [optionsi] is optional and gives a comma separated list of options:
+
+\begin{description}
+
+\item[color] This loads the \texttt{color} package and defines the \texttt{vdmnotcovered} command to use a red color.
+
+\item[notimes] This package loads the \texttt{times} package, by default, so if you do not want that to happen use this option to skip the load of \texttt{times}.
+
+\end{description}
+
+
+
+\section{Installing the \vdmlisting \ files}
+
+Place the file {\tt vdmlisting.sty} in your standard directory for \LaTeX\
+style files (your system administrator will know where this is). 
+
+
+\section{The License}
+The vdmlisting.sty and vdmlisting.tex file is copyright 2012--2013 Kenneth Lausdahl and is released under the LaTeX Project Public License 1.3 or later.
+
+\end{document}

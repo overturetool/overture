@@ -1,0 +1,167 @@
+The following section will describe the outcome of development, it will discuss mainly, but among other things: a measure of what work has been done, which constructs were translated for example; metrics of the development, how long development took, how many lines of code were written; limitations of the current state of the tool, what is missing from the tool and the things that the tool cannot achieve; which aims and objectives were achieved? which were not? As well as any new aims and objectives born from the development process; the complexity of the project.
+
+\section{Work Done}
+As mentioned, the purpose of development was to create IR transformation functionality that would facilitate translation from the IR into Isabelle for as many VDM constructs as possible. The test framework provided a large list of tests for the translation of VDM constructs to Isabelle, the test strategy was that they should all pass, there were tests for each construct, as well as tests for a combination of constructs. By the end of development every one of these tests passed successfully, each translation matched a correct manual translation for each construct test and construct combination test.
+\begin{vdmsl}[label=lst:MapIntChar.vdmsl, caption=The VDM-SL test file\, MapIntChar.vdmsl. This test file tests that the translation of a VDM-SL map\, and a combination of int and char constructs\, matches a previously manually translated correct translation\, seen below in MapIntChar.vdmsl.result. If the translation matches\, the tool successfully translates this construct.]
+types
+
+t = map int to char
+\end{vdmsl} 
+\begin{lstlisting}[language=Isabelle, label=lst:MapIntChar.vdmsl.result, caption=The MapIntChar.vdmsl.result file specifies that the below is the correct translation\, and the output of the tool applied to MapIntChar.vdmsl should match it. The file specifies that not only should the type be translated but so should also have generated invariant for it. The output\, under the word "Got:" matches\, and so this test passes\, this construct is successfully translated.]
+ --- Expected: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt \<rightharpoonup> char"
+
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ \<rightharpoonup> char"
+
+
+
+definition
+	inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+\end{lstlisting}
+
+Additional to the pre-defined tests, I created some further tests that should pass, testing things like nested collection translation and translation of multiple parameter functions. The partial list of tests and their contents is in the appendices along with their result files, in appendix \ref{testing}, section \ref{vdmsl}. The collective code is far too long to include each test.
+\begin{multicols}{2}
+\textbf{\emph{Functions}}\hfill\break
+\emph{Explicit}
+\begin{itemize}
+\item FuncApply1Param.vdmsl
+\item FuncApply3Params.vdmsl
+\item FuncApplyNoParam.vdmsl
+\item FuncDecl1Param.vdmsl
+\item FuncDecl2Params.vdmsl
+\item FuncDeclNoParam.vdmsl
+\item FuncDepSimple.vdmsl
+\item FuncPost.vdmsl
+\item FuncPre.vdmsl
+\item FuncPrePost.vdmsl
+\item NotYetSpecified.vdmsl
+\end{itemize}
+\emph{Implicit}
+\begin{itemize}
+\item 1ParamNoPre.vdmsl
+\item 1ParamPrePost.vdmsl
+\item 2ParamsPrePost.vdmsl
+\item 2ParamsNoPre.vdmsl
+\item 2ParamsNoPost.vdmsl
+\item NoParamNoPre.vdmsl
+\item NoParamPrePost.vdmsl
+\end{itemize}
+\textbf{\emph{State}}
+\begin{itemize}
+\item EqualsInit.vdmsl
+\item PredicateInit.vdmsl
+\end{itemize}
+\textbf{\emph{Types}}\hfill\break
+\emph{InvTypes}
+\begin{itemize}
+\item InvInt.vdmsl
+\item InvRecordDummyInv.vdmsl
+\item InvSet.vdmsl
+\end{itemize}
+\emph{NoInv}
+\begin{itemize}
+\item Char.vdmsl
+\item CharNatTokenTuple.vdmsl
+\item CharSeqIntSetTuple.vdmsl
+\item Int.vdmsl
+\item IntCharTuple.vdmsl
+\item IntIntTuple.vdmsl
+\item MapIntChar.vdmsl
+\item MapIntInt.vdmsl
+\item Nat.vdmsl
+\item Nat1.vdmsl
+\item Rat.vdmsl
+\item Real.vdmsl
+\item Rec1Field.vdmsl
+\item Rec2Fields.vdmsl
+\item Rec2FieldsDiffTypes.vdmsl
+\item SeqInt.vdmsl
+\item SeqNat.vdmsl
+\item \item SetInt.vdmsl
+\item Token.vdmsl
+\end{itemize}
+\textbf{\emph{Values}}
+\begin{itemize}
+\item BoolType.vdmsl
+\item ExplicitInt.vdmsl
+\item ExplicitNat.vdmsl
+\item ExplicitNat1.vdmsl
+\item ExplicitReal.vdmsl
+\item ImplicitNumericExp.vdmsl
+\item IndependentDefsOrder.vdmsl
+\item IntExpVarExp.vdmsl
+\item NestedVarExp.vdmsl
+\item VarExp.vdmsl
+\end{itemize}
+\end{multicols}
+This means that every VDM construct, with the exception of a few special cases, discussed in \ref{lott}. Basic constructs such as \lstinline[language=Isabelle]{Int}, \lstinline[language=Isabelle]{char}, \lstinline[language=Isabelle]{set}, essentially the type construct, were translated without much hassle, relative to function or invariant translations. Successful translation of basic constructs presented a nice quirk of the development process that I decided to exploit early on, if visitors and their methods are built flexibly, translations almost pass like dominoes when one of these tests pass. Translation of the basic types and their invariants means that any consequent combination of types is translated successfully. For example, successful translation of \lstinline[language=Isabelle]{Map}, \lstinline[language=Isabelle]{Int} and \lstinline[language=Isabelle]{char}, powered by a flexible visitor for generating invariants from any type, means that any combination of them also translate successfully - see \ref{mapintchar}. This feature means that translation of a most type constructs were relatively trivial after one good general transformation visitor was written. 
+
+This was not true for all types however, and more tricky transformations were required for record types due to the uniqueness of their field structure, however even then, due to the fact that a flexible invariant and type generation visitor was set up, transformation functionality was already majorly established for each field and only required some massaging. Due to the way that invariant generation visitors had been written, different invariants for different fields were generated, the difficult part here was to combine them into one invariant field.
+\begin{vdmsl}[caption=Rec2FieldsDiffTypes.vdmsl\, two fields needed to have invariant checks in the invariant but were generated in separate invariant functions.]
+types
+
+RecType :: x : char
+           y: real
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle, caption=After removing malformed individual invariants from the AST\, one was generated and combined\, no additional code had to be written to translate each field's type as this had already been done when translating type constructs.]
+  imports VDMToolkit
+begin
+
+record RecType =
+        recType_x :: char
+        recType_y :: \<real>
+    
+
+
+
+definition
+	inv_RecType :: "RecType \<Rightarrow> \<bool>"
+    where
+    "inv_RecType r \<equiv> (isa_invTrue (recType_x r) \<and> isa_invTrue (recType_y r))"
+
+end
+\end{lstlisting}
+
+The more difficult translations were for functions - invariant or otherwise. Functions have many more layers of complexity to be concerned with during translation, the tool had to worry about more than just one name, one type and keywords generated by velocity. Now there were special cases for implicit functions, multiple parameter functions, no parameter functions, functions with existing pre and post conditions with their own identifier variables. For implicit functions, the malformed function body needed to be removed from the AST leaving only correctly translated pre and post conditions. Pre conditions carried the issue of having to traverse the AST and pull out only the parameters of a function for their method type. Post conditions required more fiddling by adding the result of their parent function to their parameters. Most of all though, the most difficult thing in the development was generating expressions. Generating expressions was so sophisticated for the fact that they were needed to be generated by almost every construct in the AST, and as such, the methods involved needed to be highly flexible. Figuring out the recursion of methods such as \lstinline[language=Isabelle]{genAnd} and \lstinline[language=Isabelle]{buildInvForType} was a difficult task with so many different inputs to consider and took up the majority of my time with the project. Again though, once this infrastructure had been set up, all invariant check expression generation was successful for functions and invariants regardless of their type, structure or parameters.
+
+Briefly, translation of state declaration followed the same formula as other transformations before it, and all that needed be done was to create a new function that would hold initialisation of state. 
+
+To summarise, thoughtful generation of flexible transformations from the start, made it trivial to translate what should have been highly complex constructs later in the development, and this I think is what makes the tool successful.
+
+\subsection{Complexity of This Project}
+This project had a high complexity because of the various frameworks and environments that drive it.
+For the Java side alone, there was an AST to work with and efficiently traverse and manipulate. I had to learn the structure of the AST, the families of nodes within it and their interaction. I also had to learn the visitor design pattern and get to grips with the various adaptors, each one with its own subtlety and aberration. Familiarity with a number of frameworks was also essential, the code generation platform, overture, and the ability to write and use Apache Velocity. Before development could begin, it was necessary to be able to write, use and understand two formal specification languages, both Isabelle and VDM-SL. Finally, and perhaps most importantly, the tool required me to learn and be able to perform translation from VDM into HOL and Isabelle so that the tool produced the correct translation.
+
+\subsection{Limitations of the Tool} \label{lott}
+Due to time restrictions, a few translations are not sophisticated, the tool simply prints out the translations of the node that it can cope with, and for the most part this is acceptable, however for more intricate Isabelle, the tool might struggle to produce an error free translation. These include the template type, and the \lstinline[language=Isabelle]{ARecordPatternIR} pattern template.
+
+\section{Reflection and Development Process Metrics}
+The entire development process lasted for 46 days in total, and each day averaged successful translation of two constructs, this is because later in the project development slowed down to debug null pointer exceptions and develop utility methods for more complex function translations. To the merit of the tool, Velocity templates were kept as small as possible, at 2.6, rounded to 3, lines on average. It is worth noting that the code in the appendices and in this project were at three times their size on the first development iteration, but have been refined and cut down for efficiency. Given more time with the project, it would be rewarding to revise the code further, some control flow blocks could be transformed into more complex separate state methods and would therefore become better programs for it. In all, the functionality of the tool is split across only 14 visitor classes, development contributed 2,049 additions and 171 deletions. See https://github.com/overturetool/overture/compare/cth/isagen...SamieJim:cth/isagen, to compare the progress of development.
+
+\section{Application to POLAR}
+
+

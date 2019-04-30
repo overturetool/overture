@@ -1,0 +1,215 @@
+\documentclass[11pt,twoside]{report}
+\usepackage{vdmlisting}
+\usepackage{multicol}
+\usepackage{pict2e}
+
+\newcommand{\lbparen}{%
+  \mathopen{%
+    \sbox0{$()$}%
+    \setlength{\unitlength}{\dimexpr\ht0+\dp0}%
+    \raisebox{-\dp0}{%
+      \begin{picture}(.32,1)
+      \linethickness{\fontdimen8\textfont3}
+      \roundcap
+      \put(0,0){\raisebox{\depth}{$($}}
+      \polyline(0.32,0)(0,0)(0,1)(0.32,1)
+      \end{picture}%
+    }%
+  }%
+}
+
+\newcommand{\rbparen}{%
+  \mathclose{%
+    \sbox0{$()$}%
+    \setlength{\unitlength}{\dimexpr\ht0+\dp0}%
+    \raisebox{-\dp0}{%
+      \begin{picture}(.32,1)
+      \linethickness{\fontdimen8\textfont3}
+      \roundcap
+      \put(-0.08,0){\raisebox{\depth}{$)$}}
+      \polyline(0,0)(0.32,0)(0.32,1)(0,1)
+      \end{picture}%
+    }%
+  }%
+}
+
+
+\usepackage{color}        
+\usepackage{alltt}  
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[toc,page]{appendix}
+\usepackage{soul}
+\sethlcolor{lightgray}
+\lstdefinelanguage{Velocity}{
+  keywords={\$Isa, true, false, \#foreach, \#if, \#end, null, \#else, \#elseif, \$node, \#, \#\#},
+  keywordstyle=\color{orange}\bfseries,
+  ndkeywords={\.trans, \\\<, \>},
+  ndkeywordstyle=\color{gray}\bfseries,
+  identifierstyle=\color{gray},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{\\<}{>},
+  commentstyle=\color{blue}\ttfamily,
+}
+
+\lstdefinelanguage{Isabelle}{
+  keywords={\\\<and\>, true, false, \#foreach, \#if, \#end, null, \#else, \#elseif, \$node, type_synonym, definition, where, abbreviation, record},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={\.trans, \\\<, \>},
+  ndkeywordstyle=\color{pink}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{\\<}{>},
+  commentstyle=\color{black}\ttfamily,
+  stringstyle=\color{purple}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{orange},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+\NewDocumentCommand{\codeword}{v}{%
+\texttt{\textcolor{cyan}{#1}}%
+}
+\newcommand{\syntaxNULL}[1]{\textcolor[rgb]{0.0,0.0,0.0}{#1}}
+\newcommand{\syntaxCOMMENTA}[1]{\textcolor[rgb]{0.8,0.0,0.0}{#1}}
+\newcommand{\syntaxCOMMENTB}[1]{\textcolor[rgb]{1.0,0.5176470588235295,0.0}{#1}}
+\newcommand{\syntaxCOMMENTC}[1]{\textcolor[rgb]{0.4,0.0,0.8}{#1}}
+\newcommand{\syntaxCOMMENTD}[1]{\textcolor[rgb]{0.8,0.4,0.0}{#1}}
+\newcommand{\syntaxDIGIT}[1]{\textcolor[rgb]{1.0,0.0,0.0}{#1}}
+\newcommand{\syntaxFUNCTION}[1]{\textcolor[rgb]{0.6,0.4,1.0}{#1}}
+\newcommand{\syntaxINVALID}[1]{\colorbox[rgb]{1.0,1.0,0.8}{\textcolor[rgb]{1.0,0.0,0.4}{#1}}}
+\newcommand{\syntaxKEYWORDA}[1]{\textcolor[rgb]{0.0,0.4,0.6}{\textbf{#1}}}
+\newcommand{\syntaxKEYWORDB}[1]{\textcolor[rgb]{0.0,0.6,0.4}{\textbf{#1}}}
+\newcommand{\syntaxKEYWORDC}[1]{\textcolor[rgb]{0.0,0.6,1.0}{\textbf{#1}}}
+\newcommand{\syntaxKEYWORDD}[1]{\textcolor[rgb]{0.4,0.8,1.0}{\textbf{#1}}}
+\newcommand{\syntaxLABEL}[1]{\textcolor[rgb]{0.00784313725490196,0.7254901960784313,0.00784313725490196}{#1}}
+\newcommand{\syntaxLITERALA}[1]{\textcolor[rgb]{1.0,0.0,0.8}{#1}}
+\newcommand{\syntaxLITERALB}[1]{\textcolor[rgb]{0.8,0.0,0.8}{#1}}
+\newcommand{\syntaxLITERALC}[1]{\textcolor[rgb]{0.6,0.0,0.8}{#1}}
+\newcommand{\syntaxLITERALD}[1]{\textcolor[rgb]{0.4,0.0,0.8}{#1}}
+\newcommand{\syntaxMARKUP}[1]{\textcolor[rgb]{0.0,0.0,1.0}{#1}}
+\newcommand{\syntaxOPERATOR}[1]{\textcolor[rgb]{0.0,0.0,0.0}{\textbf{#1}}}
+
+\newcommand{\gutter}[1]{\textcolor[rgb]{0,0,0}{{|}#1}}
+\newcommand{\gutterH}[1]{\textcolor[rgb]{1,0,0}{{|}#1}}
+
+\definecolor{bgcolor}{rgb}{1.0,1.0,1.0}
+\newsavebox{\opencurlybracket}%
+\newsavebox{\closecurlybracket}%
+\newsavebox{\lessthan}%
+\newsavebox{\greaterthan}%
+\newsavebox{\dollarbox}%
+\newsavebox{\underscorebox}%
+\newsavebox{\andbox}%
+\newsavebox{\hashbox}%
+\newsavebox{\backslashbox}%
+\newsavebox{\atbox}%
+\newsavebox{\percentbox}%
+\newsavebox{\hatbox}%
+\setbox\opencurlybracket=\hbox{\verb.{.}%
+\setbox\closecurlybracket=\hbox{\verb.}.}%
+\setbox\lessthan=\hbox{\verb.<.}%
+\setbox\dollarbox=\hbox{\verb.$.}%
+\setbox\underscorebox=\hbox{\verb._.}%
+\setbox\andbox=\hbox{\verb.&.}%
+\setbox\hashbox=\hbox{\verb.#.}%
+\setbox\atbox=\hbox{\verb.@.}%
+\setbox\backslashbox=\hbox{\verb.\.}%
+\setbox\greaterthan=\hbox{\verb.>.}%
+\setbox\percentbox=\hbox{\verb.\%.}%
+\setbox\hatbox=\hbox{\verb.^.}%
+\def\urltilda{\kern -.15em\lower .7ex\hbox{\~{}}\kern .04em}
+
+\def\vdmlisting{\texttt{vdmlisting}}
+\def\envvdmsl{\texttt{vdmsl}}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage[citestyle=alphabetic,bibstyle=authortitle]{biblatex}
+\addbibresource{Dissertation.bib}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\graphicspath{ {images/} }
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{Creating a tool for the translation of VDM to Isabelle HOL}
+\fancyfoot{}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,CE]{\leftmark}
+\fancyhead[LE,LO]{Jamie Simm}
+\title{
+{Creating a tool for the translation of VDM to Isabelle HOL}\\
+{\vspace{0.5cm}}
+{\large BSc Computer Science}\\
+{\vspace{0.5cm}}
+{\large Newcastle University}\\
+{\vspace{0.5cm}}
+{\large Project Supervisor Dr Leonardo J.S Freitas}\\
+{\vspace{3cm}}
+{\small Word count : 13751 in text, 245 outside text.}\\
+{\vspace{2.5cm}}
+{\includegraphics[width=5cm, height=2cm ]{newcastle.jpg}}
+}
+\author{Jamie Simm}
+\date{2019}
+
+\begin{document}
+\maketitle
+
+\chapter*{Abstract}
+This dissertation aims to explain and describe the implementation of and need for a VDM (Vienna Development Method) to Isabelle HOL (Higher Order Logic) translation tool. The tool is applied to a VDM model of the POLAR organ persufflation machine's alarm system. As Isabelle theories can be proven mathematically by the modeller, it is hoped that this tool will be useful in the verification of software by eliminating the need for manual VDM to Isabelle translation.
+\chapter*{Declaration}
+I declare that this dissertation represents my own work except where otherwise stated. The length of this document is only so large for its code snippets and figures, the majority of which take up a considerable amount of the page. Excluding them, this document would approximately measure thirty pages in length. 
+
+\chapter*{Acknowledgments}
+I would like to thank my supervisor, Dr Leo Freitas: for guiding me toward the project of developing this tool, which I have thoroughly enjoyed; for introducing me to the world of formal specification, Isabelle and VDM; and for fostering my interest in automated translation and proof tools. Secondly, I would like to thank Casper Thule Hansen of Aarhus University, Denmark, for setting up the environment upon which this tool was built and teaching me how to write transformation visitors. I believe that this project may not have been so successful without such an essential and flexible platform for it to be built upon. 
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/Introduction}
+
+\chapter{Background}
+\input{chapters/Background}
+
+\chapter{Implementation}
+\input{chapters/Implementation}
+
+\chapter{Results}
+\input{chapters/Results}
+
+\chapter{Conclusion}
+\input{chapters/Conclusion}
+\printbibliography
+
+\input{chapters/Appendices}
+
+\end{document}

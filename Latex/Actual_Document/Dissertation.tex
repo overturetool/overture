@@ -1,0 +1,52 @@
+\documentclass[12pt,twoside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\graphicspath{ {images/} }
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{Thesis Title}
+\fancyfoot{}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,CE]{Section \thechapter}
+\fancyfoot[CO,RE]{Thomas Sturgeon}
+
+\title{
+{Using Machine Learning to Aid Programmability in Systems of Self-Assembly}\\
+{\vspace{0.5cm}}
+{\large Newcastle University}\\
+{\vspace{2.5cm}}
+{\includegraphics[width=5cm, height=2cm ]{newcastle.jpg}}
+}
+\author{Thomas Sturgeon}
+\date{2019}
+
+\begin{document}
+\maketitle
+
+\chapter*{Abstract}
+ 
+\chapter*{Dedication}
+ 
+\chapter*{Declaration}
+ 
+\chapter*{Acknowledgements}
+ 
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/Introduction}
+
+\chapter{Section 2}
+\input{chapters/Section2}
+
+\chapter{Section 3}
+\input{chapters/Section3}
+
+\chapter{Conclusion}
+\input{chapters/Conclusion}
+
+
+\end{document}

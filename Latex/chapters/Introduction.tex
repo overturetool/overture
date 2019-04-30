@@ -1,0 +1,23 @@
+\subsection{The POLAR machine and persufflation}
+Organ preservation is a vital factor in the success and availability of allotransplantation\footnote{The transplantation of organs, tissue, or cells from a genetically distinct individual of the same species.} as a treatment for illness, conventional methods like Static Cold Storage (SCS) have a number of issues - advancements in this field could serve to transform medicine\parencite{Giwa2017}. One such issue is that SCS is incapable of sufficient oxygen delivery during preservation\parencite{Pappas2005}. The POLAR project aims to address this issue by designing a machine to automate another method of organ preservation, persufflation, which gives a far higher oxygen supply per gram of tissue. 
+
+\subsection{Verifying the correctness of the machine to ensure reliability}
+To achieve verification of the system we apply formal modelling techniques to its specification in order to derive an unambiguous representation of its components and its operation. For POLAR, this has been done by translating the machine's various alarm conditions into a VDM model. VDM is a formal modelling language, it allows the modeller to abstract the system into a mathematical representation, its syntax rules and semantics are so precisely defined that there is no room for disagreement about the model’s properties. This means that the POLAR VDM model can be analysed using mathematical proof. In principal we can: prove that a program, in this case the alarm system, is correct with respect to a specification and prove that the POLAR VDM model embodies a property such as safety - critical in a medical system. While VDM has tools for generating proof obligations, it has no support for mathematical proof of those obligations.
+
+One way to prove a VDM model is to translate it into HOL\footnote{Higher order logic, essentially higher-order simple predicate logic, quantifies over an arbitrary number of nested sets i.e. where first-order logic quantifies only variables that range over individuals and second-order logic quantifies variables that range over both individuals and sets; third-order also quantifies over sets of sets etc. Higher Order Logic is a union of first, second third up to any number of nested sets.} so that it can then be proven using the proof assistant Isabelle, this is how the POLAR model will be proven. Ordinarily, translation is done manually, this can be an arduous process for the modeller/prover who should only be concerned with the proof of the model rather than the process of translation. 
+
+Currently, there exists an effort to create a tool that will automate translation so that the modeller/prover can focus their efforts on proof of the system, as this is the pertinent part of the verification process\parencite{VDM2ISAGit}. In its current state at the time of beginning this dissertation the tool does not have the functionality to translate the POLAR model and can only translate integer basic types as well as arithmetic and predicate. With more work, applying the automated translation tool to the POLAR model could save a considerable amount of time in its verification, work on proving the systems alarm system mathematically could begin sooner and therefore be more thorough. Human errors made during manual translation would be removed, reducing the likelihood that the modeller wastes time proving an incorrect translation.
+
+\section{Aims and Objectives}
+\subsection{Aim}
+The aim of this dissertation is to extend the current VDM to Isabelle translation tool so that it can translate more components of the POLAR model.
+\subsection{Objectives}
+\begin{itemize}
+	\item Understand the Java visitor design pattern.
+	\item Understand the existing tool architecture.
+	\item Create Velocity templates and Java visitors for more VDM constructs.
+	\item Apply the translator to the POLAR model.
+\end{itemize}
+
+\section{Document structure}
+In the following sections, I will provide background by explaining and discussing the area/domain that the project affects and explores as well as clarifying existing works on the translation tool. In the following section, I will present the implementation of my contribution to the tool with a description of implementation issues and its architecture. Before concluding this dissertation I will apply the tool to the POLAR example and review my time working on the project.
