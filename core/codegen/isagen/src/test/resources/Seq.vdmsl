@@ -1,0 +1,228 @@
+/*
+   A module that specifies and defines general purpose functions over sequences.
+
+   All functions are explicit and executable. Where a non-executable condition adds value, it
+   is included as a comment.
+*/
+module Seq
+imports from Numeric all
+exports functions sum: seq of real +> real
+                  prod: seq of real +> real
+                  min: seq1 of real +> real
+                  max: seq1 of real +> real
+                  inSeq[@a]: @a * seq of @a +> bool
+                  indexOf[@a]: @a * seq1 of @a +> nat1
+                  indexOfSeq[@a]: seq1 of @a * seq1 of @a +> nat1
+                  indexOfSeqOpt[@a]: seq1 of @a * seq1 of @a +> [nat1]
+                  numOccurs[@a]: @a * seq of @a +> nat
+                  permutation[@a]: seq of @a * seq of @a +> bool
+                  preSeq[@a]: seq of @a * seq of @a +> bool
+                  postSeq[@a]: seq of @a * seq of @a +> bool
+                  subSeq[@a]: seq of @a * seq of @a +> bool
+                  replicate[@a]: nat * @a +> seq of @a
+                  padLeft[@a]: seq of @a * @a * nat +> seq of @a
+                  padRight[@a]: seq of @a * @a * nat +> seq of @a
+                  padCentre[@a]: seq of @a * @a * nat +> seq of @a
+                  dropWhile[@a]: (@a +> bool) * seq of @a +> seq of @a
+                  xform[@a,@b]: (@a +> @b) * seq of @a +> seq of @b
+                  fold[@a]: (@a * @a +> @a) * @a * seq of @a +> @a
+                  fold1[@a]: (@a * @a +> @a) * seq1 of @a +> @a
+                  zip[@a,@b]: seq of @a * seq of @b +> seq of (@a * @b)
+                  unzip[@a,@b]: seq of (@a * @b) +> seq of @a * seq of @b
+                  isDistinct[@a]: seq of @a +> bool
+                  app[@a]: seq of @a * seq of @a +> seq of @a
+                  setOf[@a]: seq of @a +> set of @a
+                  format[@a]: (@a +> seq of char) * seq of char * seq of @a +> seq of char
+
+definitions
+
+functions
+
+  -- The sum of a sequence of numerics.
+  sum: seq of real +> real
+  sum(s) == fold[real](Numeric`add,0,s);
+
+  -- The product of a sequence of numerics.
+  prod: seq of real +> real
+  prod(s) == fold[real](Numeric`mult,1,s);
+
+  -- The minimum of a sequence of numerics.
+  min: seq1 of real +> real
+  min(s) == fold1[real](Numeric`min,s)
+  post RESULT in set elems s and forall e in set elems s & RESULT <= e;
+
+  -- The maximum of a sequence of numerics.
+  max: seq1 of real +> real
+  max(s) == fold1[real](Numeric`max,s)
+  post RESULT in set elems s and forall e in set elems s & RESULT >= e;
+
+  -- Does an element appear in a sequence?
+  inSeq[@a]: @a * seq of @a +> bool
+  inSeq(e,s) == e in set elems s;
+
+  -- The position an item appears in a sequence?
+  indexOf[@a]: @a * seq1 of @a +> nat1
+  indexOf(e,s) == cases s:
+                    [-]    -> 1,
+                    [f]^ss -> if e=f then 1 else 1 + indexOf[@a](e,ss)
+                  end
+  pre inSeq[@a](e,s)
+  measure size0;
+
+  -- The position a subsequence appears in a sequence.
+  indexOfSeq[@a]: seq1 of @a * seq1 of @a +> nat1
+  indexOfSeq(r,s) == if preSeq[@a](r,s)
+                     then 1
+                     else 1 + indexOfSeq[@a](r, tl s)
+  pre subSeq[@a](r,s)
+  measure size3;
+
+  -- The position a subsequence appears in a sequence?
+  indexOfSeqOpt[@a]: seq1 of @a * seq1 of @a +> [nat1]
+  indexOfSeqOpt(r,s) == if subSeq[@a](r,s) then indexOfSeq[@a](r, s) else nil;
+
+  -- The number of times an element appears in a sequence.
+  numOccurs[@a]: @a * seq of @a +> nat
+  numOccurs(e,sq) == len [ 0 | i in seq sq & i = e ];
+
+  -- Is one sequence a permutation of another?
+  permutation[@a]: seq of @a * seq of @a +> bool
+  permutation(sq1,sq2) ==
+    len sq1 = len sq2 and
+    forall x in seq sq1 & numOccurs[@a](x,sq1) = numOccurs[@a](x,sq2);
+
+  -- Is one sequence a prefix of another?
+  preSeq[@a]: seq of @a * seq of @a +> bool
+  preSeq(pres,full) == pres = full(1,...,len pres);
+
+  -- Is one sequence a suffix of another?
+  postSeq[@a]: seq of @a * seq of @a +> bool
+  postSeq(posts,full) == preSeq[@a](reverse posts, reverse full);
+
+  -- Is one sequence a subsequence of another sequence?
+  subSeq[@a]: seq of @a * seq of @a +> bool
+  subSeq(sub,full) == sub = [] or (exists i,j in set inds full & sub = full(i,...,j));
+
+  -- Create a sequence of identical elements.
+  replicate[@a]: nat * @a +> seq of @a
+  replicate(n,x) == [ x | i in set {1,...,n} ]
+  post len RESULT = n and forall y in seq RESULT & y = x;
+
+  -- Pad a sequence on the left with a given item up to a specified length.
+  padLeft[@a]: seq of @a * @a * nat +> seq of @a
+  padLeft(sq,x,n) == replicate[@a](n-len sq, x) ^ sq
+  pre n >= len sq
+  post len RESULT = n and postSeq[@a](sq, RESULT);
+
+  -- Pad a sequence on the right with a given item up to a specified length.
+  padRight[@a]: seq of @a * @a * nat +> seq of @a
+  padRight(sq,x,n) == sq ^ replicate[@a](n-len sq, x)
+  pre n >= len sq
+  post len RESULT = n and preSeq[@a](sq, RESULT);
+
+  -- Pad a sequence with a given item such that it is centred in a specified length.
+  -- If padded by an odd number, add the extra item on the right.
+  padCentre[@a]: seq of @a * @a * nat +> seq of @a
+  padCentre(sq,x,n) == let space = if n <= len sq then 0 else n - len sq
+                       in padRight[@a](padLeft[@a](sq,x,len sq + (space div 2)),x,n);
+
+--  trim[@a]: seq of @a * (@a +> bool) +> seq of @a
+--  trim(s, p) == trimpre(reverse(trimpre(reverse s, p)), p);
+--  post exists s1,s2: seq of char & s = s1 ^ RESULT ^ s2 and isDigits(s1) and isDigits(s2);
+
+  -- Drop items from a sequence while a predicate is true.
+  dropWhile[@a]: (@a +> bool) * seq of @a +> seq of @a
+  dropWhile(p, s) == cases s:
+                       []      -> [],
+                       [x] ^ t -> if p(x) then dropWhile[@a](p, t) else s
+                     end
+  post postSeq[@a](RESULT, s) and
+       (RESULT = [] or not p(RESULT(1))) and
+       forall i in set {1,...,(len s - len RESULT)} & p(s(i))
+  measure size5;
+
+  -- Apply a function to all elements of a sequence.
+  xform[@a,@b]: (@a+>@b) * seq of @a +> seq of @b
+  xform(f,s) == [ f(x) | x in seq s ]
+  post len RESULT = len s and
+       (forall i in set inds s & RESULT(i) = f(s(i)));
+
+  -- Fold (iterate, accumulate, reduce) a binary function over a sequence.
+  -- The function is assumed to be associative and have an identity element.
+  fold[@a]: (@a * @a +> @a) * @a * seq of @a +> @a
+  fold(f, e, s) == cases s:
+                     []    -> e,
+                     [x]   -> x,
+                     s1^s2 -> f(fold[@a](f,e,s1), fold[@a](f,e,s2))
+                   end
+  --pre (forall x:@a & f(x,e) = x and f(e,x) = x)
+  --and forall x,y,z:@a & f(x,f(y,z)) = f(f(x,y),z)
+  measure size2;
+
+  -- Fold (iterate, accumulate, reduce) a binary function over a non-empty sequence.
+  -- The function is assumed to be associative.
+  fold1[@a]: (@a * @a +> @a) * seq1 of @a +> @a
+  fold1(f, s) == cases s:
+                   [e]   -> e,
+                   s1^s2 -> f(fold1[@a](f,s1), fold1[@a](f,s2))
+                 end
+  --pre forall x,y,z:@a & f(x,f(y,z)) = f(f(x,y),z)
+  measure size1;
+
+  -- Pair the corresponding elements of two lists of equal length.
+  zip[@a,@b]: seq of @a * seq of @b +> seq of (@a * @b)
+  zip(s,t) == [ mk_(s(i),t(i)) | i in set inds s ]
+  pre len s = len t
+  post len RESULT = len s and mk_(s,t) = unzip[@a,@b](RESULT);
+
+  -- Split a list of pairs into a list of firsts and a list of seconds.
+  unzip[@a,@b]: seq of (@a * @b) +> seq of @a * seq of @b
+  unzip(s) == mk_([ x.#1 | x in seq s], [ x.#2 | x in seq s])
+  post let mk_(t,u) = RESULT in len t = len s and len u = len s;
+  -- and s = zip[@a,@b](RESULT.#1,RESULT.#2);
+
+  -- Are the elements of a list distinct (no duplicates).
+  isDistinct[@a]: seq of @a +> bool
+  isDistinct(s) == len s = card elems s;
+
+  -- Create a string presentation of a set.
+  format[@a]: (@a +> seq of char) * seq of char * seq of @a +> seq of char
+  format(f,sep,s) == cases s:
+                       []        -> "",
+                       [x]       -> f(x),
+                       t ^ u -> format[@a](f,sep,t) ^ sep ^ format[@a](f,sep,u)
+                     end
+  measure size4;
+
+  -- The following functions wrap primitives for convenience, to allow them for example to
+  -- serve as function arguments.
+
+  -- Concatenation of two sequences.
+  app[@a]: seq of @a * seq of @a +> seq of @a
+  app(m,n) == m^n;
+
+  -- Set of sequence elements.
+  setOf[@a]: seq of @a +> set of @a
+  setOf(s) == elems(s);
+
+  -- Measure functions.
+
+  size0[@a]: @a * seq1 of @a +> nat
+  size0(-, s) == len s;
+
+  size1[@a]: (@a * @a +> @a) * seq1 of @a +> nat
+  size1(-, s) == len s;
+
+  size2[@a]: (@a * @a +> @a) * @a * seq of @a +> nat
+  size2(-, -, s) == len s;
+
+  size3[@a]: seq1 of @a * seq1 of @a +> nat
+  size3(-, s) == len s;
+
+  size4[@a]: (@a +> seq of char) * seq of char * seq of @a +> nat
+  size4(-, -, s) == len s;
+  
+  size5[@a]: (@a +> bool) * seq of @a +> nat
+  size5(-, s) == len s;
+
+end Seq

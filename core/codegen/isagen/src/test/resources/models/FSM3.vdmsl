@@ -1,0 +1,468 @@
+module FSM3
+exports
+	types
+		struct Command
+		struct Event
+		struct State
+
+		struct Packet_Data 
+		struct Address
+		struct Packet 
+		struct Bytes
+		struct Count
+		struct Flag
+		
+		struct CandoFSM
+		struct FSM3
+		
+	
+	values
+		--test1: bool
+		--test2: bool
+		--test3: bool
+		--test4: bool
+		test5: bool
+definitions 
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- Basic types 
+------------------------------------------------------------------------------------------------------------------------------------
+types
+	--@doc code generator doesn't like case sensitive differences in quote types (e.g. <A> x <a>). This is allowed in VDM, but in Java,
+	--	   the code generator has to taken into account the underlying OS file system restrictions. For Linux this is okay, but for Macs,
+	--		 the file system is not usually case-sensitive to file names, which generate conflicts. These names are better normalised anyhow.
+	--
+	--@TODO _C, _E, _S for command, event, state.
+	Command = <LED_ON_C>| <LED_OFF_C>| <READ_LED_C>| <SET_BRE_C>| <SET_VLED_C>| <READ_DIAG_C>| <PROG_DELAY_DIAG_C>| <PROG_OP_MEM_C>| <LED_ALL_OFF_C>| <RUN_MEM_C>|
+						<READ_LFP_C>| <PROG_CLK_CNT_C>| <RESET_ANA_C>| <SET_ANA_C>| <CONFIG_REC_C>| <PROG_ID_C>| <DUMMY_C>; 
+	
+	-- columns
+	Event =  <CONT> | <ERROR> | <SPI_TX_FINISH> | <SPI_RX_FINISH> | <LED_ON_E> | <SET_VLED_E> | <SET_BRE_E> | <LED_ALL_OFF_E> | 
+					 <PROG_DELAY_DIAG_E> | <PROG_OP_MEM_E> | <RUN_MEM_E> | <PROG_CLK_CNT_E> | <RESET_ANA_E> | <SET_ANA_E> | <CONFIG_REC_E> | 
+					 <PROG_ID_E> | <DUMMY_E> | <READ_LED_E> | <READ_DIAG_E> | <READ_LFP_E> | <GET_CMD_E>;
+
+	-- rows
+	State = <start> | <get_cmd> | <LED_off> | <send_packet_3> | <LED_on> | <set_vLED> | <send_packet_6> | <set_sDac> | <set_bre> | 
+					<send_packet_9> | <set_dDac> | <LED_all_off> | <prog_delay_diag> | <prog_op_mem_1> | <send_packet_14> | <prog_op_mem_2> | 
+					<run_mem> | <prog_clk_cnt> | <reset_ana> | <set_ana> | <config_rec> | <prog_ID> | <dummy> | <read_LED> | <send_packet_24> | 
+					<read_DIAG> | <read_LFP> | <receive_packet_27> | <receive_packet_28> | <receive_packet_29> | <receive_packet_30> | <error_> | 
+					<chip_rst> | <cmd_finish>;
+
+values
+	ALL_STATES: set1 of State = 
+				 {<start> , 						  --0;
+				 <get_cmd> , 						  --1;
+				 <LED_off> ,						  --2;
+				 <send_packet_3> ,        --3;
+				 <LED_on> ,               --4;
+				 <set_vLED> ,             --5;
+				 <send_packet_6> ,        --6; 
+				 <set_sDac> ,             --7;
+				 <set_bre> ,              --8;
+				 <send_packet_9> ,        --9;
+				 <set_dDac> ,            --10;
+				 <LED_all_off> ,         --11;
+				 <prog_delay_diag> ,     --12;
+				 <prog_op_mem_1> ,       --13;
+				 <send_packet_14> ,      --14;
+				 <prog_op_mem_2> ,       --15;
+				 <run_mem> ,             --16;
+				 <prog_clk_cnt> ,        --17;
+				 <reset_ana> ,           --18;
+				 <set_ana> ,             --19;
+				 <config_rec> ,          --20;
+				 <prog_ID> ,             --21;
+				 <dummy> ,               --22;
+				 <read_LED> ,            --23;
+				 <send_packet_24> ,      --24;
+				 <read_DIAG> ,           --25;
+				 <read_LFP> , 					 --26;
+				 <receive_packet_27> , 	 --27;
+				 <receive_packet_28> , 	 --28;
+				 <receive_packet_29> , 	 --29;
+				 <receive_packet_30> , 	 --30;
+				 <error_> , 						 --31;
+					<chip_rst> , 					 --32;
+					<cmd_finish>					 --33;
+				 };
+					
+	ALL_EVENTS: set1 of Event =
+				{<CONT> , <ERROR> , <SPI_TX_FINISH> , <SPI_RX_FINISH> , <LED_ON_E> , <SET_VLED_E> , <SET_BRE_E> , <LED_ALL_OFF_E> , 
+					 <PROG_DELAY_DIAG_E> , <PROG_OP_MEM_E> , <RUN_MEM_E> , <PROG_CLK_CNT_E> , <RESET_ANA_E> , <SET_ANA_E> , <CONFIG_REC_E> , 
+					 <PROG_ID_E> , <DUMMY_E> , <READ_LED_E> , <READ_DIAG_E> , <READ_LFP_E> , <GET_CMD_E>
+				};
+					
+  send_states: set1 of State = {<send_packet_3>, <send_packet_6>, <send_packet_9>, <send_packet_14>, <send_packet_24>};
+  
+  receive_states: set1 of State = {<receive_packet_27>, <receive_packet_28>, <receive_packet_29>, <receive_packet_30>};
+  
+  packet_creator_states: set1 of State = 
+		{ <LED_off>, 				 --2;
+			<LED_on>,					 --4;
+			<set_vLED>,			   --5;
+			<set_sDac>,				 --7;
+			<set_bre>, 				 --8;
+			<set_dDac> ,      --10;
+			<LED_all_off>,		--11;
+			<prog_delay_diag>,--12;
+			<prog_op_mem_1>, 	--13;
+			<prog_op_mem_2>, 	--15;
+			<run_mem>, 				--16;
+			<prog_clk_cnt>,		--17;
+			<reset_ana>, 		  --18;
+			<set_ana>, 				--19;
+			<config_rec>,		  --20;
+			<prog_ID>, 				--21;
+			<dummy>, 					--22;
+			<read_LED>, 			--23;
+			<read_DIAG>,			--25;
+			<read_LFP>			  --26;
+		};
+	
+	stage_one_packet_creator_states: set1 of State =
+		{ <LED_off>, 				 --2;
+			<LED_on>,					 --4;
+			<set_vLED>,			   --5;
+			<set_bre>, 				 --8;
+			<LED_all_off>,		--11;
+			<prog_delay_diag>,--12;
+			<prog_op_mem_1>, 	--13;
+			<run_mem>, 				--16;
+			<prog_clk_cnt>,		--17;
+			<reset_ana>, 		  --18;
+			<set_ana>, 				--19;
+			<config_rec>,		  --20;
+			<prog_ID>, 				--21;
+			<dummy>, 					--22;
+			<read_LED>, 			--23;
+			<read_DIAG>,			--25;
+			<read_LFP>			  --26;
+		};
+		
+	stage_two_packet_creator_states: set1 of State =
+		{ <set_sDac>,				 --7;
+			<set_dDac> ,      --10;
+			<prog_op_mem_2> 	--15;
+		};
+		
+	error_states: set1 of State =
+		{<chip_rst>	,			--32;
+		 <cmd_finish> 		--33;
+		};
+			
+------------------------------------------------------------------------------------------------------------------------------------
+-- Packet types (created as described in v2)
+------------------------------------------------------------------------------------------------------------------------------------
+types
+	Packet_Data = <LED_addr> | <NO_LED_ADDR> | <DAC_value> | <diag_delay> | <mem_len> | <constructed_data> | <fs_ratio_to_clk> | <rec_config> ;
+	
+	Address = <Optrode_addr> ;
+	
+	Packet :: addr : [Address]
+						cmd  : [Command]
+						data : [Packet_Data];
+	
+	Flag = bool;
+	
+	Bytes = nat					-- Bytes sent or received
+		inv b == b <= PACKET_LENGTH;
+	
+	Count = nat        -- counter for error
+		inv t == t <= MAX_COUNT; 
+		
+values
+	PACKET_LENGTH 	:nat1 	=		3;
+	MAX_COUNT				:nat1		= 	2;
+------------------------------------------------------------------------------------------------------------------------------------
+-- FSM and map (sub-)types 
+------------------------------------------------------------------------------------------------------------------------------------
+types
+	StateMap = map State to State
+	inv s == 
+		--@doc states cannot map to the initial state "Start"
+		not <start> in set rng s
+		and
+		--@doc start state can only map to <get_cmd> or <error> 
+		(<start> in set dom s => s(<start>) in set { <get_cmd>, <error_> })
+		and
+		--@doc error state can only go to error_, get_cmd, or chip_rst
+		(<error_> in set dom s => s(<error_>) in set { <get_cmd>, <chip_rst>, <error_>})
+		and
+		--@doc cmd_finish can only lead to error
+		(<cmd_finish> in set dom s => s(<cmd_finish>) = <error_>) 
+		and
+		--@doc chip_reset can only lead to error
+		(<chip_rst> in set dom s => s(<chip_rst>) = <error_>) 
+		and
+		--@doc packet_creator_states can only go to send packet states or error, prevents packets being overwritten
+		(forall p in set packet_creator_states & p in set dom s => s(p) in set ({<error_>} union send_states))
+		and
+		--receive states map to either a stage 2 packet creator state or the finish state
+		 (forall r in set receive_states & r in set dom s => s(r) in set {<cmd_finish>, r, <error_>} union stage_two_packet_creator_states)
+		
+		--ERRONOUS INVARIANTS - don't contain errors but throw them for initial FSM (commented out)
+		and
+		--@doc get_cmd maps to either error or a stage 1 packet state
+		--@doc get_cmd cannot lead to either send or receive states or stage 2 packet states
+		--@doc simplified invariatn 
+		--(<get_cmd> in set dom s => 
+		--		s(<get_cmd>) in set ({<error_>} union stage_one_packet_creator_states) 
+		--												\ 
+		--												(send_states union receive_states union stage_two_packet_creator_states)
+		(<get_cmd> in set dom s => 
+				s(<get_cmd>) in set ({<error_>} union stage_one_packet_creator_states) 
+		)
+		; 
+
+	--@doc transmission map ensures that send_states are mapped only to receive_states, if any 
+	TXMap = StateMap
+	inv m == 
+		dom m subset send_states 
+		and
+		rng m subset receive_states;
+		
+	--@doc identity state map
+	IdMap = StateMap
+	inv m ==
+		forall s in set dom m & m(s) = s;
+	
+	--@doc maps every state to <error_>	
+	ErrorMap = StateMap
+	inv em ==
+		forall s in set dom em & em(s) = <error_>;
+	
+	--@doc maps every packet creator state to a send state so no packets are overwritten
+	PacketMap = StateMap
+	inv pm ==
+		dom pm subset packet_creator_states
+		and
+		rng pm subset send_states;
+	
+	--@doc maps every receive state maps to a stage 2 packet state or the command finish state
+	ReceiveMap = StateMap
+	inv rm ==
+		dom rm subset receive_states
+		and
+		rng rm subset stage_two_packet_creator_states union {<cmd_finish>};
+		
+	--@doc total statemap (or FSM row) must contain all states in the domain of the set
+	TStateMap = StateMap
+	inv sm == dom sm = ALL_STATES; 
+	
+	--@doc FSM is a map of event to map of state to state that can be partial
+	FSM = map Event to StateMap;
+	
+	--@doc FSM that is total on events and state map for every event 
+	TFSM = FSM 
+	inv fsm == 
+		dom fsm = ALL_EVENTS
+		and
+		forall e in set dom fsm & is_TStateMap(fsm(e));
+	
+	--@doc Cando FSM is total on events and states
+	CandoFSM = TFSM 
+	inv fsm ==
+		--@doc check that all send states map to receive state if event = CONT
+		--@doc that is, the StateMap from <CONT> event over send_states is a transmission map
+		--@doc if this wasn't total map, then we would need
+		--		 <CONT> in set dom fsm => is_TXMap(send_states <: fsm(<CONT>))
+		is_TXMap(send_states <: fsm(<CONT>))
+		and
+		--@doc check all send states map to themselves if event = SPI_TX_FINISH
+		is_IdMap(send_states <: fsm(<SPI_TX_FINISH>))
+		and
+		--@doc check all receive states map to themselves if event = SPI_RX_FINISH
+		is_IdMap(receive_states <: fsm(<SPI_RX_FINISH>))
+		and
+		--@doc on packet creation states, CONT leads to a send state
+		--previously: 
+		--rng (packet_creator_states<:fsm(<CONT>)) subset send_states
+		is_PacketMap(packet_creator_states <: fsm(<CONT>))
+		and
+			--@todo? should all others be error; no. Only those two.
+			is_ErrorMap(error_states <: (packet_creator_states<-:fsm(<CONT>)))
+			-- is this not the same as is_ErrorMap({cmd_finish>, <chip_rst>} <: fsm(<CONT>))?
+			and	
+		--@doc on CONT event, start state leads to get_cmd or error elsewhere
+		fsm(<CONT>)(<start>) = <get_cmd>
+		and
+		(forall x in set dom ({<CONT>}<-:fsm) & fsm(x)(<start>) = <error_>)
+		and
+		--@doc CONT/GET_CMD_E error behaviour; @todo missing other states?
+		fsm(<CONT>)(<error_>) = <chip_rst> 
+		and 
+		fsm(<GET_CMD_E>)(<error_>) = <get_cmd>
+		and
+		--is_IdMap(({<CONT>,<GET_CMD_E>}<-:fsm)); this is not quite right, needs the forall
+		--If I wanted is_IdMap, I would have to matrix transpose to make x a row rather than a column
+		(forall x in set dom ({<CONT>,<GET_CMD_E>}<-:fsm) & fsm(x)(<error_>) = <error_>)
+		and
+		--@doc receive states map to cmd_finish or to a stage 2 packet state under CONT
+		is_ReceiveMap(receive_states <: fsm(<CONT>))
+		;
+
+functions
+
+	--@doc conver partial to total CandoFSM 
+	--		 all undefined state transitions set to <error_>
+	sm2tsm_VDM: StateMap -> TStateMap 
+	sm2tsm_VDM(sm) == 
+		--@todo/codegen/FSM3 CG-Error: ATypeMultipleBind
+		--	sm munion { s |-> <error_> | s : State & not s in set dom sm }; 
+		sm munion { s |-> <error_> | s in set ALL_STATES \ dom sm }; 
+		
+	--@doc using munion to encode the fact the totalisation does not mess with the original fsm
+	fsm2tfsm_VDM: FSM -> TFSM
+	fsm2tfsm_VDM(fsm) == 
+		{ e |-> sm2tsm(fsm(e)) | e in set dom fsm } 
+			munion 
+		{ e |-> sm2tsm({|->}) | e in set ALL_EVENTS \ dom fsm };		
+		
+	--@doc in Isabelle, we defined this the other way round: make everywone sm2trm({|->}) then update the dom fsm with fsm(e)
+	--		 this is necessary because there is no comprehension in Isabelle, and all maps are total. So we make it total on empty
+	--		 for all events, then update it on events of the given FSM. 
+	sm2tsm_VDM2: StateMap -> TStateMap
+	sm2tsm_VDM2(sm) ==
+		{ s |-> <error_> | s in set ALL_STATES }
+		++
+		{ s |-> sm(s) | s in set dom sm };
+
+	fsm2tfsm_VDM2: FSM -> TFSM
+	fsm2tfsm_VDM2(fsm) == 
+		{ e |-> sm2tsm({|->}) | e in set ALL_EVENTS }
+		++
+		{ e |-> sm2tsm(fsm(e)) | e in set dom fsm }; 
+		
+	--@doc because of the various issues with lemmas and complexity, kept it dead simple (i.e. no extra operators) and closer 
+	--		 to how Isabelle likes it but without compromising on meaning, albeit on clarity perhaps.
+	sm2tsm: StateMap -> TStateMap
+	sm2tsm(sm) == 
+		{ s |-> if s in set dom sm then sm(s) else <error_> | s in set ALL_STATES };
+
+	fsm2tfsm: FSM -> TFSM
+	fsm2tfsm(fsm) == 
+		{ e |-> if e in set dom fsm then sm2tsm(fsm(e)) else sm2tsm({|->}) | e in set ALL_EVENTS };
+
+values
+	--@doc codegen doesn't like these function equalities
+	--test1: bool = sm2tsm_VDM2   = sm2tsm_VDM;
+	--test2: bool = sm2tsm        = sm2tsm_VDM;
+	--test3: bool = fsm2tfsm_VDM2 = fsm2tfsm_VDM;
+	--test4: bool = fsm2tfsm      = fsm2tfsm_VDM;
+	test5: bool = ({<SPI_TX_FINISH>,<PROG_OP_MEM_E>}<-:recommended_fsm) = ({<SPI_TX_FINISH>,<PROG_OP_MEM_E>}<-:original_initial_fsm)
+
+values
+	--recommended_fsm is different to initial_fsm as it includes corrections we believe are needed from the initial fsm we were given in the code
+	-- the changes are highlighted with @TODO marker
+  recommended_fsm: FSM = { 				 
+											<CONT>  |-> { 		-- event 0 = CONT
+															<start> 						|-> <get_cmd>,
+															<get_cmd> 					|-> <LED_off>,
+															<LED_off> 					|-> <send_packet_3>,
+															<send_packet_3> 		|-> <receive_packet_27>,
+															<LED_on> 						|-> <send_packet_3>,
+															<set_vLED> 					|-> <send_packet_6>,
+															<send_packet_6> 		|-> <receive_packet_28>,
+															<set_sDac> 					|-> <send_packet_3>,
+															<set_bre> 					|-> <send_packet_9>,
+															<send_packet_9> 		|-> <receive_packet_29>,
+															<set_dDac> 					|-> <send_packet_3>,
+															<LED_all_off> 			|-> <send_packet_3>,
+															<prog_delay_diag> 	|-> <send_packet_3>,
+															<prog_op_mem_1> 		|-> <send_packet_14>,
+															<send_packet_14> 		|-> <receive_packet_30>,
+															<prog_op_mem_2>   	|-> <send_packet_3>,
+															<run_mem> 					|-> <send_packet_3>,
+															<prog_clk_cnt> 			|-> <send_packet_3>,
+															<reset_ana> 				|-> <send_packet_3>,
+															<set_ana> 					|-> <send_packet_3>,
+															<config_rec> 				|-> <send_packet_3>,
+															<prog_ID> 					|-> <send_packet_3>,
+															<dummy> 						|-> <send_packet_3>,
+															<read_LED> 					|-> <send_packet_24>,
+															<send_packet_24> 		|-> <receive_packet_27>,	
+															<read_DIAG> 				|-> <send_packet_24>,
+															<read_LFP> 					|-> <send_packet_24>,
+															<receive_packet_27> |-> <cmd_finish>,
+															<receive_packet_28> |-> <set_sDac>,
+															<receive_packet_29> |-> <set_dDac>,	
+															<receive_packet_30> |-> <prog_op_mem_2>,	
+															<error_> 						|-> <chip_rst>,	
+															<chip_rst>					|-> <error_>,
+															<cmd_finish> 				|-> <error_>
+															},
+  									<ERROR>  |-> {|->},	-- event 1  = ERROR
+  									<SPI_TX_FINISH>  |-> { 			-- event 2  = SPI_TX_FINISH
+  														<send_packet_3>  |-> <send_packet_3>, 					
+  														<send_packet_6>  |-> <send_packet_6>,
+  														<send_packet_9>  |-> <send_packet_9>, 					--@TODO this was <send_packet_9> |-> <set_dDAC>
+  														<send_packet_14> |-> <send_packet_14>, 
+  														<send_packet_24> |-> <send_packet_24> 
+  															},		
+  								  <SPI_RX_FINISH>  |-> { -- event 3  = SPI_RX_FINISH															 
+  														<receive_packet_27> |-> <receive_packet_27>, 			 
+  														<receive_packet_28> |-> <receive_packet_28>, 
+  														<receive_packet_29> |-> <receive_packet_29>, 
+  														<receive_packet_30> |-> <receive_packet_30> 
+  															},	
+										<LED_ON_E>  				|-> { <get_cmd> |-> <LED_on>},					-- event 4  = LED_ON_E
+										<SET_VLED_E>  			|-> { <get_cmd> |-> <set_vLED>},				-- event 5  = SET_VLED_E
+										<SET_BRE_E>  				|-> { <get_cmd> |-> <set_bre>},				  -- event 6  = SET_BRE_E
+										<LED_ALL_OFF_E>  		|-> { <get_cmd> |-> <LED_all_off>},		  -- event 7  = LED_ALL_OFF_E
+										<PROG_DELAY_DIAG_E> |-> { <get_cmd> |-> <prog_delay_diag>}, -- event 8  = PROG_DELAY_DIAG_E
+										<PROG_OP_MEM_E>  		|-> { <get_cmd> |-> <prog_op_mem_1>},	  -- event 9  = PROG_OP_MEM_E  --@TODO this was <get_cmd> |-> <prog_op_mem_2>
+										<RUN_MEM_E> 				|-> { <get_cmd> |-> <run_mem>},				  -- event 10 = RUN_MEM_E
+										<PROG_CLK_CNT_E> 		|-> { <get_cmd> |-> <prog_clk_cnt>},		-- event 11 = PROG_CLK_CNT_E
+										<RESET_ANA_E> 			|-> { <get_cmd> |-> <reset_ana>},			  -- event 12 = RESET_ANA_E
+										<SET_ANA_E> 				|-> { <get_cmd> |-> <set_ana>},				  -- event 13 = SET_ANA_E
+										<CONFIG_REC_E> 			|-> { <get_cmd> |-> <config_rec>},			-- event 14 = CONFIG_REC_E
+										<PROG_ID_E> 				|-> { <get_cmd> |-> <prog_ID>},				  -- event 15 = PROG_IDE_E
+										<DUMMY_E> 					|-> { <get_cmd> |-> <dummy>},					  -- event 16 = DUMMY_E
+										<READ_LED_E> 				|-> { <get_cmd> |-> <read_LED>},				-- event 17 = READ_LED_E
+										<READ_DIAG_E> 			|-> { <get_cmd> |-> <read_DIAG>},			  -- event 18 = READ_DIAG_E
+										<READ_LFP_E> 				|-> { <get_cmd> |-> <read_LFP>},				-- event 19 = READ_LFP_E
+										<GET_CMD_E> 					|-> {																		-- event 20 = GET_CMD_E
+																							<error_>  |-> <get_cmd>   				
+																							--<chip_rst> |-> <get_cmd> 	--@TODO this was omitted
+																						}				  				
+								 };
+
+	--@doc the original initial FSM breaks the discovered invariant
+  original_initial_fsm: map Event to (map State to State) = recommended_fsm ++ 
+  							{ <SPI_TX_FINISH>  |-> { 			-- event 2  = SPI_TX_FINISH
+  														<send_packet_3>  |-> <send_packet_3>, 					
+  													<send_packet_6>  |-> <send_packet_6>,
+  														<send_packet_9>  |-> <set_dDac>, 					-- @TODO THIS IS AN ERROR <send_packet_9> |-> <send_packet_9>
+  														<send_packet_14> |-> <send_packet_14>, 
+  														<send_packet_24> |-> <send_packet_24> 
+  															},		
+										<PROG_OP_MEM_E>  		|-> { <get_cmd> |-> <prog_op_mem_2>}	  -- event 9  = PROG_OP_MEM_E  --@TODO THIS IS ALSO AN ERROR <get_cmd> |-> <prog_op_mem_1>
+								 };
+--------------------------------------------------------------------------------------------
+-- FSM3 State
+--------------------------------------------------------------------------------------------
+
+state FSM3 of
+			fsm 								: 				CandoFSM   --1
+			currentSt						:					State			 --2
+			currentEvt					:					Event      --3
+			currentCmd					:					Command    --4
+			command_finish_flag	:					Flag       --5
+			optrode_TX_finish		:					Flag       --6
+			optrode_RX_finish		:					Flag       --7
+			s_packet						:					[Packet]   --8
+			bytes_received			:					Bytes      --9
+			bytes_sent					:					Bytes      --10
+			tx_cnt							:					Count      --11
+inv mk_FSM3(-,s,-,-,-,-,-,p,-,-,-) == 
+			--@doc only at the start can the s_packet be nil
+			(s = <start> <=> p = nil)		
+init FSM3 == 
+	FSM3 = mk_FSM3(fsm2tfsm(recommended_fsm), 
+								 <start>, <CONT>, <READ_LFP_C>, 
+								 false, true, true, nil, 3, 0, 0)
+	
+end
+	
+
+end FSM3

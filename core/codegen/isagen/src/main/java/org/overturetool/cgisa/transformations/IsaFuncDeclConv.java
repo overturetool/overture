@@ -112,10 +112,10 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     	AIdentifierVarExpIR arg = new AIdentifierVarExpIR();
     	arg.setName(node.getName());
     	arg.setType(node.getMethodType().clone());
-    	app.getArgs().add(arg);
+    	app.getArgs().add(arg.clone());
     	
-    	postInit.setBody(app);
-        addToAST(postInit, node);
+    	postInit.setBody(app.clone());
+        addToAST(postInit.clone(), node.clone());
 
         System.out.println("Post condition has been added");
 		
@@ -256,10 +256,10 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
         	finalPostCondition = new AFuncDeclIR();
         	
         	//No need to add formal params again they're all already put there above
-        	AFuncDeclIR postCond_ = (AFuncDeclIR) node.getPostCond();
-        	finalPostCondition.setBody(postCond_.getBody());
+        	AFuncDeclIR postCond_ = (AFuncDeclIR) node.getPostCond().clone();
+        	finalPostCondition.setBody(postCond_.getBody().clone());
         	finalPostCondition.setFormalParams(postCond_.getFormalParams());
-        	finalPostCondition.setMethodType(postCond_.getMethodType());
+        	finalPostCondition.setMethodType(postCond_.getMethodType().clone());
         	finalPostCondition.setName(postCond_.getName());
         }
        /* If no post condition is written, none has been generated then
@@ -271,17 +271,17 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
         	finalPostCondition = new AFuncDeclIR();
         	ANotImplementedExpIR n = new ANotImplementedExpIR();
         	n.setTag("TODO");
-        	finalPostCondition.setBody(n);
+        	finalPostCondition.setBody(n.clone());
        
 	        AMethodTypeIR mty = new AMethodTypeIR();
 	        mty.setResult(new ABoolBasicTypeIR());
 			mty.getParams().add(mt.getResult());
-	        finalPostCondition.setMethodType(mty);
+	        finalPostCondition.setMethodType(mty.clone());
         	finalPostCondition.setName("unimplemented_post_"+node.getName());
         }
      	
-        formatIdentifierPatternVars(finalPostCondition);
-        node.setPostCond(finalPostCondition);
+        formatIdentifierPatternVars(finalPostCondition.clone());
+        node.setPostCond(finalPostCondition.clone());
 	    IsaGen.funcGenHistoryMap.put(finalPostCondition.getName(), finalPostCondition.clone());
         addToAST(finalPostCondition, node);
 

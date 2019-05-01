@@ -61,7 +61,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         AIdentifierVarExpIR fInvIdentifier = new AIdentifierVarExpIR();
         fInvIdentifier.setName(fInv.getName());
         fInvIdentifier.setSourceNode(fInv.getSourceNode());
-        fInvIdentifier.setType(fInv.getMethodType());
+        fInvIdentifier.setType(fInv.getMethodType().clone());
 
         // Crete apply expr
         AApplyExpIR exp = new AApplyExpIR();
@@ -91,7 +91,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 	            invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
 	            		node.getName().toString().substring(1, node.getName().toString().length())+"_"+
 	            		fields.get(i).getName()+" "+this.ps.toString()+")");
-	            invExp.setType(this.methodType);
+	            invExp.setType(this.methodType.clone());
 	            this.targetIP = invExp;
 				
 	            completeExp.setType(new ABoolBasicTypeIR());
@@ -107,10 +107,10 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     	
      // Link numerous apply expressions together in an and expression
         if (fieldInvariants.size() >= 2)
-        	return genAnd(fieldInvariants);
+        	return genAnd(fieldInvariants).clone();
         else
         // Just one field return it as an apply expression
-        	return fieldInvariants.get(0);
+        	return fieldInvariants.get(0).clone();
     }
     
     
@@ -133,7 +133,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 	            invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
 	            		node.getName().toString().substring(1, node.getName().toString().length())+"_"+
 	            		fields.get(i).getName()+" "+this.ps.toString()+")");
-	            invExp.setType(this.methodType);
+	            invExp.setType(this.methodType.clone());
 	            this.targetIP = invExp;
 				
 	            completeExp.setType(new ABoolBasicTypeIR());
@@ -164,7 +164,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         // Crete apply to the inv_ expr e.g inv_x inv_y
         AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
         invExp.setName(node.getName());
-        invExp.setType(this.methodType);
+        invExp.setType(this.methodType.clone());
         this.targetIP = invExp;
 		
         completeExp.setType(new ABoolBasicTypeIR());
@@ -191,7 +191,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         	// Create apply to the inv_ expr e.g inv_x inv_y
             AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
             invExp.setName(node.getFormalParams().get(i).getPattern().toString());
-            invExp.setType(this.methodType);
+            invExp.setType(this.methodType.clone());
             this.targetIP = invExp;
 			
             completeExp.setType(new ABoolBasicTypeIR());
@@ -256,11 +256,11 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
     		fInv = IsaGen.funcGenHistoryMap.get("inv_"+typeName).clone();
     		
     	}
-    	if (fInv.getMethodType() == null)
+    	if (fInv.getMethodType().clone() == null)
     	{
     		AMethodTypeIR mt = new AMethodTypeIR();
     		mt.setResult(new ABoolBasicTypeIR());
-    		mt.getParams().add(seqtNode);
+    		mt.getParams().add(seqtNode.clone());
     		fInv.setMethodType(mt.clone());
     	}
     	

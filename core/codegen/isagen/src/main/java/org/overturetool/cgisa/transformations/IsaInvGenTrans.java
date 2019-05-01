@@ -53,7 +53,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     	
     	SDeclIR decl = node.clone();
     	String typeName = IsaInvNameFinder.findName(node.clone());
-    	SExpIR invExp = node.getInvExp();
+    	SExpIR invExp = node.getInvExp().clone();
         // Invariant function
         AFuncDeclIR invFun_ = new AFuncDeclIR();
         invFun_.setName("inv_" + typeName); //inv_t
@@ -65,7 +65,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         
 	        
     	methodType.setResult(new ABoolBasicTypeIR());
-        invFun_.setMethodType(methodType);
+        invFun_.setMethodType(methodType.clone());
 	       
 	        
 	        
@@ -77,22 +77,22 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         	//change (a_c a) to (c A) for Isabelle field access
             //if (decl instanceof ARecordDeclIR) formatExistingRecordInvExp(inv.getBody());
         	
-            multipleInvs.setRight(invExp);
+            multipleInvs.setRight(invExp.clone());
         	
 			AIdentifierPatternIR identifierPattern = new AIdentifierPatternIR();
 			identifierPattern.setName(typeName.substring(0, 1).toLowerCase());
 			
 			//set Inv pattern if one does not exist
-			if (node.getInvPattern() != null) node.setInvPattern(identifierPattern);
+			if (node.getInvPattern() != null) node.setInvPattern(identifierPattern.clone());
 			
-			SExpIR expr = IsaInvExpGen.apply(decl, 
-					identifierPattern , 
+			SExpIR expr = IsaInvExpGen.apply(decl.clone(), 
+					identifierPattern.clone() , 
 					methodType.clone(), isaFuncDeclIRMap);
         	
-			multipleInvs.setLeft(expr);
+			multipleInvs.setLeft(expr.clone());
         	
-        	invFun_.setBody(multipleInvs);
-        	node.setInvExp(multipleInvs);
+        	invFun_.setBody(multipleInvs.clone());
+        	node.setInvExp(multipleInvs.clone());
         } 
         //translation for no inv types 
         else 
@@ -105,7 +105,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
 	        afp.setPattern(identifierPattern.clone());
 	        afp.setType(t.clone()); 
 	        
-	        node.setInvPattern(identifierPattern);
+	        node.setInvPattern(identifierPattern.clone());
 	        
 	        invFun_.getFormalParams().add(afp);
 	        expr = IsaInvExpGen.apply(decl.clone(), identifierPattern, methodType.clone(), isaFuncDeclIRMap);
