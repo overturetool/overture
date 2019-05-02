@@ -2010,12 +2010,13 @@
     <bcf:citekey order="13">vdmwikiast</bcf:citekey>
     <bcf:citekey order="14">vdmwikiast</bcf:citekey>
     <bcf:citekey order="15">vdmwikiast</bcf:citekey>
-    <bcf:citekey order="16">OvertureWikiArchitectureDescription</bcf:citekey>
-    <bcf:citekey order="17">overtureproceedings</bcf:citekey>
-    <bcf:citekey order="18">vdmwikicgp</bcf:citekey>
-    <bcf:citekey order="19">casper</bcf:citekey>
-    <bcf:citekey order="20">VDM2ISAGit</bcf:citekey>
-    <bcf:citekey order="21">vdmwikiast</bcf:citekey>
+    <bcf:citekey order="16">VDM2ISAGit</bcf:citekey>
+    <bcf:citekey order="17">OvertureWikiArchitectureDescription</bcf:citekey>
+    <bcf:citekey order="18">overtureproceedings</bcf:citekey>
+    <bcf:citekey order="19">vdmwikicgp</bcf:citekey>
+    <bcf:citekey order="20">casper</bcf:citekey>
+    <bcf:citekey order="21">VDM2ISAGit</bcf:citekey>
+    <bcf:citekey order="22">vdmwikiast</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

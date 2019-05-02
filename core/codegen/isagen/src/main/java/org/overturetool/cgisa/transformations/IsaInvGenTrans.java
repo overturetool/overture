@@ -53,7 +53,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     	
     	SDeclIR decl = node.clone();
     	String typeName = IsaInvNameFinder.findName(node.clone());
-    	SExpIR invExp = node.getInvExp().clone();
+    	SExpIR invExp = node.getInvExp();
         // Invariant function
         AFuncDeclIR invFun_ = new AFuncDeclIR();
         invFun_.setName("inv_" + typeName); //inv_t

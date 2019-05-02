@@ -1,4 +1,4 @@
 #foreach( $pat in $node.Patterns )
 $Isa.trans($pat)#if( $foreach.hasNext ), #end
 #end
- in @set $Isa.trans($node.Set)
+ \<in> $Isa.trans($node.Set)

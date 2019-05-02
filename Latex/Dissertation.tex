@@ -1,4 +1,4 @@
-\documentclass[11pt,twoside]{report}
+\documentclass[11pt]{report}
 \usepackage{vdmlisting}
 \usepackage{multicol}
 \usepackage{pict2e}
@@ -58,7 +58,7 @@
 }
 
 \lstdefinelanguage{Isabelle}{
-  keywords={\\\<and\>, true, false, \#foreach, \#if, \#end, null, \#else, \#elseif, \$node, type_synonym, definition, where, abbreviation, record},
+  keywords={datatype, type_synonym, definition, where, abbreviation, record},
   keywordstyle=\color{blue}\bfseries,
   ndkeywords={\.trans, \\\<, \>},
   ndkeywordstyle=\color{pink}\bfseries,
@@ -160,21 +160,19 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhead{}
-\fancyhead[RO,LE]{Creating a tool for the translation of VDM to Isabelle HOL}
+\fancyhead[RO,LE]{Creating a Tool for the Translation of VDM-SL to Isabelle HOL}
 \fancyfoot{}
 \fancyfoot[LE,RO]{\thepage}
 \fancyfoot[LO,CE]{\leftmark}
 \fancyhead[LE,LO]{Jamie Simm}
 \title{
-{Creating a tool for the translation of VDM to Isabelle HOL}\\
+{Creating a Tool for the Translation of VDM-SL to Isabelle HOL}\\
 {\vspace{0.5cm}}
 {\large BSc Computer Science}\\
 {\vspace{0.5cm}}
 {\large Newcastle University}\\
 {\vspace{0.5cm}}
 {\large Project Supervisor Dr Leonardo J.S Freitas}\\
-{\vspace{3cm}}
-{\small Word count : 13751 in text, 245 outside text.}\\
 {\vspace{2.5cm}}
 {\includegraphics[width=5cm, height=2cm ]{newcastle.jpg}}
 }
@@ -185,12 +183,12 @@
 \maketitle
 
 \chapter*{Abstract}
-This dissertation aims to explain and describe the implementation of and need for a VDM (Vienna Development Method) to Isabelle HOL (Higher Order Logic) translation tool. The tool is applied to a VDM model of the POLAR organ persufflation machine's alarm system. As Isabelle theories can be proven mathematically by the modeller, it is hoped that this tool will be useful in the verification of software by eliminating the need for manual VDM to Isabelle translation.
+This dissertation aims to explain and describe the implementation of and need for a VDM-SL (Vienna Development Method - Specification Language) to Isabelle HOL (Higher Order Logic) translation tool. The tool is applied to a VDM model of the POLAR organ persufflation machine's alarm system. As Isabelle theories can be proven mathematically by the modeller, it is hoped that this tool will be useful in the verification of software by eliminating the need for manual VDM to Isabelle translation.
 \chapter*{Declaration}
-I declare that this dissertation represents my own work except where otherwise stated. The length of this document is only so large for its code snippets and figures, the majority of which take up a considerable amount of the page. Excluding them, this document would approximately measure thirty pages in length. 
+I declare that this dissertation represents my own work except where otherwise stated. The length of this document is only so large for its code snippets and figures, the majority of which take up a considerable amount of the page. To avoid having large code blocks in the main text, relevant code is stored and organised in the Appendices, when the text references code, a footnote will guide the reader to the relevant appendix and section. The exception to this rule is in the Results chapter in which translations are presented. The reader is urged to follow such footnotes in order to make sense of references to computation made in the text. This document contains 14891 words and spans 30 pages without figures or code.
 
-\chapter*{Acknowledgments}
-I would like to thank my supervisor, Dr Leo Freitas: for guiding me toward the project of developing this tool, which I have thoroughly enjoyed; for introducing me to the world of formal specification, Isabelle and VDM; and for fostering my interest in automated translation and proof tools. Secondly, I would like to thank Casper Thule Hansen of Aarhus University, Denmark, for setting up the environment upon which this tool was built and teaching me how to write transformation visitors. I believe that this project may not have been so successful without such an essential and flexible platform for it to be built upon. 
+\chapter*{Acknowledgements}
+I would like to thank my supervisor, Dr Leo Freitas, for guiding me toward the project of developing this tool, which I have thoroughly enjoyed; for introducing me to the world of formal specification, Isabelle and VDM; and for fostering my interest in automated translation and proof tools. Secondly, I would like to thank Casper Thule Hansen of Aarhus University, Denmark, for setting up the environment upon which this tool was built and teaching me how to write transformation visitors. I believe that this project may not have been so successful without the essential and flexible platform upon which it is built. 
 
 \tableofcontents
 

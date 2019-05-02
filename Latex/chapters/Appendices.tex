@@ -130,7 +130,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
                 encModule.getDecls().add(invFun_);
             }
 
-            System.out.println("Invariant function has been added");
+            System.out.println("");
 
         }
     }
@@ -363,7 +363,7 @@ public class IsaInvNameFinder extends AnswerIsaAdaptor<String>
 \end{lstlisting}
 
 \section{CodeGen Platform}
-\section{IsaGen} \label{IsaGenbefore}
+\subsection{IsaGen} \label{IsaGenbefore}
 \begin{lstlisting}
 /*
  * #%~
@@ -514,7 +514,7 @@ public class IsaGen extends CodeGenBase {
             // Apply transformations
             for (IRStatus<PIR> status : statuses) {
                 if(status.getIrNodeName().equals("VDMToolkit")){
-                    System.out.println("Skipping VDMToolkit transformations");
+                    System.out.println("");
                 } else {
 
 
@@ -579,7 +579,7 @@ public class IsaGen extends CodeGenBase {
 
         for (IRStatus<PIR> status : statuses) {
             if(status.getIrNodeName().equals("VDMToolkit")){
-                System.out.println("Skipping VDMToolkit transformations");
+                System.out.println("");
             } else {
                 generated.add(prettyPrintNode(pp, status));
             }
@@ -1642,7 +1642,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         node.setInvDecl(invFun_.clone());
         
         IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_.clone());
-        System.out.println("Invariant function has been added");
+        System.out.println("");
         }
         
     
@@ -1745,7 +1745,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
 
         IsaGen.funcGenHistoryMap.put(invFun_.getName(), invFun_.clone());
         
-        System.out.println("Invariant function has been added");
+        System.out.println("");
 
         
     }
@@ -1788,7 +1788,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         {
             encModule.getDecls().add(invFun_.clone());
         }
-        System.out.println("Invariant function has been added");
+        System.out.println("");
         }
     }
     
@@ -1803,7 +1803,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
 
 }
 \end{lstlisting}
-
+\section{CodeGen Platform}
 \subsection{IsaGen} \label{IsaGenafter}
 \begin{lstlisting}
 
@@ -1910,7 +1910,7 @@ public class IsaGen extends CodeGenBase {
             // Apply transformations
             for (IRStatus<PIR> status : statuses) {
                 if(status.getIrNodeName().equals("VDMToolkit")){
-                    System.out.println("Skipping VDMToolkit transformations");
+                    System.out.println("");
                 } else {
 
 
@@ -1986,7 +1986,7 @@ public class IsaGen extends CodeGenBase {
 
         for (IRStatus<PIR> status : statuses) {
             if(status.getIrNodeName().equals("VDMToolkit")){
-                System.out.println("Skipping VDMToolkit transformations");
+                System.out.println("");
             } else {
                 generated.add(prettyPrintNode(pp, status));
             }
@@ -2032,6 +2032,7 @@ public class IsaGen extends CodeGenBase {
 
 
 \chapter{Testing} \label{testing}
+\subsection{IsaGenParamTest}
 \begin{lstlisting}
 /**
  * Main parameterized test class. Runs tests on modules with minimal
@@ -2151,7 +2152,89 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
 
 \end{lstlisting}
 
-\section{vdmsl} \label{vdmsl}
+\subsection{IsaGenModelTest} \label{IsaGenModelTest}
+\begin{lstlisting}
+/*
+ * #%~
+ * VDM to Isabelle Translation
+ * %%
+ * Copyright (C) 2008 - 2015 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
+package org.overturetool.cgisa;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import org.junit.Assume;
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.overture.core.testing.PathsProvider;
+
+/**
+ * Main integration test class. Runs tests on complete models.
+ * 
+ * @author ldc
+ */
+@RunWith(Parameterized.class)
+
+public class IsaGenModelTest extends IsaGenParamTest
+{
+
+    public IsaGenModelTest(String nameParameter, String inputParameter,
+            String resultParameter)
+    {
+        super(nameParameter, inputParameter, resultParameter);
+    }
+
+    private static final String UPDATE = "tests.update.isagen.model";
+    private static final String MODELS_ROOT = "src/test/resources/models";
+    private static final List<String> skippedTests = Arrays.asList();//"CustomAlarm.vdmsl","dummy.vdmsl","Alarm1.vdmsl");
+
+
+    @Parameters(name = "{index} : {0}")
+    public static Collection<Object[]> testData()
+    {
+        return PathsProvider.computePaths(MODELS_ROOT);
+    }
+
+    @Override
+    protected String getUpdatePropertyString()
+    {
+        return UPDATE;
+    }
+
+    protected void checkAssumptions() {
+        Assume.assumeTrue("Test in skip list.",notSkipped());
+    }
+
+    private boolean notSkipped() {
+        return !skippedTests.contains(testName);
+    }
+
+
+}
+
+\end{lstlisting}
+
+\section{VDM-SL Test Files} \label{vdmsl}
 \subsection{FuncDecl1Param.vdmsl / .vdmsl.result}
 \begin{lstlisting}
 module A
@@ -2632,32 +2715,6 @@ t = map int to char
 {"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\ntype_synonym t \u003d \"VDMInt \\<rightharpoonup> char\"\n\n\n\n\ndefinition\n    inv_t :: \"(t) \\\u003cRightarrow\u003e \\\u003cbool\u003e\"\n    where\n    \"inv_t t \\\u003cequiv\u003e isa_invTrue t\"\n\nend","errors":false}
 \end{lstlisting}
 
-\begin{lstlisting}
-
-\end{lstlisting}
-
-\begin{lstlisting}
-
-\end{lstlisting}
-
-\begin{lstlisting}
-
-\end{lstlisting}
-
-\begin{lstlisting}
-
-\end{lstlisting}
-
-\begin{lstlisting}
-
-\end{lstlisting}
-
-\begin{lstlisting}
-
-\end{lstlisting}
-
-
-
 \chapter{Apache Velocity} \label{velocity}
 \section{Velocity Before Development} \label{Velocitybefore}
 \subsection{AFuncDeclIR}
@@ -2693,5 +2750,1272 @@ definition
     "$node.Name #transIdentifiers($node) \<equiv> $Isa.trans($node.Body)"
 \end{lstlisting}
 
+\chapter{Results} \label{results}
+\subsection{Individual Construct Translation} \label{ict}
+\begin{lstlisting}[language=Isabelle]
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ \<rightharpoonup> VDMInt
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record RecType =
+        recType_x :: char
+        recType_y :: \<real>
+    
+
+
+
+definition
+    inv_RecType :: "RecType \<Rightarrow> \<bool>"
+    where
+    "inv_RecType r \<equiv> (isa_invTrue (recType_x r) \<and> isa_invTrue (recType_y r))"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym XType = "VDMInt
+"
+
+
+
+definition
+    inv_XType :: "(XType) \<Rightarrow> \<bool>"
+    where
+    "inv_XType x \<equiv> isa_invTrue x"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMNat1
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMNat
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ VDMSet
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "\<rat>"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "char * VDMNat
+ * VDMToken
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMToken
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ * char"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record RecType =
+        recType_x :: VDMNat
+
+    
+
+
+
+definition
+    inv_RecType :: "RecType \<Rightarrow> \<bool>"
+    where
+    "inv_RecType r \<equiv> isa_invVDMNat (recType_x r)"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "char"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ \<rightharpoonup> char"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ * VDMInt
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "char VDMSeq
+ * VDMInt
+ VDMSet
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "\<real>"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMNat
+ VDMSeq
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ VDMSeq
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+
+
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record RecType =
+        recType_x :: VDMNat
+
+        recType_y :: VDMNat
+
+    
+
+
+
+definition
+    inv_RecType :: "RecType \<Rightarrow> \<bool>"
+    where
+    "inv_RecType r \<equiv> (isa_invVDMNat (recType_x r) \<and> isa_invVDMNat (recType_y r))"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> (isa_invTrue t \<and> (t > 0))"
+
+end
+
+
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record A =
+        a_b :: char VDMSeq
+
+        a_c :: VDMInt
+
+    
+
+
+
+definition
+    inv_A :: "A \<Rightarrow> \<bool>"
+    where
+    "inv_A a \<equiv> ((isa_invSeqElems isa_invTrue (a_b a) \<and> isa_invTrue (a_c a)) \<and> ((a_c a) > 1))"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ VDMSet
+"
+
+
+
+definition
+    inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> (isa_invTrue t \<and> (t <> {}))"
+
+end
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: \<bool> where
+"x \<equiv> true"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invTrue x"
+
+end
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMNat1
+ where
+"x \<equiv> 1"
+
+abbreviation
+ y :: VDMNat1
+ where
+"y \<equiv> x"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invVDMNat1 x"
+
+
+definition
+    inv_y :: "\<bool>"
+    where
+    "inv_y  \<equiv> isa_invVDMNat1 y"
+
+end
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMNat1
+ where
+"x \<equiv> 1"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invVDMNat1 x"
+
+end
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ a :: VDMNat1
+ where
+"a \<equiv> 10"
+
+abbreviation
+ b :: VDMNat1
+ where
+"b \<equiv> 20"
+
+abbreviation
+ c :: VDMNat1
+ where
+"c \<equiv> 30"
+
+
+definition
+    inv_a :: "\<bool>"
+    where
+    "inv_a  \<equiv> isa_invVDMNat1 a"
+
+
+definition
+    inv_b :: "\<bool>"
+    where
+    "inv_b  \<equiv> isa_invVDMNat1 b"
+
+
+definition
+    inv_c :: "\<bool>"
+    where
+    "inv_c  \<equiv> isa_invVDMNat1 c"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: \<real> where
+"x \<equiv> 1.2"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invTrue x"
+
+end
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMNat1
+ where
+"x \<equiv> 1"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invVDMNat1 x"
+
+end
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMNat1
+ VDMSeq
+ VDMSet
+ where
+"x \<equiv> {[1]}"
+
+abbreviation
+ y :: VDMNat1
+ VDMSeq
+ VDMSet
+ where
+"y \<equiv> x"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invSetElems isa_invSeqElems isa_invVDMNat1 x"
+
+
+definition
+    inv_y :: "\<bool>"
+    where
+    "inv_y  \<equiv> isa_invSetElems isa_invSeqElems isa_invVDMNat1 y"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMNat
+ where
+"x \<equiv> 1"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invVDMNat x"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMInt
+ where
+"x \<equiv> 1"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invTrue x"
+
+end
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMNat1
+ where
+"x \<equiv> 1"
+
+abbreviation
+ y :: VDMNat1
+ where
+"y \<equiv> x"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invVDMNat1 x"
+
+
+definition
+    inv_y :: "\<bool>"
+    where
+    "inv_y  \<equiv> isa_invVDMNat1 y"
+
+end
+
+
+
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMNat
+ \<Rightarrow> VDMNat
+"
+    where
+    "f x  \<equiv> x"
+
+
+definition
+    pre_f :: "VDMNat
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> isa_invVDMNat x"
+
+
+definition
+    post_f :: "VDMNat
+ \<Rightarrow> VDMNat
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xRESULT \<equiv> (isa_invVDMNat x \<and> isa_invVDMNat RESULT)"
+
+end
+
+
+
+f(1)
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMInt
+ \<Rightarrow> VDMInt
+"
+    where
+    "f x  \<equiv> 0"
+
+abbreviation
+ x :: VDMInt
+ where
+"x \<equiv> f 1"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invTrue x"
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> isa_invTrue x"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xRESULT \<equiv> (isa_invTrue x \<and> isa_invTrue RESULT)"
+
+end
+
+
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMInt
+ \<Rightarrow> VDMInt
+"
+    where
+    "f x  \<equiv> 0"
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> isa_invTrue x"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xRESULT \<equiv> ((isa_invTrue x \<and> isa_invTrue RESULT) \<and> true)"
+
+end
+
+
+
+f()
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMInt
+"
+    where
+    "f  \<equiv> 0"
+
+abbreviation
+ x :: VDMInt
+ where
+"x \<equiv> f "
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invTrue x"
+
+
+definition
+    unimplemented_pre_f :: "\<bool>"
+    where
+    "unimplemented_pre_f  \<equiv> undef"
+
+
+definition
+    unimplemented_post_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "unimplemented_post_f  \<equiv> undef"
+
+end
+
+
+
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    g :: "VDMInt
+ \<Rightarrow> VDMInt
+"
+    where
+    "g x  \<equiv> 0"
+
+
+definition
+    f :: "VDMInt
+ \<Rightarrow> VDMInt
+"
+    where
+    "f x  \<equiv> g x"
+
+
+definition
+    pre_g :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_g x  \<equiv> isa_invTrue x"
+
+
+definition
+    post_g :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_g xRESULT \<equiv> (isa_invTrue x \<and> isa_invTrue RESULT)"
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> isa_invTrue x"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xRESULT \<equiv> (isa_invTrue x \<and> isa_invTrue RESULT)"
+
+end
+
+
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMNat
+"
+    where
+    "f  \<equiv> 0"
+
+
+definition
+    unimplemented_pre_f :: "\<bool>"
+    where
+    "unimplemented_pre_f  \<equiv> undef"
+
+
+definition
+    unimplemented_post_f :: "VDMNat
+ \<Rightarrow> \<bool>"
+    where
+    "unimplemented_post_f  \<equiv> undef"
+
+end
+
+
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMNat
+ \<Rightarrow> VDMNat
+ \<Rightarrow> VDMNat
+"
+    where
+    "f x y  \<equiv> x"
+
+
+definition
+    pre_f :: "VDMNat
+ \<Rightarrow> VDMNat
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x y  \<equiv> (isa_invVDMNat x \<and> isa_invVDMNat y)"
+
+
+definition
+    post_f :: "VDMNat
+ \<Rightarrow> VDMNat
+ \<Rightarrow> VDMNat
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xyRESULT \<equiv> (isa_invVDMNat x \<and> (isa_invVDMNat y \<and> isa_invVDMNat RESULT))"
+
+end
+
+
+
+f(1, 2, 3)
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+"
+    where
+    "f x y z  \<equiv> 0"
+
+abbreviation
+ x :: VDMInt
+ where
+"x \<equiv> f 1 2 3"
+
+
+definition
+    inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invTrue x"
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x y z  \<equiv> (isa_invTrue x \<and> (isa_invTrue y \<and> isa_invTrue z))"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xyzRESULT \<equiv> (isa_invTrue x \<and> (isa_invTrue y \<and> (isa_invTrue z \<and> isa_invTrue RESULT)))"
+
+end
+
+
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMInt
+ \<Rightarrow> VDMInt
+"
+    where
+    "f x  \<equiv> 0"
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> (isa_invTrue x \<and> true)"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xRESULT \<equiv> (isa_invTrue x \<and> isa_invTrue RESULT)"
+
+end
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMInt
+ \<Rightarrow> VDMToken
+"
+    where
+    "f x  \<equiv> undef"
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> isa_invTrue x"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMToken
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xRESULT \<equiv> (isa_invTrue x \<and> isa_invTrue RESULT)"
+
+end
+
+
+
+
+ --- Got: ---
+theory A
+  imports VDMToolkit
+begin
+
+
+definition
+    f :: "VDMNat
+ \<Rightarrow> VDMInt
+"
+    where
+    "f x  \<equiv> 0"
+
+
+definition
+    pre_f :: "VDMNat
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> (isa_invVDMNat x \<and> true)"
+
+
+definition
+    post_f :: "VDMNat
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xRESULT \<equiv> ((isa_invVDMNat x \<and> isa_invTrue RESULT) \<and> true)"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> (isa_invTrue x \<and> true)"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xr \<equiv> ((isa_invTrue x \<and> isa_invTrue r) \<and> (r = x))"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x  \<equiv> isa_invTrue x"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xr \<equiv> ((isa_invTrue x \<and> isa_invTrue r) \<and> (r = x))"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+    unimplemented_pre_f :: "\<bool>"
+    where
+    "unimplemented_pre_f  \<equiv> undef"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f r \<equiv> true"
+
+end
+
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+    pre_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x y  \<equiv> ((isa_invTrue x \<and> isa_invTrue y) \<and> (y <> 0))"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xyr \<equiv> ((isa_invTrue x \<and> (isa_invTrue y \<and> isa_invTrue r)) \<and> ((x / y) = r))"
+
+end
+
+
+
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+    pre_f :: "\<bool>"
+    where
+    "pre_f  \<equiv> true"
+
+
+definition
+    post_f :: "VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f r \<equiv> true"
+
+end
+\end{lstlisting}
 
 \end{appendices}

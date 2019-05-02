@@ -280,7 +280,7 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
         	finalPostCondition.setName("unimplemented_post_"+node.getName());
         }
      	
-        formatIdentifierPatternVars(finalPostCondition.clone());
+        formatIdentifierPatternVars(finalPostCondition);
         node.setPostCond(finalPostCondition.clone());
 	    IsaGen.funcGenHistoryMap.put(finalPostCondition.getName(), finalPostCondition.clone());
         addToAST(finalPostCondition, node);

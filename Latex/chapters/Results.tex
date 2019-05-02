@@ -1,13 +1,16 @@
-The following section will describe the outcome of development, it will discuss mainly, but among other things: a measure of what work has been done, which constructs were translated for example; metrics of the development, how long development took, how many lines of code were written; limitations of the current state of the tool, what is missing from the tool and the things that the tool cannot achieve; which aims and objectives were achieved? which were not? As well as any new aims and objectives born from the development process; the complexity of the project.
+The following section will describe the outcome of development, it will discuss, among other things: a measure of what work has been done, for example which constructs were translated; metrics of the development, how long development took, how many lines of code were written; limitations of the current state of the tool.
 
-\section{Work Done}
-As mentioned, the purpose of development was to create IR transformation functionality that would facilitate translation from the IR into Isabelle for as many VDM constructs as possible. The test framework provided a large list of tests for the translation of VDM constructs to Isabelle, the test strategy was that they should all pass, there were tests for each construct, as well as tests for a combination of constructs. By the end of development every one of these tests passed successfully, each translation matched a correct manual translation for each construct test and construct combination test.
-\begin{vdmsl}[label=lst:MapIntChar.vdmsl, caption=The VDM-SL test file\, MapIntChar.vdmsl. This test file tests that the translation of a VDM-SL map\, and a combination of int and char constructs\, matches a previously manually translated correct translation\, seen below in MapIntChar.vdmsl.result. If the translation matches\, the tool successfully translates this construct.]
+\section{Work Done} \label{wd}
+As mentioned, the purpose of development was to create IR transformation functionality, that would facilitate translation from the IR into Isabelle, for as many VDM constructs as possible. The test framework provided a large list of tests for the translation of VDM constructs to Isabelle, the test strategy was that they should all pass, there were tests for each construct, as well as tests for a combination of constructs. By the end of development every one of these tests passed successfully, each construct test and construct combination test matched a manual correct translation.
+\begin{vdmsl}[label=lst:MapIntChar.vdmsl, caption=The VDM-SL test file\, MapIntChar.vdmsl]
 types
 
 t = map int to char
 \end{vdmsl} 
-\begin{lstlisting}[language=Isabelle, label=lst:MapIntChar.vdmsl.result, caption=The MapIntChar.vdmsl.result file specifies that the below is the correct translation\, and the output of the tool applied to MapIntChar.vdmsl should match it. The file specifies that not only should the type be translated but so should also have generated invariant for it. The output\, under the word "Got:" matches\, and so this test passes\, this construct is successfully translated.]
+
+This test file tests that the translation of a VDM-SL map, and a combination of int and char constructs, matches a previously manually translated correct translation, seen below in MapIntChar.vdmsl.result. If the translation matches then the tool successfully translates this construct.
+
+\begin{lstlisting}[language=Isabelle, label=lst:MapIntChar.vdmsl.result, caption=The MapIntChar.vdmsl.result file specifies that the below is the correct translation and the output of the tool applied to MapIntChar.vdmsl should match it.]
  --- Expected: ---
 theory DEFAULT
   imports VDMToolkit
@@ -41,8 +44,10 @@ definition
 
 end
 \end{lstlisting}
+The .vdmsl.result file specifies that not only should the type be translated but it should also have an invariant generated for it. The output, under the word "Got:" matches, and so this test passes, this construct is successfully translated.
 
-Additional to the pre-defined tests, I created some further tests that should pass, testing things like nested collection translation and translation of multiple parameter functions. The partial list of tests and their contents is in the appendices along with their result files, in appendix \ref{testing}, section \ref{vdmsl}. The collective code is far too long to include each test.
+
+Additional to the pre-defined tests, I created some further tests that should pass, testing things like nested collection translation and translation of multiple parameter functions. A partial list of tests and their contents is in the appendices along with their result files, appendix \ref{testing}, section \ref{vdmsl}. The collective code is far too long to include each test. Instead, below is a list of tests that pass, the names should make evident what they tested.
 \begin{multicols}{2}
 \textbf{\emph{Functions}}\hfill\break
 \emph{Explicit}
@@ -117,9 +122,12 @@ Additional to the pre-defined tests, I created some further tests that should pa
 \item VarExp.vdmsl
 \end{itemize}
 \end{multicols}
-This means that every VDM construct, with the exception of a few special cases, discussed in \ref{lott}. Basic constructs such as \lstinline[language=Isabelle]{Int}, \lstinline[language=Isabelle]{char}, \lstinline[language=Isabelle]{set}, essentially the type construct, were translated without much hassle, relative to function or invariant translations. Successful translation of basic constructs presented a nice quirk of the development process that I decided to exploit early on, if visitors and their methods are built flexibly, translations almost pass like dominoes when one of these tests pass. Translation of the basic types and their invariants means that any consequent combination of types is translated successfully. For example, successful translation of \lstinline[language=Isabelle]{Map}, \lstinline[language=Isabelle]{Int} and \lstinline[language=Isabelle]{char}, powered by a flexible visitor for generating invariants from any type, means that any combination of them also translate successfully - see \ref{mapintchar}. This feature means that translation of a most type constructs were relatively trivial after one good general transformation visitor was written. 
+\subsection{Reflection on Difficulty at Each Stage}
+This means that every VDM construct was successfully translated, with the exception of a few special cases, discussed in \ref{lott}. Basic constructs such as \lstinline[language=Isabelle]{Int}, \lstinline[language=Isabelle]{char}, \lstinline[language=Isabelle]{set}, essentially the type construct, were translated without much hassle, relative to function or invariant translations. Successful translation of basic constructs presented a nice quirk of the development process that I decided to exploit early on, if visitors and their methods are built flexibly, translations almost pass like dominoes when one of these tests pass. Translation of the basic types and their invariants means that any consequent combination of types is translated successfully. For example, successful translation of \lstinline[language=Isabelle]{Map}, \lstinline[language=Isabelle]{Int} and \lstinline[language=Isabelle]{char}, powered by a flexible visitor for generating invariants from any type, means that any combination of them also translate successfully - see \ref{mapintchar}. This feature means that translation of most type constructs were relatively trivial after one good general transformation visitor was written, the truly difficult part of translation was engineering this flexibility. 
 
 This was not true for all types however, and more tricky transformations were required for record types due to the uniqueness of their field structure, however even then, due to the fact that a flexible invariant and type generation visitor was set up, transformation functionality was already majorly established for each field and only required some massaging. Due to the way that invariant generation visitors had been written, different invariants for different fields were generated, the difficult part here was to combine them into one invariant field.
+
+
 \begin{vdmsl}[caption=Rec2FieldsDiffTypes.vdmsl\, two fields needed to have invariant checks in the invariant but were generated in separate invariant functions.]
 types
 
@@ -146,22 +154,670 @@ definition
 end
 \end{lstlisting}
 
-The more difficult translations were for functions - invariant or otherwise. Functions have many more layers of complexity to be concerned with during translation, the tool had to worry about more than just one name, one type and keywords generated by velocity. Now there were special cases for implicit functions, multiple parameter functions, no parameter functions, functions with existing pre and post conditions with their own identifier variables. For implicit functions, the malformed function body needed to be removed from the AST leaving only correctly translated pre and post conditions. Pre conditions carried the issue of having to traverse the AST and pull out only the parameters of a function for their method type. Post conditions required more fiddling by adding the result of their parent function to their parameters. Most of all though, the most difficult thing in the development was generating expressions. Generating expressions was so sophisticated for the fact that they were needed to be generated by almost every construct in the AST, and as such, the methods involved needed to be highly flexible. Figuring out the recursion of methods such as \lstinline[language=Isabelle]{genAnd} and \lstinline[language=Isabelle]{buildInvForType} was a difficult task with so many different inputs to consider and took up the majority of my time with the project. Again though, once this infrastructure had been set up, all invariant check expression generation was successful for functions and invariants regardless of their type, structure or parameters.
+The more difficult translations were for functions - invariant or otherwise. Functions have many more layers of complexity to be concerned with during translation, the tool had to worry about more than just one name, one type and keywords generated by velocity. Now there were special cases for implicit functions, multiple parameter functions, no parameter functions, functions with existing pre and post conditions with their own identifier variables. For implicit functions, the malformed function body needed to be removed from the AST leaving only correctly translated pre and post conditions. Pre conditions carried the issue of having to traverse the AST and pull out only the parameters of a function for their method type. Post conditions required more fiddling by adding the result of their parent function to their parameters. Most of all though, the most difficult thing in the development was generating expressions. Generating expressions was so sophisticated for the fact that they were needed to be generated by almost every construct in the AST, and as such, the methods involved needed to be highly flexible. Figuring out the recursion of methods such as \lstinline[language=Isabelle]{genAnd} and \lstinline[language=Isabelle]{buildInvForType} was a difficult task with so many different inputs to consider, and took up the majority of my time with the project. Again though, once this infrastructure had been set up, all invariant check expression generation was successful for functions and invariants regardless of their type, structure or parameters.
 
 Briefly, translation of state declaration followed the same formula as other transformations before it, and all that needed be done was to create a new function that would hold initialisation of state. 
 
-To summarise, thoughtful generation of flexible transformations from the start, made it trivial to translate what should have been highly complex constructs later in the development, and this I think is what makes the tool successful.
+To summarise, thoughtful generation of flexible transformations from the start, made it trivial to translate what should have been highly complex constructs later in the development, and this I think is what makes the tool successful. Creating transformations was difficult overall because development was aimed toward making the tool as flexible and extensible as possible. Translating individual constructs would have been trivial but rigid, and not extendible to successful translation of further tests on whole models.
+
 
 \subsection{Complexity of This Project}
-This project had a high complexity because of the various frameworks and environments that drive it.
+This project had a high level of complexity because of the numerous, and varied, frameworks and environments that drive it.
 For the Java side alone, there was an AST to work with and efficiently traverse and manipulate. I had to learn the structure of the AST, the families of nodes within it and their interaction. I also had to learn the visitor design pattern and get to grips with the various adaptors, each one with its own subtlety and aberration. Familiarity with a number of frameworks was also essential, the code generation platform, overture, and the ability to write and use Apache Velocity. Before development could begin, it was necessary to be able to write, use and understand two formal specification languages, both Isabelle and VDM-SL. Finally, and perhaps most importantly, the tool required me to learn and be able to perform translation from VDM into HOL and Isabelle so that the tool produced the correct translation.
 
 \subsection{Limitations of the Tool} \label{lott}
-Due to time restrictions, a few translations are not sophisticated, the tool simply prints out the translations of the node that it can cope with, and for the most part this is acceptable, however for more intricate Isabelle, the tool might struggle to produce an error free translation. These include the template type, and the \lstinline[language=Isabelle]{ARecordPatternIR} pattern template.
+Due to time restrictions, a few translations are not sophisticated, the tool simply prints out the translations of the node that it can cope with, and for the most part this is acceptable, however for more intricate Isabelle, the tool might struggle to produce an error free translation. These include the template type, and the \lstinline[language=Isabelle]{ARecordPatternIR} pattern template, as well as a number more IR node constructs which form a list of roughly $7$. The biggest limitation of the tool is that it does not translate VDM-SL operations, thought it is common for the modeller to not translate operations anyway, there would have been more satisfaction in including operation translations also. With that said, the tool goes above and beyond in other ways, it can translate far more than just the POLAR model, as we will see in \label{atp} 
 
-\section{Reflection and Development Process Metrics}
+\section{Development Process Metrics}
 The entire development process lasted for 46 days in total, and each day averaged successful translation of two constructs, this is because later in the project development slowed down to debug null pointer exceptions and develop utility methods for more complex function translations. To the merit of the tool, Velocity templates were kept as small as possible, at 2.6, rounded to 3, lines on average. It is worth noting that the code in the appendices and in this project were at three times their size on the first development iteration, but have been refined and cut down for efficiency. Given more time with the project, it would be rewarding to revise the code further, some control flow blocks could be transformed into more complex separate state methods and would therefore become better programs for it. In all, the functionality of the tool is split across only 14 visitor classes, development contributed 2,049 additions and 171 deletions. See https://github.com/overturetool/overture/compare/cth/isagen...SamieJim:cth/isagen, to compare the progress of development.
 
-\section{Application to POLAR}
+\section{Application to POLAR and More} \label{atp}
+In this section, a number of examples will be displayed to show the tool working on individual constructs. Next, the tool will be applied to the POLAR model. It came to be that the tool worked well on the POLAR model, and therefore it is applied further to the FSM3 payment system model and a model of a nuclear plant Alarm system. Also discussed, will be any bugs and limitations of the tool present in translations. This section is thick with code, but is kept out of the appendices as it is important to have it all in one locale so that it can be commented upon.
+
+\subsection{Examples of Application to Individual Types}  
+\subsubsection{Some function translations}
+\begin{vdmsl}
+module A
+
+definitions
+
+functions
+f : int * int * int -> int
+f (x,y,z) == 0;
+
+values
+x = f(1,2,3);
+
+end A
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+--- Got: ---
+theory A
+  imports VDMToolkit
+begin
 
 
+definition
+	f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+"
+    where
+    "f x y z  \<equiv> 0"
+
+abbreviation
+ x :: VDMInt
+ where
+"x \<equiv> f 1 2 3"
+
+
+definition
+	inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invTrue x"
+
+
+definition
+	pre_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x y z  \<equiv> (isa_invTrue x \<and> (isa_invTrue y \<and> isa_invTrue z))"
+
+
+definition
+	post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f xyzRESULT \<equiv> (isa_invTrue x \<and> (isa_invTrue y \<and> (isa_invTrue z \<and> isa_invTrue RESULT)))"
+
+end
+\end{lstlisting}
+
+
+\begin{vdmsl}
+functions
+
+f (x:int, y:int) r: int
+pre y <> 0
+post x/y =r
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+--- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+
+definition
+	pre_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "pre_f x y  \<equiv> ((isa_invTrue x \<and> isa_invTrue y) \<and> (y <> 0))"
+
+
+definition
+	post_f :: "VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> VDMInt
+ \<Rightarrow> \<bool>"
+    where
+    "post_f x y r \<equiv> ((isa_invTrue x \<and> (isa_invTrue y \<and> isa_invTrue r)) \<and> ((x / y) = r))"
+\end{lstlisting}
+
+\subsubsection{Some value translations}
+\begin{vdmsl}
+values
+a = 10;
+b = 20;
+c = 30;
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+abbreviation
+ x :: VDMNat1
+ where
+"x \<equiv> 1"
+
+abbreviation
+ y :: VDMNat1
+ where
+"y \<equiv> x"
+
+
+definition
+	inv_x :: "\<bool>"
+    where
+    "inv_x  \<equiv> isa_invVDMNat1 x"
+
+
+definition
+	inv_y :: "\<bool>"
+    where
+    "inv_y  \<equiv> isa_invVDMNat1 y"
+
+end
+\end{lstlisting}
+
+\subsubsection{Some type translations}
+
+\begin{vdmsl}
+types
+
+t = set of int
+inv t == t <> {}
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ VDMSet
+"
+
+
+
+definition
+	inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> (isa_invTrue t \<and> (t <> {}))"
+\end{lstlisting}
+
+
+\begin{vdmsl}
+types
+
+t = nat1
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMNat1
+"
+
+
+
+definition
+	inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+\end{lstlisting}
+
+\begin{vdmsl}
+types
+
+RecType :: x : char
+           y: real
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record RecType =
+        recType_x :: char
+        recType_y :: \<real>
+    
+
+
+
+definition
+	inv_RecType :: "RecType \<Rightarrow> \<bool>"
+    where
+    "inv_RecType r \<equiv> (isa_invTrue (recType_x r) \<and> isa_invTrue (recType_y r))"
+
+end
+\end{lstlisting}
+
+
+\begin{vdmsl}
+types
+
+t = map int to int
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+--- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym t = "VDMInt
+ \<rightharpoonup> VDMInt
+"
+
+
+
+definition
+	inv_t :: "(t) \<Rightarrow> \<bool>"
+    where
+    "inv_t t \<equiv> isa_invTrue t"
+
+end
+\end{lstlisting}
+
+\subsubsection{State translations}
+\begin{vdmsl}
+state S of
+  x : nat
+  init s == s = mk_S(0)
+end
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+ --- Got: ---
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+record S =
+        s_x :: VDMNat
+
+    
+
+definition
+	inv_S :: "S \<Rightarrow> \<bool>"
+    where
+    "inv_S s \<equiv> isa_invVDMNat (s_x s)"
+
+
+definition
+	init_S :: "S \<Rightarrow> \<bool>"
+    where
+    "init_S s \<equiv> (s = (| x = 0 |))"
+
+end
+\end{lstlisting}
+
+\subsection{Comments}
+As is evident from the above, the tool successfully translates every construct presented to it. For a full list of its translations for all of the types mentioned in \ref{wd}, see appendix \ref{results}, section \ref{ict}.
+
+\subsection{Application to FSM3}
+Due to the sensitivity of this model, with relation to the legally reserved technology that it models, I cannot show the entire model's translation or its VDM-SL specification, but a jumbled version of it is below to prove that this translation is not a fabrication. FSM3 is a payment system, the function of the tool on this model speaks to this projects success.
+
+
+\begin{lstlisting}[language=Isabelle]
+theory FSM3
+  imports VDMToolkit
+begin
+
+datatype Command = <CONFIG_REC_C>| <DUMMY_C>| <LED_ALL_OFF_C>| <LED_OFF_C>| <LED_ON_C>| <PROG_CLK_CNT_C>| <PROG_DELAY_DIAG_C>| <PROG_ID_C>| <PROG_OP_MEM_C>| <READ_DIAG_C>| <READ_LED_C>| <READ_LFP_C>| <RESET_ANA_C>| <RUN_MEM_C>| <SET_ANA_C>| <SET_BRE_C>| <SET_VLED_C>
+
+
+
+abbreviation
+ ALL_STATES :: State
+ VDMSet
+ where
+"ALL_STATES \<equiv> start, get_cmd, LED_off, send_packet_3, LED_on, set_vLED, send_packet_6, set_sDac, set_bre, send_packet_9, set_dDac, LED_all_off, prog_delay_diag, prog_op_mem_1, send_packet_14, prog_op_mem_2, run_mem, prog_{c}lk_cnt, reset_ana, set_ana, config_rec, prog_ID, dummy, read_LED, send_packet_24, read_DIAG, read_LFP, receive_packet_27, receive_packet_28, receive_packet_29, receive_packet_30, error_, chip_rst, cmd_finish"
+
+abbreviation
+ ALL_EVENTS :: Event
+ VDMSet
+ where
+"ALL_EVENTS \<equiv> CONT, ERROR, SPI_TX_FINISH, SPI_RX_FINISH, LED_ON_E, SET_VLED_E, SET_BRE_E, LED_ALL_OFF_E, PROG_DELAY_DIAG_E, PROG_OP_MEM_E, RUN{_}MEM_E, PROG_CLK_CNT_E, RESET_ANA_E, SET_ANA_E, CONFIG_REC_E, PROG_ID_E, DUMMY_E, READ_LED_E, READ_DIAG_E, READ_LFP_E, GET_CMD_E"
+
+abbreviation
+ stage_two_packet_creator_states :: State
+ VDMSet
+ where
+"stage_two_packet_creator_states \<equiv> set_sDac, set_dD{a}c, prog_op_mem_2"
+
+abbreviation
+ error_states :: State
+ VDMSet
+ where
+"error_states \<equiv> chip_rst, {c}md_finish"
+
+datatype Packet_Data = <DAC_value>| <LED_addr>| <NO_LED_ADDR>| <constructed_data>| <diag_delay>| <fs_ratio_to_clk>| <mem_len>| <rec_config>
+
+
+
+
+abbreviation
+ PACKET_LENGTH :: VDMNat1
+ where
+"PACKET_LENGTH \<equiv> 3"
+
+abbreviation
+ MAX_COUNT :: VDMNat1
+ where
+"MAX_COUNT \<equiv> 2"
+
+type_synonym StateMap = "State
+ \<rightharpoonup> State
+"
+
+
+type_synonym TXMap = "State
+ \<rightharpoonup> State
+"
+
+
+definition
+	inv_Packet 
+definition
+	inv_StateMap :: "(StateMap) \<Rightarrow> \<bool>"
+    where
+    "inv_StateMap s \<equiv> (isa_invTrue s \<and> (not (('start' in @set rng (s))) \<and> ((not (('start' in @set dom (s))) or (s<'start'> in @set {'get_cmd', 'error_'})) \<and> ((not (('error_' in @set dom (s))) or (s<'error_'> in @set {'get_cmd', 'chip_rst', 'error_'})) \<and> ((not (('cmd_finish' in @set dom (s))) or (s<'cmd_finish'> = 'error_')) \<and> ((not (('chip_rst' in @set dom (s))) or (s<'chip_rst'> = 'error_')) \<and> ((forall p in @set packet_creator_states & (not ((p in @set dom (s))) or (s<p> in @set [error_] \<union> send_states))) \<and> ((forall r in @set receive_states & (not ((r in @set dom (s))) or (s<r> in @set [cmd_finish, r, error_] \<union> stage_two_packet_creator_states))) \<and> (not (('get_cmd' in @set dom (s))) or (s<'get_cmd'> in @set [error_] \<union> stage_one_packet_creator_states))))))))))"
+
+
+definition
+	inv_TXMap :: "(TXMap) \<Rightarrow> \<bool>"
+    where
+    "inv_TXMap m \<equiv> (isa_invTrue t \<and> ((dom (m) subset send_states) \<and> (rng (m) subset receive_states)))"
+
+
+definition
+	inv_IdMap :: "(IdMap) \<Rightarrow> \<bool>"
+    where
+    "inv_IdMap m \<equiv> (isa_invTrue i \<and> (forall s in @set dom (m) & (m<s> = s)))"
+
+
+definition
+	inv_FSM :: "(FSM) \<Rightarrow> \<bool>"
+    where
+    "inv_FSM f \<equiv> isa_invTrue f"
+
+
+definition
+	inv_TFSM :: "(TFSM) \<Rightarrow> \<bool>"
+    where
+    "inv_TFSM fsm \<equiv> (isa_invTrue t \<and> ((dom (fsm) = ALL_EVENTS) \<and> (forall e in @set dom (fsm) & (fsm<e> hasType State
+ \<rightharpoonup> State
+))))"
+
+
+definition
+	inv_CandoFSM :: "(CandoFSM) \<Rightarrow> \<bool>"
+    where
+    "inv_CandoFSM fsm \<equiv> (isa_invTrue c \<and> ((send_states \<ADomainResToBinaryExp> fsm(CONT) hasType State
+ \<rightharpoonup> State
+) \<and> ((send_states \<ADomainResToBinaryExp> fsm(SPI_TX_FINISH) hasType State
+ \<rightharpoonup> State
+) \<and> ((receive_states \<ADomainResToBinaryExp> fsm(SPI_RX_FINISH) hasType State
+ \<rightharpoonup> State
+) \<and> ((packet_creator_states \<ADomainResToBinaryExp> fsm(CONT) hasType State
+ \<rightharpoonup> State
+) \<and> ((error_states \<ADomainResToBinaryExp> org.overture.codegen.ir.expressions.ADomainResByBinaryExpIR@5f861587 hasType State
+ \<rightharpoonup> State
+) \<and> ((fsm<'CONT'><'start'> = 'get_cmd') \<and> ((forall x in @set dom ([CONT] \<ADomainResByBinaryExp> fsm) & (fsm<x><'start'> = 'error_')) \<and> ((fsm<'CONT'><'error_'> = 'chip_rst') \<and> ((fsm<'GET_CMD_E'><'error_'> = 'get_cmd') \<and> ((forall x in @set dom ([CONT, GET_CMD_E] \<ADomainResByBinaryExp> fsm) & (fsm<x><'error_'> = 'error_')) \<and> (receive_states \<ADomainResToBinaryExp> fsm(CONT) hasType State
+ \<rightharpoonup> State
+))))))))))))"
+
+
+definition
+	inv_recommended_fsm :: "\<bool>"
+    where
+    "inv_recommended_fsm  \<equiv> isa_invTrue recommended_fsm"
+
+
+definition
+	inv_original_initial_fsm :: "\<bool>"
+    where
+    "inv_original_initial_fsm  \<equiv> isa_invTrue original_initial_fsm"
+
+
+definition
+	inv_test5 :: "\<bool>"
+    where
+    "inv_test5  \<equiv> isa_invTrue test5"
+
+
+definition
+	pre_sm2tsm_VDM :: "State
+ \<rightharpoonup> State
+ \<Rightarrow> \<bool>"
+    where
+    "pre_sm2tsm_VDM sm  \<equiv> isa_invTrue sm"
+
+
+definition
+	post_sm2tsm_VDM :: "State
+ \<rightharpoonup> State
+ \<Rightarrow> State
+ \<rightharpoonup> State
+ \<Rightarrow> \<bool>"
+    where
+    "post_sm2tsm_VDM sm RESULT  \<equiv> (isa_invTrue sm \<and> isa_invTrue RESULT)"
+
+
+definition
+	pre_sm2tsm_VDM2 :: "State
+ \<rightharpoonup> State
+ \<Rightarrow> \<bool>"
+    where
+    "pre_sm2tsm_VDM2 sm  \<equiv> isa_invTrue sm"
+
+
+definition
+	post_sm2tsm_VDM2 :: "State
+ \<rightharpoonup> State
+ \<Rightarrow> State
+ \<rightharpoonup> State
+ \<Rightarrow> \<bool>"
+    where
+    "post_sm2tsm_VDM2 sm RESULT  \<equiv> (isa_invTrue sm \<and> isa_invTrue RESULT)"
+
+end
+\end{lstlisting}
+
+\subsection{Comments}
+Above, there are a few places in which the tool does not successfully translate, this is only because it has a handful of velocity templates missing, notice, at one point, an expression operator \lstinline[language=Isabelle]{\<ADomainResByBinaryExp>} is one of them.
+
+\subsection{Application to Alarm.vdmsl}
+One model that is open source and can be shown in its entirety, is an alarm system for a nuclear reactor. 
+\begin{vdmsl}
+types
+
+  Plant :: schedule : Schedule
+           alarms   : set of Alarm
+  inv mk_Plant(schedule,alarms) ==
+        forall a in set alarms &
+     forall peri in set dom schedule &
+       QualificationOK(schedule(peri),a.quali);
+       
+  Schedule = map Period to set of Expert
+inv sch ==
+   forall exs in set rng sch &
+          exs <> {} and
+          forall ex1, ex2 in set exs &
+                 ex1 <> ex2 => ex1.expertid <> ex2.expertid;
+
+  Period = token;
+
+  Expert :: expertid : ExpertId
+            quali    : set of Qualification
+  inv ex == ex.quali <> {};
+
+  ExpertId = token;
+
+  Qualification = <Elec> | <Mech> | <Bio> | <Chem>;
+     
+  Alarm :: alarmtext : seq of char
+           quali     : Qualification
+
+functions
+
+  NumberOfExperts: Period * Plant -> nat
+  NumberOfExperts(peri,plant) ==
+    card plant.schedule(peri)
+  pre peri in set dom plant.schedule;
+
+  ExpertIsOnDuty: Expert * Plant -> set of Period
+  ExpertIsOnDuty(ex,mk_Plant(sch,-)) ==
+    {peri| peri in set dom sch & ex in set sch(peri)};
+
+  ExpertToPage(a:Alarm,peri:Period,plant:Plant) r: Expert
+  pre peri in set dom plant.schedule and
+      a in set plant.alarms
+  post r in set plant.schedule(peri) and
+       a.quali in set r.quali;
+
+  QualificationOK: set of Expert * Qualification -> bool
+  QualificationOK(exs,reqquali) ==
+    exists ex in set exs & reqquali in set ex.quali;
+\end{vdmsl}
+
+\begin{lstlisting}[language=Isabelle]
+theory DEFAULT
+  imports VDMToolkit
+begin
+
+type_synonym Schedule = "(Period) \<rightharpoonup> Expert VDMSet
+"
+
+
+type_synonym Period = "VDMToken
+"
+
+
+record Expert =
+        expert_expertid :: (ExpertId)
+        expert_quali :: Qualification
+ VDMSet
+
+    
+
+
+type_synonym ExpertId = "VDMToken
+"
+
+
+datatype Qualification = <Bio>| <Chem>| <Elec>| <Mech>
+
+
+record Alarm =
+        alarm_alarmtext :: char VDMSeq
+
+        alarm_quali :: Qualification
+
+    
+
+
+
+definition
+	NumberOfExperts :: "(Period) \<Rightarrow> Plant \<Rightarrow> VDMNat
+"
+    where
+    "NumberOfExperts peri plant  \<equiv> card ((plant_schedule plant)peri)"
+
+
+definition
+	ExpertIsOnDuty :: "Expert \<Rightarrow> Plant \<Rightarrow> (Period) VDMSet
+"
+    where
+    "ExpertIsOnDuty ex Plant_(sch, _)  \<equiv> {peri | peri \<in> dom (sch)  & (ex \<in> sch<peri>)}"
+
+
+definition
+	QualificationOK :: "Expert VDMSet
+ \<Rightarrow> Qualification
+ \<Rightarrow> \<bool>"
+    where
+    "QualificationOK exs reqquali  \<equiv> (exists ex \<in> exs & (reqquali \<in> (ex_quali ex)))"
+
+record Plant =
+        plant_schedule :: (Period) \<rightharpoonup> Expert VDMSet
+
+        plant_alarms :: Alarm VDMSet
+
+    
+
+
+
+definition
+	inv_Plant :: "Plant \<Rightarrow> \<bool>"
+    where
+    "inv_Plant Plant_(schedule, alarms) \<equiv> ((isa_invTrue (plant_schedule p) \<and> isa_invSetElems isa_invTrue (plant_alarms p)) \<and> (forall a \<in> alarms & (forall peri \<in> dom (schedule) & QualificationOK schedule<peri> (a_quali a))))"
+
+
+definition
+	pre_NumberOfExperts :: "(Period) \<Rightarrow> Plant \<Rightarrow> \<bool>"
+    where
+    "pre_NumberOfExperts peri plant  \<equiv> ((isa_invTrue peri \<and> isa_invTrue plant) \<and> (peri \<in> dom ((plant_schedule plant))))"
+
+
+definition
+	post_NumberOfExperts :: "(Period) \<Rightarrow> Plant \<Rightarrow> VDMNat
+ \<Rightarrow> \<bool>"
+    where
+    "post_NumberOfExperts peri plant RESULT  \<equiv> (isa_invTrue peri \<and> (isa_invTrue plant \<and> isa_invVDMNat RESULT))"
+
+
+definition
+	pre_ExpertIsOnDuty :: "Expert \<Rightarrow> Plant \<Rightarrow> \<bool>"
+    where
+    "pre_ExpertIsOnDuty ex Plant_(sch, _)  \<equiv> (isa_invTrue ex \<and> isa_invTrue Plant_(sch, -))"
+
+
+definition
+	post_ExpertIsOnDuty :: "Expert \<Rightarrow> Plant \<Rightarrow> (Period) VDMSet
+ \<Rightarrow> \<bool>"
+    where
+    "post_ExpertIsOnDuty ex Plant_(sch, _) RESULT  \<equiv> (isa_invTrue ex \<and> (isa_invTrue Plant_(sch, -) \<and> isa_invSetElems isa_invTrue RESULT))"
+
+
+definition
+	pre_ExpertToPage :: "Alarm \<Rightarrow> (Period) \<Rightarrow> Plant \<Rightarrow> \<bool>"
+    where
+    "pre_ExpertToPage a peri plant  \<equiv> ((isa_invTrue a \<and> (isa_invTrue peri \<and> isa_invTrue plant)) \<and> ((peri \<in> dom ((plant_schedule plant))) \<and> (a \<in> (plant_alarms plant))))"
+
+
+definition
+	post_ExpertToPage :: "Alarm \<Rightarrow> (Period) \<Rightarrow> Plant \<Rightarrow> Expert \<Rightarrow> \<bool>"
+    where
+    "post_ExpertToPage a peri plant r  \<equiv> ((isa_invTrue a \<and> (isa_invTrue peri \<and> (isa_invTrue plant \<and> isa_invTrue r))) \<and> ((r \<in> (plant_schedule plant)peri) \<and> ((a_quali a) \<in> (r_quali r))))"
+
+
+definition
+	pre_QualificationOK :: "Expert VDMSet
+ \<Rightarrow> Qualification
+ \<Rightarrow> \<bool>"
+    where
+    "pre_QualificationOK exs reqquali  \<equiv> (isa_invSetElems isa_invTrue exs \<and> inv_Qualification reqquali)"
+
+
+definition
+	post_QualificationOK :: "Expert VDMSet
+ \<Rightarrow> Qualification
+ \<Rightarrow> \<bool> \<Rightarrow> \<bool>"
+    where
+    "post_QualificationOK exs reqquali RESULT  \<equiv> (isa_invSetElems isa_invTrue exs \<and> (inv_Qualification reqquali \<and> isa_invTrue RESULT))"
+
+end
+\end{lstlisting}
+
+\subsection{Comments}
+As previously mentioned, this tool is not without its bugs, one such example is \lstinline[language=Isabelle]{sch<peri>} above, as well as \lstinline[language=Isabelle]{ Plant_(sch, -)}, it is unclear why the tool handles \lstinline[language=Isabelle]{sch} in this way. This is a good opportunity however, to commend the tool on its robustness. The  \lstinline[language=Isabelle]{post_ExpertToPage} post condition is extremely complex and the tool translates the entire thing correctly.
+
+\subsection{Application to POLAR}
+Law prevents inclusion of the VDM-SL specification to POLAR, and only a minimal section of the translation can be shown, however, the tool translates it without trouble, making this project a success.
+
+\begin{lstlisting}[language=Isabelle]
+
+\end{lstlisting}

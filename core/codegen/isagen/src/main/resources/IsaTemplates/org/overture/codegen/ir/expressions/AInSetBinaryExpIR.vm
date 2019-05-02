@@ -1,1 +1,1 @@
-($Isa.trans($node.Left) in @set $Isa.trans($node.Right))
+($Isa.trans($node.Left) \<in> $Isa.trans($node.Right))
