@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.annotations.Annotation;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -47,6 +48,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Settings;
+import org.overture.interpreter.annotations.INAnnotation;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
@@ -202,6 +204,7 @@ public class ClassInterpreter extends Interpreter
 		initialContext = classes.createInitialContext(assistantFactory);
 		classes.initialize(initialContext, assistantFactory, dbgp);
 		classes.systemInit(scheduler, dbgp, initialContext);
+		Annotation.init(INAnnotation.class, initialContext);
 		logSwapOut();
 
 		createdValues = new NameValuePairMap();

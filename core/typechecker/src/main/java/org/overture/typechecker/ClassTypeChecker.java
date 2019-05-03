@@ -163,7 +163,7 @@ public class ClassTypeChecker extends TypeChecker
 		}
 
 		// Initialise any annotations
-		Annotation.init();
+		Annotation.init(TCAnnotation.class);
 
 		for (SClassDefinition c: classes)
 		{

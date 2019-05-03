@@ -12,7 +12,9 @@ package org.overture.ast.annotations;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * This is the base class for all Annotation implementations. Implementations further
@@ -24,10 +26,12 @@ public abstract class Annotation
 {
 	protected PAnnotation ast = null;
 	private static final Set<Class<?>> declared = new HashSet<Class<?>>(); 
+	private static final List<Annotation> instances = new Vector<Annotation>(); 
 
 	protected Annotation()
 	{
 		declared.add(this.getClass());
+		instances.add(this);
 	}
 	
 	public void setAST(PAnnotation ast)
@@ -35,23 +39,39 @@ public abstract class Annotation
 		this.ast = ast;
 	}
 
-	public static void init()
+	public static void init(Class<?> impl, Object... args)	// eg. pass TCAnnotation.class
 	{
 		for (Class<?> clazz: declared)
 		{
-			try
+			if (impl.isAssignableFrom(clazz))
 			{
-				Method doInit = clazz.getMethod("doInit", (Class<?>[])null);
-				doInit.invoke(null, (Object[])null);
+				try
+				{
+					Method doInit = clazz.getMethod("doInit", (Class<?>[])null);
+					doInit.invoke(null, (Object[])null);
+				}
+				catch (Throwable e)
+				{
+					throw new RuntimeException(clazz.getSimpleName() + ":" + e);
+				}
 			}
-			catch (Throwable e)
+		}
+		
+		for (Annotation annotation: instances)
+		{
+			if (impl.isAssignableFrom(annotation.getClass()))
 			{
-				throw new RuntimeException(clazz.getSimpleName() + ":" + e);
-			}
+				annotation.doInit(args);
+			}			
 		}
 	}
 	
 	public static void doInit()
+	{
+		// Nothing by default
+	}
+
+	protected void doInit(Object[] args)
 	{
 		// Nothing by default
 	}
