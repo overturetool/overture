@@ -3,6 +3,6 @@ record $node.Name =
     $Isa.mkFirstCharLowerCase( ${node.Name} )_$fld.Name :: $Isa.trans($fld.Type)
     #end
 
-$Isa.trans( $node.InvDecl )
+$Isa.transState( $node.InvDecl )
 
-$Isa.trans( $node.InitDecl )
+$Isa.transState( $node.InitDecl )

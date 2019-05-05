@@ -31,6 +31,7 @@ import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.SBasicType;
 import org.overture.codegen.ir.INode;
+import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.SMultipleBindIR;
 import org.overture.codegen.ir.STypeIR;
@@ -77,11 +78,7 @@ public class IsaTranslations {
         return mergeVisitor;
     }
 
-    public void transState(AStateDeclIR state) throws AnalysisException {
-    	/*Invocation of method 'trans' in  class org.overturetool.cgisa.IsaTranslations 
-    	threw exception java.lang.NullPointerException*/
-    	trans(state.getInvDecl());
-    }
+   
     
     // Translations
 
@@ -92,6 +89,19 @@ public class IsaTranslations {
     }
 
    
+    public String transState(AStateDeclIR node) throws AnalysisException {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(" ");
+    	if (node != null) {
+	    	if (node.getInitDecl() != null) {
+	    		sb.append(trans(node.getInitDecl()));
+	    	}
+	    	if (node.getInvDecl() != null) {
+	    		sb.append(trans(node.getInvDecl()));
+	    	}
+    	}
+    	return sb.toString();
+    }
     
 	public String transApplyParams(List<SExpIR> params)
             throws AnalysisException {
@@ -102,7 +112,16 @@ public class IsaTranslations {
 		String str = new String();
 		List<SExpIR> args = new ArrayList();
 		args = node.getArgs();
-		List<AFieldDeclIR> f = node.getAncestor(AStateDeclIR.class).getFields();
+		List<AFieldDeclIR> f = new ArrayList<AFieldDeclIR>();
+		SDeclIR rs = IsaGen.declGenHistoryMap.get(((ARecordTypeIR) 
+					node.getType().clone()).getName().toString());
+		
+		if (rs instanceof AStateDeclIR)
+			f = ((AStateDeclIR) rs).getFields();
+		else
+			f = ((ARecordDeclIR) rs).getFields();
+			
+		
 		for (int i = 0; i < f.size(); i++)
 		{
 			str = str + (f.get(i).getName() + " = " + args.get(i).toString());
