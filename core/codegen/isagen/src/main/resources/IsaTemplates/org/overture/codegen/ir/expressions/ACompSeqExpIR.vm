@@ -1,1 +1,1 @@
-$node.left \<ACompSeqExpIR> $node.right
+$node.First | $node.SetSeq

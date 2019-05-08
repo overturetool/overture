@@ -117,23 +117,40 @@ public class IsaTranslations {
 
 	public String transMkArgs(ANewExpIR node) {
 		String str = new String();
-		List<SExpIR> args = new ArrayList();
+		List<SExpIR> args = new ArrayList<SExpIR>();
 		args = node.getArgs();
 		List<AFieldDeclIR> f = new ArrayList<AFieldDeclIR>();
 		SDeclIR rs = IsaGen.declGenHistoryMap.get(((ARecordTypeIR) 
 					node.getType().clone()).getName().toString());
 		
-		if (rs instanceof AStateDeclIR)
-			f = ((AStateDeclIR) rs).getFields();
+		
+		if (rs instanceof AStateDeclIR) 
+		{
+			AStateDeclIR state = (AStateDeclIR) rs.clone();
+			f = state.getFields();
+			for (int i = 0; i < f.size(); i++)
+			{
+				str = str + state.getName().toString().substring(0,1).toLowerCase() 
+						+ state.getName().toString().substring(1) + "_"
+						+ (f.get(i).getName() + " = " + args.get(i).toString());
+				if (i < f.size()-1) str = str + (", ");
+			}
+		}
 		else
-			f = ((ARecordDeclIR) rs).getFields();
+		{
+			ARecordDeclIR rec = (ARecordDeclIR) rs.clone();
+			f = rec.getFields();
+			for (int i = 0; i < f.size(); i++)
+			{
+				str = str + rec.getName().toString().substring(0,1).toLowerCase() 
+						+ rec.getName().toString().substring(1) + "_"
+						+ (f.get(i).getName() + " = " + args.get(i).toString());
+				if (i < f.size()-1) str = str + (", ");
+			}
+		}
 			
 		
-		for (int i = 0; i < f.size(); i++)
-		{
-			str = str + (f.get(i).getName() + " = " + args.get(i).toString());
-			if (i < f.size()-1) str = str + (", ");
-		}
+		
 		return str;
 	}
 	
@@ -382,6 +399,23 @@ public class IsaTranslations {
     public boolean hasInvariant(ATypeDeclIR node) {
         return (node.getInv() != null);
     }
+    
+    public String transTypeName(STypeIR node) {
+    	if (node instanceof ASetSetTypeIR) 
+    	{
+    		ASetSetTypeIR set = (ASetSetTypeIR) node;
+    		return IsaGen.typeGenHistoryMap.get(set);
+    	}
+    	if (node instanceof ASeqSeqTypeIR)
+    	{
+    		ASetSetTypeIR seq = (ASetSetTypeIR) node;
+    		return IsaGen.typeGenHistoryMap.get(seq);
+    	}
+    	else 
+    	{
+    		return "collectionName";
+    	}
+    }
 
     public String genUnaryTypeConstructorInv(Object node, String name)
     {
@@ -395,7 +429,7 @@ public class IsaTranslations {
                 if(node_.getSeqOf() instanceof SBasicTypeBase)
                 {
                     // In this case it is a seq of a basic type.
-                    inv= "isa_invSeqElems inv_True";
+                    inv= "inv_SeqElems inv_True";
                 }
             }
 
@@ -449,7 +483,7 @@ public class IsaTranslations {
     {
         if(node instanceof ASeqSeqTypeIR){
             ASeqSeqTypeIR node_ = (ASeqSeqTypeIR) node;
-            return concreteTypeInvariantForUnaryTypeConstructorInvariant(node_.getSeqOf(),"isa_invSeqElems ");
+            return concreteTypeInvariantForUnaryTypeConstructorInvariant(node_.getSeqOf(),"inv_SeqElems ");
         }
         if(node instanceof ASetSetTypeIR)
         {

@@ -69,7 +69,7 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
 //    		"NoParamNoPre.vdmsl",
 //    		"1ParamNoPre.vdmsl","1ParamPrePost.vdmsl",
 //    		"FuncPrePost.vdmsl",
-////    		"NotYetSpecified.vdmsl",
+//    		"NotYetSpecified.vdmsl",
 //    		"FuncPre.vdmsl",
 //    		"FuncApply3Params.vdmsl",
 //    		"FuncDecl2Params.vdmsl",
@@ -146,7 +146,7 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
     public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected) {
     	PrintWriter writer = null;
 		try {
-			writer = new PrintWriter("/Users/jamie/Desktop/ToolDemo/Polar.thy", "UTF-8");
+			writer = new PrintWriter("/Users/jamie/Desktop/ToolDemo/Polar.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

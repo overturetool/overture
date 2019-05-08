@@ -1,1 +1,1 @@
-$node.left \<AEnumMapExpIR> $node.right
+$node.Left \<mapsto> $node.Right

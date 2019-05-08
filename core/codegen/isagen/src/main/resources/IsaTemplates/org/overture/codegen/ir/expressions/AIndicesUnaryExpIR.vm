@@ -1,1 +1,1 @@
-$node.left \<AIndicesUnaryExp> $node.right
+#*$Isa.transTypeName($node.Type)*# inds $node.Exp

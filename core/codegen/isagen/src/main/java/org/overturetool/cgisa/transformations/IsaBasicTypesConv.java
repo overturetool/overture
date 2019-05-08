@@ -7,6 +7,7 @@ import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
 import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
+import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.ASeqSeqTypeIR;
 import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.ir.types.ATokenBasicTypeIR;
@@ -46,6 +47,8 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
                 }).map(d -> (ATypeDeclIR) d)
                 .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
     }
+    
+    
     
     //Transform int to isa_VDMInt
     public void caseAIntNumericBasicTypeIR(AIntNumericBasicTypeIR x){

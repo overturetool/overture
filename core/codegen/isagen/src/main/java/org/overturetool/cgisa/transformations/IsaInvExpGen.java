@@ -132,7 +132,7 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
         		STypeIR type = fields.get(i).getType();
 		    	AIdentifierVarExpIR invExp = new AIdentifierVarExpIR();
 	            invExp.setName("("+node.getName().substring(0,1).toLowerCase()+
-	            		node.getName().toString().substring(1, node.getName().toString().length())+"_"+
+	            		node.getName().toString().substring(1) + "_" +
 	            		fields.get(i).getName()+" "+this.ps.toString()+")");
 	            invExp.setType(this.methodType.clone());
 	            this.targetIP = invExp;
