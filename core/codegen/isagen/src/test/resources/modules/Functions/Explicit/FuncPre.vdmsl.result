@@ -7,7 +7,7 @@ f :: \"VDMInt \\<Rightarrow> VDMInt\"\nwhere \n
 definition \n
 pre_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
 where \n
-\"pre_f x \\<equiv> (isa_invTrue x \\<and> true)\"\n
+\"pre_f x \\<equiv> (isa_invTrue x \\<and> True)\"\n
 
 definition\n
 post_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n

@@ -1,6 +1,6 @@
 record $node.Name =
     #foreach ($fld in $node.Fields )
-    $Isa.mkFirstCharLowerCase( ${node.Name} )_$fld.Name :: $Isa.trans($fld.Type)
+    $Isa.mkFirstCharLowerCase( ${node.Name} )_$fld.Name :: "$Isa.trans($fld.Type)"
     #end
 
 #*

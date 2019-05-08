@@ -24,6 +24,9 @@ package org.overturetool.cgisa;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
@@ -141,6 +144,17 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
 
     @Override
     public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected) {
+    	PrintWriter writer = null;
+		try {
+			writer = new PrintWriter("/Users/jamie/Desktop/ToolDemo/Polar.thy", "UTF-8");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	writer.println(actual.translation);
+    	writer.close();
+
         assertTrue("\n --- Expected: ---\n" + expected.translation
                 + "\n --- Got: ---\n" + actual.translation, expected.compare(actual));
         if(expected.compare(actual))

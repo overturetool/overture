@@ -2,6 +2,6 @@
 $node.NamedInvType.Name.Name
 #else
 #foreach( $t in $node.Types )
-$Isa.trans($t)#if( $foreach.hasNext )| #end
+$Isa.transUnion($t)#if( $foreach.hasNext )| #end
 #end
 #end

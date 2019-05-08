@@ -17,7 +17,7 @@ where \n
 definition\n
 post_f \:\: \"VDMInt \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
 where\n
-\" post_f x RESULT \\<equiv> ((isa_invTrue x \\<and> isa_invTrue RESULT) \\<and> true)\"\n
+\" post_f x RESULT \\<equiv> ((isa_invTrue x \\<and> isa_invTrue RESULT) \\<and> True)\"\n
 
 \n\n 
 end","errors":false}

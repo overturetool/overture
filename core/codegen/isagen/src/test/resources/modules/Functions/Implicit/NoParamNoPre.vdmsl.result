@@ -8,7 +8,7 @@ where \n
 definition\n
 post_f \:\: \"VDMInt \\<Rightarrow> \\<bool>\"\n
 where\n
-\" post_f r \\<equiv> true\"\n
+\" post_f r \\<equiv> True\"\n
 
 
 

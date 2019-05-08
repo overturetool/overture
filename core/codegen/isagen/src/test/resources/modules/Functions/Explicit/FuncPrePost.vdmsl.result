@@ -9,12 +9,12 @@ where \n
 definition \n
 pre_f \:\: \"VDMNat \\<Rightarrow> \\<bool>\"\n
 where \n
-\"pre_f x \\<equiv> (isa_invVDMNat x \\<and> true)\"\n
+\"pre_f x \\<equiv> (isa_invVDMNat x \\<and> True)\"\n
 
 definition\n
 post_f \:\: \"VDMNat \\<Rightarrow> VDMInt \\<Rightarrow> \\<bool>\"\n
 where\n
-\" post_f x RESULT \\<equiv> ((isa_invVDMNat x \\<and> isa_invTrue RESULT) \\<and> true)\"\n
+\" post_f x RESULT \\<equiv> ((isa_invVDMNat x \\<and> isa_invTrue RESULT) \\<and> True)\"\n
 
 
 

@@ -44,6 +44,7 @@ import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
+import org.overture.codegen.ir.expressions.AEnumSetExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.ANewExpIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
@@ -85,19 +86,25 @@ public class IsaTranslations {
     public String trans(INode node) throws AnalysisException {
         StringWriter writer = new StringWriter();
         node.apply(mergeVisitor, writer);
-        return writer.toString();
+        return writer.toString().replace("true", "True");//hack around lower cased trues;
     }
 
    
+    public String transUnion(STypeIR node) throws AnalysisException {
+        return trans(node).replace("<", "").replace(">", "");//hack around lower cased trues;
+    }
+    
+    
+    
     public String transState(AStateDeclIR node) throws AnalysisException {
     	StringBuilder sb = new StringBuilder();
     	sb.append(" ");
     	if (node != null) {
 	    	if (node.getInitDecl() != null) {
-	    		sb.append(trans(node.getInitDecl()));
+	    		sb.append(trans(node.getInitDecl()) + "\n");
 	    	}
 	    	if (node.getInvDecl() != null) {
-	    		sb.append(trans(node.getInvDecl()));
+	    		sb.append(trans(node.getInvDecl()) + "\n");
 	    	}
     	}
     	return sb.toString();
@@ -125,7 +132,7 @@ public class IsaTranslations {
 		for (int i = 0; i < f.size(); i++)
 		{
 			str = str + (f.get(i).getName() + " = " + args.get(i).toString());
-			if (i < f.size() - 1) str.concat(", ");
+			if (i < f.size()-1) str = str + (", ");
 		}
 		return str;
 	}
@@ -161,6 +168,7 @@ public class IsaTranslations {
                 sb.append(sep);
             }
         }
+        
         return sb.toString();
     }
     
@@ -308,6 +316,9 @@ public class IsaTranslations {
     		String initial = shift( Arrays.asList(transInit(node.getType(), node.toString().replace("[", "").replace("]", "")).split("")) );
     		return initial;
     	}
+//    	if (node.getClass() == AEnumSetExpIR.class) {
+//    		return "{" + trans(node) + "}";
+//    	}
     	else 
     	{
     		return trans(node);

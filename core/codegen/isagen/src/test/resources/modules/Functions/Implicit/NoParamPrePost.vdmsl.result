@@ -7,14 +7,14 @@ begin
 definition
 	pre_f \:\: \"\\<bool>\"
     where
-    \"pre_f  \\<equiv> true\"
+    \"pre_f  \\<equiv> True\"
 
 
 definition
 	post_f \:\: \"VDMInt
  \\<Rightarrow> \\<bool>\"
     where
-    \"post_f r  \\<equiv> true\"
+    \"post_f r  \\<equiv> True\"
 
 end
 ","errors":false}

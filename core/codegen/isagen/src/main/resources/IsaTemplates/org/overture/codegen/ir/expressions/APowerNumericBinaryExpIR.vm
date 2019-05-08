@@ -1,1 +1,1 @@
-$node.left \<APowerNumericBinaryExp> $node.right
+$node.left^$node.right

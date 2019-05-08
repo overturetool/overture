@@ -1,5 +1,4 @@
 package org.overturetool.cgisa.transformations;
-
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.cgisa.isair.analysis.AnswerIsaAdaptor;
 import org.overture.codegen.ir.*;
@@ -74,6 +73,8 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 
         return exp;
     }
+    
+    
 
     
     @Override
