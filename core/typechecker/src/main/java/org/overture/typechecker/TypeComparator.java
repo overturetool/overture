@@ -281,6 +281,17 @@ public class TypeComparator
 		{
 			return Result.Yes; // Not defined "yet"...?
 		}
+		
+		// Correct for one-type unions
+		if (to instanceof AUnionType && ((AUnionType)to).getTypes().size() == 1)
+		{
+			to = ((AUnionType)to).getTypes().get(0);
+		}
+
+		if (from instanceof AUnionType && ((AUnionType)from).getTypes().size() == 1)
+		{
+			from = ((AUnionType)from).getTypes().get(0);
+		}
 
 		// Obtain the fundamental type of BracketTypes, NamedTypes and
 		// OptionalTypes.
