@@ -2218,6 +2218,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3317, "Expression can never match narrow type", node.getLocation(), node);
 		}
 
+		node.setType(result);
 		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, result, node.getLocation());
 	}
 
