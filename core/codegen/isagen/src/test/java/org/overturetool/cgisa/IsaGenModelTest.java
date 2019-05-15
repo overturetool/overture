@@ -51,7 +51,7 @@ public class IsaGenModelTest extends IsaGenParamTest
 	private static final String UPDATE = "tests.update.isagen.model";
 	private static final String MODELS_ROOT = "src/test/resources/models";
 	private static final List<String> skippedTests = Arrays.asList("IO.vdmsl",
-			"CustomAlarm.vdmsl","dummy.vdmsl","Alarm1.vdmsl", "FSM3.vdmsl");//,
+			"CustomAlarm.vdmsl","dummy.vdmsl","Alarm1.vdmsl");//, //"FSM3.vdmsl");//,
 			//"Polar.vdmsl");
 
 

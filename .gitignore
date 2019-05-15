@@ -72,10 +72,6 @@ target/
 # eclipse noise #
 #################
 .metadata/
-.classpath
-.settings/
-.metadata/
-.project
 bin
 .factorypath
 

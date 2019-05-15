@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Nick Boxes</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.overture.ide.core.builder.VdmBuilder</name>
+			<arguments>
+				<dictionary>
+					<key>LANGUAGE_VERSION</key>
+					<value>vdm10</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.overture.ide.vdmsl.core.nature</nature>
+	</natures>
+</projectDescription>
