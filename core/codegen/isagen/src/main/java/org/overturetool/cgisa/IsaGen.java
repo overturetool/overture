@@ -240,7 +240,6 @@ public class IsaGen extends CodeGenBase {
     }
 
     
-    //feed to velocity monster
     private GeneratedModule prettyPrint(IRStatus<? extends INode> status)
             throws org.overture.codegen.ir.analysis.AnalysisException {
         // Apply merge visitor to pretty print Isabelle syntax
