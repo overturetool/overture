@@ -41,11 +41,17 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.declarations.AFuncDeclIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2java.IJavaConstants;
+import org.overture.codegen.vdm2java.JavaCodeGen;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overturetool.cgisa.transformations.*;
 
@@ -57,9 +63,11 @@ import org.overturetool.cgisa.transformations.*;
 public class IsaGen extends CodeGenBase {
 
 
-	public static Map<String, AFuncDeclIR> funcGenHistoryMap = new HashMap<>();;
-	public static Map<STypeIR, String> typeGenHistoryMap = new HashMap<>();;
-	public static Map<String, SDeclIR> declGenHistoryMap = new HashMap<>();;
+	public static Map<String, AFuncDeclIR> funcGenHistoryMap = new HashMap<>();
+	public static Map<STypeIR, String> typeGenHistoryMap = new HashMap<>();
+	public static Map<String, SDeclIR> declGenHistoryMap = new HashMap<>();
+	
+	private IsaSettings isaSettings;
 	
     public IsaGen()
     {
@@ -67,6 +75,8 @@ public class IsaGen extends CodeGenBase {
 
         this.getSettings().setAddStateInvToModule(false);
         this.getSettings().setGenerateInvariants(true);
+        
+        isaSettings = new IsaSettings();
     }
     //TODO: Auto load files in macro directory
     public static void addInvTrueMacro(){
@@ -269,4 +279,37 @@ public class IsaGen extends CodeGenBase {
             return generatedModule;
         }
     }
+    
+    protected void setIsaSettings(IsaSettings s)
+    {
+    	isaSettings = s;
+    }
+    
+	public void genIsaSourceFiles(File root,
+			List<GeneratedModule> generatedClasses)
+	{
+		for (GeneratedModule classCg : generatedClasses)
+		{
+			if (classCg.canBeGenerated())
+			{
+				genIsaSourceFile(root, classCg);
+			}
+		}
+	}
+
+	public void genIsaSourceFile(File root, GeneratedModule generatedModule)
+	{
+		if (root == null)
+		{
+			MsgPrinter.getPrinter().error("Invalid file directory = null");
+			return;
+		}
+
+		if (generatedModule != null && generatedModule.canBeGenerated()
+				&& !generatedModule.hasMergeErrors())
+		{
+			String isaFileName = generatedModule.getName() + IIsaConstants.THY_FILE_EXTENSION;
+			emitCode(root, isaFileName, generatedModule.getContent());
+		}
+	}
 }
