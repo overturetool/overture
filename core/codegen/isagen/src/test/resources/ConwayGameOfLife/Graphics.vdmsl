@@ -1,0 +1,64 @@
+module gui_Graphics 
+
+imports from Conway all
+
+exports all
+definitions
+
+types
+	Configuration ::
+		gridSide : int
+		sleepTime : int
+		pop : Conway`Population;
+
+functions
+	generations_animate: nat1 * Configuration -> seq of Conway`Population
+	generations_animate(n,conf) == 
+		let - = initialise(conf.gridSide, conf.sleepTime) 
+		 in
+		  let patterns =  Conway`generations(n, conf.pop) 
+		   in 
+		    animate_step(patterns);
+
+	animate_step : seq of Conway`Population -> seq of Conway`Population
+	animate_step(pop) ==
+		if pop = [] 
+		then []
+		else
+			let - = {newLivingCell(cell.x, cell.y)| cell in set hd pop} 
+			 in		
+			  let - = newRound() 
+			   in
+	 		    animate_step(tl pop) 
+	measure measure_animate_step;
+	
+	measure_animate_step: seq of Conway`Population -> nat
+	measure_animate_step(list) == len list;
+
+	initialise: nat1 * nat1 -> int
+  initialise(gridSideCount, sleepTime)== is not yet specified;
+    
+  newLivingCell:  int * int -> int
+  newLivingCell(x,y)== is not yet specified;
+    
+  newRound: () -> int
+  newRound()== is not yet specified;
+
+values
+	BLOCK = mk_Configuration(4, 500, Conway`BLOCK);
+
+	BLINKER = mk_Configuration(5, 500, Conway`BLINKER);
+	
+	TOAD = mk_Configuration(6, 500, Conway`TOAD );
+	
+	BEACON = mk_Configuration(8, 500, Conway`BEACON);
+            
+	PULSAR =  mk_Configuration(17, 1000, Conway`PULSAR);
+				
+  DIEHARD = mk_Configuration(33, 300, Conway`DIEHARD);
+      
+  GLIDER = mk_Configuration(40, 100, Conway`GLIDER);      
+       
+  GOSPER_GLIDER_GUN = mk_Configuration(40, 50, Conway`GOSPER_GLIDER_GUN);
+
+end gui_Graphics

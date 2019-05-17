@@ -1,0 +1,192 @@
+module Alarm
+exports all
+definitions
+types
+
+	--@doc IR(?) needed to transform every type declaration with an invariant, even if true.
+	--		 could change isa_invTrue(p) (i.e. no need for the type parameter)?  
+  Period = token
+  --@IR inv p == isa_invTrue[Period](p)
+  ;
+
+  ExpertId = token
+  --@IR inv e == isa_invTrue(e)
+	;
+	
+	--@witness(<Elec>)
+  Qualification = <Elec> | <Mech> | <Bio> | <Chem>
+  --@IR inv q == isa_invTrue(q)
+  ;
+  
+  AlarmText = seq of char;
+	
+	--@witness(mk_Alarm("Some text", Qualification.@witness))   
+  Alarm :: alarmtext : AlarmText
+           quali     : Qualification
+  --@IR inv mk_Alarm(t, q) == isa_invSeqElems[char](isa_invVDMChar)(t) and inv_Qualification(q)
+  ;
+  
+  Qualifications = set of Qualification;
+
+	--@witness(mk_ExpertId(ExpertId.@witness, {Qualification.@witness}))
+  Expert :: expertid : ExpertId
+            quali    : Qualifications
+  inv mk_Expert(-, q) == q <> {}
+  --@IR inv mk_Expert(e, q) == inv_ExpertID(e) and isa_invSetElems[Qualification](inv_Qualification)(q) and q <> {}
+  ;
+	/*
+	  Expert :: expertid : ExpertId
+            quali    :- set of Qualification
+  	inv ex == ex.quali <> {};
+	
+		that obiviates the invariant below :-)
+		
+		why not set1 of Expert to simplify the invariant? 
+	*/
+
+  --@witness({ p1 |-> mk_Expert(e1,{<Bio>}), p2 |-> mk_Expert(e2,{<Elec>}) })
+  Schedule = map Period to set of Expert
+	inv sch ==
+		 -- isa_invVDMMap[Period, set of Expert](inv_Period, (isa_invSetElems[Expert](inv_Expert, rng sch), sch) and
+	   forall exs1 in set rng sch &
+	          --@doc why not simply make it set1 of Expert?
+	          exs1 <> {} and
+	          forall ex1, ex2 in set exs1 &
+	                 ex1 <> ex2 => ex1.expertid <> ex2.expertid;
+	     
+
+functions
+  QualificationOK: set of Expert * Qualification -> bool
+  QualificationOK(exs2,reqquali) ==
+    exists ex in set exs2 & reqquali in set ex.quali;
+
+types
+
+	--@qst could you really have a plant with not alarms?
+	--@witness(mk_Plant(Schedule.@witness, {}))
+	--@expand(Plant,Alarm) ... 
+  Plant :: schedule : Schedule
+           alarms   : set of Alarm
+  inv mk_Plant(schedule,alm) ==
+    forall a in set alm &
+		   forall peri in set dom schedule &
+		   	 QualificationOK(schedule(peri),a.quali);
+
+	--@doc alarms without 
+	--@witness(mk_Plant(Schedule.@witness, {mk_Alarm("Whatever", <Bio>), mk_Alarm("Whatever2", <Elec>)}))
+  Plant1 :: schedule : Schedule
+            alarms   : set1 of Alarm
+  inv mk_Plant1(schedule,alm) ==
+    forall a in set alm &
+		   forall peri in set dom schedule &
+		     QualificationOK(schedule(peri),a.quali);
+				     
+functions
+	g: Qualification -> nat
+	g(q) == 
+		cases q:
+			<Elec> -> 10,
+			<Mech> -> 20,
+			<Bio>  -> 30
+		end
+	pre
+		q <> <Chem>
+	post
+		RESULT mod 10 = 0 and RESULT >= 10;
+		
+	f: set of Expert * Qualification -> nat
+	f(exs1, q) == card exs1 + g(q)
+	pre
+		--@doc proof shows missing precondition: card exs1 mod 2 = 0;
+		card exs1 mod 2 = 0
+		and
+		QualificationOK(exs1, q)
+	post
+		RESULT mod 2 = 0;
+
+  NumberOfExperts: Period * Plant -> nat
+  NumberOfExperts(peri,plant) ==
+    card plant.schedule(peri)
+  pre 
+  	peri in set dom plant.schedule;
+
+  ExpertIsOnDuty: Expert * Plant -> set of Period
+  ExpertIsOnDuty(ex,mk_Plant(sch,-)) ==
+    {peri| peri in set dom sch & ex in set sch(peri)};
+
+  ExpertToPage(a:Alarm,peri:Period,plant:Plant) r: Expert
+  pre peri in set dom plant.schedule and
+      a in set plant.alarms
+  post r in set plant.schedule(peri) and
+       a.quali in set r.quali;
+
+	-- this function is NOT correct. Why not?
+	ChangeExpert: Plant * Expert * Expert * Period -> Plant
+	ChangeExpert(mk_Plant(plan,alm),ex1,ex2,peri) ==
+	  mk_Plant(plan ++ {peri |-> plan(peri)\{ex1} union {ex2}},alm);
+
+
+values
+ 
+  p1:Period = mk_token("Monday day");
+  p2:Period = mk_token("Monday night");
+  p3:Period = mk_token("Tuesday day");
+  p4:Period = mk_token("Tuesday night");
+  p5:Period = mk_token("Wednesday day");
+  ps : set of Period = {p1,p2,p3,p4,p5};
+
+  eid1:ExpertId = mk_token(134);
+  eid2:ExpertId = mk_token(145);
+  eid3:ExpertId = mk_token(154);
+  eid4:ExpertId = mk_token(165);
+  eid5:ExpertId = mk_token(169);
+  eid6:ExpertId = mk_token(174);
+  eid7:ExpertId = mk_token(181);
+  eid8:ExpertId = mk_token(190);
+  
+  e1:Expert = mk_Expert(eid1,{<Elec>});
+  e2:Expert = mk_Expert(eid2,{<Mech>,<Chem>});
+  e3:Expert = mk_Expert(eid3,{<Bio>,<Chem>,<Elec>});
+  e4:Expert = mk_Expert(eid4,{<Bio>});
+  e5:Expert = mk_Expert(eid5,{<Chem>,<Bio>});
+  e6:Expert = mk_Expert(eid6,{<Elec>,<Chem>,<Bio>,<Mech>});
+  e7:Expert = mk_Expert(eid7,{<Elec>,<Mech>});
+  e8:Expert = mk_Expert(eid8,{<Mech>,<Bio>});
+  exs : set of Expert = {e1,e2,e3,e4,e5,e6,e7,e8};
+
+  s: map Period to set of Expert
+     = {p1 |-> {e7,e5,e1},
+        p2 |-> {e6},
+        p3 |-> {e1,e3,e8},
+        p4 |-> {e6}};
+
+  a1:Alarm = mk_Alarm("Power supply missing",<Elec>);
+  a2:Alarm = mk_Alarm("Tank overflow",<Mech>);
+  a3:Alarm = mk_Alarm("CO2 detected",<Chem>);
+  a4:Alarm = mk_Alarm("Biological attack",<Bio>);
+  alarms: set of Alarm = {a1,a2,a3,a4};
+  
+  plant1 : Plant = mk_Plant(s,{a1,a2,a3});
+  
+ operations
+
+Run: Expert ==> set of Period
+Run(e) == return ExpertIsOnDuty(e, plant1);
+
+traces 
+
+  Test1: let a in set alarms
+         in
+           let p in set ps 
+           in
+             (NumberOfExperts(p,plant1);
+              pre_ExpertToPage(a,p,plant1);
+              let ex in set exs
+              in
+                post_ExpertToPage(a,p,plant1,ex))
+               
+  Test2: let ex in set exs
+         in
+           ExpertIsOnDuty(ex,plant1)
+           
+end Alarm

@@ -1,0 +1,119 @@
+module Conway3323
+exports all
+definitions 
+
+/*
+1) Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.
+2) Any live cell with more than three live neighbors dies, as if by overcrowding.
+3) Any live cell with two or three live neighbors lives on to the next generation.
+4) Any dead cell with exactly three live neighbors becomes a live cell - reproduction.
+*/
+
+values
+	GENERATE:	int				 = 3;		-- Number of neighbours to cause generation
+	SURVIVE	: set of int = {2, 3};	-- Numbers of neighbours to ensure survival, else death
+	AROUND	: set of int = { -1, 0, +1 };
+	MAX_NEIGHBOURS: int = 8;
+	
+types
+	Dot = nat
+	inv d == d < 4;
+	
+	Bag = set of Dot
+	inv b == card b > 2;
+
+	Bag2 = set of Dot
+	inv b == card b > 2 and forall d in set b & inv_Dot(d);
+	
+	Point ::				-- Plain is indexed by integers
+		x : int
+		y : int
+	;
+		
+	Population =	 set of Point;
+	
+functions
+	test: Bag -> Bag
+	test(b) == b;
+
+	test2: Bag2 -> Bag
+	test2(b) == b;
+	
+	-- Generate the Points around a given Point
+	around: Point -> Population
+	around(p) == 
+			-- mk_Point(0,0)
+			-- mk_Point(0,1), mk_Point(1,0), mk_Point(0,0), mk_Point(-1,0), ...
+			-- { Expr | Generator/Binder & Filter } 
+			
+			-- p.x ~= select_x_p: Point -> int
+			--				  select_y_p: Point -> nat
+			--					mk_Point  : int * nat -> Point
+			{ mk_Point(p.x+ x, p.y+y) | x,y  in set AROUND } \ { p }
+	post not p in set RESULT and card RESULT <= MAX_NEIGHBOURS;
+	
+	-- Count the number of live cells around a given point 
+	neighbours: Population * Point -> Population
+	neighbours(pop, p) == pop inter around(p)   
+	--pre p in set pop
+	post card RESULT <= MAX_NEIGHBOURS;
+	
+	neighbours2: Population * Point -> Population
+	neighbours2(pop, p) == if p in set pop then pop inter around(p) else {}   
+	post card RESULT <= MAX_NEIGHBOURS;
+
+	neighbours3: Population * Point -> Population
+	neighbours3(pop, p) == { q | q in set pop & q in set around(p) }
+	pre true
+	post card RESULT <= MAX_NEIGHBOURS;
+
+	neighbourCount: Population * Point -> nat
+	neighbourCount(pop, p) == card neighbours(pop,p)
+	post RESULT <= MAX_NEIGHBOURS;
+
+/*
+1) Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.
+2) Any live cell with more than three live neighbors dies, as if by overcrowding.
+3) Any live cell with two or three live neighbors lives on to the next generation.
+4) Any dead cell with exactly three live neighbors becomes a live cell - reproduction.
+*/
+	-- Generate the set of empty cells that will become live
+	newCellsByPoint: Population * Point -> set of Point
+	newCellsByPoint(pop, p) == { q | q in set around(p) & q not in set pop and
+																							neighbourCount(pop, q) = GENERATE };
+																							
+	newCells: Population -> set of Point
+	newCells(pop) == dunion { newCellsByPoint(pop, p) | p in set pop }	
+	-- can only create (RESULT) that you don't know already
+	post RESULT inter pop = {};		-- None currently live
+		
+	-- Generate the set of cells to die
+	deadCells: Population -> set of Point
+	deadCells(pop) == { q | q in set pop & neighbourCount(pop, q) < 2 
+																		 or neighbourCount(pop, q) > 3 }
+																				 -- nc 0,1,4,...,8
+	-- can only kill what you know
+	post RESULT inter pop = RESULT;	-- All currently live
+	
+	-- Perform one generation
+	generation: Population -> Population
+	generation(pop) == (pop \ deadCells(pop)) union newCells(pop);
+
+	-- Generate a sequence of N generations 
+	generations: nat1 * Population -> seq of Population
+	generations(n,pop) == 
+		let new_p = generation(pop) in
+			if n = 1 then 
+				[new_p]
+			else
+				-- ex: with n = 3
+				-- [generation(pop)] ^ generations(3-1, generation(pop))
+				-- [generation(pop)] ^ [generation(generation(pop))] ^ generations(2-1, generation(generation(pop)))
+				-- [generation(pop), generation(generation(pop)), generation(generation(generation(pop)))]
+				[new_p] ^ generations(n-1, new_p)
+	measure measureGenerations;
+     
+	measureGenerations: nat1 * Population -> nat
+	measureGenerations(n,-) == n;
+	
+end Conway3323

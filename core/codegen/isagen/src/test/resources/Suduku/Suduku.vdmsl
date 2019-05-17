@@ -1,0 +1,214 @@
+module Suduku
+exports all
+definitions 
+
+
+values
+
+MAX_GRID_VAL: nat1 = 9;
+MAX_SUB_GRID: nat1 = 3;
+GRID_SIZE   : nat1 = MAX_GRID_VAL * MAX_GRID_VAL;
+
+GRID_VALS    : set of nat1 = {1,...,MAX_GRID_VAL};
+ALL_CELLS   : set of Cell = 
+		{ mk_Cell(r, c) | r, c in set GRID_VALS };
+
+-- set of 'first' cells per sub-grid (e.g. mk_Cell(1,1), mk_Cell(1,7), mk_Cell(4,7))
+SUB_GRID_ORIGINS : set of Cell	 		  = { get3x3(c) | c in set ALL_CELLS };
+SUB_GRID_CELLS   : set of set of Cell = 
+{ { c | c in set ALL_CELLS & in3x3(c, origin) } | 
+   origin in set SUB_GRID_ORIGINS };
+
+types
+
+Cell :: r:nat1 
+			  c:nat1
+inv mk_Cell(r,c) == r <= MAX_GRID_VAL 
+ 							  and c <= MAX_GRID_VAL;
+
+Puzzle0 = map Cell to nat1;
+
+Puzzle2 = seq of nat1
+inv p2 == elems p2 subset GRID_VALS 
+					and
+					card(elems p2) = MAX_GRID_VAL 
+					and 
+					len p2 <= GRID_SIZE		 
+				 ;
+				 
+Puzzle3 = seq of seq of nat1
+inv p3 == len p3 <= MAX_GRID_VAL
+					and
+					forall s in set elems p3 & elems s subset GRID_VALS
+				 ;
+
+Puzzle = Puzzle0
+inv p == rng p subset GRID_VALS 
+				 and
+				 -- (forall c in set dom p & p(c) <= MAX_GRID_VAL)
+				 card(dom p) <= GRID_SIZE
+				 and
+				 isValidSuduku(p)
+				 ;
+
+functions
+
+isValidSuduku: (map Cell to nat1) -> bool
+isValidSuduku(m) == forall sg in set SUB_GRID_CELLS & isInjective(sg <: m);
+
+isInjective : map Cell to nat1 -> bool
+isInjective(m) == forall x1, x2 in set dom m & forall y in set rng m & m(x1) = y and m(x2) = y => x1 = x2;
+
+get3x3: Cell -> Cell
+get3x3(mk_Cell(r,c)) ==
+		mk_Cell( ((r-1) div MAX_SUB_GRID) * MAX_SUB_GRID + 1, 
+					   ((c-1) div MAX_SUB_GRID) * MAX_SUB_GRID + 1)
+pre MAX_SUB_GRID < 4
+post RESULT.r in set {1,4,7} and
+		 RESULT.c in set {1,4,7};
+	
+--get3x3version2(cell: Cell) result: Cell
+--post result.r <= cell.r and result.c <= cell.c and
+--     result.r in set {1,4,7} and
+--		 result.c in set {1,4,7};
+
+
+in3x3: Cell * Cell -> bool
+in3x3(cell, origin) ==
+	cell.r >= origin.r and cell.r <= origin.r + (MAX_SUB_GRID-1) and
+	cell.c >= origin.c and cell.c <= origin.c + (MAX_SUB_GRID-1)
+pre origin in set SUB_GRID_ORIGINS;
+
+
+
+
+
+allowed: Cell * nat * Puzzle0 -> bool
+allowed(cell, n, puzzle) ==
+	(not (exists other in set dom puzzle &
+					puzzle(other) = n and 
+					(other.r = cell.r or other.c = cell.c)))
+	and
+		let origin = get3x3(cell) in
+			not exists other in set dom puzzle &
+				puzzle(other) = n and in3x3(other, origin);
+				
+solve: Puzzle0 * nat -> bool
+solve(puzzle, l) ==
+	let free = ALL_CELLS \ dom puzzle in
+		if free = {}
+		then true		-- puzzle is solved
+		else
+			exists n in set GRID_VALS, c in set free &
+				allowed(c, n, puzzle) and solve(puzzle munion {c |-> n}, l+1)
+measure solve_measure;
+
+solve_measure: Puzzle0 * nat -> nat
+solve_measure(p, -) == card(ALL_CELLS \ dom p);
+				
+empty: () -> bool
+empty() == solve({|->}, 1);
+
+test : () -> set of Cell
+test() == SUB_GRID_ORIGINS;
+
+state StateName of
+-- TODO Define state here
+end 
+
+operations 
+-- TODO Define operations here
+
+values
+EASY : Puzzle0 = { 
+--									mk_Cell(?,1) |-> ?, 
+--									mk_Cell(?,2) |-> ?, 
+--									mk_Cell(?,3) |-> ?,
+									mk_Cell(2,1) |-> 5, 
+									mk_Cell(2,2) |-> 3, 
+--									mk_Cell(2,3) |-> ?, 
+									mk_Cell(3,1) |-> 2, 
+--									mk_Cell(3,2) |-> ?, 
+--									mk_Cell(3,3) |-> ?, 
+									 
+--									mk_Cell(1,4) |-> ?, 
+--									mk_Cell(1,5) |-> ?, 
+--									mk_Cell(1,6) |-> ?, 
+									mk_Cell(2,4) |-> 7, 
+--									mk_Cell(2,5) |-> ?, 
+									mk_Cell(2,6) |-> 8, 
+--									mk_Cell(3,4) |-> ?, 
+									mk_Cell(3,5) |-> 4, 
+--									mk_Cell(3,6) |-> ?, 
+									
+--									mk_Cell(1,7) |-> ?, 
+									mk_Cell(1,8) |-> 1, 
+--									mk_Cell(1,9) |-> ?,
+--									mk_Cell(2,7) |-> ?, 
+									mk_Cell(2,8) |-> 6, 
+--									mk_Cell(2,9) |-> ?, 
+--									mk_Cell(3,7) |-> ?, 
+									mk_Cell(3,8) |-> 9, 
+--									mk_Cell(3,9) |-> ?,
+									
+--									mk_Cell(4,1) |-> ?, 
+--									mk_Cell(4,2) |-> ?, 
+									mk_Cell(4,3) |-> 9,
+--									mk_Cell(5,1) |-> ?, 
+--									mk_Cell(5,2) |-> ?, 
+									mk_Cell(5,3) |-> 8, 
+--									mk_Cell(6,1) |-> ?, 
+--									mk_Cell(6,2) |-> ?, 
+--									mk_Cell(6,3) |-> ?, 
+									 
+--									mk_Cell(4,4) |-> ?, 
+									mk_Cell(4,5) |-> 3, 
+--									mk_Cell(4,6) |-> ?, 
+--									mk_Cell(5,4) |-> ?, 
+									mk_Cell(5,5) |-> 1, 
+--									mk_Cell(5,6) |-> ?, 
+--									mk_Cell(6,4) |-> ?, 
+									mk_Cell(6,5) |-> 6, 
+--									mk_Cell(6,6) |-> ?, 
+									
+--									mk_Cell(4,7) |-> ?, 
+									mk_Cell(4,8) |-> 7, 
+--									mk_Cell(4,9) |-> ?,
+									mk_Cell(5,7) |-> 4, 
+--									mk_Cell(5,8) |-> ?, 
+									mk_Cell(5,9) |-> 5, 
+--									mk_Cell(6,7) |-> ?, 
+--									mk_Cell(6,8) |-> ?, 
+--									mk_Cell(6,9) |-> ?,
+									
+									mk_Cell(7,1) |-> 4, 
+--									mk_Cell(7,2) |-> ?, 
+--									mk_Cell(7,3) |-> ?,
+--									mk_Cell(8,1) |-> ?, 
+									mk_Cell(8,2) |-> 7, 
+--									mk_Cell(8,3) |-> ?, 
+--									mk_Cell(9,1) |-> ?, 
+--									mk_Cell(9,2) |-> ?, 
+									mk_Cell(9,3) |-> 6, 
+									 
+									mk_Cell(7,4) |-> 9, 
+--									mk_Cell(7,5) |-> ?, 
+--									mk_Cell(7,6) |-> ?, 
+--									mk_Cell(8,4) |-> ?, 
+									mk_Cell(8,5) |-> 8, 
+--									mk_Cell(8,6) |-> ?, 
+									mk_Cell(9,4) |-> 5, 
+--									mk_Cell(9,5) |-> ?, 
+--									mk_Cell(9,6) |-> ?, 
+									
+--									mk_Cell(7,7) |-> ?, 
+--									mk_Cell(7,8) |-> ?, 
+									mk_Cell(7,9) |-> 1,
+--									mk_Cell(8,7) |-> ?, 
+									mk_Cell(8,8) |-> 2, 
+--									mk_Cell(8,9) |-> ?, 
+--									mk_Cell(9,7) |-> ?, 
+--									mk_Cell(9,8) |-> ?, 
+									mk_Cell(9,9) |-> 7
+							  };
+end Suduku

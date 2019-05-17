@@ -1,0 +1,171 @@
+module NickBoxes
+exports all
+definitions
+--
+-- A simple model of a dots-and-boxes game (Boxes, Squares, Paddocks, Pigs in a Pen...)
+--
+values
+	SIZE : nat1	= 4;							-- The size of the board (NxN)
+	
+types
+	Player = <A> | <B>;							-- Arbitrary number of players
+
+	Pos ::										-- A square's position on the board
+		row : nat1
+		col : nat1
+	inv p ==
+		p.row <= SIZE and p.col <= SIZE;		-- Row/col must be on the board
+
+	Side = <TOP> | <BOTTOM> | <LEFT> | <RIGHT>;
+	
+	Square ::
+		owner	: [Player]
+		sides	: set of Side
+	inv s ==
+		s.owner <> nil <=> isSurrounded(s.sides);	-- Ownership implies square is surrounded
+
+	Game = map Pos to Square;					-- A game (where squares are located)
+	
+functions
+	isFinished: Game -> bool
+	isFinished(g) ==
+		card { s | s in set rng g & s.owner = nil } = 0;
+		
+	scoreFor: Game * Player -> nat
+	scoreFor(g, p) ==
+		card { x | x in set dom g & g(x).owner = p };
+		
+	scores: Game -> map Player to nat
+	scores(g) ==
+		{ p |-> scoreFor(g, p) | p : Player };
+		
+	winners: Game -> set of Player
+	winners(g) ==
+		let s = scores(g) in
+			{ p | p : Player &
+				forall x : Player &
+					(x = p or s(x) <= s(p)) and s(p) > 0 }
+	pre isFinished(g);
+
+	isWon: Game -> bool
+	isWon(g) ==
+		isFinished(g) and card winners(g) = 1;
+		
+	isDraw: Game -> bool
+	isDraw(g) ==
+		isFinished(g) and card winners(g) > 1;
+		
+	oppositeSide: Side -> Side
+	oppositeSide(s) ==
+		cases s:
+			<TOP>    -> <BOTTOM>,
+			<BOTTOM> -> <TOP>,
+			<LEFT>   -> <RIGHT>,
+			<RIGHT>  -> <LEFT>
+		end;
+		
+	adjacentPos: Pos * Side -> [Pos]
+	adjacentPos(p, s) ==
+		cases s:
+			<TOP>    -> if p.row = 1    then nil else mk_Pos(p.row - 1, p.col),
+			<BOTTOM> -> if p.row = SIZE then nil else mk_Pos(p.row + 1, p.col),
+			<LEFT>   -> if p.col = 1    then nil else mk_Pos(p.row, p.col - 1),
+			<RIGHT>  -> if p.col = SIZE then nil else mk_Pos(p.row, p.col + 1)
+		end;
+		
+	adjacentMove: Move -> [Move]
+	adjacentMove(m) ==
+		let adj = adjacentPos(m.pos, m.side) in
+			if adj = nil then nil
+			else mk_Move(adj, oppositeSide(m.side));
+		
+	isSurrounded: set of Side -> bool
+	isSurrounded(s) ==
+		card s = 4;
+
+values
+	PLAYERS	= { p | p:Player };				-- The set of all Players
+
+	EMPTY : Game =							-- An empty game board
+	{ mk_Pos(r, c) |-> mk_Square(nil, {})	| r, c in set {1, ..., SIZE} };
+
+types
+	Move ::									-- A move is a position and a side
+		pos	 : Pos
+		side : Side; 
+
+	Moves = seq of Move						-- A legal game play sequence
+	inv moves ==
+		len moves = card elems moves;		-- Has no duplicated moves
+
+	PlayOrder = seq1 of Player				-- The order of play of the players
+	inv order ==
+		len order = card elems order and	-- No duplicates in the list
+		elems order = PLAYERS				-- Order contains all players
+
+
+state Sigma of
+	game : Game		-- The game board, initialized by the play operation
+end
+
+operations
+	takeOwnership: Player * [Move] ==> bool		-- Return true if move owns square
+	takeOwnership(p, m) ==
+		if m = nil
+		then return false		-- There is no alternative square for the move
+		else
+			let owner = game(m.pos).owner,
+			    sides = game(m.pos).sides,
+			    newsides = sides union {m.side}
+			in 
+			(
+				if isSurrounded(newsides) and owner = nil then
+				(
+					game(m.pos) := mk_Square(p, newsides);		-- Take ownership
+					return true
+				)
+				else
+				(
+					game(m.pos) := mk_Square(owner, newsides);	-- Just add an edge
+					return false
+				)
+			)
+	pre m = nil or m.side not in set game(m.pos).sides; 
+
+
+	move: Player * Move ==> <AGAIN> | <END>
+	move(p, m) ==
+		let first  = takeOwnership(p, m),				-- Possibly take square
+		    second = takeOwnership(p, adjacentMove(m))	-- And possibly adjacent one
+		in
+			if first or second
+			then return <AGAIN>
+			else return <END>
+	pre m.side not in set game(m.pos).sides;
+
+
+	play: PlayOrder * Moves ==> set of Player | <DRAW> | <UNFINISHED>
+	play(playorder, moves) ==
+	(
+		dcl order:PlayOrder := playorder;	-- hd order is always next to play
+		game := EMPTY;
+
+		for m in moves do
+			let player = hd order in
+			(
+				if move(player, m) = <END>
+				then order := tl order ^ [player];	-- else carry on playing
+				
+				if isWon(game) then
+					return winners(game)
+				elseif isDraw(game) then
+					return <DRAW>
+			);
+
+		return <UNFINISHED>
+	)
+	post if RESULT = <DRAW> then isDraw(game)
+		 else if RESULT = <UNFINISHED> then not isFinished(game)
+		 else RESULT = winners(game);
+
+end NickBoxes

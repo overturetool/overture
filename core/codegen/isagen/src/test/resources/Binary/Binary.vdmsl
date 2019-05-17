@@ -1,0 +1,487 @@
+module Binary
+imports
+from VDMUtil
+	functions
+		val2seq_of_char renamed val2str
+		seq_of_char2val renamed str2val
+exports
+	values
+		BITS: set of nat
+		BITS_PER_BYTE: nat1
+		BYTE_SIZE: nat1
+		WORD_SIZE: nat1
+	types
+		struct String
+		struct Bit
+		struct Byte
+		struct BitVector
+		struct BinByte0
+		struct BinByte
+		struct ByteVector
+		struct HexDigit
+		struct HexString
+		struct HexStringExact2
+		struct UniqueHexStringList1
+		struct CannonicalHexString
+	functions
+		--@doc transforms a Byte (0.255) to a partial bit vector (e.g. up to needed number of bits) 
+		--@doc transforms a partial bit vector (e.g. up to needed number of bits) to a Byte (0..255)
+		bv2nat: BitVector -> nat
+		nat2bv: nat -> BitVector
+		
+		--@doc like byte2bin but return a bit vector with BITS_PER_BYTE length (padded with false)
+		--@doc like bin2byte but only accepts a bit vector with BITS_PER_BYTE length
+		byte2bin: Byte -> BinByte
+		bin2byte: BinByte -> Byte
+		
+		hasSizeBytes: nat * nat1 -> bool
+		hasSizeBits: nat * nat1 -> bool
+		
+		--@doc pads a given bit vector to byte size
+		--@doc gets the first enabled bit in a vector (e.g. [F,T,F,F]=3, whereas (seq) index is 6 (padded bin to 8))
+		--		 ex: [F,T,F,F] = [F,F,F,F,F,T,F,F] = Index 6 and Bit 3
+		
+		bvPad: BitVector * nat -> BitVector
+		firstBit: BitVector -> nat
+		firstBitIndex: BitVector -> nat
+		binPad: BinByte0 -> BinByte
+		firstByteIndex: BinByte0 -> Bit
+		firstByteBit: BinByte0 -> Bit
+		
+		bvAnd: BitVector * BitVector -> BitVector
+		bvOr : BitVector * BitVector -> BitVector
+		bvXor: BitVector * BitVector -> BitVector
+		
+		bvNot: BitVector -> BitVector
+		
+		natShl: nat * nat1 -> nat
+		natShr: nat * nat1 -> nat
+		bvShl: BitVector * nat1 -> BitVector
+		bvShr: BitVector * nat1 -> BitVector
+		
+		removeLeadingZeroedBits: BitVector -> BitVector
+		
+		--@doc transforms a HexString into a nat and vice-versa
+		hex2nat: HexString -> nat
+		nat2hex: nat -> HexString
+		
+		hexSizeBytes: HexString -> nat
+		
+		fold1[@T]: (@T * @T -> @T) * seq1 of @T +> @T
+	  min: nat * nat +> nat
+		minxs_nat: seq1 of nat -> nat 
+		minxs[@T]: seq1 of @T * (@T * @T -> @T) -> @T
+		injective[@T]: seq of @T +> bool
+		
+definitions 
+
+/******************* Bit Vectors ********************/
+
+values
+	BITS_PER_BYTE: nat1 = 8;
+	BIN_BASE: nat1 = 2;
+	BITS: set of nat = {0,...,BITS_PER_BYTE};
+
+	BYTE_SIZE: nat1 = npow(BIN_BASE,BITS_PER_BYTE)-1;
+	WORD_SIZE: nat1 = npow(BIN_BASE,2*BITS_PER_BYTE)-1;
+
+types 
+	binary = nat
+	inv b == b in set {0,1};
+	
+	Bit = nat
+	inv b == b in set BITS;
+	
+	Byte = nat
+	inv v == v < npow(2,BITS_PER_BYTE);	
+	
+	BitVector = seq of bool;
+	
+	ByteVector = seq of BinByte;
+	
+	BinByte0 = BitVector
+	inv b == len b <= BITS_PER_BYTE;
+	
+	BinByte = BinByte0
+	inv b == len b = BITS_PER_BYTE;
+	
+	BitVectorOp = <BAnd> | <BOr> | <BXor>;
+
+	String = seq1 of char;
+	
+functions 
+  injective[@T]: seq of @T +> bool
+  injective(ss) == card (elems ss) = len ss;
+
+  -- Functions related to definition of types
+ 	-- byte size bound e.g. 1 byte = 8 bits = npower(2, 8) = 256; value < 256 (i.e. 0..255)
+	hasSizeBytes: nat * nat1 -> bool
+	hasSizeBytes(value, no_of_bytes) == value < BIN_BASE**(no_of_bytes * BITS_PER_BYTE);
+	
+	-- bit field size boundary
+	hasSizeBits: nat * nat1 -> bool
+	hasSizeBits(value, no_of_bits) == value < BIN_BASE**no_of_bits;
+
+	b2n: bool -> binary
+	b2n(b) == if b then 1 else 0;
+	
+	n2b: binary -> bool
+	n2b(n) == n <> 0; --if n <> 0 then true else false; -- n <> 0
+	
+	--@doc arguably not necessary?
+	npow: nat * nat -> nat1
+	npow(base, exp) == 
+		base**exp--if exp = 0 then 1 else base * npow(base, exp - 1)
+	--post 
+	--	RESULT = base**exp
+	--measure 
+	--	npow_measure
+	;
+	
+	--bnpow : Bit -> nat1
+	--bnpow(exp) == npow(BIN_BASE,exp);
+	
+	bv2natQ: BitVector * nat -> nat
+	bv2natQ(bv, p) ==
+		if bv = [] then
+			p
+		else
+   	  bv2natQ(tl bv, b2n(hd bv) + 2 * p)
+		--@todo/codegen/mods0 CG-Error: ASeqPattern/AConcatenationPattern
+		--cases bv:
+		--	[]		-> p,
+		--	[x]^xs-> bv2natQ(xs, b2n(x) + 2 * p)
+		--end
+	measure 
+		len bv;
+		
+	bv2nat: BitVector -> nat
+	bv2nat(bv) == bv2natQ(bv,0)
+	post 
+		RESULT < npow(BIN_BASE,len bv);
+	
+	nat2bvQ: nat * BitVector -> BitVector
+	nat2bvQ(n, bv) == 
+		if n = 0 then 
+			reverse bv 
+		else 
+			nat2bvQ(n div 2, bv ^ [n2b(n mod 2)])
+	measure 
+		n;
+	
+	nat2bv: nat -> BitVector
+	nat2bv(n) == 
+		nat2bvQ(n,[])
+	post 
+		n < npow(BIN_BASE, len RESULT);
+				
+	bin2byte: BinByte -> Byte
+	bin2byte(bv) == bv2nat(bv)
+	post
+		post_bv2nat(bv, RESULT);
+	
+	byte2bin: Byte -> BinByte
+	byte2bin(n) == binPad(nat2bv(n))
+	post
+		post_nat2bv(n, RESULT);
+	
+	--@doc use of double sequence generator to avoid warning on both OVerture and VDMJ
+	zeroed: nat -> BitVector
+	zeroed(size) == [ false | - in seq [ p | p in set {1,...,size} ] ]
+	post
+		len RESULT = size;
+	
+	bvPad: BitVector * nat -> BitVector
+	bvPad(bv, size) == zeroed(size) ^ bv
+	post
+		len RESULT = len bv + size;
+	
+	binPad: BinByte0 -> BinByte
+	binPad(bv) == bvPad(bv, BITS_PER_BYTE - len bv)
+	post
+		post_bvPad(bv, BITS_PER_BYTE - len bv, RESULT);
+
+	fold1[@T]: (@T * @T -> @T) * seq1 of @T +> @T
+  fold1(f, s) == 
+  	if len s = 1 then
+  		hd s
+  	else
+  		let lens: nat1 = len s in
+  			f(fold1[@T](f,s(1,...,lens div 2)), fold1[@T](f,s((lens div 2)+1,...,lens)))
+  	--@todo/codegen/mods0 CG-Error: ASeqPattern/AConcatenationPattern
+  	--cases s:
+    --  [e]   -> e,
+    --  s1^s2 -> f(fold1[@T](f,s1), fold1[@T](f,s2))
+    --end
+  --pre forall x,y,z:@T & f(x,f(y,z)) = f(f(x,y),z)
+  measure 
+  	len s;
+  	
+	min: nat * nat +> nat
+	min(x,y) == if x < y then x else y;
+	
+	minxs_nat: seq1 of nat -> nat
+	minxs_nat(s) == 
+		minxs[nat](s, min);
+
+	minxs[@T]: seq1 of @T * (@T * @T -> @T) -> @T
+  minxs(s,lt_ord) == 
+  	fold1[@T](lt_ord,s)
+  post 
+  	RESULT in set elems s and forall e in set elems s & lt_ord(RESULT,e) = RESULT or RESULT = e;
+  				
+	firstBitIndex: BitVector -> nat
+	firstBitIndex(bv) == 
+		let s: seq of nat1 = [ i | i in set inds bv & bv(i) ] in
+			if s = [] then 0 else minxs_nat(s)
+	post
+		--@doc if empty vector, result is zero, otherwise find first true index
+		if bv = [] then 
+			RESULT = 0
+		else
+			--@doc result is Bit between 0..8, or within the binPad lenth (8)
+			RESULT <= len bv
+			and
+			--@doc if result is not zero, then ps at result it true, and that's the first index
+			(RESULT <> 0 => bv(RESULT) and (forall i in set inds bv & i < RESULT => not bv(i)))
+			and
+			--@doc if result is zero, then all indexes must be false
+			(RESULT = 0 => not (exists e in set elems bv & e));
+
+	firstBit: BitVector -> nat
+	firstBit(bv) == firstBitIndex(reverse bv)--bvPad(bv, 0))
+	post
+		post_firstBitIndex(reverse bv, RESULT);--binPad(bv), RESULT); 
+
+	firstByteIndex: BinByte0 -> Bit
+	firstByteIndex(bv) == firstBitIndex(binPad(bv))
+	post
+		post_firstBitIndex(binPad(bv), RESULT);
+		
+	firstByteBit: BinByte0 -> Bit
+	firstByteBit(bv) == firstBit(binPad(bv))
+	post
+		post_firstBit(binPad(bv), RESULT);
+		
+	removeLeadingZeroedBits: BitVector -> BitVector
+	removeLeadingZeroedBits(bv) == 
+		--@doc either empty or without leading zeroed bits
+		if bv = [] or hd bv then
+			bv
+		else
+			let fi: nat = firstBitIndex(bv) in
+				--@doc if no bits are set, return empty (e.g. [false,false,false]=[])
+				if fi = 0 then
+					[]
+				else 
+					bv(fi,...,len bv)
+	post
+		len RESULT <= len bv;
+
+	max: nat * nat -> nat
+	max(x,y) == if x >= y then x else y
+	post
+		RESULT >= x and RESULT >= y;
+		
+	bvOp: BitVector * BitVector * BitVectorOp -> BitVector
+	bvOp(lhs, rhs, op) ==
+		--@doc first pad bit vectors to the same size 
+		let pad_size: nat = max(len lhs, len rhs),
+				l: BitVector = bvPad(lhs, pad_size - len lhs),
+				r: BitVector = bvPad(rhs, pad_size - len rhs)
+		 in
+		 		[ cases op: 
+		 				<BAnd> -> l(i) and r(i),
+		 				<BOr>  -> l(i) or r(i),
+		 				<BXor> -> (l(i) and not r(i)) 
+		 									or
+		 									(not l(i) and r(i))
+		 			end
+		 			--@doc add the len l = len r to emphasise the underlying invariant onf BinByte
+		 		| i in set (inds l inter inds r) & len l = len r ]
+	post
+		len RESULT = max(len lhs, len rhs)
+		--@doc a test for and/or/xor on all indexes will be too honerous/spurious?
+		;
+	
+	bvAnd: BitVector * BitVector -> BitVector
+	bvAnd(lhs, rhs) == bvOp(lhs, rhs, <BAnd>)
+	post
+		post_bvOp(lhs,rhs,<BAnd>, RESULT);
+		 		
+	bvOr: BitVector * BitVector -> BitVector
+	bvOr(lhs, rhs) == bvOp(lhs, rhs, <BOr>)
+	post
+		post_bvOp(lhs,rhs,<BOr>, RESULT);
+
+	bvXor: BitVector * BitVector -> BitVector
+	bvXor(lhs, rhs) == bvOp(lhs, rhs, <BXor>)
+	post
+		post_bvOp(lhs,rhs,<BXor>, RESULT);
+
+	bvNot: BitVector -> BitVector
+	bvNot(bv) == [ not bv(i) | i in set inds bv ]
+	post
+		len RESULT = len bv
+		and
+		forall i in set inds bv & not bv(i) = RESULT(i);
+	
+	--@todo natNot, natOr, natAnd?
+	natShl: nat * nat1 -> nat
+	natShl(x,y) == x * npow(BIN_BASE,y);
+	
+	natShr: nat * nat1 -> nat
+	natShr(x,y) == x div npow(BIN_BASE,y);
+	
+	--@doc assuming shl never overflows
+	bvShl: BitVector * nat1 -> BitVector
+	bvShl(bv, s) == 
+		bv ^ zeroed(s)
+	post
+		len RESULT = len bv + s
+		and
+		removeLeadingZeroedBits(RESULT) = removeLeadingZeroedBits(nat2bv(natShl(bv2nat(bv),s)));
+		
+	--@doc assuming shr returns zeroed bv of same size as given if underflow (or []?)
+	bvShr: BitVector * nat1 -> BitVector
+	bvShr(bv, s) ==
+		let shift_amount: int = len bv - s in
+			if shift_amount <= 0 then 
+				--[]
+				zeroed(len bv)
+			else
+				bvPad(bv(1,...,shift_amount), s)
+	post
+		len RESULT = len bv
+		and
+		removeLeadingZeroedBits(RESULT) = removeLeadingZeroedBits(nat2bv(natShr(bv2nat(bv),s)));
+		
+/******************* Hex String ********************/
+
+values
+	--@doc = part of conversion from HexString to nat; use map instead of seq for digits because of zero based neeed
+	--BIN_BASE			: nat1 = 2;
+	HEX_BASE      : nat1 = 16;
+	HEX_TOUPPER   : inmap char to char = { 'a' |-> 'A', 'b' |-> 'B', 'c' |-> 'C', 'd' |-> 'D', 'e' |-> 'E', 'f' |-> 'F' };
+	NAT_HEX_LETTER: inmap nat to char	 = {  10 |-> 'A',  11 |-> 'B',  12 |-> 'C',  13 |-> 'D',  14 |-> 'E',  15 |-> 'F' };
+	HEX_INVARIANT : bool 							 = rng HEX_TOUPPER = rng NAT_HEX_LETTER;
+	
+	--@doc = each binary octet is represented by the equivalent two-character hexadecimal number. ex: FF = 2 chars = 8 bits = 1 byte
+	HEX_BIN_OCTET_LEN: nat1 = 2;
+
+	NUM_CHARS      : set1 of char = {'0','1','2','3','4','5','6','7','8','9'};
+	HEX_CHARS			 : set1 of char = NUM_CHARS union dom HEX_TOUPPER union rng HEX_TOUPPER ;--union {'x'}; NO
+
+types
+	--@doc = hex number range (0..15)					  
+	HexDigit = nat
+	inv digit == digit < HEX_BASE;
+	
+	--@doc = hex string range (0..9,A..F,a..f); minimum is 0 (non empty)
+	HexString = String
+	inv hs == elems hs subset HEX_CHARS;
+	
+	--@doc09 = xs:hexBinary cannonical, no a-f
+	CannonicalHexString = HexString
+	inv chs == elems chs inter dom HEX_TOUPPER = {};
+
+	HexStringExact2 = HexString
+	inv s == len s = 2;
+	
+	UniqueHexStringList1 = seq1 of HexString
+	inv list == injective[HexString](list);
+		
+functions
+	--@doc = calculates the number of bytes in a hex string; any leading zeros are ignored
+	--			 ex: hexSizeBytes(0F)=hexSizeBytes(FF)=1
+	--			 ranges:
+	--			  0  -  FF		1  byte, lentgh 1-2
+	--			100  -FFFF		2 bytes, length 3-4
+	--			10000-FFFFFF	3 bytes, length 5-6
+	hexSizeBytes: HexString -> nat
+	hexSizeBytes(hs) == 
+		let hs_clean = removeLeadingZeros(hs) in
+			(len hs_clean div HEX_BIN_OCTET_LEN) + (len hs_clean mod HEX_BIN_OCTET_LEN);
+
+	--@doc = removes the leading zeros hex string (e.g. 00FC becomes FC). 
+	--			 important for calculating the byte size of given hex string
+	--			 ex: hexSizeBytes(00FC)=hexSizeByte(FC)=(len "FC" div HEX_BIN_OCTET_LEN) + (len "FC" mod HEX_BIN_OCTET_LEN)=1+0=1
+	removeLeadingZeros: HexString -> HexString
+	removeLeadingZeros(hs) == nat2hex(hex2nat(hs))
+	post
+		--@doc = removing leading zero does not affect the underlying nat result value
+		hex2nat(hs) = hex2nat(RESULT);
+
+	hex2nat: HexString -> nat
+	hex2nat(hs) == hex2nat0(hs, 0);
+	
+	hex2digit: char -> nat
+	hex2digit(hs) == 
+		-- hs in {a,b,c,d,e,f}
+		if hs in set dom HEX_TOUPPER then
+			hex2digit(HEX_TOUPPER(hs))
+		-- hs in {A,B,C,D,E,F}
+		else if hs in set rng HEX_TOUPPER then
+			(inverse NAT_HEX_LETTER)(hs)
+		-- hs in {0..9}
+		else			
+			str2val[nat]([hs]).#2 
+	pre
+		HEX_INVARIANT
+		and
+		-- must be between 0..9,A..F
+		hs in set HEX_CHARS
+		and
+		-- if between 0..9, must convert ok
+		hs in set NUM_CHARS => str2val[nat]([hs]).#1
+	measure
+		if hs in set dom HEX_TOUPPER then 1 else 0;
+
+	hex2nat0: seq of char * nat -> nat
+	hex2nat0(hs, res) == 
+		if hs = [] then
+			res
+		else
+			hex2nat0(tl hs, HEX_BASE*res + hex2digit(hd hs))
+		--@todo/codegen/mods0 CG-Error:ASeqPattern/AConcatenationPattern
+		--cases hs:
+		--	[]		 -> res,
+		--	[x]^xs -> hex2nat0(xs, HEX_BASE*res + hex2digit(x))
+		--end
+	pre
+		forall i in set elems hs & pre_hex2digit(i)
+	measure 
+		len hs;
+	
+	nat2hex: nat -> HexString
+	nat2hex(n) == nat2hex0(n, "");
+	
+	digit2hex: HexDigit -> HexString
+	digit2hex(digit) == 
+		if digit in set dom NAT_HEX_LETTER then
+			[NAT_HEX_LETTER(digit)]
+		else
+			val2str[nat](digit);
+	
+	nat2hex0: nat * seq of char -> seq of char
+	nat2hex0(n, res) == 
+		if n = 0 then 
+			res 
+		else 
+			nat2hex0(n div 16, digit2hex(n mod 16) ^ res)
+  measure
+  	n;
+
+/******************* Traces ********************/
+
+	equal : nat * nat -> bool
+	equal(x,y) == x = y;
+
+traces
+
+	N2B_EQUIV: 
+		let b in set BITS in
+			let bp: nat1 = npow(2,b) in
+				equal(bin2byte(byte2bin(bp-1)),bp-1);
+				
+end Binary

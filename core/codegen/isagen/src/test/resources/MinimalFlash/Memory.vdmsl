@@ -1,0 +1,217 @@
+module Memory
+exports all
+definitions 
+
+values
+	pageAddrSize		: nat1 = 5;
+	colAddrSize			: nat1 = 6;
+	spare						: nat1 = 2;
+	pagesPerBlock		: nat1 = 32;
+	blocksPerLUN		: nat1 = 4;
+	LUNsPerTarget		: nat1 = 4;
+	targetsPerDev		: nat1 = 2;
+
+	pageCount				: nat1 = 2**pageAddrSize; -- =32
+	
+	invSpareRange		: bool = pageCount + spare <= 2**colAddrSize;
+	invPagesPerBlock: bool = (pagesPerBlock mod 32 = 0);
+
+	SOME_AMOUNT			: nat1= 256;
+	MEM_BOUND				: nat = pageCount + spare + SOME_AMOUNT;
+	COL_ADDR				: set of nat = {0,...,pageCount+spare-1};
+	PAGE_ADDR				: set of nat = {0,...,pagesPerBlock-1};
+	BLOCK_ADDR			: set of nat = {0,...,blocksPerLUN-1};
+	LUN_ADDR				: set of nat = {0,...,LUNsPerTarget-1};
+	TARGET_IDS			: set of nat = {1,...,targetsPerDev};
+	MAX_BBS					: nat = (card TARGET_IDS * card LUN_ADDR * card BLOCK_ADDR) div 2;
+	
+	BAD_COL_ADDR		: set of nat = {pageCount,...,pageCount+spare-1};
+	BAD_PAGE_ADDR		: set of nat = {0,pagesPerBlock-1};
+	
+	invBadCol				: bool = BAD_COL_ADDR subset COL_ADDR;
+	invBadPage			: bool = BAD_PAGE_ADDR subset PAGE_ADDR;
+	
+types 
+
+	ColAddr   = nat  inv ca == ca in set COL_ADDR;	
+	PageAddr  = nat  inv pa == pa in set PAGE_ADDR;	
+	BlockAddr = nat  inv ba == ba in set BLOCK_ADDR;	
+	LUNAddr   = nat  inv la == la in set LUN_ADDR;	
+	TargetIds = nat1 inv ti == ti in set TARGET_IDS;
+
+	Data = <Erased> | <Bad> | <Other>;
+	
+	-- Addressable entities can be partial for updates and must be total for the state
+	AddrData0 = map ColAddr to Data;
+	AddrPage0 = map PageAddr to AddrData0;
+	AddrBlock0= map BlockAddr to AddrPage0;
+	AddrLUN0 = map LUNAddr to LUN0;
+	Targets0 = map TargetIds to AddrLUN0;
+	
+	LUN0 :: blocks : AddrBlock0 SR: Status PR: AddrData0;
+	
+	Flag = <Fail> | <Ready> | <WriteProtected>;
+	Status = set of Flag inv status == <Fail> in set status => <Ready> in set status;
+
+	AddrData  = AddrData0 								inv ad == dom ad = COL_ADDR;
+	AddrPage  = map PageAddr to AddrData  inv ap == dom ap = PAGE_ADDR;
+	AddrBlock = map BlockAddr to AddrPage inv ab == dom ab = BLOCK_ADDR;
+	AddrLUN   = map LUNAddr to LUN 				inv al == dom al = LUN_ADDR;
+	Targets  = map TargetIds to AddrLUN   inv tg == dom tg = TARGET_IDS;
+	
+	LUN = LUN0 inv mk_LUN0(blocks, -, PR) == inv_AddrBlock(blocks) and inv_AddrData(PR);
+	
+	BadTLBA= map TargetIds to BadLBA 
+	inv m == forall t in set dom m & m(t) <> {|->};
+	BadLBA = map LUNAddr to set1 of BlockAddr;
+
+values
+	erased_page		: AddrData  = { ca |-> <Erased> | ca in set COL_ADDR };
+	erased_block		: AddrPage  = { pa |-> erased_page | pa in set PAGE_ADDR };
+	erased_lunblocks: AddrBlock = { ba |-> erased_block | ba in set BLOCK_ADDR };
+	erased_lun			: LUN 			= mk_LUN0(erased_lunblocks, {<Ready>}, erased_page);
+	erased_target		: AddrLUN		= { la |-> erased_lun | la in set LUN_ADDR };
+	erased_flash		: Targets		= { tid |-> erased_target | tid in set TARGET_IDS };
+
+	-- AddrXXX0 reflect a subset of the adddressable entity
+	bad_page				: AddrData0 = { ca |-> <Bad> | ca in set BAD_COL_ADDR };
+	bad_block0			: AddrPage0 = { 0 |-> bad_page };
+	bad_blockN			: AddrPage0 = { pagesPerBlock-1 |-> bad_page };
+	
+															 -- target 1 LUN 0 blocks 0 and 3, and LUN 2 blocks 1 and 2 as bad
+															 -- target 2 LUN 2 blocks 1 and 2 as bad
+	bad_tlba_ex1		: BadTLBA   = { 1 |-> { 0 |-> { 0, 3 }, 2 |-> { 1, 2 } }, 
+															  	2 |-> { 2 |-> { 1, 2 } } };
+																 
+	invCountBadTLBA1: bool = count_bad(bad_tlba_ex1) = 6;
+	
+functions
+	npower: nat1 * nat -> nat
+	npower(b, e) ==
+		if (e = 0) then 1 else b * npower(b, (e - 1))
+	measure
+		npower_measure;
+		
+	npower_measure: nat1 * nat -> nat
+	npower_measure(-, e) == e;
+	
+	sum_elems: map nat to nat -> nat
+	sum_elems(m) == 
+		if m = {|->} then 0 else
+			let d in set dom m in m(d) + sum_elems({d}<-:m)
+	measure
+		sum_elems_measure;
+		
+	sum_elems_measure: map nat to nat -> nat
+	sum_elems_measure(m) == card dom m;
+	
+	count_bad: BadTLBA -> nat
+	count_bad(badTLBA) ==
+		--count_bad({ 1 |-> { 0 |-> { 0, 3 }, 2 |-> { 1, 2 } }, 3 |-> { 2 |-> { 1, 2 } } })
+		--=
+		--sum_elems({ 1 |-> sum_elems({ 0 |-> card {0,3}, 2 |-> card {1,2} }),
+		--					{ 3 |-> sum_elems({ 2 |-> card {1,2} })})
+		--=
+		--sum_elems({ 1 |-> 4, 3 |-> 2 }) = 6
+		sum_elems(
+			{ tid 
+				|-> 
+				sum_elems(
+					{ la 
+						|-> 
+						card badTLBA(tid)(la) | 
+						la in set dom badTLBA(tid) }) 
+						
+				| tid in set dom badTLBA }
+		);
+		
+state FlashMemory of
+	targets						 : Targets
+	maxBadBlocksShipped: nat
+init
+	fm == fm = mk_FlashMemory(erased_flash, MAX_BBS)
+end 
+
+functions
+	only_changed_target: Targets * Targets * TargetIds -> bool
+	only_changed_target(bt, at, tid) == 
+		{tid} <-: bt = {tid} <-: at;
+	
+	only_changed_LUN: Targets * Targets * TargetIds * LUNAddr -> bool
+	only_changed_LUN(bt, at, tid, la) == 
+		{la} <-: bt(tid) = {la} <-: at(tid);
+		
+	only_changed_block: Targets * Targets * TargetIds * LUNAddr * BlockAddr -> bool
+	only_changed_block(bt, at, tid, la, ba) == 
+		{ba} <-: bt(tid)(la).blocks = {ba} <-: at(tid)(la).blocks
+		and
+		BAD_PAGE_ADDR <-: bt(tid)(la).blocks(ba) = BAD_PAGE_ADDR <-: at(tid)(la).blocks(ba);
+		
+	bad_lunblocks: set of BlockAddr -> AddrBlock
+	bad_lunblocks(badBA) == 
+		let pick_bad_blockN in set {false, true} in
+			{ ba |-> if pick_bad_blockN then bad_blockN else bad_block0 | ba in set badBA };
+	
+	bad_lun_error: set of BlockAddr -> LUN
+	bad_lun_error(badBA) ==
+		mk_LUN0(bad_lunblocks(badBA), {<Ready>}, erased_page);
+		
+	bad_lun: LUN * set of BlockAddr -> LUN
+	bad_lun(lun, badBA) ==
+		let mk_LUN0(blocks, SR, PR) = lun in 
+			mk_LUN0(blocks ++ bad_lunblocks(badBA), SR, PR);
+	
+	bad_target: AddrLUN * BadLBA -> AddrLUN0
+	bad_target(luns, badLBA) ==
+		{ la |-> bad_lun(luns(la), badLBA(la)) | la in set dom badLBA };	
+		
+	bad_flash: Targets * BadTLBA -> Targets
+	bad_flash(targets, badTLBA) ==
+		{ tid |-> bad_target(targets(tid), badTLBA(tid)) | tid in set dom badTLBA };
+				
+	only_changed: Targets * Targets * TargetIds * LUNAddr * BlockAddr -> bool
+	only_changed(bt, at, tid, la, ba) == 
+		{tid} <-: bt = {tid} <-: at
+		and
+		{la} <-: bt(tid) = {la} <-: at(tid)
+		and
+		{ba} <-: bt(tid)(la).blocks = {ba} <-: at(tid)(la).blocks
+		and
+		BAD_PAGE_ADDR <-: bt(tid)(la).blocks(ba) 
+		= 
+		BAD_PAGE_ADDR <-: at(tid)(la).blocks(ba);
+		
+operations 
+
+	MarkFlashI(badTLBA: BadTLBA)
+	ext rd maxBadBlocksShipped 
+			wr targets
+	pre
+		count_bad(badTLBA) <= maxBadBlocksShipped
+	post
+		forall tid in set dom badTLBA & 
+			forall la in set dom badTLBA(tid) &
+				forall ba in set badTLBA(tid)(la) &
+					only_changed(targets~, targets, tid, la, ba);
+					
+	MarkFlash(badTLBA: BadTLBA) ==
+		targets := targets ++ bad_flash(targets, badTLBA)
+	ext rd maxBadBlocksShipped 
+			wr targets
+	pre
+		count_bad(badTLBA) <= maxBadBlocksShipped
+	post
+		forall tid in set dom badTLBA & 
+			only_changed_target(targets~, targets, tid)
+			and
+			forall la in set dom badTLBA(tid) &
+				only_changed_LUN(targets~, targets, tid, la)
+				and
+				forall ba in set badTLBA(tid)(la) &
+					only_changed_block(targets~, targets, tid, la, ba);
+					
+traces
+	MARK_BAD_ex1:
+		MarkFlash(bad_tlba_ex1)
+			
+end Memory

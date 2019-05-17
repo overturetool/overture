@@ -1,0 +1,806 @@
+module DotsBoxesV2
+imports from VDMUtil functions val2seq_of_char renamed val2str,
+			 from IO		 operations  println	renamed println;
+															--printf  renamed printf;
+															print		renamed print
+exports all
+definitions 
+
+/******************************************************************************
+ * Key game range-properties 
+ ******************************************************************************/
+values 
+
+GRID_SIZE: nat1 = grid_size();	   				  -- n >1  =  4
+GRID_MAX : nat1 = GRID_SIZE ** 2; 					-- 4x4   = 16 
+BOX_MAX  : nat1 = (2 * GRID_SIZE) + 1;			-- 2x4+1 =  9
+MOVE_MAX : nat1 = BOX_MAX + GRID_MAX - 1;	  -- 9+16-1= 24
+
+WINNER_MOVE_MAX: nat1 = MOVE_MAX - BOX_MAX; -- 15 moves; taking all boxes; 
+																						-- inner boxes share sides (i.e not 9 + 9) 
+LOOSER_MOVE_MIN: nat1 = BOX_MAX;						--  9 moves; taking no boxes 
+
+-- start with zero for use of modulo arithmetic  as conversion function
+DOT_VALS  : set of nat = {first_idx(), ..., GRID_MAX-1};		-- 0...15
+COORD_VALS: set of nat = {first_idx(), ..., last_idx()};		-- 0...3
+BOX_VALS  : set of nat = {first_idx(), ..., BOX_MAX-1};			-- 0...8
+MOVE_VALS : set of nat = {0,...,WINNER_MOVE_MAX};						-- 0...15
+
+
+/******************************************************************************
+ * Game main types  
+ ******************************************************************************/
+types 
+
+-- Sequences of source/target dot pairs represent moves taken; 
+-- Cartesian coordinates could be used, as well as maps to appropriate types;
+-- The choice for sequences is due to easier mechanisation in Isabelle.
+
+/************************* Coordinates ****************************************/
+
+-- Coords are cartesian representation of the grid (e.g. (0,1), (3,2), etc)
+Coord = nat
+inv c == c in set COORD_VALS
+		;
+
+-- Move types are horizontal or vertical
+MType = <H> | <V>;
+
+-- Coordinate use Coord to make grid; MType avoids reflexive (e.g. (0,0),(0,1) + (0,1),(0,0)) 		
+Coordinate ::
+		row : Coord
+		col : Coord
+		mt: MType;
+
+
+
+
+/**************************** Moves ******************************************/
+
+-- Dots are a numerical representation of the grid (e.g. 0,1,2,3,4...,15)
+Dot = nat
+inv d == d in set DOT_VALS
+		;
+
+-- Each move is ordered to avoid reflexive moves e.g., (1,2) = (2,1). 
+-- This also impose that moves are alway left-right and top-bottom.
+Move :: 
+	source: Dot
+	target: Dot
+inv mk_Move(s, t) == 
+		s < t														-- move is directed (< = L-R, T-B)
+		and
+		(t-s) in set {1, grid_size()}		-- H or V move only please (no diagnoals)
+		and
+		((t-s) = 1 => t div grid_size() = s div grid_size()) 				-- all H moves bound by same distance 
+																																-- no off grid horizontal/diagnoal moves
+		and
+		((t-s) = grid_size() => (s+t) mod grid_size() in set {0,2}) -- all V moves bound by same distance
+		;
+		
+-- All moves are unique, hence moves are injective
+Moves = seq of Move
+inv m == 
+		len m = card elems m						-- no repreated moves
+		and
+		len m in set MOVE_VALS					-- no more moves than possible
+		;
+
+
+
+/**************************** Boxes ******************************************/
+
+-- Box numbers are bound to grid size
+BoxNo = nat
+inv bn == bn < BOX_MAX;
+
+-- Boxes are specific H/V moves
+Box = set of Move
+inv b == 
+		card b = grid_size()						-- size of box is fixed?
+		and
+		card (b inter HMOVES) = 2				-- two moves are horizontal
+		and
+		card (b inter VMOVES) = 2				-- and two vertical in a box
+		;	
+-- theorem: b subset MOVES
+-- desired: (forall bn in set BOX_VALS & card move_dom/rng_filter(b,{bn}) = 2)
+
+/******************************************************************************
+ * Game moves by kind  
+ ******************************************************************************/
+values
+-- Move types are determined by the horizontal/vertical play according to 
+-- grid boundaries. Valid moves are charactesised by corresponding auxiliary
+-- functions that calculate H/V moves, and their corresponding ranging indexes.  
+-- Sets of sets are used to fix one corrdinate and vary the other. Varying 
+-- both coordinates gives the same result; sets of sets separate moves per row/col.
+-- The order of index variation (i.e. rows/cols first) is irrelevant to outcome.  
+-- TODO: make them function-based with postconditions associated with the valid_XXX functions
+-- All moves combine flattened horizontal and vertical moves 
+HMOVES: set of Move = { hmove(r,c) | c in set all_but_last_idxs(), r in set all_idxs() }; 
+VMOVES: set of Move = { vmove(r,c) | r in set all_but_last_idxs(), c in set all_idxs() }; 
+MOVES : set of Move = (HMOVES union VMOVES);
+
+-- Centre box moves 
+HCENTRE: set of Move = { hmove(r,centre_idx()) | r in set centre_idxs() }; 								
+VCENTRE: set of Move = { vmove(centre_idx(), c) | c in set centre_idxs() }; 							
+CENTRE : set of Move = HCENTRE union VCENTRE;
+
+-- Corner moves
+HCORNER: set of Move = { hmove(r,c) | r in set hcorner_idxs(), c in set vcorner_idxs() };
+VCORNER: set of Move = { vmove(r,c) | r in set vcorner_idxs(), c in set hcorner_idxs() }; 
+CORNER : set of Move = HCORNER union VCORNER;
+
+-- Side moves
+HSIDES: set of Move = { hmove(r,centre_idx()) | r in set hcorner_idxs() }; 							
+VSIDES: set of Move = { vmove(centre_idx(),c) | c in set hcorner_idxs() }; 							
+SIDES : set of Move = HSIDES union VSIDES;
+
+-- Spoke moves
+HSPOKES: set of Move = { hmove(r,c) | r in set centre_idxs(), c in set vcorner_idxs() }; 
+VSPOKES: set of Move = { vmove(r,c) | r in set vcorner_idxs(), c in set centre_idxs() };	
+SPOKES : set of Move = HSPOKES union VSPOKES;
+
+
+
+-- Top/Bottom winning-strategy (initial h and v) moves 
+THMOVES: set of Move = 
+	{ hmove(centre_idx(),first_idx()), hmove(vcorner_last_idx(), vcorner_last_idx()) };
+BHMOVES: set of Move = 
+	{ hmove(vcorner_last_idx(),first_idx()), hmove(centre_idx(), vcorner_last_idx()) }; 
+SVMOVES: set of Move = { vmove(centre_idx(), c) | c in set centre_idxs() };								
+TSMOVES: set of Move = THMOVES union SVMOVES;
+BSMOVES: set of Move = BHMOVES union SVMOVES;
+
+/* some tests:
+print HM_ROW
+print VM_COL
+print HMOVES
+print VMOVES
+print CENTRE
+print CORNER
+print SIDES
+print SPOKES
+print valid_move_sets(HMOVES, VMOVES, CENTRE, CORNER, SIDES, SPOKES, TSMOVES, BSMOVES, MOVES)
+print valid_coord_dot
+*/
+
+/******************************************************************************
+ * Game auxiliary functions   
+ ******************************************************************************/
+functions 
+
+
+/******************************************************************************
+ * Grid indexes (i.e. row/col) of interest
+ ******************************************************************************/
+
+-- trivial fix for first index; doesn't need to be 1 in general?
+first_idx: () -> nat
+first_idx() == 0;
+
+last_idx: () -> nat1
+last_idx() == grid_size() - 1;
+
+-- to have boxes grids must be two-dimentional (n > 1)
+grid_size : () -> nat1
+grid_size() == 4
+post RESULT > first_idx() and RESULT mod 2 = 0;
+
+-- grid indexes of interest by an offset (1...grid_size()-offset)
+grid_idxs : nat -> set of Coord
+grid_idxs(offset) == { first_idx(), ..., last_idx()-offset };
+
+-- all grid indexes of interest (1...grid_size()) 
+all_idxs : () -> set of Coord
+all_idxs() == grid_idxs(0);
+
+-- all grid indexes of interest but the last (1...grid_size()-1) 
+all_but_last_idxs: () -> set of Coord
+all_but_last_idxs() == grid_idxs(1);
+
+-- centre is relative to grid_size (half of it) (e.g. 2,3 for grid 4)
+centre_idx: () -> Coord
+centre_idx() == (grid_size() div 2)-1;
+
+-- TODO: here the +1 is fixed rather than generalised
+centre_idxs: () -> set of Coord
+centre_idxs() == { centre_idx(), centre_idx() + 1 }
+pre centre_idx() < grid_size(); 
+
+-- corner horizontal indexes (e.g. 1, 4)
+hcorner_idxs: () -> set of Coord
+hcorner_idxs() == { first_idx(), last_idx() };
+
+-- corner vertical indexes (e.g. 1, 3; because is L-R, T-B)
+vcorner_last_idx: () -> Coord
+vcorner_last_idx() == last_idx()-1;
+
+vcorner_idxs: () -> set of Coord
+vcorner_idxs() == { first_idx(), vcorner_last_idx() };
+
+-- top-left indexes from central box (e.g. 1, 2 for grid 4)
+top_left_idxs: () -> set of Coord
+top_left_idxs() == { first_idx(), ..., centre_idx() };
+
+-- TODO: here the -1 is fixed rather than generalised (e.g. 3, 4 for grid 4)
+bottom_right_idxs: () -> set of Coord
+bottom_right_idxs() == { last_idx()-1, last_idx()};
+
+/******************************************************************************
+ * Grid moves by Coord and Move (i.e. they are bijective)
+ ******************************************************************************/
+
+/************************* Coord + Dot ****************************************/
+
+-- converts coordinates to dots (e.g. (r=1,c=2)==dot=6)
+coord2dot: Coord * Coord -> Dot
+coord2dot(r,c) == r * grid_size() + c
+post RESULT < GRID_MAX
+;
+
+-- inverse of coord2dot  
+dot2coord: Dot -> Coord * Coord
+dot2coord(d) == mk_(d div grid_size(), d mod grid_size())
+--post RESULT.#1 <= last_idx() RESULT.#2 <= last_idx() 
+--	(already as part of COORD_VALS invariant for Coord)
+;
+
+-- given a dot and a move type we know the coordinate
+dot2coordinate: Dot * MType -> Coordinate
+dot2coordinate(d, mt) == 
+		let mk_(r, c) = dot2coord(d) in
+			mk_Coordinate(r, c, mt); 
+
+
+
+
+/********************** Coordinate + Move  ***********************************/
+
+-- given a coordinate, we know the corresponding move			
+coord2move: Coordinate +> Move
+coord2move(mk_Coordinate(r,c, mt)) == 
+	cases mt:
+		<H> -> hmove(r,c),
+		<V> -> vmove(r,c)
+	end
+pre (mt = <H> => pre_hmove(r,c)) and (mt = <V> => pre_vmove(r,c));
+
+-- assembles a left-to-right horizontal move given row/col coordinates
+hmove: Coord * Coord +> Move
+hmove(r,c) == mk_Move(coord2dot(r,c), coord2dot(r, c+1))
+pre c < last_idx()
+;
+
+-- assembles a top-to-bottom vertical move given row/col coordinates
+vmove : Coord * Coord +> Move
+vmove(r,c) == mk_Move(coord2dot(r,c), coord2dot(r+1,c))
+pre r < last_idx()
+;
+
+-- determines move type given move dots
+mtype: Move -> MType
+mtype(mk_Move(s,t)) == 
+		if (t -s) = 1 then 
+			<H> 
+		else if (t-s) = grid_size() then 
+			<V> 
+		else undefined
+pre (t-s) in set {1, grid_size()};
+
+/****************************** Moves ****************************************/
+
+-- given set of Coord, return set of possible moves observing grid H/V move restrictions
+moves : set of (Coord * Coord) -> set of Move
+moves(cs) == 
+	{ hmove(r, c) | mk_(r,c) in set cs & pre_hmove(r,c) } 
+	union 
+	{ vmove(r, c) | mk_(r,c) in set cs & pre_vmove(r,c) }
+post card cs <= card RESULT;
+
+-- gets coordinate for a given move
+move2coordinate: Move -> Coordinate
+move2coordinate(mk_Move(s,t)) == dot2coordinate(s, mtype(mk_Move(s,t)));
+
+-- gets all coordinates for given set of moves
+coords : set of Move -> set of Coordinate
+coords(ms) == { move2coordinate(m) | m in set ms }
+post card RESULT = card ms
+		 and
+		 forall cd in set RESULT & pre_coord2move(cd)
+		 ;
+
+
+-- TODO: cleanup; all sources in a set of moves
+sources: set of Move -> set of Dot
+sources(ms) == { s | mk_Move(s, -) in set ms }
+post card RESULT <= card ms;
+
+-- TODO: cleanup; all targets in a set of moves
+targets: set of Move -> set of Dot
+targets(ms) == { t | mk_Move(-, t) in set ms }
+post card RESULT <= card ms;
+
+-- specialised <: for Move record
+move_dom_filter: set of Dot * (set of Move) -> set of Move
+move_dom_filter(s, ms) == { m | m in set ms & m.source in set s };
+
+-- specialised :> for Move record
+move_rng_filter: (set of Move) * set of Dot -> set of Move
+move_rng_filter(ms, t) == { m | m in set ms & m.target in set t };
+
+/****************************** Boxes ****************************************/
+-- calculate the set of all moves per box based on known MOVES
+-- illustrate the useful bijection between coord and dot  
+box_moves: () -> set of Box
+box_moves() == 
+	{ move_dom_filter({coord2dot(x,y)}, MOVES) 
+		union 
+		move_rng_filter(MOVES, {coord2dot(x+1,y+1)}) 
+				| x in set all_but_last_idxs(), y in set all_but_last_idxs() 
+	};
+
+--Bn div no_box_per_row() + Bn mod no_box_per_row()
+-- { m | m in set box_moves() & card move_rng_filter({2},m) = 2 }
+boxes: () -> inmap BoxNo to Box
+boxes() == 
+	{ bn |-> b | bn in set BOX_VALS, b in set box_moves() & card move_dom_filter({bn},b) = 2 };
+
+-- TODO: cleanup
+--box_no: Coord * Coord -> nat1
+--box_no(r,c) == mk_(((r-1) div no_box_per_row()) * no_box_per_row() + 1,
+--									 ((c-1) div no_box_per_row()) * no_box_per_row() + 1);
+
+-- TODO: cleanup
+box_moves_debug: Coord * Coord +> set of set of Move
+box_moves_debug(x,y) == 
+	{ move_dom_filter({coord2dot(x,y)}, MOVES) 
+		union 
+		move_rng_filter(MOVES, {coord2dot(x+1,y+1)}) 
+	}
+pre x < last_idx()-1 and y < last_idx()-1;
+
+/******************************************************************************
+ * Game validation functions  
+ ******************************************************************************/ 
+
+-- winning strategy works for grids with central boxes (e.g. even size > 2)		
+has_central_box: () -> bool
+has_central_box() == grid_size() mod 2 = 0;
+
+-- overture does not like generalised quantification so we use the type invariant instead
+valid_coord_dot: () -> bool
+valid_coord_dot() ==
+	(forall r,c in set COORD_VALS & dot2coord(coord2dot(r,c)) = mk_(r,c))
+	and
+	(forall d in set DOT_VALS & let mk_(x,y) = dot2coord(d) in coord2dot(x,y) = d)
+	;
+
+-- ensures that the game moves (e.g. values are consistent
+valid_moves: () -> bool
+valid_moves() == 
+	valid_move_sets(HMOVES, VMOVES, CENTRE, CORNER, SIDES, SPOKES, TSMOVES, BSMOVES, MOVES);
+
+-- given the move types, ensue that any set of calculated moves is sound
+-- we use high-order polimorphic functions as an example; could be given explicitly
+valid_move_sets : set of Move * set of Move * set of Move * set of Move * 
+									set of Move * set of Move * set of Move * set of Move *
+									set of Move -> bool
+valid_move_sets(hm, vm, centre, corner, sides, spokes, tsm, bsm, hvm) == 
+		has_central_box()
+		and
+		card hm = card vm 
+		and
+		card vm = MOVE_MAX div 2
+		and 
+		card hvm = MOVE_MAX
+		and 
+		partition[Move]([hm, vm], hvm)
+		and 
+		partition[Move]([centre, corner, sides, spokes], hvm)
+		and
+		tsm subset centre union spokes
+		and
+		bsm subset centre union spokes
+		and
+		(tsm \ centre) subset spokes 
+		and
+		(bsm \ centre) subset spokes
+		and
+		(tsm inter bsm) inter spokes = {}
+		and
+		(tsm inter bsm) subset centre; 		
+
+/******************************************************************************
+ * Generic and polymorphic (auxiliary) definitions
+ ******************************************************************************/
+
+-- distributed set difference
+dist_diff[@elem]: set of set of @elem * set of @elem -> set of set of @elem
+dist_diff(ss, s) == { v \ s | v in set ss }
+post forall v in set RESULT & v inter s = {}
+;
+
+
+
+-- given a sequence, tells whether all their set-elements have no elements in common		
+disjoint [@elem]: seq of (set of @elem) +> bool
+disjoint(s) ==
+	-- empty or singleton sequences are trivially disjoint
+	if (len s <= 1) then 
+		true
+	else
+	-- other sequences of sets are disjoint if they are pairwise disjoint to all 
+	-- higher indexes (e.g., slightlty more efficient than POST?)
+		len s = card { i | i in set inds s & forall j in set inds s & j > i => s(i) inter s(j) = {} } 
+--post
+--	RESULT => (forall i, j in set inds s & i <> j => s(i) inter s(j) = {}) -- BAD PERFORMANCE
+;
+
+-- given a sequence, tells whether it's disjoint and their union equal to given set 		
+partition [@elem]: seq of (set of @elem) * set of @elem +> bool
+partition(s, p) ==
+	disjoint[@elem](s) and
+	p = dunion(elems s)
+	--p = distUnion[@elem](elems s)
+--post
+--	RESULT => (disjoint[@elem](s) and p = dunion(elems s)) -- BAD PERFORMANCE
+;
+
+-- TODO: cleanup; maximum
+max: nat * nat -> nat
+max(x,y) == if x > y then x else y;
+
+-- TODO: cleanup; set maximum
+Max: set of nat +> nat
+Max(s) ==
+	let x in set s in
+		let sm = s \ {x} in
+			if (sm = {}) then
+				x
+			else
+				max(x, Max(sm))
+pre s <> {}
+measure max_measure;
+
+-- TODO: cleanup; set maximum measure
+max_measure: set of nat -> nat
+max_measure(s) == card s;
+
+/******************************************************************************
+ * Game operations auxiliary function
+ ******************************************************************************/
+
+-- appends a given move to Moves
+save_move: Move * Moves +> Moves
+save_move(m, ms) == ms ^ [m]
+pre m not in set elems ms;
+
+
+
+
+-- checks whether a box has been made given possible moves and moves taken so far
+made_box: set of set of Move * set of Move -> bool
+made_box(currently_possible, taken) == 
+	{} in set dist_diff[Move](currently_possible, taken)
+post RESULT <=> {} in set currently_possible;
+	
+-- invariant for whoever won 
+who_won_invariant: Moves * Moves -> bool 
+who_won_invariant(won,lost) ==
+	len won > len lost						-- who wins play more moves
+	and
+	len won <= WINNER_MOVE_MAX		-- but not that many
+	and 
+	len lost >= LOOSER_MOVE_MIN		-- who lost at least was given fair play
+; 
+
+/******************************************************************************
+ * Game state
+ ******************************************************************************/
+-- state records each of the players moves, who is playing, and all remaining 
+-- possible moves. The play algorithm ensures fairness (i.e. players take turns,
+-- and making a box awards another move). Initially p1 start, no moves are 
+-- played all all valid moves are possible. 
+state DBGame of
+  p1: Moves
+  p2: Moves
+  p1plays: bool
+	possible_moves: set of set of Move
+  inv mk_DBGame(p1, p2, -, possible_moves) == 
+  	valid_coord_dot() and valid_moves()				-- key constructed values remain constant   
+  	and
+  	elems p1 inter elems p2 = {}							-- players don't share moves
+  	and
+  	(elems p1 union elems p2) 								-- played moves aren't possible
+  		inter 
+  	(dunion possible_moves) = {} 
+  	and
+  	(dunion possible_moves) subset MOVES			-- possible moves are within known moves
+  	--and
+  	--(forall cd in set coords(dunion possible_moves) & pre_coord2move(cd))
+  init s == s = mk_DBGame([], [], true, box_moves())
+end 
+
+/******************************************************************************
+ * Game state operations
+ ******************************************************************************/
+operations 
+
+/************************ Read-only operations ********************************/
+
+-- how many moves are left in the possible moves?
+moves_left() b: bool ==
+	return (dunion possible_moves <> {})
+ext rd possible_moves
+post b <=> (dunion possible_moves <> {});
+
+-- moves played so far by current player  
+current_moves() ms: Moves ==
+	return (if p1plays then p1 else p2)
+ext rd p1plays, p1, p2, possible_moves
+post elems ms inter dunion possible_moves = {};
+
+-- transforms a chosen coordinate into a possible move
+move(cd: Coordinate) m: Move ==
+	return coord2move(cd)
+ext rd possible_moves
+pre pre_coord2move(cd)
+post m in set (dunion possible_moves);
+
+-- has the current player made a box given its current moves?
+player_made_box() b: bool ==
+	return made_box(possible_moves, elems current_moves())
+ext rd possible_moves, p1plays, p1, p2
+post b <=> {} in set possible_moves;
+
+-- who won is determined by who played more moves
+who_won() w: nat1 ==
+	return (if (len p1 > len p2) then 1 else 2)
+ext rd p1, p2
+pre len p1 <> len p2
+post (w = 1 <=> who_won_invariant(p1,p2))
+			and
+		 (w = 2 <=> who_won_invariant(p2,p1))
+;
+
+-- prints final results of last game play for each player and who won
+-- TODO: printf is not working. get an internal error?
+tally() ==
+	 (print("Player P");print(who_won());println(" won. Play finished with:");
+	  print("\tP1 ");print(len p1);println(" moves = ");println(val2str[Moves](p1));
+	  print("\tP2 ");print(len p2);println(" moves = ");println(val2str[Moves](p2));
+	  --printf("\tP1 moves = %1\n", [p1]);
+	 )
+ext rd p1, p2;	
+
+/************************ Game play strategies *******************************/
+-- All game play strategies better be read-only
+-- non-deterministic choice of coordinates for next move to be played
+silly_choose() cdr: Coordinate ==
+	let cd in set coords(dunion possible_moves) in 
+		return cd
+ext rd possible_moves
+pre dunion possible_moves <> {}
+post coord2move(cdr) in set dunion possible_moves;
+/*Finished playing with:
+	P1 10 moves = 
+    [mk_Move(0, 1), mk_Move(1, 2), mk_Move(2, 3), mk_Move(3, 7), mk_Move(5, 6), 
+     mk_Move(5, 9), mk_Move(7, 11), mk_Move(9, 10), mk_Move(9, 13), mk_Move(11, 15)]
+	P2 14 moves = 
+    [mk_Move(0, 4), mk_Move(1, 5), mk_Move(2, 6), mk_Move(4, 5), mk_Move(4, 8),
+     mk_Move(6, 7), mk_Move(6, 10), mk_Move(8, 9), mk_Move(8, 12), mk_Move(10, 11), 
+     mk_Move(10, 14), mk_Move(12, 13), mk_Move(13, 14), mk_Move(14, 15)]*/
+
+double_cross_choose() cdr: Coordinate ==
+	return (if p1plays then (DOUBLE_CROSS_PLAY.#1)(len p1 + 1) else (DOUBLE_CROSS_PLAY.#2)(len p2 + 1))
+ext rd p1plays, p1, p2, possible_moves
+pre let mk_(m1, m2) = DOUBLE_CROSS_PLAY in 
+			-- TODO: not true after first move is saved then removed from possible_moves
+			--{ coord2move(c) | c in set elems m1 union elems m2 } subset dunion possible_moves
+			dunion possible_moves subset { coord2move(c) | c in set elems m1 union elems m2 } 
+			and 
+			len m1 >= len p1 and len m2 >= len p2
+post coord2move(cdr) in set dunion possible_moves
+;
+
+-- TODO
+winning_choose() cdr: Coordinate ==
+	let cd in set coords(dunion possible_moves) in 
+		return cd
+ext rd possible_moves
+pre dunion possible_moves <> {}
+post coord2move(cdr) in set dunion possible_moves;
+
+
+/************************** Write operations *********************************/
+-- given a chosen move, save it for the current player, and remove it from possible play
+save(m: Move) ==
+	(dcl pm : set of set of Move := dist_diff[Move](possible_moves, {m}),
+		   p :         seq of Move := save_move(m, current_moves());
+		  (if (p1plays) then
+		  	(atomic(
+		  		possible_moves := pm;
+		  		p1 := p))
+		  else
+		  	atomic(
+		  		possible_moves := pm;
+		  		p2 := p)
+		  )
+	)
+ext rd p1plays wr possible_moves, p1, p2
+pre m in set dunion possible_moves
+post m not in set dunion possible_moves 
+			and
+		 dunion possible_moves subset dunion possible_moves~
+;
+
+-- flips who is playing	
+flip_player() == 
+	p1plays := not p1plays
+ext wr p1plays
+post p1plays <> p1plays~;
+
+-- TODO: what happens with double-cross moves? (i.e. two {} inside possible_moves)!
+-- clears the box made in last chosen move from possible moves
+-- be careful that: 
+-- 		{{..},{}} \ {} 
+--		=
+--	  x in set {{..},{}} and not x in set {}
+--	  =
+--		x in set {{..},{}} and not false 
+--		=
+--		{{..},{}}
+-- what we want is:
+--		{{..},{}} \ {{}}
+--		=
+--		x in set {{..},{}} and not x in set {{}}
+--		=
+--		x in set {{..},{}} and not x = {}
+--		=
+--		{{..}}
+
+
+
+clear_box_made() ==
+	possible_moves := possible_moves \ {{}}
+ext wr possible_moves
+pre {} in set possible_moves
+post {} not in set possible_moves;
+
+-- resets the game to its initial state 
+reset() ==
+		atomic(
+			p1 := [];
+			p2 := [];
+			p1plays := true;
+			possible_moves := box_moves()
+		)
+ext wr p1plays, p1, p2, possible_moves
+;
+
+/************************** Top-level algorithm *********************************/
+
+-- top-level algorithm for fair game play:
+-- a) while there are moves left
+-- 		1) choose a coordinate
+--		2) calculate the move for coordinate
+--		3) update state with chosen move
+--		4) test whether move made box
+--		5) flip player if so; clear box from state otherwise
+-- b) tally and print results
+-- c) reset the state  
+play() ==
+	((while moves_left() do
+		(dcl whop   : seq1 of char := (if p1plays then "P1" else "P2"),
+				 choice : Coordinate := silly_choose(),
+				      m : Move := move(choice);
+						save(m);  
+						print("Player " ^ whop ^ " move: ");println(m);
+					  (if not player_made_box() then
+							flip_player()
+						else
+							(clear_box_made();
+							 println("Player " ^ whop ^ " closed a box!"))
+						)
+		)
+	 );
+	 tally();
+	)
+ext wr p1plays, p1, p2, possible_moves
+post dunion possible_moves = {};
+
+inner_play(m: Move, whop: seq1 of char) ==
+		( save(m);  
+			print("Player " ^ whop ^ " move: ");println(m);
+		  (if not player_made_box() then
+				flip_player()
+			else
+				(clear_box_made();
+				 println("Player " ^ whop ^ " closed a box!"))
+		  )
+		)
+ext wr p1plays, p1, p2, possible_moves;
+		
+-- double_cross detection leads to less box closed messages, but not less moves needed
+playDC() ==
+	(--dcl index : nat1 := 1;
+		 (while moves_left() do
+			(dcl whop   : seq1 of char := (if p1plays then "P1" else "P2"),
+					 choice : Coordinate := double_cross_choose(),
+					      m : Move := move(choice);
+							inner_play(m, whop);
+							--index := index + 1;
+			)
+		 );
+	 	 tally();
+	)
+ext wr p1plays, p1, p2, possible_moves
+post dunion possible_moves = {};
+
+/******************************************************************************
+ ***************************** END ********************************************
+ ******************************************************************************/
+
+
+/******************************************************************************
+ * TODO: clean up; Explore Game moves by kind  
+ ******************************************************************************/
+values
+
+DOUBLE_CROSS_PLAY: seq of Coordinate * seq of Coordinate = 
+		mk_([mk_Coordinate(0,0,<H>), mk_Coordinate(0,1,<H>), mk_Coordinate(0,2,<H>), 
+				 mk_Coordinate(2,0,<H>), mk_Coordinate(2,1,<H>), mk_Coordinate(2,2,<H>),
+				 
+				 mk_Coordinate(0,0,<V>), mk_Coordinate(1,0,<V>), mk_Coordinate(2,0,<V>),
+				 
+				 -- make box
+				 mk_Coordinate(0,1,<V>), mk_Coordinate(1,1,<V>), mk_Coordinate(2,1,<V>), 
+				 
+				 -- make double cross
+				 mk_Coordinate(0,2,<V>), mk_Coordinate(1,2,<V>), mk_Coordinate(2,2,<V>)
+				],
+		    [mk_Coordinate(1,0,<H>), mk_Coordinate(1,1,<H>), mk_Coordinate(1,2,<H>), 
+		     mk_Coordinate(3,0,<H>), mk_Coordinate(3,1,<H>), mk_Coordinate(3,2,<H>),
+		     
+		     mk_Coordinate(0,3,<V>), mk_Coordinate(1,3,<V>), mk_Coordinate(2,3,<V>)
+		    ]);
+
+
+-- Horizontal moves by row are all valid (hmove) on all rows, and all but last col
+HM_ROW : set of set of Move = 
+		{ { hmove(r,c) | c in set all_but_last_idxs() } | r in set all_idxs() }; 
+		
+-- Vertical moves by col are all valid (vmove) on all cols, and all but last row
+VM_COL : set of set of Move =  
+	  { { vmove(r,c) | c in set all_idxs() } | r in set all_but_last_idxs() };     
+
+
+/******************************************************************************
+ * Game box samples - 3nd attempt 
+ ******************************************************************************/
+
+B1  : Box = { hmove(r, first_idx()) | r in set top_left_idxs() } 			-- H: r=1,2	;c=1		   
+						union 
+						{ vmove(first_idx(), c) | c in set top_left_idxs() }; 		-- V: r=1		;c=1,2
+
+B2  : Box = { hmove(r, centre_idx()) | r in set top_left_idxs() } 		-- H: r=1,2	;c=2   
+						union 
+						{ vmove(first_idx(), c) | c in set centre_idxs() };				-- V: r=1		;c=2,3
+
+-- Aha! hmove({Bn, Bn+1}, Bn) union vmove(what row Bn is, {Bn, Bn+1})?
+B3  : Box = { hmove(r, Max(centre_idxs())) | 
+														r in set top_left_idxs() } 								-- H: r=1,2	;c=3   
+						union 
+						{ vmove(first_idx(), c) | c in set bottom_right_idxs() };	-- V: r=1		;c=3,4
+
+B4  : Box = 
+        { hmove(r, first_idx()) | r in set centre_idxs() } 				-- H: r=2,3	;c=1   
+				union 
+				{ vmove(centre_idx(), c) | c in set top_left_idxs() };		-- V: r=2		;c=1,2
+
+--BOXES2: set of set of set of Move={{{hmove(r,c),vmove(r,c)}|r in set{1,2}}|c in set{1,2}};
+--BOXES: set of Box = dunion { { box(r, c) | c in set all_idxs() } | r in set all_idxs() };
+
+end DotsBoxesV2

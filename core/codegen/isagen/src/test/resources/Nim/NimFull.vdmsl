@@ -1,0 +1,341 @@
+module NimFull
+imports from IO		 operations  println	renamed println;
+															printf  renamed printf;
+															print		renamed print
+exports all
+definitions 
+-- http://www.archimedes-lab.org/game_nim/play_nim_game.html
+-- http://www.archimedes-lab.org/How_to_Solve/Win_at_Nim.html
+-- https://en.wikipedia.org/wiki/Nim
+
+values
+
+MAX_PILE: nat1 = 31;
+MAX_MOV: nat1 = 3;
+
+types 
+
+-- leave fair play out of game types for simplicity; 
+-- include it in the game play algorithm instead
+Player = <P1> | <P2> ;
+
+-- not needed; and if needed use nat for the case when the game finishes.
+--Pile = nat1
+--inv p == p <= MAX_PILE;
+
+Move = nat1
+inv m == m <= MAX_MOV;
+
+Moves = seq of Move
+inv s == 
+	-- you can never move beyond what's in the pile
+	sum_elems(s) <= MAX_PILE
+	and
+	-- last move is always 1, when moves are present, at the end of the game
+	(sum_elems(s) = MAX_PILE => s(len s) = 1)
+	;
+
+functions 
+
+sum_elems: seq of Move -> nat
+sum_elems(s) == 
+	cases s:
+		[]     -> 0,
+		[x]^xs -> x + sum_elems(xs)
+	end
+post
+ 	-- if someone played, then sum is not zero
+	s <> [] <=> RESULT > 0
+measure sum_elems_measure;
+
+sum_elems_measure: seq of Move -> nat
+sum_elems_measure(s) == len s;
+
+-- assumes <P1> is the first player
+who_plays_next: Moves -> Player
+who_plays_next(ms) == 
+	if len ms mod 2 = 0 then <P1> else <P2>
+pre isFirst(<P1>);
+	-- TODO: consider the more complex if-then-else when not isFirst(<P1>) 
+
+fair_play: Player * Moves -> bool
+fair_play(p, ms) == p = who_plays_next(ms);
+
+moves_left: Moves -> nat
+moves_left(ms) == MAX_PILE - sum_elems(ms);
+
+--print play_move(<P1>, 3, [3,3,3,3,1,2,1,3])
+--print pre_play_move(<P1>, 3, [3,3,3,3,1,2,1,3])
+--print post_play_move(<P1>, 3, [3,3,3,3,1,2,1,3], play_move(<P1>, 3, [3,3,3,3,1,2,1,3]))
+--print inv_Moves([3,3,3,3,1,2,1,3])
+--play_move: Player * Move * Moves -> seq of Move
+play_move: Player * Move * Moves -> Moves
+play_move(p, m, s) == s ^ [m]
+pre 
+	-- x cannot play to loose, but at the end
+	-- x cannot play to loose before the end
+	(moves_left(s) <> 1 => m < moves_left(s))
+	and
+-- must play to loose at the end
+	(moves_left(s) = m => m = 1)
+	--(moves_left(s) = 1 => m = 1
+	and
+  --there must be something to be played
+	moves_left(s) > 0
+
+	and
+	-- encodes fairness: if even no moves, then it must be <P1>'s turn
+	fair_play(p, s)
+	
+post 
+	-- you play something = implicitly true by the inv of Move
+	sum_elems(s) < sum_elems(RESULT)
+	and
+	sum_elems(s) + m = sum_elems(RESULT) 
+;
+		
+-- invariant for whoever won: last player looses by taking 1
+-- even seq means second player; odd seq means firs player 
+who_won_invariant: Player * Moves -> bool 
+who_won_invariant(winner, moves) ==
+	-- all moves played, including last
+	moves_left(moves) = 0
+	and
+	-- if the winner plays next, then the last guy lost, given there are no more moves left
+	winner = who_plays_next(moves)
+	-- assuming perfect play?
+	and
+	will_first_player_win() => isFirst(winner) 
+; 
+
+isFirst: Player -> bool
+isFirst(p) == p = <P1>;
+
+first_player: () -> Player
+first_player() == if isFirst(<P1>) then <P1> else <P2>
+post isFirst(RESULT);
+
+first_player_inds: Moves -> set of nat1
+first_player_inds(ms) == { i | i in set inds ms & i mod 2 <> 0 }
+post RESULT subset inds ms;
+
+moves_of: Moves * bool -> seq of Move
+moves_of(ms, first) == 
+	let idxs = first_player_inds(ms) in
+			[ ms(i) | i in set  if (first) then idxs else inds ms \ idxs ]
+;
+
+will_first_player_win: () -> bool
+will_first_player_win() == (MAX_PILE - 1) mod (MAX_MOV + 1) <> 0;
+
+best_move: Moves -> nat
+best_move(moves) == (moves_left(moves) - 1) mod (MAX_MOV + 1)
+pre moves_left(moves) > 0
+	-- missed pre found through failed proof.
+post RESULT <= moves_left(moves);
+
+min: int * int -> int
+min(x,y) == if (x < y) then x else y;
+
+max: int * int -> int
+max(x,y) == if (x > y) then x else y;
+
+flip_current_player: Player -> Player
+flip_current_player(p) == if (p = <P1>) then <P2> else <P1>
+post p <> RESULT;
+
+state Nim of
+	limit: Move
+	current: Player
+	moves: Moves
+inv mk_Nim(limit, current, moves) ==
+	-- cannot move all at once
+	limit < MAX_PILE
+	and
+	limit <= MAX_MOV
+	and
+	-- fair play
+	fair_play(current, moves)
+	and
+	isFirst(<P1>)
+--init nim == nim = mk_Nim(MAX_MOV, first_player(), FIXED_PLAY_GAME)
+init nim == nim = mk_Nim(MAX_MOV, first_player(), [])
+end 
+
+operations 
+
+debug(p: Player, choice: Move) ==
+	(dcl whop: seq1 of char := (if (p = <P1>) then "P1" else "P2");
+			print("Player " ^ whop ^ " removed: ");
+			print(choice);print("\tpile has ");
+			println(moves_left(moves));
+	)
+ext rd moves;
+
+tally() ==
+	 (printf("\nPlayer %1s won! Play finished as:\n\tP1 moves = %2s\n\tP2 moves = %3s", 
+	 		[who_won(), moves_of(moves, isFirst(<P1>)), moves_of(moves, isFirst(<P2>))]);
+	 )
+ext rd current, moves;	
+
+-- flips who is playing - as extended explicit operation
+-- PROBLEM: changing player without changing moves will break
+-- 				  fair_play invariant (and vice-versa). Needs to be atomic!
+flip_player() == 
+	current := if (current = <P1>) then <P2> else <P1>
+ext wr current
+		rd moves
+pre moves_left(moves) > 0 and false
+post current <> current~;
+
+-- who won is determined by who played more moves? 
+who_won() w: Player ==
+	return current -- who_plays_next(moves)
+ext rd current, moves
+pre isFirst(first_player())
+post (who_won_invariant(w, moves) 
+			and 
+			-- last save flipped loser and put winner as current
+			w = current)
+;
+
+naive_choose_move() r: Move == 
+	-- naive choice: from 1 up to MAX_MOV or else amount left, presuming there are at least the last
+	let m in set {1,...,min(MAX_MOV, moves_left(moves))} in return m
+ext rd moves
+pre moves_left(moves) > 0
+post 
+	-- might be = in the case of the loosing play
+	r <= moves_left(moves);
+	
+io_choose_move() r: Move == 
+	return min(2, moves_left(moves))
+ext rd moves
+pre moves_left(moves) > 0
+post
+	r <= moves_left(moves);
+
+fixed_choose_move() r: Move == 
+	return FIXED_PLAY(len moves + 1)
+ext rd moves, current
+pre moves_left(moves) > 0
+post 
+	-- can never be = moves_left(moves) or it would entail loosing?
+	r < moves_left(moves)
+	and
+	-- after playing the chosen move r, the next player has no good move choice
+	(will_first_player_win() 
+	and
+	isFirst(who_plays_next(moves))) 
+	=> best_move(play_move(current, r, moves)) = 0
+	;
+
+/*
+Top-level function that is interesting: it links auxiliary functions with VDM state. 
+Its proof proof obligaiton is:
+
+forall bst: Nim & pre_fixed_play_game(bst) => exists ast: Nim, r: Move & post_fixed_play_game(r, ast)
+
+The Isabelle proof shows a possible problem with function $best\_move$ precondition.  
+*/
+first_player_winning_choose_move() r: Move == 
+	-- winning choice: get the best move, unless it's zero, so choose the least worst (1) play
+	return max(1, best_move(moves))
+ext rd moves, current
+pre moves_left(moves) > 0
+post 
+	-- can never be = moves_left(moves) or it would entail loosing?
+	r < moves_left(moves)
+	and
+	-- after playing the chosen move r, the next player has no good move choice
+	will_first_player_win() => best_move(play_move(current, r, moves)) = 0
+	;
+	
+save(choice : Move) == 
+	(dcl ms  : Moves := play_move(current, choice, moves),
+			 next: Player := flip_current_player(current);
+		--flip_player();, see flip_current_player(current) instead
+		-- to keep the fair_play_invariant, we need to change both atomically
+		atomic(
+			moves := ms;
+			current := next;
+		);
+		-- we want to debug who played last, so flip back
+		debug(flip_current_player(current), choice);	  
+	)	
+ext wr current, moves
+pre pre_play_move(current, choice, moves) 
+post 
+	post_play_move(current, choice, moves~, moves)
+	and
+	current~ <> current
+;
+
+naive_play_game() ==
+	((while moves_left(moves) > 0 do
+			save(naive_choose_move())
+		);
+	 tally()
+	)
+ext wr current, moves
+pre moves_left(moves) = MAX_PILE
+post moves_left(moves) = 0;
+
+fixed_play_game() ==
+	((while moves_left(moves) > 0 do
+			save(fixed_choose_move())
+		);
+	 tally()
+	)
+ext wr current, moves
+pre moves_left(moves) = MAX_PILE
+post moves_left(moves) = 0;
+
+first_win_game() ==
+	((while moves_left(moves) > 0 do
+		(dcl choice : Move := (if (isFirst(current)) then 
+														first_player_winning_choose_move() 
+													else
+														naive_choose_move());  
+			save(choice)
+		)
+	 );
+	 tally()
+	)
+ext wr current, moves
+pre moves_left(moves) = MAX_PILE
+post moves_left(moves) = 0;
+
+-- resets the game to its initial state 
+reset() ==
+		atomic(
+			--limit := MAX_MOV
+			moves := [];
+			current := first_player()
+		)
+ext wr moves, current
+;
+
+all_play_game() ==
+	(
+		println("\n==================================");
+		println(  "= Fixed moves play               =");
+		println(  "==================================\n");
+		fixed_play_game();
+		reset();
+		println("\n==================================");
+    println(  "= Both naive play                =");
+		println(  "==================================\n");
+		naive_play_game();
+		reset();
+		println("\n==================================");
+		println(  "= First win, second random play  =");
+		println(  "==================================\n");
+		first_win_game();
+	)
+
+values
+									-- 1 2 1 2 1 2 1 2 1 2
+FIXED_PLAY: Moves = [3,2,2,1,3,2,2,1,3,1];
+
+end NimFull
