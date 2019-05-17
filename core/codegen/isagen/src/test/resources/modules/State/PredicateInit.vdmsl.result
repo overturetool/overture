@@ -4,7 +4,7 @@ theory DEFAULT
 begin
 
 record S =
-        s_x \:\: VDMNat
+        s_x \:\: \"VDMNat\"
 
     
 

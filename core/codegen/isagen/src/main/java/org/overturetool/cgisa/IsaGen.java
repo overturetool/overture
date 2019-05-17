@@ -194,7 +194,7 @@ public class IsaGen extends CodeGenBase {
                     
                 }
             }
-
+            printIR(statuses);
             r.setClasses(prettyPrint(statuses));
         } catch (org.overture.codegen.ir.analysis.AnalysisException e) {
             throw new AnalysisException(e);
@@ -203,7 +203,11 @@ public class IsaGen extends CodeGenBase {
 
     }
 
-    public GeneratedModule generateIsabelleSyntax(PExp exp)
+    private void printIR(List<IRStatus<PIR>> statuses) {
+		//sysout
+		
+	}
+	public GeneratedModule generateIsabelleSyntax(PExp exp)
             throws AnalysisException,
             org.overture.codegen.ir.analysis.AnalysisException {
         IRStatus<SExpIR> status = this.generator.generateFrom(exp);

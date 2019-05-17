@@ -9,7 +9,7 @@ definition
  \\<Rightarrow> VDMToken
 \"
     where
-    \"f x  \\<equiv> undef\"
+    \"f x  \\<equiv> undefined\"
 
 
 definition

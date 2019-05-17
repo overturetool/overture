@@ -14,14 +14,14 @@ definition
 definition
 	unimplemented_pre_f \:\: \"\\<bool>\"
     where
-    \"unimplemented_pre_f  \\<equiv> undef\"
+    \"unimplemented_pre_f  \\<equiv> undefined\"
 
 
 definition
 	unimplemented_post_f \:\: \"VDMNat
  \\<Rightarrow> \\<bool>\"
     where
-    \"unimplemented_post_f  \\<equiv> undef\"
+    \"unimplemented_post_f  \\<equiv> undefined\"
 
 end
 ","errors":false}

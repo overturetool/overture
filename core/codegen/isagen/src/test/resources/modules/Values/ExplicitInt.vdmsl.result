@@ -2,7 +2,7 @@
 begin
 
 abbreviation
- x \:\: VDMInt where 
+ x \:\: \"VDMInt\" where 
 \" x \\<equiv> 1 \" 
 
 definition

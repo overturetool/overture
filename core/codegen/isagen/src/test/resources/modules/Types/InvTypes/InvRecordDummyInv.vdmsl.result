@@ -3,9 +3,9 @@
 begin
 
 record A =
-        a_b \:\: char VDMSeq
+        a_b \:\: \"char VDMSeq\"
 
-        a_c \:\: VDMInt
+        a_c \:\: \"VDMInt\"
 
     
 

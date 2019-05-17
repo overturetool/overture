@@ -4,8 +4,8 @@ theory DEFAULT
 begin
 
 record RecType =
-        recType_x \:\: char
-        recType_y \:\: \\<real>
+        recType_x \:\: \"char\"
+        recType_y \:\: \"\\<real>\"
     
 
 
