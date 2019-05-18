@@ -231,7 +231,7 @@ public class IsaGen extends CodeGenBase {
 			writer.println("Parent Node : " + n.parent());
 			
 			//print children neatly
-			List<String> keys = n.getChildren(true).keySet().stream().filter(k -> k != null).collect(Collectors.toList());
+			List<String> keys = n.getChildren(true).keySet().stream().filter(k -> k != null && k != "_sourceNode").collect(Collectors.toList());
 			writer.println("Children w/ inherited fields : ");
 			for (int x = 0; x < keys.size(); x++)
 			{
