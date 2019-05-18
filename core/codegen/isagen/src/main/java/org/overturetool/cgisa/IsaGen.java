@@ -23,13 +23,17 @@
 package org.overturetool.cgisa;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.runtime.RuntimeServices;
@@ -204,8 +208,40 @@ public class IsaGen extends CodeGenBase {
     }
 
     private void printIR(List<IRStatus<PIR>> statuses) {
-		//sysout
+    	
+    	
+		AModuleDeclIR decls = (AModuleDeclIR) statuses.get(0).getIrNode();
 		
+		for (int i = 0; i < decls.getDecls().size(); i++)
+		{
+			SDeclIR n = decls.getDecls().get(i).clone();
+			
+			PrintWriter writer = null;
+			try {
+				writer = new PrintWriter("../isagen/generatedIRtext/" + decls.getDecls().get(i).getClass().toString().substring(43)
+						+ i + "_IR.txt", "UTF-8");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+	    	
+
+			writer.println("Source Node : " + n.getSourceNode());
+			writer.println("Parent Node : " + n.parent().clone());
+			
+			//print children neatly
+			List<String> keys = n.getChildren(true).keySet().stream().filter(k -> k != null).collect(Collectors.toList());
+			writer.println("Children w/ inherited fields : ");
+			for (int x = 0; x < keys.size(); x++)
+			{
+				if (keys.get(x) != null && n.getChildren(true).get(keys.get(x)) != null)				
+					writer.println("---- " + keys.get(x) + " = " + n.getChildren(true).get(keys.get(x)).toString());
+			}
+			
+			writer.println("Class : " + n.getClass());
+	    	writer.close();
+		}
 	}
 	public GeneratedModule generateIsabelleSyntax(PExp exp)
             throws AnalysisException,
