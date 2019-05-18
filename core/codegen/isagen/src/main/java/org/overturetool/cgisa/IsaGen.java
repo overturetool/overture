@@ -228,7 +228,7 @@ public class IsaGen extends CodeGenBase {
 	    	
 
 			writer.println("Source Node : " + n.getSourceNode());
-			writer.println("Parent Node : " + n.parent().clone());
+			writer.println("Parent Node : " + n.parent());
 			
 			//print children neatly
 			List<String> keys = n.getChildren(true).keySet().stream().filter(k -> k != null).collect(Collectors.toList());
