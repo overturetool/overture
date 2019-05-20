@@ -2,15 +2,15 @@
 begin
 
 abbreviation
- a \:\: VDMNat1 where 
+ a \:\: \"VDMNat1\" where 
 \" a \\<equiv> 10 \" 
 \n
 abbreviation
- b \:\: VDMNat1 where 
+ b \:\: \"VDMNat1\" where 
 \" b \\<equiv> 20 \" 
 \n
 abbreviation
- c \:\: VDMNat1 where 
+ c \:\: \"VDMNat1\" where 
 \" c \\<equiv> 30 \" 
 \n\n
 definition

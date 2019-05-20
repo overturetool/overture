@@ -2,10 +2,10 @@
 begin
 
 abbreviation
- x \:\: VDMNat1 where 
+ x \:\: \"VDMNat1\" where 
 \" x \\<equiv> 1 \" 
 \nabbreviation
- y \:\: VDMNat1 where 
+ y \:\: \"VDMNat1\" where 
 \" y \\<equiv> x \" 
 
 definition

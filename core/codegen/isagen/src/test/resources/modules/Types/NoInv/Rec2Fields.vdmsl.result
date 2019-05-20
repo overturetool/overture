@@ -4,9 +4,9 @@ theory DEFAULT
 begin
 
 record RecType =
-        recType_x \:\: VDMNat
+        recType_x \:\: \"VDMNat\"
 
-        recType_y \:\: VDMNat
+        recType_y \:\: \"VDMNat\"
 
     
 

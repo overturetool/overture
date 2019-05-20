@@ -1,4 +1,4 @@
-{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\nabbreviation\n x \:\: \\<bool>\nwhere \" x \\<equiv> True \"\n
+{"translation":"theory DEFAULT\n  imports VDMToolkit\nbegin\n\nabbreviation\n x \:\: \"\\<bool>\"\nwhere \" x \\<equiv> True \"\n
 
 definition
 inv_x \:\: \"\\<bool>\" where

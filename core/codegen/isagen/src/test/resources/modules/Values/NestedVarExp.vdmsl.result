@@ -2,10 +2,10 @@
 begin
 
 abbreviation
- x \:\: VDMNat1 VDMSeq VDMSet  where 
+ x \:\: \"VDMNat1 VDMSeq VDMSet\"  where 
 \" x \\<equiv> {[1]} \" 
 \nabbreviation
- y \:\: VDMNat1 VDMSeq VDMSet where 
+ y \:\: \"VDMNat1 VDMSeq VDMSet\" where 
 \" y \\<equiv> x \" 
 
 definition

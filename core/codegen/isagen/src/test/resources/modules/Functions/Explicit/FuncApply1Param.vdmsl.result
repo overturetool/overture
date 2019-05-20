@@ -11,7 +11,7 @@ definition
     \"f x  \\<equiv> 0\"
 
 abbreviation
- x \:\: VDMInt
+ x \:\: \"VDMInt\"
  where
 \"x \\<equiv> f 1\"
 

@@ -2,7 +2,7 @@
 begin
 
 abbreviation
- x \:\: VDMNat1 where 
+ x \:\: \"VDMNat1\" where 
 \" x \\<equiv> 1 \" 
 
 definition

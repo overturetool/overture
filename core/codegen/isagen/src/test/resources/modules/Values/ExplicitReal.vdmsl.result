@@ -2,7 +2,7 @@
 begin
 
 abbreviation
- x \:\: \\<real> where 
+ x \:\: \"\\<real>\" where 
 \" x \\<equiv> 1.2 \" 
 
 definition
