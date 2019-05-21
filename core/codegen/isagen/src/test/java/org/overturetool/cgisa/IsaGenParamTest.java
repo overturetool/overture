@@ -146,7 +146,7 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
     public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected) {
     	PrintWriter writer = null;
 		try {
-			writer = new PrintWriter("/Users/jamie/Desktop/ToolDemo/FSM3.thy", "UTF-8");
+			writer = new PrintWriter("/Users/jamie/Desktop/ToolDemo/Polar.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
