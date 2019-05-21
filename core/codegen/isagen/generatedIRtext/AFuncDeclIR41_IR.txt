@@ -1,0 +1,11 @@
+Source Node : null
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = inv_Bytes
+---- _raises = []
+---- _body = org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@37f66be1
+---- _metaData = []
+---- _templateTypes = []
+---- _methodType = (int ==> bool)
+---- _formalParams = [natb]
+Class : class org.overture.codegen.ir.declarations.AFuncDeclIR

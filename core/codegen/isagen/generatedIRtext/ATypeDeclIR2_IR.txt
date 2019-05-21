@@ -1,0 +1,8 @@
+Source Node : State = FSM3`State
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = State(<LED_all_off> | <LED_off> | <LED_on> | <chip_rst> | <cmd_finish> | <config_rec> | <dummy> | <error_> | <get_cmd> | <prog_ID> | <prog_clk_cnt> | <prog_delay_diag> | <prog_op_mem_1> | <prog_op_mem_2> | <read_DIAG> | <read_LED> | <read_LFP> | <receive_packet_27> | <receive_packet_28> | <receive_packet_29> | <receive_packet_30> | <reset_ana> | <run_mem> | <send_packet_14> | <send_packet_24> | <send_packet_3> | <send_packet_6> | <send_packet_9> | <set_ana> | <set_bre> | <set_dDac> | <set_sDac> | <set_vLED> | <start>)
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_State[ints][]AFuncDeclIR[]isa_invTrue(s)
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

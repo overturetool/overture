@@ -1,0 +1,11 @@
+Source Node : null
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = post_fsm2tfsm_VDM
+---- _raises = []
+---- _body = org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@686273fb
+---- _metaData = []
+---- _templateTypes = []
+---- _methodType = (org.overture.codegen.ir.types.AMapMapTypeIR@32832f21 * org.overture.codegen.ir.types.AMapMapTypeIR@3142c3fe ==> bool)
+---- _formalParams = [org.overture.codegen.ir.types.AMapMapTypeIR@3bcc5c23fsm , org.overture.codegen.ir.types.AMapMapTypeIR@404a0d0aRESULT ]
+Class : class org.overture.codegen.ir.declarations.AFuncDeclIR

@@ -1,0 +1,12 @@
+Source Node : ALL_EVENTS:set1 of (FSM3`Event) = {<CONT>, <ERROR>, <SPI_TX_FINISH>, <SPI_RX_FINISH>, <LED_ON_E>, <SET_VLED_E>, <SET_BRE_E>, <LED_ALL_OFF_E>, <PROG_DELAY_DIAG_E>, <PROG_OP_MEM_E>, <RUN_MEM_E>, <PROG_CLK_CNT_E>, <RESET_ANA_E>, <SET_ANA_E>, <CONFIG_REC_E>, <PROG_ID_E>, <DUMMY_E>, <READ_LED_E>, <READ_DIAG_E>, <READ_LFP_E>, <GET_CMD_E>}
+Parent Node : null
+Children w/ inherited fields : 
+---- _static = true
+---- _access = private
+---- _name = ALL_EVENTS
+---- _initial = [CONT, ERROR, SPI_TX_FINISH, SPI_RX_FINISH, LED_ON_E, SET_VLED_E, SET_BRE_E, LED_ALL_OFF_E, PROG_DELAY_DIAG_E, PROG_OP_MEM_E, RUN_MEM_E, PROG_CLK_CNT_E, RESET_ANA_E, SET_ANA_E, CONFIG_REC_E, PROG_ID_E, DUMMY_E, READ_LED_E, READ_DIAG_E, READ_LFP_E, GET_CMD_E]
+---- _volatile = false
+---- _type = org.overture.codegen.ir.types.ASetSetTypeIR@65dc5a24
+---- _metaData = []
+---- _final = true
+Class : class org.overture.codegen.ir.declarations.AFieldDeclIR

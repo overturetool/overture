@@ -1,0 +1,11 @@
+Source Node : null
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = inv_IdMap
+---- _raises = []
+---- _body = org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@27dc2ec4
+---- _metaData = []
+---- _templateTypes = []
+---- _methodType = (int ==> bool)
+---- _formalParams = [org.overture.codegen.ir.types.AMapMapTypeIR@41ca7feam]
+Class : class org.overture.codegen.ir.declarations.AFuncDeclIR

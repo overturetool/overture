@@ -1,0 +1,18 @@
+Source Node : state FSM3of
+[fsm : FSM3`CandoFSM, currentSt : FSM3`State, currentEvt : FSM3`Event, currentCmd : FSM3`Command, command_finish_flag : FSM3`Flag, optrode_TX_finish : FSM3`Flag, optrode_RX_finish : FSM3`Flag, s_packet : [FSM3`Packet], bytes_received : FSM3`Bytes, bytes_sent : FSM3`Bytes, tx_cnt : FSM3`Count]
+	inv mk_FSM3(-, s, -, -, -, -, -, p, -, -, -) == ((s = <start>) <=> (p = nil))
+	init FSM3 == (FSM3 = mk_FSM3(fsm2tfsm(recommended_fsm), <start>, <CONT>, <READ_LFP_C>, false, true, true, nil, 3, 0, 0))
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = FSM3
+---- _initDecl = AFuncDeclIRAFuncDeclIRprivatefalse(FSM3 ==> bool)init_FSM3[FSM3FSM3][]false[]org.overture.codegen.ir.expressions.AEqualsBinaryExpIR@684baf0c
+---- _metaData = []
+---- _invExp = org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@26583e03
+---- _executable = true
+---- _fields = [public org.overture.codegen.ir.types.AMapMapTypeIR@473c6fd4 fsm , public (<LED_all_off> | <LED_off> | <LED_on> | <chip_rst> | <cmd_finish> | <config_rec> | <dummy> | <error_> | <get_cmd> | <prog_ID> | <prog_clk_cnt> | <prog_delay_diag> | <prog_op_mem_1> | <prog_op_mem_2> | <read_DIAG> | <read_LED> | <read_LFP> | <receive_packet_27> | <receive_packet_28> | <receive_packet_29> | <receive_packet_30> | <reset_ana> | <run_mem> | <send_packet_14> | <send_packet_24> | <send_packet_3> | <send_packet_6> | <send_packet_9> | <set_ana> | <set_bre> | <set_dDac> | <set_sDac> | <set_vLED> | <start>) currentSt , public (<CONFIG_REC_E> | <CONT> | <DUMMY_E> | <ERROR> | <GET_CMD_E> | <LED_ALL_OFF_E> | <LED_ON_E> | <PROG_CLK_CNT_E> | <PROG_DELAY_DIAG_E> | <PROG_ID_E> | <PROG_OP_MEM_E> | <READ_DIAG_E> | <READ_LED_E> | <READ_LFP_E> | <RESET_ANA_E> | <RUN_MEM_E> | <SET_ANA_E> | <SET_BRE_E> | <SET_VLED_E> | <SPI_RX_FINISH> | <SPI_TX_FINISH>) currentEvt , public (<CONFIG_REC_C> | <DUMMY_C> | <LED_ALL_OFF_C> | <LED_OFF_C> | <LED_ON_C> | <PROG_CLK_CNT_C> | <PROG_DELAY_DIAG_C> | <PROG_ID_C> | <PROG_OP_MEM_C> | <READ_DIAG_C> | <READ_LED_C> | <READ_LFP_C> | <RESET_ANA_C> | <RUN_MEM_C> | <SET_ANA_C> | <SET_BRE_C> | <SET_VLED_C>) currentCmd , public bool command_finish_flag , public bool optrode_TX_finish , public bool optrode_RX_finish , public Packet s_packet , public nat bytes_received , public nat bytes_sent , public nat tx_cnt ]
+---- _invDecl = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(FSM3 ==> bool)inv_FSM3[][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@56ab527e
+---- _initPattern = FSM3
+---- _access = private
+---- _initExp = org.overture.codegen.ir.expressions.AEqualsBinaryExpIR@63adb468
+---- _invPattern = f
+Class : class org.overture.codegen.ir.declarations.AStateDeclIR

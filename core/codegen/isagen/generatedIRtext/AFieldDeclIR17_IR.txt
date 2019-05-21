@@ -1,0 +1,12 @@
+Source Node : PACKET_LENGTH:nat1 = 3
+Parent Node : null
+Children w/ inherited fields : 
+---- _static = true
+---- _access = private
+---- _name = PACKET_LENGTH
+---- _initial = 3
+---- _volatile = false
+---- _type = nat1
+---- _metaData = []
+---- _final = true
+Class : class org.overture.codegen.ir.declarations.AFieldDeclIR

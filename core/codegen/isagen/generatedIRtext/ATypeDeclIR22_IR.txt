@@ -1,0 +1,9 @@
+Source Node : ErrorMap = FSM3`ErrorMap
+	inv em == (forall s in set (dom em) & (em(s) = <error_>))
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = ErrorMaporg.overture.codegen.ir.types.AMapMapTypeIR@4cb7dd2c
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_ErrorMap[org.overture.codegen.ir.types.AMapMapTypeIR@6adb9d16em][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@250980d8
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

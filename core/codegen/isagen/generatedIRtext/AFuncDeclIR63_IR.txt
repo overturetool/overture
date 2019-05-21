@@ -1,0 +1,11 @@
+Source Node : null
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = pre_sm2tsm
+---- _raises = []
+---- _body = isa_invTrue(sm)
+---- _metaData = []
+---- _templateTypes = []
+---- _methodType = (org.overture.codegen.ir.types.AMapMapTypeIR@4fcbc6f9 ==> bool)
+---- _formalParams = [org.overture.codegen.ir.types.AMapMapTypeIR@62200202sm ]
+Class : class org.overture.codegen.ir.declarations.AFuncDeclIR

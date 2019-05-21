@@ -1,0 +1,8 @@
+Source Node : Packet_Data = FSM3`Packet_Data
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = Packet_Data(<DAC_value> | <LED_addr> | <NO_LED_ADDR> | <constructed_data> | <diag_delay> | <fs_ratio_to_clk> | <mem_len> | <rec_config>)
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_Packet_Data[intp][]AFuncDeclIR[]isa_invTrue(p)
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

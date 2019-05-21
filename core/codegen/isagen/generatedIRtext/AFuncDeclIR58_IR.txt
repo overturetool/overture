@@ -1,0 +1,11 @@
+Source Node : null
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = inv_test5
+---- _raises = []
+---- _body = isa_invTrue(test5)
+---- _metaData = []
+---- _templateTypes = []
+---- _methodType = (() ==> bool)
+---- _formalParams = [bool]
+Class : class org.overture.codegen.ir.declarations.AFuncDeclIR

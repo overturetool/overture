@@ -1,0 +1,11 @@
+Source Node : null
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = inv_recommended_fsm
+---- _raises = []
+---- _body = isa_invTrue(recommended_fsm)
+---- _metaData = []
+---- _templateTypes = []
+---- _methodType = (() ==> bool)
+---- _formalParams = [org.overture.codegen.ir.types.AMapMapTypeIR@4816b5db]
+Class : class org.overture.codegen.ir.declarations.AFuncDeclIR

@@ -1,0 +1,9 @@
+Source Node : TStateMap = FSM3`TStateMap
+	inv sm == ((dom sm) = ALL_STATES)
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = TStateMaporg.overture.codegen.ir.types.AMapMapTypeIR@35570fb2
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_TStateMap[org.overture.codegen.ir.types.AMapMapTypeIR@7f7f4c97sm][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@4ba6018c
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

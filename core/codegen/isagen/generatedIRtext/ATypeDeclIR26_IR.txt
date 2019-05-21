@@ -1,0 +1,8 @@
+Source Node : FSM = FSM3`FSM
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = FSMorg.overture.codegen.ir.types.AMapMapTypeIR@5a51ce4a
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_FSM[intf][]AFuncDeclIR[]isa_invTrue(f)
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

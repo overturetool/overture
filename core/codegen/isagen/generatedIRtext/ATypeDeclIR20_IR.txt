@@ -1,0 +1,9 @@
+Source Node : TXMap = FSM3`TXMap
+	inv m == (((dom m) subset send_states) and ((rng m) subset receive_states))
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = TXMaporg.overture.codegen.ir.types.AMapMapTypeIR@43676faa
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_TXMap[org.overture.codegen.ir.types.AMapMapTypeIR@2c1848a3m][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@7ee7aaa3
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

@@ -1,0 +1,9 @@
+Source Node : CandoFSM = FSM3`CandoFSM
+	inv fsm == (is_((send_states <: fsm(<CONT>)), TXMap) and (is_((send_states <: fsm(<SPI_TX_FINISH>)), IdMap) and (is_((receive_states <: fsm(<SPI_RX_FINISH>)), IdMap) and (is_((packet_creator_states <: fsm(<CONT>)), PacketMap) and (is_((error_states <: (packet_creator_states <-: fsm(<CONT>))), ErrorMap) and ((fsm(<CONT>)(<start>) = <get_cmd>) and ((forall x in set (dom ({<CONT>} <-: fsm)) & (fsm(x)(<start>) = <error_>)) and ((fsm(<CONT>)(<error_>) = <chip_rst>) and ((fsm(<GET_CMD_E>)(<error_>) = <get_cmd>) and ((forall x in set (dom ({<CONT>, <GET_CMD_E>} <-: fsm)) & (fsm(x)(<error_>) = <error_>)) and is_((receive_states <: fsm(<CONT>)), ReceiveMap)))))))))))
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = CandoFSMorg.overture.codegen.ir.types.AMapMapTypeIR@7dceece3
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_CandoFSM[org.overture.codegen.ir.types.AMapMapTypeIR@19dd8c6ffsm][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@f8ecfe1
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

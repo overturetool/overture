@@ -1,0 +1,8 @@
+Source Node : Address = FSM3`Address
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = Address<Optrode_addr>
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_Address[inta][]AFuncDeclIR[]isa_invTrue(a)
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

@@ -1,0 +1,12 @@
+Source Node : receive_states:set1 of (FSM3`State) = {<receive_packet_27>, <receive_packet_28>, <receive_packet_29>, <receive_packet_30>}
+Parent Node : null
+Children w/ inherited fields : 
+---- _static = true
+---- _access = private
+---- _name = receive_states
+---- _initial = [receive_packet_27, receive_packet_28, receive_packet_29, receive_packet_30]
+---- _volatile = false
+---- _type = org.overture.codegen.ir.types.ASetSetTypeIR@65c674fd
+---- _metaData = []
+---- _final = true
+Class : class org.overture.codegen.ir.declarations.AFieldDeclIR

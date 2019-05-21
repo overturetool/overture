@@ -1,0 +1,12 @@
+Source Node : original_initial_fsm:map (FSM3`Event) to (map (FSM3`State) to (FSM3`State)) = (recommended_fsm ++ {<SPI_TX_FINISH> |-> {<send_packet_3> |-> <send_packet_3>, <send_packet_6> |-> <send_packet_6>, <send_packet_9> |-> <set_dDac>, <send_packet_14> |-> <send_packet_14>, <send_packet_24> |-> <send_packet_24>}, <PROG_OP_MEM_E> |-> {<get_cmd> |-> <prog_op_mem_2>}})
+Parent Node : null
+Children w/ inherited fields : 
+---- _static = true
+---- _access = private
+---- _name = original_initial_fsm
+---- _initial = org.overture.codegen.ir.expressions.AMapOverrideBinaryExpIR@4622638
+---- _volatile = false
+---- _type = org.overture.codegen.ir.types.AMapMapTypeIR@2004bbaf
+---- _metaData = []
+---- _final = true
+Class : class org.overture.codegen.ir.declarations.AFieldDeclIR

@@ -1,0 +1,20 @@
+Source Node : private static fsm2tfsm: (FSM3`FSM -> FSM3`TFSM)
+	fsm2tfsm(fsm) ==
+{e |-> (if (e in set (dom fsm))
+then sm2tsm(fsm(e))
+else sm2tsm({|->})) | e in set ALL_EVENTS}
+Parent Node : null
+Children w/ inherited fields : 
+---- _name = fsm2tfsm
+---- _raises = []
+---- _preCond = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(org.overture.codegen.ir.types.AMapMapTypeIR@2dfa01b7 ==> bool)pre_fsm2tfsm[org.overture.codegen.ir.types.AMapMapTypeIR@50244a92fsm ][]AFuncDeclIR[]isa_invTrue(fsm)
+---- _body = eorg.overture.codegen.ir.expressions.AInSetBinaryExpIR@27a9a766sm2tsm(fsm(e))sm2tsm([])[e in set ALL_EVENTS]ACompMapExpIR
+---- _metaData = []
+---- _implicit = false
+---- _abstract = false
+---- _access = private
+---- _templateTypes = []
+---- _methodType = (org.overture.codegen.ir.types.AMapMapTypeIR@10c654de ==> org.overture.codegen.ir.types.AMapMapTypeIR@189fc2e)
+---- _postCond = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(org.overture.codegen.ir.types.AMapMapTypeIR@738b5657 * org.overture.codegen.ir.types.AMapMapTypeIR@19735dd7 ==> bool)post_fsm2tfsm[org.overture.codegen.ir.types.AMapMapTypeIR@3b319a83fsm , org.overture.codegen.ir.types.AMapMapTypeIR@75177947RESULT ][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@5c07a05c
+---- _formalParams = [org.overture.codegen.ir.types.AMapMapTypeIR@5f19d3eefsm ]
+Class : class org.overture.codegen.ir.declarations.AFuncDeclIR

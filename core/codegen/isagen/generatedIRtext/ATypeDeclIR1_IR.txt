@@ -1,0 +1,8 @@
+Source Node : Event = FSM3`Event
+Parent Node : null
+Children w/ inherited fields : 
+---- _decl = Event(<CONFIG_REC_E> | <CONT> | <DUMMY_E> | <ERROR> | <GET_CMD_E> | <LED_ALL_OFF_E> | <LED_ON_E> | <PROG_CLK_CNT_E> | <PROG_DELAY_DIAG_E> | <PROG_ID_E> | <PROG_OP_MEM_E> | <READ_DIAG_E> | <READ_LED_E> | <READ_LFP_E> | <RESET_ANA_E> | <RUN_MEM_E> | <SET_ANA_E> | <SET_BRE_E> | <SET_VLED_E> | <SPI_RX_FINISH> | <SPI_TX_FINISH>)
+---- _metaData = []
+---- _access = private
+---- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_Event[inte][]AFuncDeclIR[]isa_invTrue(e)
+Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

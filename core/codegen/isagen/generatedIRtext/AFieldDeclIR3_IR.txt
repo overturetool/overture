@@ -1,0 +1,12 @@
+Source Node : ALL_STATES:set1 of (FSM3`State) = {<start>, <get_cmd>, <LED_off>, <send_packet_3>, <LED_on>, <set_vLED>, <send_packet_6>, <set_sDac>, <set_bre>, <send_packet_9>, <set_dDac>, <LED_all_off>, <prog_delay_diag>, <prog_op_mem_1>, <send_packet_14>, <prog_op_mem_2>, <run_mem>, <prog_clk_cnt>, <reset_ana>, <set_ana>, <config_rec>, <prog_ID>, <dummy>, <read_LED>, <send_packet_24>, <read_DIAG>, <read_LFP>, <receive_packet_27>, <receive_packet_28>, <receive_packet_29>, <receive_packet_30>, <error_>, <chip_rst>, <cmd_finish>}
+Parent Node : null
+Children w/ inherited fields : 
+---- _static = true
+---- _access = private
+---- _name = ALL_STATES
+---- _initial = [start, get_cmd, LED_off, send_packet_3, LED_on, set_vLED, send_packet_6, set_sDac, set_bre, send_packet_9, set_dDac, LED_all_off, prog_delay_diag, prog_op_mem_1, send_packet_14, prog_op_mem_2, run_mem, prog_clk_cnt, reset_ana, set_ana, config_rec, prog_ID, dummy, read_LED, send_packet_24, read_DIAG, read_LFP, receive_packet_27, receive_packet_28, receive_packet_29, receive_packet_30, error_, chip_rst, cmd_finish]
+---- _volatile = false
+---- _type = org.overture.codegen.ir.types.ASetSetTypeIR@502d0225
+---- _metaData = []
+---- _final = true
+Class : class org.overture.codegen.ir.declarations.AFieldDeclIR
