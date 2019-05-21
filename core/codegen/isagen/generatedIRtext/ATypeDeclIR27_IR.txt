@@ -1,9 +1,0 @@
-Source Node : TFSM = FSM3`TFSM
-	inv fsm == (((dom fsm) = ALL_EVENTS) and (forall e in set (dom fsm) & is_(fsm(e), TStateMap)))
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = TFSMorg.overture.codegen.ir.types.AMapMapTypeIR@57f6702d
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_TFSM[org.overture.codegen.ir.types.AMapMapTypeIR@526885b0fsm][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@29394410
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

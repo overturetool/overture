@@ -1,9 +1,0 @@
-Source Node : PacketMap = FSM3`PacketMap
-	inv pm == (((dom pm) subset packet_creator_states) and ((rng pm) subset send_states))
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = PacketMaporg.overture.codegen.ir.types.AMapMapTypeIR@1c90d0c8
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_PacketMap[org.overture.codegen.ir.types.AMapMapTypeIR@6ebc30cbpm][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@58b92327
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

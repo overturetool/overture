@@ -1,8 +1,0 @@
-Source Node : Packet = FSM3`Packet
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = PacketARecordDeclIR[public <Optrode_addr> addr , public (<CONFIG_REC_C> | <DUMMY_C> | <LED_ALL_OFF_C> | <LED_OFF_C> | <LED_ON_C> | <PROG_CLK_CNT_C> | <PROG_DELAY_DIAG_C> | <PROG_ID_C> | <PROG_OP_MEM_C> | <READ_DIAG_C> | <READ_LED_C> | <READ_LFP_C> | <RESET_ANA_C> | <RUN_MEM_C> | <SET_ANA_C> | <SET_BRE_C> | <SET_VLED_C>) cmd , public (<DAC_value> | <LED_addr> | <NO_LED_ADDR> | <constructed_data> | <diag_delay> | <fs_ratio_to_clk> | <mem_len> | <rec_config>) data ][]
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(Packet ==> bool)inv_Packet[Packetp][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@6f6b3197
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

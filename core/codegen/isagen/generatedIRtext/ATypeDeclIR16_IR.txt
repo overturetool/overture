@@ -1,9 +1,0 @@
-Source Node : Count = FSM3`Count
-	inv t == (t <= MAX_COUNT)
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = Countnat
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_Count[natt][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@142d953d
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

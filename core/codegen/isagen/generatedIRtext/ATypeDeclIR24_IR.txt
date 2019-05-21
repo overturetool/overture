@@ -1,9 +1,0 @@
-Source Node : ReceiveMap = FSM3`ReceiveMap
-	inv rm == (((dom rm) subset receive_states) and ((rng rm) subset (stage_two_packet_creator_states union {<cmd_finish>})))
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = ReceiveMaporg.overture.codegen.ir.types.AMapMapTypeIR@315f67a8
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_ReceiveMap[org.overture.codegen.ir.types.AMapMapTypeIR@2bd3f7dbrm][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@2466a002
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

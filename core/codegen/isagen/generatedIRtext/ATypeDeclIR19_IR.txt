@@ -1,9 +1,0 @@
-Source Node : StateMap = FSM3`StateMap
-	inv s == ((not (<start> in set (rng s))) and (((<start> in set (dom s)) => (s(<start>) in set {<get_cmd>, <error_>})) and (((<error_> in set (dom s)) => (s(<error_>) in set {<get_cmd>, <chip_rst>, <error_>})) and (((<cmd_finish> in set (dom s)) => (s(<cmd_finish>) = <error_>)) and (((<chip_rst> in set (dom s)) => (s(<chip_rst>) = <error_>)) and ((forall p in set packet_creator_states & ((p in set (dom s)) => (s(p) in set ({<error_>} union send_states)))) and ((forall r in set receive_states & ((r in set (dom s)) => (s(r) in set ({<cmd_finish>, r, <error_>} union stage_two_packet_creator_states)))) and ((<get_cmd> in set (dom s)) => (s(<get_cmd>) in set ({<error_>} union stage_one_packet_creator_states))))))))))
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = StateMaporg.overture.codegen.ir.types.AMapMapTypeIR@1cee6fda
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_StateMap[org.overture.codegen.ir.types.AMapMapTypeIR@2abf1259s][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@3b9b9199
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

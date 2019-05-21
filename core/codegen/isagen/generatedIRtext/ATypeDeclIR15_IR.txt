@@ -1,9 +1,0 @@
-Source Node : Bytes = FSM3`Bytes
-	inv b == (b <= PACKET_LENGTH)
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = Bytesnat
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_Bytes[natb][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@75ac9324
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

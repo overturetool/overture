@@ -1,9 +1,0 @@
-Source Node : IdMap = FSM3`IdMap
-	inv m == (forall s in set (dom m) & (m(s) = s))
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = IdMaporg.overture.codegen.ir.types.AMapMapTypeIR@1917ebbf
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_IdMap[org.overture.codegen.ir.types.AMapMapTypeIR@6175dd08m][]AFuncDeclIR[]org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR@f46ccd5
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR

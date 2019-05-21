@@ -1,8 +1,0 @@
-Source Node : Command = FSM3`Command
-Parent Node : null
-Children w/ inherited fields : 
----- _decl = Command(<CONFIG_REC_C> | <DUMMY_C> | <LED_ALL_OFF_C> | <LED_OFF_C> | <LED_ON_C> | <PROG_CLK_CNT_C> | <PROG_DELAY_DIAG_C> | <PROG_ID_C> | <PROG_OP_MEM_C> | <READ_DIAG_C> | <READ_LED_C> | <READ_LFP_C> | <RESET_ANA_C> | <RUN_MEM_C> | <SET_ANA_C> | <SET_BRE_C> | <SET_VLED_C>)
----- _metaData = []
----- _access = private
----- _inv = AFuncDeclIRAFuncDeclIRAFuncDeclIRAFuncDeclIR(int ==> bool)inv_Command[intc][]AFuncDeclIR[]isa_invTrue(c)
-Class : class org.overture.codegen.ir.declarations.ATypeDeclIR
