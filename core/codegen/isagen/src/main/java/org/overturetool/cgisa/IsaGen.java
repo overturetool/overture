@@ -1,6 +1,6 @@
 /*
  * #%~
- * VDM to Isabelle Translation
+\ * VDM to Isabelle Translation
  * %%
  * Copyright (C) 2008 - 2015 Overture
  * %%
@@ -219,7 +219,7 @@ public class IsaGen extends CodeGenBase {
 
     private void printIR(List<IRStatus<PIR>> statuses) {
     	
-    	
+    	new File("../isagen/target/generatedIRtext/").mkdirs();
 		AModuleDeclIR decls = (AModuleDeclIR) statuses.get(0).getIrNode();
 		
 		for (int i = 0; i < decls.getDecls().size(); i++)
@@ -228,7 +228,7 @@ public class IsaGen extends CodeGenBase {
 			
 			PrintWriter writer = null;
 			try {
-				writer = new PrintWriter("../isagen/generatedIRtext/" + decls.getDecls().get(i).getClass().toString().substring(43)
+				writer = new PrintWriter("../isagen/target/generatedIRtext/" + decls.getDecls().get(i).getClass().toString().substring(43)
 						+ i + "_IR.txt", "UTF-8");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
