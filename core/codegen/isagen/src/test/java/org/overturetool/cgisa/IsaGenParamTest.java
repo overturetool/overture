@@ -157,11 +157,6 @@ public class IsaGenParamTest extends ParamStandardTest<CgIsaTestResult> {
 
         assertTrue("\n --- Expected: ---\n" + expected.translation
                 + "\n --- Got: ---\n" + actual.translation, expected.compare(actual));
-        if(expected.compare(actual))
-        {
-            System.out.println("\n --- Got: ---\n" + actual.translation);
-        }
-
     }
 
     @Override
