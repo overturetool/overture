@@ -76,6 +76,7 @@ target/
 .settings/
 .metadata/
 .project
+.launch
 bin
 .factorypath
 
