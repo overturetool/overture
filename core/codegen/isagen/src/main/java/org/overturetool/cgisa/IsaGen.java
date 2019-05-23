@@ -1,6 +1,6 @@
 /*
  * #%~
-\ * VDM to Isabelle Translation
+ * VDM to Isabelle Translation
  * %%
  * Copyright (C) 2008 - 2015 Overture
  * %%
@@ -70,7 +70,6 @@ public class IsaGen extends CodeGenBase {
 	public static Map<String, AFuncDeclIR> funcGenHistoryMap = new HashMap<>();
 	public static Map<STypeIR, String> typeGenHistoryMap = new HashMap<>();
 	public static Map<String, SDeclIR> declGenHistoryMap = new HashMap<>();
-	
 	private IsaSettings isaSettings;
 	
     public IsaGen()
@@ -143,8 +142,6 @@ public class IsaGen extends CodeGenBase {
      */
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
-    	
-    	
         // Typecheck the VDMToolkit module and generate the IR
         TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 =
                 TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
@@ -174,16 +171,13 @@ public class IsaGen extends CodeGenBase {
                     // transform away any recursion cycles
                     GroupMutRecs groupMR = new GroupMutRecs();
                     generator.applyTotalTransformation(status, groupMR);
-                    
                     if (status.getIrNode() instanceof AModuleDeclIR) {
-                    	
                         AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
                         
                         // then sort remaining dependencies
                         SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
                         generator.applyPartialTransformation(status, sortTrans);
                     }
-                    
                     
                     // Transform all token types to isa_VDMToken
                     // Transform all nat types to isa_VDMNat
@@ -270,10 +264,8 @@ public class IsaGen extends CodeGenBase {
     private List<GeneratedModule> prettyPrint(List<IRStatus<PIR>> statuses)
             throws org.overture.codegen.ir.analysis.AnalysisException {
         // Apply merge visitor to pretty print Isabelle syntax
-    	
         IsaTranslations isa = new IsaTranslations();
         MergeVisitor pp = isa.getMergeVisitor();
-        
        
         List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 
