@@ -79,8 +79,6 @@ public class IsaTranslations {
         return mergeVisitor;
     }
 
-   
-    
     // Translations
 
     public String trans(INode node) throws AnalysisException {
@@ -185,13 +183,8 @@ public class IsaTranslations {
                 sb.append(sep);
             }
         }
-        
         return sb.toString();
     }
-    
-//    public String transTemplate(ATemplateTypeIR node){
-//    	
-//    }
 
     public String transString(List<SExpIR> args) throws AnalysisException {
         StringBuilder sb = new StringBuilder();
@@ -376,7 +369,6 @@ public class IsaTranslations {
     }
 
     public boolean isFunc(STypeIR node) throws AnalysisException {
-    	
         return node.apply(new IsMethodTypeVisitor());
     }
 
@@ -492,8 +484,6 @@ public class IsaTranslations {
     public String genInvariantsForRecordDecl(ARecordDeclIR node)
     {
         List<String> invs = new ArrayList<>();
-        
-    		
         for (AFieldDeclIR f : node.getFields())
         {
             Object type = f.getType();
