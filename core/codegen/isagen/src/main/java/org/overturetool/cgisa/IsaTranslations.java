@@ -325,7 +325,6 @@ public class IsaTranslations {
     }
 
     public String initial(SExpIR node) throws AnalysisException {
-    	System.out.println(node);
     	if (node.getClass() != AIdentifierVarExpIR.class && 
     			(node.getType() instanceof ASetSetTypeIR || node.getType() instanceof ASeqSeqTypeIR))
     	{
@@ -333,9 +332,6 @@ public class IsaTranslations {
     		String initial = shift( Arrays.asList(transInit(node.getType(), node.toString().replace("[", "").replace("]", "")).split("")) );
     		return initial;
     	}
-//    	if (node.getClass() == AEnumSetExpIR.class) {
-//    		return "{" + trans(node) + "}";
-//    	}
     	else 
     	{
     		return trans(node);

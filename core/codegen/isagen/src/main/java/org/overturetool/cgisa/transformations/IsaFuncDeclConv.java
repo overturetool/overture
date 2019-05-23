@@ -105,7 +105,6 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     	AApplyExpIR app = new AApplyExpIR();
     	AIdentifierVarExpIR root = new AIdentifierVarExpIR();
     	root.setName("inv_"+st.getName());
-    	System.out.println(IsaGen.funcGenHistoryMap.keySet());
     	root.setType(IsaGen.funcGenHistoryMap.get("inv_"+st.getName()).getMethodType().clone());
     	app.setRoot(root);
     	
@@ -116,8 +115,6 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
     	
     	postInit.setBody(app.clone());
         addToAST(postInit.clone(), node.clone());
-
-        System.out.println("Post condition has been added");
 		
 	}
 
@@ -210,8 +207,6 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
 	    IsaGen.funcGenHistoryMap.put(finalPreCondition.getName(), finalPreCondition.clone());
 	    addToAST(finalPreCondition, node);
 	    
-	    System.out.println("Pre condition has been added");
-   
     }
     
     
@@ -284,8 +279,6 @@ public class IsaFuncDeclConv extends DepthFirstAnalysisIsaAdaptor {
         node.setPostCond(finalPostCondition.clone());
 	    IsaGen.funcGenHistoryMap.put(finalPostCondition.getName(), finalPostCondition.clone());
         addToAST(finalPostCondition, node);
-
-        System.out.println("Post condition has been added");
     }
     
   
