@@ -40,7 +40,7 @@ public class GhostAnnotation extends ASTAnnotationAdapter
 	}
 
 	/**
-	 * Override the default parse, and look for @Ghost <name> = <exp>;
+	 * Override the default parse, and look for {@literal}Ghost NAME = EXP;
 	 */
 	@Override
 	public List<PExp> parse(LexTokenReader ltr) throws LexException, ParserException
