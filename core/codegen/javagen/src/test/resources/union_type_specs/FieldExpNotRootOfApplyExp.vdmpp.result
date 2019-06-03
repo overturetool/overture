@@ -26,7 +26,7 @@ public class Entry {
 
     if (Utils.equals(1L, 1L)) {
       VDMMap mapCompResult_1 = MapUtil.map();
-      VDMSet set_1 = Utils.copy(ss);
+      VDMSet set_1 = ((VDMSet) Utils.copy(ss));
       for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext(); ) {
         VDMSeq hr = ((VDMSeq) iterator_1.next());
         Object obj_1 = Utils.get(hr, hr.size());
@@ -43,7 +43,7 @@ public class Entry {
 
     } else {
       VDMMap mapCompResult_2 = MapUtil.map();
-      VDMSet set_2 = Utils.copy(ss);
+      VDMSet set_2 = ((VDMSet) Utils.copy(ss));
       for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext(); ) {
         VDMSeq hr = ((VDMSeq) iterator_2.next());
         MapUtil.mapAdd(mapCompResult_2, new Maplet(Utils.copy(hr), SeqUtil.seq()));

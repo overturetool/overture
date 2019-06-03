@@ -1,0 +1,28 @@
+class Entry
+
+values
+
+val = f[char]('a');
+
+functions
+
+f[@T] : @T -> seq of @T
+f (t) == [t];
+
+g : char -> seq of char
+g (c) == f[char](c);
+
+operations
+
+op : () ==> seq of char
+op () ==
+(
+  dcl res : seq of char := f[char]('a');
+  res := f[char]('a');
+  return res;
+);
+
+public static Run : () ==> ?
+Run () == return f[char]('a') ^ g('b') ^ new Entry().op();
+
+end Entry

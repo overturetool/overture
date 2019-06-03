@@ -8,9 +8,10 @@
 <message column="5" line="86" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm"/>
 <message column="35" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="blockstmt.vdm"/>
 <message column="22" line="42" message="Expression does not match declared type" messageType="error" number="3000" resource="blockstmt.vdm"/>
+<message column="6" line="65" message="Statement may return void value" messageType="error" number="3328" resource="blockstmt.vdm"/>
 <message column="3" line="67" message="Operation returns void value" messageType="error" number="3313" resource="blockstmt.vdm"/>
 <message column="5" line="85" message="Statement may return void value" messageType="error" number="3328" resource="blockstmt.vdm"/>
 <message column="3" line="83" message="Operation returns unexpected type" messageType="error" number="3027" resource="blockstmt.vdm"/>
-<message column="24" line="100" message="Unable to resolve type name 'Unknown'" messageType="error" number="3431" resource="blockstmt.vdm"/>
+<message column="24" line="100" message="From module BlockStmtTest: Unable to resolve type name 'Unknown'" messageType="error" number="3431" resource="blockstmt.vdm"/>
 <result/>
 </testResult>

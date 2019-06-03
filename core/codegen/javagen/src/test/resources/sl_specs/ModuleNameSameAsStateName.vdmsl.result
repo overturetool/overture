@@ -1,0 +1,143 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class Entry {
+  private Entry() {}
+
+  public static Number Run() {
+
+    if (Utils.equals(1L, 1L)) {
+      return A_Module.op();
+    } else {
+      return A_Module.op();
+    }
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class A_Module {
+  private static A A = new A(1L);
+
+  private A_Module() {}
+
+  public static Number op() {
+
+    A.id = A.id.longValue() + 1L;
+    A.id = A.id.longValue() + 1L;
+    return A.id.longValue()
+        + A.id.longValue()
+        + new A(4L).id.longValue()
+        + new A(4L).id.longValue();
+  }
+
+  public static Number fun() {
+
+    final A a = new A(5L);
+
+    return a.id;
+  }
+
+  public String toString() {
+
+    return "A_Module{" + "A := " + Utils.toString(A) + "}";
+  }
+
+  public static class A implements Record {
+    public Number id;
+
+    public A(final Number _id) {
+
+      id = _id;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof A)) {
+        return false;
+      }
+
+      A other = ((A) obj);
+
+      return Utils.equals(id, other.id);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(id);
+    }
+
+    public A copy() {
+
+      return new A(id);
+    }
+
+    public String toString() {
+
+      return "mk_A_Module`A" + Utils.formatFields(id);
+    }
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class X_Module {
+  private X_Module() {}
+
+  public String toString() {
+
+    return "X_Module{}";
+  }
+
+  public static class X implements Record {
+    public Number x;
+
+    public X(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof X)) {
+        return false;
+      }
+
+      X other = ((X) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public X copy() {
+
+      return new X(x);
+    }
+
+    public String toString() {
+
+      return "mk_X_Module`X" + Utils.formatFields(x);
+    }
+  }
+}
+
+##########

@@ -80,6 +80,7 @@ public class TypeCheckerExportsVisitor extends AbstractTypeCheckVisitor
 						FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, af.createAExplicitFunctionDefinitionAssistant().getTypeParamDefinitions(efd), question.env, NameScope.NAMES);
 						TypeCheckInfo newQuestion = question.newInfo(params);
 						PType type = question.assistantFactory.createPTypeAssistant().typeResolve(exp.getExportType(), null, THIS, newQuestion);
+						exp.setExportType(type);
 					
 						if (efd.getTypeParams() == null)
 						{
@@ -104,6 +105,7 @@ public class TypeCheckerExportsVisitor extends AbstractTypeCheckVisitor
 						FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, af.createAImplicitFunctionDefinitionAssistant().getTypeParamDefinitions(ifd), question.env, NameScope.NAMES);
 						TypeCheckInfo newQuestion = question.newInfo(params);
 						PType type = question.assistantFactory.createPTypeAssistant().typeResolve(exp.getExportType(), null, THIS, newQuestion);
+						exp.setExportType(type);
 						
 						if (ifd.getTypeParams() == null)
 						{
@@ -126,6 +128,7 @@ public class TypeCheckerExportsVisitor extends AbstractTypeCheckVisitor
 				else
 				{
 					PType type = question.assistantFactory.createPTypeAssistant().typeResolve(exp.getExportType(), null, THIS, question);
+					exp.setExportType(type);
 
 					if (act != null && !af.createPTypeAssistant().equals(act, type))
     				{
@@ -158,6 +161,7 @@ public class TypeCheckerExportsVisitor extends AbstractTypeCheckVisitor
 			{
 				PType act = def.getType();
 				PType type = question.assistantFactory.createPTypeAssistant().typeResolve(exp.getExportType(), null, THIS, question);
+				exp.setExportType(type);
 				
 				if (act != null && !af.createPTypeAssistant().equals(act, type))
 				{
@@ -205,6 +209,7 @@ public class TypeCheckerExportsVisitor extends AbstractTypeCheckVisitor
 		ITypeCheckerAssistantFactory af = question.assistantFactory;
 		ModuleEnvironment menv = (ModuleEnvironment)question.env;
 		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(exp.getExportType().clone(), null, THIS, question);
+		exp.setExportType(type);
 
 		for (ILexNameToken name : exp.getNameList())
 		{

@@ -9,6 +9,7 @@ import org.overture.codegen.ir.SExpIR;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
 import org.overture.codegen.ir.declarations.AFieldDeclIR;
+import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
@@ -31,10 +32,13 @@ import org.overture.codegen.trans.assistants.TransAssistantIR;
 
 public class JavaQuoteValueCreator extends JavaClassCreatorBase
 {
+	private static final String CODEGEN_RUNTIME_PACKAGE = "org.overture.codegen.runtime";
 	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
+	public static final String JAVA_QUOTE_RUNTIME_INTERFACE = "Quote";
 
 	private static final String GET_INSTANCE_METHOD = "getInstance";
 	private static final String HASH_CODE_METHOD = "hashCode";
+	private static final String COPY_METHOD = "copy";
 
 	private static final String INSTANCE_FIELD = "instance";
 	private static final String HASHCODE_FIELD = "hc";
@@ -60,10 +64,17 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		decl.setAccess(IJavaConstants.PUBLIC);
 		decl.setName(quoteClassName);
 		decl.setStatic(false);
+		
+		AInterfaceDeclIR quoteInterface = new AInterfaceDeclIR();
+		quoteInterface.setPackage(CODEGEN_RUNTIME_PACKAGE);
+		decl.getInterfaces().add(quoteInterface);
+		final String RECORD_NAME = JAVA_QUOTE_RUNTIME_INTERFACE;
+		quoteInterface.setName(RECORD_NAME);
 
 		// The package where the quotes are put is userCode.quotes
 		String quotePackage = consQuotePackage(userCodePackage);
-
+		
+		decl.getInterfaces().add(quoteInterface);
 		decl.setPackage(quotePackage);
 
 		decl.getFields().add(consHashcodeField());
@@ -74,6 +85,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		decl.getMethods().add(consHashcodeMethod());
 		decl.getMethods().add(consEqualsMethod(quoteClassName));
 		decl.getMethods().add(consToStringMethod(quoteName));
+		decl.getMethods().add(consCopyMethod(quoteClassName));
 
 		List<ClonableString> imports = new LinkedList<>();
 		imports.add(new ClonableString(JavaCodeGen.RUNTIME_IMPORT));
@@ -298,6 +310,47 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		toStringMethod.setBody(body);
 
 		return toStringMethod;
+	}
+	
+
+	private AMethodDeclIR consCopyMethod(String quoteName) {
+		
+		AClassTypeIR quoteClassType = new AClassTypeIR();
+		quoteClassType.setName(quoteName);
+		
+		AMethodTypeIR methodType = new AMethodTypeIR();
+		methodType.setResult(quoteClassType.clone());
+		
+		AIdentifierVarExpIR getInstanceMember = new AIdentifierVarExpIR();
+		getInstanceMember.setIsLambda(false);
+		getInstanceMember.setIsLocal(true);
+		getInstanceMember.setName(GET_INSTANCE_METHOD);
+		getInstanceMember.setType(methodType);
+		
+		AApplyExpIR getInstanceCall = new AApplyExpIR();
+		getInstanceCall.setType(quoteClassType.clone());
+		getInstanceCall.setRoot(getInstanceMember);
+		
+		AReturnStmIR retStm = new AReturnStmIR();
+		retStm.setExp(getInstanceCall);
+		
+		AMethodDeclIR getInstanceMethod = new AMethodDeclIR();
+
+		getInstanceMethod.setImplicit(false);
+		getInstanceMethod.setAbstract(false);
+		getInstanceMethod.setAccess(IJavaConstants.PUBLIC);
+		getInstanceMethod.setIsConstructor(false);
+		getInstanceMethod.setName(COPY_METHOD);
+		getInstanceMethod.setStatic(false);
+		getInstanceMethod.setMethodType(methodType);
+		getInstanceMethod.setBody(retStm);
+		
+		List<ClonableString> override = new LinkedList<>();
+		override.add(new ClonableString(IJavaConstants.OVERRIDE_ANNOTATION));
+		getInstanceMethod.setMetaData(override);
+
+		return getInstanceMethod;
+
 	}
 
 	private STypeIR consFieldType()

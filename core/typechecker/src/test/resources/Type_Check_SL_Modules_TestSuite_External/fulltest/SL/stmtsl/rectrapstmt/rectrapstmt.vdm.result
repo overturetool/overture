@@ -19,6 +19,7 @@
 <message column="3" line="51" message="Definition 'RecTrap5' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="3" line="64" message="Definition 'RecTrap6' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="14" line="25" message="Matching expression is not a set type" messageType="error" number="3206" resource="rectrapstmt.vdm"/>
+<message column="5" line="40" message="Statement may return void value" messageType="error" number="3328" resource="rectrapstmt.vdm"/>
 <message column="3" line="30" message="Operation returns unexpected type" messageType="error" number="3027" resource="rectrapstmt.vdm"/>
 <message column="9" line="53" message="Matching expression is not a compatible record type" messageType="error" number="3201" resource="rectrapstmt.vdm"/>
 <result/>

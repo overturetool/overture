@@ -1,0 +1,30 @@
+module Entry
+
+exports
+  operations
+    Run: () ==> nat
+    op: () ==> ()
+definitions
+
+state St of
+  id : nat
+init id == id = mk_St(5)
+end
+
+operations
+
+Run : () ==> nat
+Run () ==
+(
+  op();
+  return id;
+);
+
+op() ==
+(
+  id := 20 + id;
+)
+ext
+  wr id;
+
+end Entry

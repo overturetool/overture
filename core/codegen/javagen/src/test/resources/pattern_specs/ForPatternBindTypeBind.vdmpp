@@ -1,0 +1,16 @@
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let xs = [10,20,30]
+in
+(
+  for x : nat in xs do
+    if 1 = 1 then
+      return x;
+  return 99;
+)
+
+end Entry

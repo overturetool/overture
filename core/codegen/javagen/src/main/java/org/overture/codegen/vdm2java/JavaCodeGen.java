@@ -452,7 +452,7 @@ public class JavaCodeGen extends CodeGenBase
 		allRenamings = normaliseIdentifiers(userModules);
 
 		// To document any renaming of variables shadowing other variables
-		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
+		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs(), ast));
 
 		invalidNamesResult = validateVdmModelNames(userModules);
 	}
@@ -593,12 +593,12 @@ public class JavaCodeGen extends CodeGenBase
 	}
 
 	private List<Renaming> performRenaming(List<INode> mergedParseLists,
-			Map<AIdentifierStateDesignator, PDefinition> idDefs)
+			Map<AIdentifierStateDesignator, PDefinition> idDefs, List<INode> nodes)
 			throws AnalysisException
 	{
 		List<Renaming> allRenamings = new LinkedList<Renaming>();
 
-		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
+		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs, nodes);
 		VarRenamer renamer = new VarRenamer();
 
 		for (INode node : mergedParseLists)
@@ -678,11 +678,19 @@ public class JavaCodeGen extends CodeGenBase
 		if (generatedModule != null && generatedModule.canBeGenerated()
 				&& !generatedModule.hasMergeErrors())
 		{
-			String javaFileName = generatedModule.getName();
+			String javaFileName;
 
-			if (JavaCodeGenUtil.isQuote(generatedModule.getIrNode(), getJavaSettings()))
+			org.overture.codegen.ir.INode irNode = generatedModule.getIrNode();
+
+			if(irNode instanceof SClassDeclIR)
 			{
-				javaFileName += JavaQuoteValueCreator.JAVA_QUOTE_NAME_SUFFIX;
+				// The class may have been renamed, hence different form the original name
+				SClassDeclIR clazz = (SClassDeclIR) irNode;
+				javaFileName = clazz.getName();
+			}
+			else
+			{
+				javaFileName = generatedModule.getName();
 			}
 
 			javaFileName += IJavaConstants.JAVA_FILE_EXTENSION;

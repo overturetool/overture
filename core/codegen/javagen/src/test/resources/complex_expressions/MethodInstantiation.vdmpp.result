@@ -9,24 +9,40 @@ public class A {
     return f1().longValue()
         + f2().f1().longValue()
         + new A().f1().longValue()
-        + g(1L, 'a').longValue();
+        + g(1L, 'a', Utils.NAT, Utils.CHAR).longValue()
+        + h(SeqUtil.seq(1L, true), Utils.SEQ_OF_ANYTHING).longValue()
+        + h(SetUtil.set(quotes.AQuote.getInstance(), 'x'), Utils.SET_OF_ANYTHING).longValue()
+        + h(MapUtil.map(new Maplet(1L, 'a')), Utils.MAP_ANYTHING_TO_ANYTHING).longValue()
+        + h(4L, SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance(), Utils.NAT))
+            .longValue();
   }
 
   public A f2() {
 
-    return g(new A(), 2L);
+    return g(new A(), 2L, Utils.TYPE_NOT_SUPPORTED, Utils.REAL);
   }
 
   public A() {}
 
   public static Number f1() {
 
-    return g(1L, 2L);
+    return g(1L, 2L, Utils.NAT, Utils.REAL);
   }
 
-  public static <T, U> T g(final T arg1, final U ignorePattern_1) {
+  public static <T, U> T g(
+      final T arg1, final U ignorePattern_1, final Object _type_T, final Object _type_U) {
 
     return arg1;
+  }
+
+  private static <T> Number h(final Object a, final Object _type_T) {
+
+    if (Utils.is_(a, _type_T)) {
+      return 42L;
+
+    } else {
+      return 43L;
+    }
   }
 
   public String toString() {
@@ -66,4 +82,7 @@ public interface Func_1<T_1> {
   public abstract T_1 eval();
 }
 
+##########
+*Quotes*
+A,B
 ##########

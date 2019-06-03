@@ -92,7 +92,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseASetPattern(ASetPattern pattern)
 			throws AnalysisException
 	{
-		if (af.createPTypeAssistant().isUnion(af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation())))
+		if (af.createPTypeAssistant().isUnion(af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation()), pattern.getLocation().getModule()))
 		{
 			return true; // Set types are various, so we must permute
 		}
@@ -170,7 +170,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 	{
 		for (PPattern p : plist)
 		{
-			if (af.createPPatternAssistant().isConstrained(p))
+			if (af.createPPatternAssistant(null).isConstrained(p))
 			{
 				return true; // NB. OR
 			}

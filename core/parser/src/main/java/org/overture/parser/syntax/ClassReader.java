@@ -26,10 +26,12 @@ package org.overture.parser.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
@@ -75,13 +77,24 @@ public class ClassReader extends SyntaxReader
 			while (lastToken().is(VDMToken.CLASS)
 					|| lastToken().is(VDMToken.SYSTEM))
 			{
+				ILexCommentList comments = getComments();
+				List<PAnnotation> annotations = readAnnotations(comments);
+				beforeAnnotations(this, annotations);
+				SClassDefinition clazz = null;
+
 				if (lastToken().is(VDMToken.CLASS))
 				{
-					list.add(readClass());
-				} else
-				{
-					list.add(readSystem());
+					clazz = readClass();
 				}
+				else
+				{
+					clazz = readSystem();
+				}
+				
+				afterAnnotations(this, annotations, clazz);
+				clazz.setAnnotations(annotations);
+				clazz.setComments(comments);
+				list.add(clazz);
 			}
 
 			if (lastToken().isNot(VDMToken.EOF))

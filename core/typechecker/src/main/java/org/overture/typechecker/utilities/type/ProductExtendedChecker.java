@@ -33,6 +33,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -44,12 +45,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class ProductExtendedChecker extends
 		QuestionAnswerAdaptor<Integer, Boolean>
 {
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	protected ITypeCheckerAssistantFactory af;
-
-	public ProductExtendedChecker(ITypeCheckerAssistantFactory af)
+	public ProductExtendedChecker(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -63,11 +65,7 @@ public class ProductExtendedChecker extends
 	public Boolean caseANamedInvariantType(ANamedInvariantType type,
 			Integer size) throws AnalysisException
 	{
-
-		if (type.getOpaque())
-		{
-			return false;
-		}
+		if (TypeChecker.isOpaque(type, fromModule)) return false;
 		return type.getType().apply(THIS, size);
 	}
 
@@ -104,7 +102,7 @@ public class ProductExtendedChecker extends
 			throws AnalysisException
 	{
 		// return af.createAUnionTypeAssistant().getProduct(type, size) != null;
-		return type.apply(af.getProductExtendedTypeFinder(), size) != null;
+		return type.apply(af.getProductExtendedTypeFinder(fromModule), size) != null;
 	}
 
 	@Override

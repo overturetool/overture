@@ -27,19 +27,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassInvariantDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.AMutexSyncDefinition;
-import org.overture.ast.definitions.ANamedTraceDefinition;
-import org.overture.ast.definitions.APerSyncDefinition;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.*;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -72,6 +60,7 @@ import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.declarations.AThreadDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
+import org.overture.codegen.ir.declarations.ARenamedDeclIR;
 import org.overture.codegen.ir.expressions.ALambdaExpIR;
 import org.overture.codegen.ir.expressions.ANotImplementedExpIR;
 import org.overture.codegen.ir.name.ATokenNameIR;
@@ -107,7 +96,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		SPatternIR initPatternCg = initPattern != null
 				? initPattern.apply(question.getPatternVisitor(), question)
 				: null;
-		SDeclIR invDeclCg = invdef != null
+		SDeclIR invDeclCg = question.getSettings().generateInvariants() && invdef != null
 				? invdef.apply(question.getDeclVisitor(), question) : null;
 		SExpIR invExpCg = invExp != null
 				? invExp.apply(question.getExpVisitor(), question) : null;
@@ -233,7 +222,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		ARecordDeclIR record = new ARecordDeclIR();
 		record.setName(name.getName());
 
-		if (node.getInvDef() != null)
+		if (node.getInvDef() != null && question.getSettings().generateInvariants())
 		{
 			SDeclIR invCg = node.getInvDef().apply(question.getDeclVisitor(), question);
 			record.setInvariant(invCg);
@@ -281,7 +270,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 
 		SDeclIR declCg = type.apply(question.getDeclVisitor(), question);
 
-		SDeclIR invCg = node.getInvdef() != null
+		SDeclIR invCg = question.getSettings().generateInvariants() && node.getInvdef() != null
 				? node.getInvdef().apply(question.getDeclVisitor(), question)
 				: null;
 
@@ -453,7 +442,16 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		func.setAbstract(false);
 		func.setAccess(accessCg);
 		func.setImplicit(true);
-		func.setBody(new ANotImplementedExpIR());
+
+		if(node.getBody() == null)
+		{
+			func.setBody(new ANotImplementedExpIR());
+		}
+		else
+		{
+			func.setBody(node.getBody().apply(question.getExpVisitor(), question));
+		}
+
 		func.setFormalParams(question.getDeclAssistant().consFormalParams(node.getParamPatterns(), question));
 		func.setMethodType((AMethodTypeIR) typeCg);
 		func.setName(funcNameCg);
@@ -529,7 +527,11 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		// Exceptions thrown:
 		// LinkedList<AErrorCase> errors = node.getErrors();
 
-		method.setBody(new ANotImplementedStmIR());
+		if(method.getBody() == null)
+		{
+			method.setBody(new ANotImplementedStmIR());
+		}
+
 		method.setFormalParams(question.getDeclAssistant().consFormalParams(node.getParameterPatterns(), question));
 		return method;
 	}
@@ -554,6 +556,7 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
+		//FIXME: patterns should be handled by transformations
 		String name = node.getPattern().toString();
 		boolean isStatic = true;
 		boolean isFinal = true;
@@ -613,5 +616,18 @@ public class DeclVisitorIR extends AbstractVisitorIR<IRInfo, SDeclIR>
 		}
 
 		return mutexdef;
+	}
+
+	@Override
+	public SDeclIR caseARenamedDefinition(ARenamedDefinition node, IRInfo question) throws AnalysisException {
+
+		PDefinition def = node.getDef();
+
+		SDeclIR defCg = def.apply(question.getDeclVisitor(), question);
+
+		ARenamedDeclIR renamedCg = new ARenamedDeclIR();
+		renamedCg.setDef(defCg);
+
+		return defCg;
 	}
 }

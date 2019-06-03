@@ -320,7 +320,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 
 	private PExp addPossibleType(PExp exp, PPattern node)
 	{
-		PType possibleType = af.createPPatternAssistant().getPossibleType(node);
+		PType possibleType = af.createPPatternAssistant(node.getLocation().getModule()).getPossibleType(node);
 		if (possibleType != null)
 		{
 			exp.setType(possibleType.clone());

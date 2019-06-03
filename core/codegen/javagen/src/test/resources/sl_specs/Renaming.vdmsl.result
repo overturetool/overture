@@ -1,0 +1,58 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class Entry {
+  private Entry() {}
+
+  public static Number Run() {
+
+    final Number a = ((Number) A.Val).doubleValue() + A.Val.longValue();
+    return a.longValue()
+        + A.fun().longValue()
+        + A.fun().longValue()
+        + A.op().longValue()
+        + A.op().longValue()
+        + util().longValue();
+  }
+
+  public static Number util() {
+
+    return A.op();
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class A {
+  public static final Number Val = 5L;
+
+  private A() {}
+
+  public static Number op() {
+
+    return 43L;
+  }
+
+  public static Number fun() {
+
+    return 42L;
+  }
+
+  public String toString() {
+
+    return "A{" + "Val = " + Utils.toString(Val) + "}";
+  }
+}
+
+##########

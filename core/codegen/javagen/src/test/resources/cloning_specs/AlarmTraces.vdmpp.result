@@ -231,6 +231,10 @@ public class Entry {
               quotes.MechQuote.getInstance()));
   private Expert ex4 =
       new Expert(SetUtil.set(quotes.ElecQuote.getInstance(), quotes.ChemQuote.getInstance()));
+  private static final Token p1 =
+      new Token(SeqUtil.seq('M', 'o', 'n', 'd', 'a', 'y', ' ', 'd', 'a', 'y'));
+  private static final Token p2 =
+      new Token(SeqUtil.seq('M', 'o', 'n', 'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
   private Plant plant =
       new Plant(
           SetUtil.set(a1),
@@ -238,10 +242,6 @@ public class Entry {
               new Maplet(Entry.p1, SetUtil.set(ex1, ex4)),
               new Maplet(Entry.p2, SetUtil.set(ex2, ex3))));
   private VDMSet exs = SetUtil.set(ex1, ex2, ex3, ex4);
-  private static final Token p1 =
-      new Token(SeqUtil.seq('M', 'o', 'n', 'd', 'a', 'y', ' ', 'd', 'a', 'y'));
-  private static final Token p2 =
-      new Token(SeqUtil.seq('M', 'o', 'n', 'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
   private static final Token p3 =
       new Token(SeqUtil.seq('T', 'u', 'e', 's', 'd', 'a', 'y', ' ', 'd', 'a', 'y'));
   private static final Token p4 =
@@ -273,14 +273,14 @@ public class Entry {
         + Utils.toString(ex3)
         + ", ex4 := "
         + Utils.toString(ex4)
-        + ", plant := "
-        + Utils.toString(plant)
-        + ", exs := "
-        + Utils.toString(exs)
         + ", p1 = "
         + Utils.toString(p1)
         + ", p2 = "
         + Utils.toString(p2)
+        + ", plant := "
+        + Utils.toString(plant)
+        + ", exs := "
+        + Utils.toString(exs)
         + ", p3 = "
         + Utils.toString(p3)
         + ", p4 = "

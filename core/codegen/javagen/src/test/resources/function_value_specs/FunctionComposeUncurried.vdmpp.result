@@ -20,13 +20,18 @@ public class Entry {
             return x.longValue() + 1L;
           }
         };
-    final Func_1<Number, Number> h = func_compose(f, g);
+    final Func_1<Number, Number> h = func_compose(f, g, Utils.INT, Utils.INT, Utils.INT);
     return h.eval(2L);
   }
 
   public Entry() {}
 
-  private static <A, B, C> Func_1<A, C> func_compose(final Func_1<A, B> f, final Func_1<B, C> g) {
+  private static <A, B, C> Func_1<A, C> func_compose(
+      final Func_1<A, B> f,
+      final Func_1<B, C> g,
+      final Object _type_A,
+      final Object _type_B,
+      final Object _type_C) {
 
     return new Func_1<A, C>() {
       public C eval(final A x) {

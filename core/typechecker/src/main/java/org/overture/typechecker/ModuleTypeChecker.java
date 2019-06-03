@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.annotations.Annotation;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
@@ -34,6 +36,7 @@ import org.overture.ast.typechecker.Pass;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.annotations.TCAnnotation;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -151,6 +154,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
+				assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 				assistantFactory.createAModuleModulesAssistant().processExports(m); // Populate exportDefs
 			}
 		}
@@ -162,6 +166,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
+				assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Populate importDefs
 			}
 		}
@@ -203,7 +208,8 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{
-				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(assistantFactory, env));
+				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc,
+						new TypeCheckInfo(assistantFactory, env).newModule(d.getLocation().getModule()));
 			} catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);
@@ -220,6 +226,21 @@ public class ModuleTypeChecker extends TypeChecker
 				report(3431, te.getMessage(), null);// FIXME: internal error
 			}
 		}
+		
+		// Initialise any annotations
+		Annotation.init(TCAnnotation.class);
+
+		for (AModuleModules m: modules)
+		{
+			for (PAnnotation annotation: m.getAnnotations())
+			{
+				if (annotation.getImpl() instanceof TCAnnotation)
+				{
+					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+					impl.tcBefore(m, null);
+				}
+			}
+		}
 
 		// Proceed to type check all definitions, considering types, values
 		// and remaining definitions, in that order.
@@ -230,6 +251,7 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				if (!m.getTypeChecked())
 				{
+					assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 					Environment e = new ModuleEnvironment(assistantFactory, m);
 
 					for (PDefinition d : m.getDefs())
@@ -240,7 +262,7 @@ public class ModuleTypeChecker extends TypeChecker
 						{
 							try
 							{
-								d.apply(tc, new TypeCheckInfo(assistantFactory, e, NameScope.NAMES));
+								d.apply(tc, new TypeCheckInfo(assistantFactory, e, NameScope.NAMES).newModule(m.getName().getName()));
 								// System.out.println();
 							} catch (TypeCheckException te)
 							{
@@ -264,16 +286,30 @@ public class ModuleTypeChecker extends TypeChecker
 			}
 		}
 
+		for (AModuleModules m: modules)
+		{
+			for (PAnnotation annotation: m.getAnnotations())
+			{
+				if (annotation.getImpl() instanceof TCAnnotation)
+				{
+					TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+					impl.tcAfter(m, null);
+				}
+			}
+		}
+
 		// Report any discrepancies between the final checked types of
 		// definitions and their explicit imported types. Rebuild the import/export lists first.
 
 		for (AModuleModules m : modules)
 		{
+			assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 			assistantFactory.createAModuleModulesAssistant().processExports(m);
 		}
 
 		for (AModuleModules m : modules)
 		{
+			assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 			assistantFactory.createAModuleModulesAssistant().processImports(m, modules);
 		}
 
@@ -281,6 +317,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
+				assistantFactory.getTypeComparator().setCurrentModule(m.getName().getName());
 				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Re-populate importDefs
 
 				try

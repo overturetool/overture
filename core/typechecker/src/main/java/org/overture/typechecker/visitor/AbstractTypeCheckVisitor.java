@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -36,8 +37,10 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
@@ -46,6 +49,7 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.annotations.TCAnnotation;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class AbstractTypeCheckVisitor extends
@@ -130,6 +134,7 @@ public class AbstractTypeCheckVisitor extends
 		{
 			// If the else case is empty then it is a statement and its type is void
 			rtypes.add(AstFactory.newAVoidType(ifLocation));
+			question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, rtypes.getType(ifLocation), question.mandatory, ifLocation);
 		}
 
 		return rtypes.getType(ifLocation);
@@ -220,12 +225,12 @@ public class AbstractTypeCheckVisitor extends
 			{
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
-				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope).newModule(question.fromModule));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}
 		}
 
-		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null));
+		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null, question.fromModule, question.mandatory));
 		local.unusedCheck(question.env);
 		return r;
 	}
@@ -261,7 +266,7 @@ public class AbstractTypeCheckVisitor extends
 		
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, qualified, question.env, question.scope);
 
-		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null);
+		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null, question.fromModule, question.mandatory);
 
 		if (suchThat != null
 				&& !question.assistantFactory.createPTypeAssistant().isType(suchThat.apply(THIS, newInfo.newConstraint(null)), ABooleanBasicType.class))
@@ -296,5 +301,97 @@ public class AbstractTypeCheckVisitor extends
 				return r;
 			}
 		};
+	}
+	
+	/**
+	 * Annotation before processing.
+	 */
+	
+	protected void beforeAnnotations(List<PAnnotation> annotations, INode node, TypeCheckInfo question) throws AnalysisException
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			beforeAnnotation(annotation, node, question);
+		}
+	}
+	
+	protected void beforeAnnotation(PAnnotation annotation, INode node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			
+			// This is not as ugly as multiple overloaded beforeAnotation and beforeAnnotations!
+			if (node instanceof PDefinition)
+			{
+				impl.tcBefore((PDefinition)node, question);
+			}
+			else if (node instanceof PExp)
+			{
+				impl.tcBefore((PExp)node, question);
+			}
+			else if (node instanceof PStm)
+			{
+				impl.tcBefore((PStm)node, question);
+			}
+			else if (node instanceof AModuleModules)
+			{
+				impl.tcBefore((AModuleModules)node, question);
+			}
+			else if (node instanceof SClassDefinition)
+			{
+				impl.tcBefore((SClassDefinition)node, question);
+			}
+			else
+			{
+				System.err.println("Cannot apply annoation to " + node.getClass().getSimpleName());
+			}
+		}
+	}
+	
+	/**
+	 * After annotation processing.
+	 */
+	
+	protected void afterAnnotations(List<PAnnotation> annotations, INode node, TypeCheckInfo question) throws AnalysisException
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			afterAnnotation(annotation, node, question);
+		}
+	}
+
+	protected void afterAnnotation(PAnnotation annotation, INode node, TypeCheckInfo question)
+	{
+		if (annotation.getImpl() instanceof TCAnnotation)
+		{
+			TCAnnotation impl = (TCAnnotation)annotation.getImpl();
+			
+			// This is not as ugly as multiple overloaded beforeAnotation and beforeAnnotations!
+			if (node instanceof PDefinition)
+			{
+				impl.tcAfter((PDefinition)node, question);
+			}
+			else if (node instanceof PExp)
+			{
+				impl.tcAfter((PExp)node, question);
+			}
+			else if (node instanceof PStm)
+			{
+				impl.tcAfter((PStm)node, question);
+			}
+			else if (node instanceof AModuleModules)
+			{
+				impl.tcAfter((AModuleModules)node, question);
+			}
+			else if (node instanceof SClassDefinition)
+			{
+				impl.tcAfter((SClassDefinition)node, question);
+			}
+			else
+			{
+				System.err.println("Cannot apply annoation to " + node.getClass().getSimpleName());
+			}
+		}
 	}
 }

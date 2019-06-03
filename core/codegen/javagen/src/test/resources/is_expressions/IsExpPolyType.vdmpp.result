@@ -1,0 +1,148 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    return SeqUtil.seq(
+        fun(0L, Utils.NAT),
+        fun(-1L, Utils.NAT),
+        fun(1L, Utils.NAT1),
+        fun(0L, Utils.NAT1),
+        fun(-1L, Utils.INT),
+        fun(1.5, Utils.INT),
+        fun(1.5, Utils.REAL),
+        fun(null, Utils.REAL),
+        fun(1.5, Utils.RAT),
+        fun(new Token(SeqUtil.seq('x')), Utils.RAT),
+        fun(true, Utils.BOOL),
+        fun(32L, Utils.BOOL),
+        fun('a', Utils.CHAR),
+        fun(42L, Utils.CHAR),
+        fun(new Token(SeqUtil.seq('x')), Utils.TOKEN),
+        fun(1L, Utils.TOKEN),
+        fun(quotes.AQuote.getInstance(), quotes.AQuote.getInstance()),
+        fun(quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
+        fun(
+            quotes.AQuote.getInstance(),
+            SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
+        fun(
+            quotes.CQuote.getInstance(),
+            SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
+        fun(null, Utils.UNKNOWN),
+        fun(new RecA(1L, 2L), RecA.class),
+        fun(new RecA(1L, 2L), RecB.class),
+        fun2(2.5, Utils.BOOL, Utils.REAL),
+        fun2(2.5, Utils.BOOL, Utils.NAT),
+        fun2(quotes.BQuote.getInstance(), quotes.AQuote.getInstance(), quotes.BQuote.getInstance()),
+        fun2(quotes.AQuote.getInstance(), quotes.BQuote.getInstance(), quotes.CQuote.getInstance()),
+        isType(0L, Utils.NAT),
+        isType(-1L, Utils.NAT));
+  }
+
+  public Entry() {}
+
+  private static <T> Boolean fun(final Object v, final Object _type_T) {
+
+    return Utils.is_(v, _type_T);
+  }
+
+  private static <T, P> Boolean fun2(final Object v, final Object _type_T, final Object _type_P) {
+
+    return Utils.is_(v, _type_P) || Utils.is_(v, _type_T);
+  }
+
+  private static <T> Boolean isType(final Object x, final Object _type_T) {
+
+    return isType2(x, _type_T);
+  }
+
+  private static <T> Boolean isType2(final Object x, final Object _type_T) {
+
+    return Utils.is_(x, _type_T);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+
+  private static class RecA implements Record {
+    public Number a;
+    public Number b;
+
+    public RecA(final Number _a, final Number _b) {
+
+      a = _a;
+      b = _b;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecA)) {
+        return false;
+      }
+
+      RecA other = ((RecA) obj);
+
+      return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(a, b);
+    }
+
+    public RecA copy() {
+
+      return new RecA(a, b);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`RecA" + Utils.formatFields(a, b);
+    }
+  }
+
+  private static class RecB implements Record {
+    public Boolean c;
+
+    public RecB(final Boolean _c) {
+
+      c = _c;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof RecB)) {
+        return false;
+      }
+
+      RecB other = ((RecB) obj);
+
+      return Utils.equals(c, other.c);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(c);
+    }
+
+    public RecB copy() {
+
+      return new RecB(c);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`RecB" + Utils.formatFields(c);
+    }
+  }
+}
+
+##########
+*Quotes*
+A,B,C
+##########

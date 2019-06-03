@@ -1,0 +1,13 @@
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () == return len concat("abc", "def");
+
+functions
+
+concat: (seq of char | nat) * (seq of char | nat) -> (seq of char | nat)
+concat(x,y) == x ^ y;
+  
+end Entry

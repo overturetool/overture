@@ -20,6 +20,9 @@ Tokens
   LexRealToken = 'java:node:org.overture.ast.intf.lex.ILexRealToken';
   LexStringToken = 'java:node:org.overture.ast.intf.lex.ILexStringToken';
   location = 'java:org.overture.ast.intf.lex.ILexLocation';
+  comment = 'java:org.overture.ast.intf.lex.ILexComment';
+  comments = 'java:org.overture.ast.intf.lex.ILexCommentList';
+  annotationimpl = 'java:org.overture.ast.annotations.Annotation';
   
   clonableFile ='java:org.overture.ast.util.ClonableFile';
   clonableString ='java:org.overture.ast.util.ClonableString';
@@ -51,7 +54,8 @@ Abstract Syntax Tree
 */    
 exp {-> package='org.overture.ast.expressions'
 	| (type):type 
-	| [location]:location}
+	| [location]:location
+	| [comments]:comments }
     =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursive):definition
     |	{narrow} [test]:exp [typeName]:LexNameToken (basicType):type (typedef):definition
     |   #Unary
@@ -109,6 +113,7 @@ exp {-> package='org.overture.ast.expressions'
 #Unary {-> package='org.overture.ast.expressions'
 	|	[exp]:exp}
     =   {absolute} 
+    |	{annotated} [annotation]:annotation
     |   {cardinality}  
     |   {distConcat} 
     |   {distIntersect}  
@@ -127,7 +132,7 @@ exp {-> package='org.overture.ast.expressions'
     |   {reverse}  
     |   {tail} 
     |   {unaryMinus}
-    |   {unaryPlus}       
+    |   {unaryPlus}
     ;
 
 
@@ -367,7 +372,9 @@ definition {-> package='org.overture.ast.definitions'
 	|	 (classDefinition):definition.#class 
 	|	 [access]:accessSpecifier.accessSpecifier
 	|	 (type):type 
-	|	 [pass]:Pass}
+	|	 [pass]:Pass
+	|	 [comments]:comments
+	|	 [annotations]:annotation* }
     =   {assignment} [expression]:exp (expType):type
     |   {instanceVariable} [expression]:exp (expType):type [initialized]:java_Boolean [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
     |   #class 
@@ -532,6 +539,8 @@ modules {-> package='org.overture.ast.modules'}
               	[isFlat]:java_Boolean
                 (typeChecked):java_Boolean
                 [isDLModule]:java_Boolean //The typechecker needs to know this, since the actual exports does not exists in a DLModule
+                [comments]:comments
+                [annotations]:annotation*
     ;
 
 
@@ -579,8 +588,10 @@ export {-> package='org.overture.ast.modules'
 
 stm {-> package='org.overture.ast.statements'
 	|	[location]:location 
-	|	(type):type}
+	|	(type):type
+	|	[comments]:comments }
     =   {always} [always]:stm [body]:stm
+    |	{annotated} [annotation]:annotation [stmt]:stm
     |   {assignment} [target]:stateDesignator [exp]:exp (targetType):type (expType):type 
                      (classDefinition):definition.#class (stateDefinition):definition.state (inConstructor):java_Boolean
     |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
@@ -655,3 +666,10 @@ case {-> package='org.overture.ast.statements'}
     = {error} [name]:LexIdentifierToken [left]:exp [right]:exp
     ;
     
+annotation {-> package='org.overture.ast.annotations'
+    |	[name]:LexIdentifierToken
+    |	[args]:exp*
+    |	[impl]:annotationimpl }
+    =
+    {annotation}
+    ;

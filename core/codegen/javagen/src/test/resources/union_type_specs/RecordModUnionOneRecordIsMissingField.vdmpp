@@ -1,0 +1,24 @@
+class Entry
+
+types
+	R1 :: ;
+		
+	R2 :: 
+		f : nat;
+
+ 	U = R1 | R2;
+
+functions
+
+fun: U -> U
+fun(u) == mu(u, f |-> u.f)
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let r = mk_R2(4)
+in
+  return fun(r).f;
+
+end Entry

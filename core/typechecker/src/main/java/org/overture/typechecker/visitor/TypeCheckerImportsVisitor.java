@@ -124,12 +124,12 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
     			}
     			if (node instanceof AFunctionValueImport)
     			{
-    				expected = question.assistantFactory.createPTypeAssistant().isFunction(expdef.getType());
+    				expected = question.assistantFactory.createPTypeAssistant().isFunction(expdef.getType(), question.fromModule);
     				expkind = "function";
     			}
     			else if (node instanceof AOperationValueImport)
     			{
-    				expected = question.assistantFactory.createPTypeAssistant().isOperation(expdef.getType());
+    				expected = question.assistantFactory.createPTypeAssistant().isOperation(expdef.getType(), question.fromModule);
     				expkind = "operation";
     			}
     			
@@ -146,6 +146,10 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 			type = question.assistantFactory.createPTypeAssistant().typeResolve(type, null, THIS, question);
 				
 			PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
+			
+			// Temporarily tweak the module to look like it is the exporting module
+			String m = question.assistantFactory.getTypeComparator().getCurrentModule();
+			question.assistantFactory.getTypeComparator().setCurrentModule(exptype.getLocation().getModule());
 
 			if (!question.assistantFactory.getTypeComparator().compatible(type, exptype))
 			{
@@ -154,6 +158,8 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 						+ from.getName(), node.getLocation(), node);
 				TypeCheckerErrors.detail2("Import", type.toString(), "Export", exptype.toString());
 			}
+			
+			question.assistantFactory.getTypeComparator().setCurrentModule(m);		// Restore it
 		}
 	
 		return null;

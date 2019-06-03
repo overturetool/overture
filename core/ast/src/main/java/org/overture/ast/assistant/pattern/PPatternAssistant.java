@@ -33,21 +33,23 @@ import org.overture.ast.patterns.PPattern;
 
 public class PPatternAssistant implements IAstAssistant
 {
-
 	protected static IAstAssistantFactory af;
+	protected final String fromModule;
 
 	@SuppressWarnings("static-access")
-	public PPatternAssistant(IAstAssistantFactory af)
+	public PPatternAssistant(IAstAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	public LexNameList getAllVariableNames(PPattern pattern)
 	{
 		try
 		{
-			return pattern.apply(af.getAllVariableNameLocator());
-		} catch (AnalysisException e)
+			return pattern.apply(af.getAllVariableNameLocator(fromModule));
+		}
+		catch (AnalysisException e)
 		{
 			return null;
 		}
@@ -55,13 +57,13 @@ public class PPatternAssistant implements IAstAssistant
 	
 	public LexNameList getVariableNames(PPattern pattern)
 	{
-		return af.createPPatternAssistant().getVariableNamesBaseCase(pattern);
+		return af.createPPatternAssistant(pattern.getLocation().getModule()).getVariableNamesBaseCase(pattern);
 	}
 
 	public LexNameList getVariableNamesBaseCase(PPattern pattern)
 	{
 		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
-		set.addAll(af.createPPatternAssistant().getAllVariableNames(pattern));
+		set.addAll(af.createPPatternAssistant(pattern.getLocation().getModule()).getAllVariableNames(pattern));
 		LexNameList list = new LexNameList();
 		list.addAll(set);
 		return list;

@@ -322,6 +322,7 @@ public class MapUtil
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static VDMMap comp(Object left, Object right)
 	{
 		validateMaps(left, right, "map composition");
@@ -348,6 +349,7 @@ public class MapUtil
 		return res;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static VDMMap iteration(Object left, Object iterations)
 	{
 		validateMap(left, "map iteration");

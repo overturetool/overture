@@ -1,0 +1,23 @@
+module Entry
+
+exports all
+definitions
+
+state St of
+  x : nat
+init pat2 == pat2 = mk_St(5)
+end
+
+operations
+
+op2 () == skip
+ext wr St
+post post_op1(St~, St);
+
+op1 () == skip
+post true;
+
+Run : () ==> ?
+Run () == post_op1(St, St);
+
+end Entry

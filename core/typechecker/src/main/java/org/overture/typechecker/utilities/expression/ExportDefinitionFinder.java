@@ -40,9 +40,6 @@ import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.AValueExport;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -137,37 +134,12 @@ public class ExportDefinitionFinder
 			else
 			{
 				PType type = af.createPDefinitionAssistant().getType(def);
+				list.add(def);
 
-				if (type instanceof ANamedInvariantType)
+				if (type instanceof SInvariantType)
 				{
-					ANamedInvariantType ntype = (ANamedInvariantType) type;
-					SInvariantType copy = AstFactory.newANamedInvariantType(ntype.getName().clone(), ntype.getType());
-					// new ANamedInvariantType(ntype.getName().getLocation(),false,list, false, null,
-					// ntype.getName().clone(), ntype.getType());
-					copy.setOpaque(true);
-					copy.setInvDef(ntype.getInvDef());
-					copy.setEqDef(ntype.getEqDef());
-					copy.setOrdDef(ntype.getOrdDef());
-					list.add(AstFactory.newATypeDefinition(def.getName(), copy, null, null));
-					// list.add(new ATypeDefinition(def.getName().location,
-					// NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy,
-					// null,null,null,false,def.getName()));
-				}
-				else if (type instanceof ARecordInvariantType)
-				{
-					ARecordInvariantType rtype = (ARecordInvariantType) type;
-					@SuppressWarnings("unchecked")
-					SInvariantType copy = AstFactory.newARecordInvariantType(rtype.getName().clone(), (List<AFieldField>) rtype.getFields().clone());
-					// new ARecordInvariantType(rtype.getName().location,false, rtype.getName().clone(), (List<?
-					// extends AFieldField>) rtype.getFields().clone());
-					copy.setOpaque(true);
-					copy.setInvDef(rtype.getInvDef());
-					copy.setEqDef(rtype.getEqDef());
-					copy.setOrdDef(rtype.getOrdDef());
-					list.add(AstFactory.newATypeDefinition(def.getName(), copy, null, null));
-					// new ATypeDefinition(def.getName().location,
-					// NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null,
-					// copy,null,null,null,false,def.getName()));
+					SInvariantType invtype = (SInvariantType) type;
+					invtype.setOpaque(true);
 				}
 			}
 		}
@@ -191,8 +163,6 @@ public class ExportDefinitionFinder
     			{
     				AUntypedDefinition untyped = (AUntypedDefinition) def;
     				list.add(AstFactory.newALocalDefinition(untyped.getLocation(), untyped.getName(), NameScope.GLOBAL, type));
-    				// new ALocalDefinition(untyped.getLocation(), NameScope.GLOBAL,
-    				// false,null,PAccessSpecifierAssistant.getDefault(),type, false,untyped.getName()));
     			}
     			else
     			{

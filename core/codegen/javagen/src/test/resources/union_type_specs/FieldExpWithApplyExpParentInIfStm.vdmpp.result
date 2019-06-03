@@ -49,7 +49,9 @@ public class Entry {
     final VDMSeq xs = SeqUtil.seq(new A(), new B());
     {
       Number counter = 0L;
-      for (Iterator iterator_1 = SeqUtil.elems(Utils.copy(xs)).iterator(); iterator_1.hasNext(); ) {
+      for (Iterator iterator_1 = ((Iterable) SeqUtil.elems(Utils.copy(xs))).iterator();
+          iterator_1.hasNext();
+          ) {
         Object x = (Object) iterator_1.next();
         VDMSeq apply_1 = null;
         if (x instanceof A) {

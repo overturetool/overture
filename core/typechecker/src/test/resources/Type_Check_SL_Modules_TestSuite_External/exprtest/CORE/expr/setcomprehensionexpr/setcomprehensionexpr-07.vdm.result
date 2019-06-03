@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="17" line="12" message="Unable to resolve type name 'A'" messageType="error" number="3431" resource="setcomprehensionexpr-07.vdm"/>
+<message column="17" line="12" message="From module SetComprehensionExpr: Unable to resolve type name 'A'" messageType="error" number="3431" resource="setcomprehensionexpr-07.vdm"/>
 <result/>
 </testResult>

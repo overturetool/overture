@@ -1,0 +1,69 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class Entry {
+  private static St St = new St(null);
+
+  private Entry() {}
+
+  public static Object Run() {
+
+    return inv_St(new St(2L));
+  }
+
+  public static Boolean inv_St(final St recordPattern_1) {
+
+    Boolean success_1 = true;
+    if (!(success_1)) {
+      throw new RuntimeException("Record pattern match failed");
+    }
+
+    final Number x = 5L;
+
+    return Utils.equals(x, 5L);
+  }
+
+  public String toString() {
+
+    return "Entry{" + "St := " + Utils.toString(St) + "}";
+  }
+
+  public static class St implements Record {
+    public Number field;
+
+    public St(final Number _field) {
+
+      field = _field;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof St)) {
+        return false;
+      }
+
+      St other = ((St) obj);
+
+      return Utils.equals(field, other.field);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(field);
+    }
+
+    public St copy() {
+
+      return new St(field);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`St" + Utils.formatFields(field);
+    }
+  }
+}
+
+##########

@@ -18,6 +18,7 @@
 <message column="3" line="3" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="rectrapstmt.vpp"/>
 <message column="3" line="4" message="Instance variable 'stid' is not initialized" messageType="warning" number="5001" resource="rectrapstmt.vpp"/>
 <message column="14" line="22" message="Matching expression is not a set type" messageType="error" number="3206" resource="rectrapstmt.vpp"/>
+<message column="5" line="37" message="Statement may return void value" messageType="error" number="3328" resource="rectrapstmt.vpp"/>
 <message column="3" line="27" message="Operation returns unexpected type" messageType="error" number="3027" resource="rectrapstmt.vpp"/>
 <message column="9" line="50" message="Matching expression is not a compatible record type" messageType="error" number="3201" resource="rectrapstmt.vpp"/>
 <result/>

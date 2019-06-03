@@ -1,0 +1,56 @@
+module Entry
+
+imports from A all
+exports all
+definitions
+
+operations
+
+Run : () ==> nat
+Run () ==
+if 1 = 1 then
+  A`op()
+else
+  return A`op();
+
+end Entry
+
+module A
+
+exports all
+definitions
+state A of
+  id : nat
+  init s == s = mk_A(1)
+end
+
+operations
+
+op : () ==> nat
+op () ==
+(
+  id := id + 1;
+  A`id := A`id + 1;
+  return A`id + id + mk_A`A(4).id + mk_A(4).id;
+)
+
+functions
+
+fun : () -> nat
+fun () ==
+let a : A = mk_A(5)
+in
+  a.id;
+
+end A
+
+module X
+
+exports all
+definitions
+types
+
+X ::
+  x : int;
+
+end X

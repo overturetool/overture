@@ -3,5 +3,6 @@
 <message column="6" line="20" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm"/>
 <message column="6" line="21" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm"/>
 <message column="3" line="12" message="Definition 'BlockStmt1' not used" messageType="warning" number="5000" resource="blockstmt.vdm"/>
+<message column="6" line="21" message="Statement may return void value" messageType="error" number="3328" resource="blockstmt.vdm"/>
 <result/>
 </testResult>

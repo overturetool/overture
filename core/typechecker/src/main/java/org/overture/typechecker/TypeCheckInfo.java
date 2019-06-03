@@ -137,10 +137,12 @@ public class TypeCheckInfo
 	public LinkedList<PType> qualifiers;
 	public final PType constraint; // expressions
 	public final PType returnType; // statements
+	public final boolean mandatory; // statements
+	public final String fromModule;
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers,
-			PType constraint, PType returnType)
+			PType constraint, PType returnType, String fromModule, boolean mandatory)
 	{
 		this.assistantFactory = assistantFactory;
 		this.env = env;
@@ -148,29 +150,31 @@ public class TypeCheckInfo
 		this.qualifiers = qualifiers;
 		this.constraint = constraint;
 		this.returnType = returnType;
+		this.fromModule = fromModule;
+		this.mandatory = mandatory;
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers)
 	{
-		this(assistantFactory, env, scope, qualifiers, null, null);
+		this(assistantFactory, env, scope, qualifiers, null, null, null, false);
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope)
 	{
-		this(assistantFactory, env, scope, null, null, null);
+		this(assistantFactory, env, scope, null, null, null, null, false);
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env)
 	{
-		this(assistantFactory, env, null, null, null, null);
+		this(assistantFactory, env, null, null, null, null, null, false);
 	}
 
 	public TypeCheckInfo()
 	{
-		this(null, null, null, null, null, null);
+		this(null, null, null, null, null, null, null, false);
 	}
 
 	@Override
@@ -181,13 +185,13 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newConstraint(PType newConstraint)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, scope, qualifiers, newConstraint, returnType);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, scope, qualifiers, newConstraint, returnType, fromModule, mandatory);
 		return info;
 	}
 
 	public TypeCheckInfo newScope(NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope, qualifiers, constraint, returnType);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope, qualifiers, constraint, returnType, fromModule, mandatory);
 		return info;
 	}
 
@@ -198,13 +202,13 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newInfo(Environment newEnv)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope, qualifiers, constraint, returnType);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope, qualifiers, constraint, returnType, fromModule, mandatory);
 		return info;
 	}
 
 	public TypeCheckInfo newInfo(Environment newEnv, NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope, qualifiers, constraint, returnType);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope, qualifiers, constraint, returnType, fromModule, mandatory);
 		return info;
 	}
 
@@ -213,6 +217,18 @@ public class TypeCheckInfo
 	{
 		Environment newEnv = new FlatCheckedEnvironment(assistantFactory, definitions, env, newScope);
 		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope);
+		return info;
+	}
+
+	public TypeCheckInfo newModule(String fromModule)
+	{
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, scope, qualifiers, constraint, returnType, fromModule, mandatory);
+		return info;
+	}
+
+	public TypeCheckInfo newMandatory(boolean mandatory)
+	{
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, scope, qualifiers, constraint, returnType, fromModule, mandatory);
 		return info;
 	}
 }

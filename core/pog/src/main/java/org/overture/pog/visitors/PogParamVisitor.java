@@ -1,7 +1,6 @@
 package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.PExp;
@@ -54,7 +53,7 @@ import org.overture.pog.utility.PogAssistantFactory;
  * @since 1.0
  */
 public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligationList>
-		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
+		extends AbstractPogParamVisitor
 {
 
 	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
@@ -84,7 +83,8 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	public IProofObligationList caseAModuleModules(AModuleModules node,
 			IPOContextStack question) throws AnalysisException
 	{
-		IProofObligationList ipol = new ProofObligationList();
+		IProofObligationList ipol = beforeAnnotations(node.getAnnotations(), node, question);
+		
 		for (PDefinition p : node.getDefs())
 		{
 			question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(p)));
@@ -93,8 +93,8 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 			question.clearStateContexts();
 		}
 
+		afterAnnotations(node.getAnnotations(), node, ipol, question);
 		return ipol;
-
 	}
 
 	@Override
@@ -252,7 +252,6 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	public IProofObligationList defaultPDefinition(PDefinition node,
 			IPOContextStack question) throws AnalysisException
 	{
-
 		return node.apply(pogDefinitionVisitor, question);
 	}
 

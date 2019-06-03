@@ -1,0 +1,25 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Number Run() {
+
+    return ((VDMSeq) concat(SeqUtil.seq('a', 'b', 'c'), SeqUtil.seq('d', 'e', 'f'))).size();
+  }
+
+  public Entry() {}
+
+  private static Object concat(final Object x, final Object y) {
+
+    return SeqUtil.conc(((VDMSeq) Utils.copy(x)), ((VDMSeq) Utils.copy(y)));
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

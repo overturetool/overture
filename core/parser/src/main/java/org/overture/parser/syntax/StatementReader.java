@@ -23,13 +23,16 @@
 
 package org.overture.parser.syntax;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
@@ -72,9 +75,37 @@ public class StatementReader extends SyntaxReader
 	{
 		super(reader);
 	}
-
 	public PStm readStatement() throws ParserException, LexException
 	{
+		ILexCommentList comments = getComments();
+		List<PAnnotation> annotations = readAnnotations(comments);
+		PStm stmt = null;
+
+		if (!annotations.isEmpty())
+		{
+			beforeAnnotations(this, annotations);
+			stmt = readAnyStatement();
+			afterAnnotations(this, annotations, stmt);
+			
+			Collections.reverse(annotations);	// Build the chain backwards
+			
+			for (PAnnotation annotation: annotations)
+			{
+				stmt = AstFactory.newAAnnotatedStm(annotation.getName().getLocation(), annotation, stmt);
+			}
+		}
+		else
+		{
+			stmt = readAnyStatement();
+		}
+		
+		stmt.setComments(comments);
+		return stmt;
+	}
+
+	public PStm readAnyStatement() throws ParserException, LexException
+	{
+		ILexCommentList comments = getComments();
 		PStm stmt = null;
 		LexToken token = lastToken();
 		ILexLocation location = token.location;
@@ -204,6 +235,7 @@ public class StatementReader extends SyntaxReader
 				throwMessage(2063, "Unexpected token in statement");
 		}
 
+		stmt.setComments(comments);
 		return stmt;
 	}
 

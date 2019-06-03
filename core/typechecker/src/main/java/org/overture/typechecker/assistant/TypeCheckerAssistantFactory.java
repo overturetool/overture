@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -134,7 +135,6 @@ import org.overture.typechecker.visitor.QualificationVisitor;
 public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		implements ITypeCheckerAssistantFactory
 {
-
 	// instance variables of things to return
 	transient TypeComparator typeComp;
 	transient LexNameTokenAssistant lnt;
@@ -217,9 +217,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new AExplicitFunctionDefinitionAssistantTC(this);
 	}
 
-	@Override public AExplicitOperationDefinitionAssistantTC createAExplicitOperationDefinitionAssistant()
+	@Override public AExplicitOperationDefinitionAssistantTC createAExplicitOperationDefinitionAssistant(String fromModule)
 	{
-		return new AExplicitOperationDefinitionAssistantTC(this);
+		return new AExplicitOperationDefinitionAssistantTC(this, fromModule);
 	}
 
 	@Override public AImplicitFunctionDefinitionAssistantTC createAImplicitFunctionDefinitionAssistant()
@@ -416,9 +416,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 	// return new AMapUnionPatternAssistantTC(this);
 	// }
 
-	@Override public APatternTypePairAssistant createAPatternTypePairAssistant()
+	@Override public APatternTypePairAssistant createAPatternTypePairAssistant(String fromModule)
 	{
-		return new APatternTypePairAssistant(this);
+		return new APatternTypePairAssistant(this, fromModule);
 	}
 
 	// @Override
@@ -477,9 +477,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new PMultipleBindAssistantTC(this);
 	}
 
-	@Override public PPatternAssistantTC createPPatternAssistant()
+	@Override public PPatternAssistantTC createPPatternAssistant(String fromModule)
 	{
-		return new PPatternAssistantTC(this);
+		return new PPatternAssistantTC(this, fromModule);
 	}
 
 	//	@Override
@@ -721,9 +721,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new UsedChecker(this);
 	}
 
-	@Override public IAnswer<Boolean> getPTypeFunctionChecker()
+	@Override public IAnswer<Boolean> getPTypeFunctionChecker(String fromModule)
 	{
-		return new PTypeFunctionChecker(this);
+		return new PTypeFunctionChecker(this, fromModule);
 	}
 
 	@Override public AnalysisAdaptor getUnusedChecker()
@@ -741,83 +741,83 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new DefinitionTypeResolver(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getMapBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getMapBasisChecker()
 	{
 		return new MapBasisChecker(this);
 	}
 
-	@Override public IAnswer<SMapType> getMapTypeFinder()
+	@Override public QuestionAnswerAdaptor<String, SMapType> getMapTypeFinder()
 	{
 		return new MapTypeFinder(this);
 	}
 
-	@Override public IAnswer<SSeqType> getSeqTypeFinder()
+	@Override public QuestionAnswerAdaptor<String, SSeqType> getSeqTypeFinder()
 	{
 		return new SeqTypeFinder(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getSeqBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getSeqBasisChecker()
 	{
 		return new SeqBasisChecker(this);
 	}
 
-	@Override public IAnswer<AOperationType> getOperationTypeFinder()
+	@Override public QuestionAnswerAdaptor<String, AOperationType> getOperationTypeFinder()
 	{
 		return new OperationTypeFinder(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getOperationBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getOperationBasisChecker()
 	{
 		return new OperationBasisChecker(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getSetBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getSetBasisChecker()
 	{
 		return new SetBasisChecker(this);
 	}
 
-	@Override public IAnswer<SSetType> getSetTypeFinder()
+	@Override public QuestionAnswerAdaptor<String, SSetType> getSetTypeFinder()
 	{
 		return new SetTypeFinder(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getRecordBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getRecordBasisChecker()
 	{
 		return new RecordBasisChecker(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getTagBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getTagBasisChecker()
 	{
 		return new TagBasisChecker(this);
 	}
 
-	@Override public IAnswer<ARecordInvariantType> getRecordTypeFinder()
+	@Override public QuestionAnswerAdaptor<String, ARecordInvariantType> getRecordTypeFinder()
 	{
 		return new RecordTypeFinder(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getClassBasisChecker(
+	@Override public QuestionAnswerAdaptor<String, Boolean> getClassBasisChecker(
 			Environment env)
 	{
 		return new ClassBasisChecker(this, env);
 	}
 
-	@Override public IAnswer<AClassType> getClassTypeFinder(Environment env)
+	@Override public QuestionAnswerAdaptor<String, AClassType> getClassTypeFinder(Environment env)
 	{
 		return new ClassTypeFinder(this, env);
 	}
 
-	@Override public IAnswer<AProductType> getProductTypeFinder()
+	@Override public QuestionAnswerAdaptor<String, AProductType> getProductTypeFinder()
 	{
 		return new ProductTypeFinder(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getProductBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getProductBasisChecker()
 	{
 		return new ProductBasisChecker(this);
 	}
 
-	@Override public IAnswer<AUnionType> getUnionTypeFinder()
+	@Override public QuestionAnswerAdaptor<String, AUnionType> getUnionTypeFinder()
 	{
 		return new UnionTypeFinder(this);
 	}
@@ -842,7 +842,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new NarrowerThanComparator(this);
 	}
 
-	@Override public AnswerAdaptor<Boolean> getUnionBasisChecker()
+	@Override public QuestionAnswerAdaptor<String, Boolean> getUnionBasisChecker()
 	{
 		return new UnionBasisChecker(this);
 	}
@@ -862,24 +862,24 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new PTypeResolver(this);
 	}
 
-	@Override public IQuestionAnswer<String, PType> getPTypeFinder()
+	@Override public IQuestionAnswer<String, PType> getPTypeFinder(String fromModule)
 	{
-		return new PTypeFinder(this);
+		return new PTypeFinder(this, fromModule);
 	}
 
-	@Override public IQuestionAnswer<Integer, Boolean> getProductExtendedChecker()
+	@Override public IQuestionAnswer<Integer, Boolean> getProductExtendedChecker(String fromModule)
 	{
-		return new ProductExtendedChecker(this);
+		return new ProductExtendedChecker(this, fromModule);
 	}
 
-	@Override public IQuestionAnswer<Integer, AProductType> getProductExtendedTypeFinder()
+	@Override public IQuestionAnswer<Integer, AProductType> getProductExtendedTypeFinder(String fromModule)
 	{
-		return new ProductExtendedTypeFinder(this);
+		return new ProductExtendedTypeFinder(this, fromModule);
 	}
 
-	@Override public IQuestionAnswer<Class<? extends PType>, Boolean> getPTypeExtendedChecker()
+	@Override public IQuestionAnswer<Class<? extends PType>, Boolean> getPTypeExtendedChecker(String fromModule)
 	{
-		return new PTypeExtendedChecker(this);
+		return new PTypeExtendedChecker(this, fromModule);
 	}
 
 	@Override public IAnswer<Boolean> getVoidExistanceChecker()
@@ -902,9 +902,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new SimplePatternChecker(this);
 	}
 
-	@Override public IAnswer<Boolean> getAlwaysMatchingPatternChecker()
+	@Override public IAnswer<Boolean> getAlwaysMatchingPatternChecker(String fromModule)
 	{
-		return new AlwaysMatchingPatternChecker(this);
+		return new AlwaysMatchingPatternChecker(this, fromModule);
 	}
 
 	@Override public AnalysisAdaptor getPatternUnresolver()
@@ -912,14 +912,14 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new PatternUnresolver(this);
 	}
 
-	@Override public IQuestion<org.overture.typechecker.utilities.pattern.PatternResolver.NewQuestion> getPatternResolver()
+	@Override public IQuestion<org.overture.typechecker.utilities.pattern.PatternResolver.NewQuestion> getPatternResolver(String fromModule)
 	{
-		return new PatternResolver(this);
+		return new PatternResolver(this, fromModule);
 	}
 
-	@Override public IQuestionAnswer<org.overture.typechecker.utilities.pattern.AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator()
+	@Override public IQuestionAnswer<org.overture.typechecker.utilities.pattern.AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator(String fromModule)
 	{
-		return new AllDefinitionLocator(this);
+		return new AllDefinitionLocator(this, fromModule);
 	}
 
 	@Override public IAnswer<PType> getPossibleBindTypeFinder()

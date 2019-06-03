@@ -35,6 +35,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -1008,7 +1009,12 @@ public class DeclAssistantIR extends AssistantBase
 		// expression might be directly linked to the operation. Therefore the above ancestor
 		// check will not work.
 
-		return appearsInPreOrPosOfEnclosingOp(node);
+		return appearsInPreOrPosOfEnclosingOp(node) || appearsInInvariant(node);
+	}
+
+	private boolean appearsInInvariant(INode node) {
+		
+		return node.getAncestor(AStateDefinition.class) != null;
 	}
 
 	public boolean appearsInPreOrPosOfEnclosingFunc(INode node)

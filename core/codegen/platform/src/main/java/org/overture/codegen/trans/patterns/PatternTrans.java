@@ -38,8 +38,23 @@ import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
 import org.overture.codegen.ir.declarations.AMethodDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AVarDeclIR;
-import org.overture.codegen.ir.expressions.*;
+import org.overture.codegen.ir.expressions.ABoolLiteralExpIR;
+import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
+import org.overture.codegen.ir.expressions.ACharLiteralExpIR;
+import org.overture.codegen.ir.expressions.AEqualsBinaryExpIR;
+import org.overture.codegen.ir.expressions.AFieldExpIR;
+import org.overture.codegen.ir.expressions.AFieldNumberExpIR;
+import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
+import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
 import org.overture.codegen.ir.expressions.AIsOfClassExpIR;
+import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.expressions.APatternMatchRuntimeErrorExpIR;
+import org.overture.codegen.ir.expressions.AQuoteLiteralExpIR;
+import org.overture.codegen.ir.expressions.ARealLiteralExpIR;
+import org.overture.codegen.ir.expressions.ATupleCompatibilityExpIR;
+import org.overture.codegen.ir.expressions.AUndefinedExpIR;
+import org.overture.codegen.ir.expressions.SVarExpIR;
+import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.ABoolPatternIR;
 import org.overture.codegen.ir.patterns.ACharPatternIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
@@ -63,8 +78,12 @@ import org.overture.codegen.ir.statements.ARaiseErrorStmIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.ACharBasicTypeIR;
 import org.overture.codegen.ir.types.AErrorTypeIR;
+import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
+import org.overture.codegen.ir.types.AQuoteTypeIR;
+import org.overture.codegen.ir.types.ARealNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;
 import org.overture.codegen.ir.types.ASeqSeqTypeIR;
+import org.overture.codegen.ir.types.AStringTypeIR;
 import org.overture.codegen.ir.types.ATupleTypeIR;
 import org.overture.codegen.ir.types.AUnionTypeIR;
 import org.overture.codegen.ir.types.AUnknownTypeIR;
@@ -94,6 +113,16 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		this.config = config;
 
 		this.casesExpNamePrefix = casesExpNamePrefix;
+	}
+	
+	@Override
+	public void caseAFieldDeclIR(AFieldDeclIR node) throws AnalysisException {
+
+		//TODO: currently values patterns are replaced by strings
+		if(node.getName().equals("-"))
+		{
+			node.setName(transAssistant.getInfo().getTempVarNameGen().nextVarName(config.getIgnorePatternPrefix()));
+		}
 	}
 
 	@Override
@@ -339,6 +368,11 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 					}
 				}
 			}
+		}
+
+		for(AVarDeclIR dcl : node.getLocalDefs())
+		{
+			dcl.apply(this);
 		}
 
 		for (SStmIR stm : node.getStatements())
@@ -1003,14 +1037,37 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		if (currentPattern instanceof ATuplePatternIR)
 		{
 			ATuplePatternIR nextTuplePattern = (ATuplePatternIR) currentPattern;
-			ATupleTypeIR nextTupleType = (ATupleTypeIR) currentType;
+
+			ATupleTypeIR nextTupleType;
+
+			if(currentType instanceof ATupleTypeIR)
+			{
+				nextTupleType = (ATupleTypeIR) currentType;
+			}
+			else
+			{
+				nextTupleType = consTupleType(nextTuplePattern);
+			}
 
 			patternBlock = consTuplePatternCheck(true, nextTuplePattern, nextTupleType, patternData, actualValue, cast);
 
 		} else if (currentPattern instanceof ARecordPatternIR)
 		{
 			ARecordPatternIR nextRecordPattern = (ARecordPatternIR) currentPattern;
-			ARecordTypeIR nextRecordType = (ARecordTypeIR) nextRecordPattern.getType();
+
+			STypeIR t = nextRecordPattern.getType();
+
+			ARecordTypeIR nextRecordType;
+
+			if(t instanceof ARecordTypeIR)
+			{
+				nextRecordType = (ARecordTypeIR) t;
+			}
+			else
+			{
+				nextRecordType = consRecordType(nextRecordPattern);
+			}
+
 			boolean checkRecordPattern = checkRecordPattern(actualValue);
 
 			patternBlock = consRecordPatternCheck(true, nextRecordPattern, nextRecordType, patternData, actualValue, checkRecordPattern);
@@ -1022,6 +1079,97 @@ public class PatternTrans extends DepthFirstAnalysisAdaptor
 		return patternBlock;
 	}
 
+	private ARecordTypeIR consRecordType(ARecordPatternIR pat)
+	{
+		if(pat != null) {
+			STypeIR patType = pat.getType();
+
+			if (patType instanceof ARecordTypeIR) {
+				ARecordTypeIR recType = (ARecordTypeIR) patType;
+				return recType.clone();
+			} else {
+				ARecordTypeIR type = new ARecordTypeIR();
+
+				ATypeNameIR typeName = new ATypeNameIR();
+				typeName.setName(pat.getTypename());
+				typeName.setDefiningClass("?");
+
+				type.setName(typeName);
+
+				log.warn("Could not determine defining class for record pattern " + pat);
+
+				return type;
+			}
+		}
+		else
+		{
+			return new ARecordTypeIR();
+		}
+	}
+
+	private ATupleTypeIR consTupleType(ATuplePatternIR pat)
+	{
+		ATupleTypeIR type = new ATupleTypeIR();
+
+		if(pat != null)
+		{
+			for(SPatternIR p : pat.getPatterns())
+			{
+				type.getTypes().add(consType(p));
+			}
+		}
+
+		return type;
+	}
+
+	private STypeIR consType(SPatternIR pat)
+	{
+		if (pat instanceof ABoolPatternIR)
+		{
+			return new ABoolBasicTypeIR();
+		} else if (pat instanceof ACharPatternIR)
+		{
+			return new ACharBasicTypeIR();
+		} else if (pat instanceof AIntPatternIR)
+		{
+			return new AIntNumericBasicTypeIR();
+		} else if (pat instanceof ANullPatternIR)
+		{
+			return new AUnknownTypeIR();
+		} else if (pat instanceof AQuotePatternIR)
+		{
+			AQuoteTypeIR qt = new AQuoteTypeIR();
+			qt.setValue(((AQuotePatternIR) pat).getValue());
+			return qt;
+		} else if (pat instanceof ARealPatternIR)
+		{
+			return new ARealNumericBasicTypeIR();
+
+		} else if (pat instanceof AStringPatternIR)
+		{
+			if (transAssistant.getInfo().getSettings().getCharSeqAsString())
+			{
+				return new AStringTypeIR();
+			} else
+			{
+				ASeqSeqTypeIR seqType = new ASeqSeqTypeIR();
+				seqType.setEmpty(false);
+				seqType.setSeqOf(new ACharBasicTypeIR());
+
+				return seqType;
+			}
+
+		} else if (pat instanceof ATuplePatternIR)
+		{
+			return consTupleType((ATuplePatternIR) pat);
+
+		} else if (pat instanceof ARecordPatternIR)
+		{
+			return consRecordType((ARecordPatternIR) pat);
+		}
+
+		return new AUnknownTypeIR();
+	}
 	private SExpIR consFieldValueToMatch(AIdentifierVarExpIR patternVar,
 			int fieldNumber, STypeIR currentType, boolean cast)
 	{

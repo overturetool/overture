@@ -48,4 +48,6 @@ public interface IJavaConstants
 	public static final String BOOLEAN = "boolean";
 	public static final String HASH_CODE = "hashCode";
 	public static final String TO_STRING = "toString";
+	
+	public static final String OVERRIDE_ANNOTATION = "@Override";
 }

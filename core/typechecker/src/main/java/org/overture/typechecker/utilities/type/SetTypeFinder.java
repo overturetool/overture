@@ -25,12 +25,14 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ASet1SetType;
 import org.overture.ast.types.SSetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -38,9 +40,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class SetTypeFinder extends TypeUnwrapper<SSetType>
+public class SetTypeFinder extends TypeUnwrapper<String, SSetType>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public SetTypeFinder(ITypeCheckerAssistantFactory af)
@@ -49,62 +50,67 @@ public class SetTypeFinder extends TypeUnwrapper<SSetType>
 	}
 
 	@Override
-	public SSetType defaultSSetType(SSetType type) throws AnalysisException
+	public SSetType defaultSSetType(SSetType type, String fromModule) throws AnalysisException
 	{
 		return type;
 	}
 
 	@Override
-	public SSetType defaultSInvariantType(SInvariantType type)
+	public SSetType defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return null;
+		
 		if (type instanceof ANamedInvariantType)
 		{
-
-			return ((ANamedInvariantType) type).getType().apply(THIS);
-		} else
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return null;
 		}
 	}
 
 	@Override
-	public SSetType caseAUnionType(AUnionType type) throws AnalysisException
+	public SSetType caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
 		ILexLocation location = type.getLocation();
 
 		if (!type.getSetDone())
 		{
 			type.setSetDone(true); // Mark early to avoid recursion.
-			// type.setSetType(PTypeAssistantTC.getSet(AstFactory.newAUnknownType(location)));
-			type.setSetType(af.createPTypeAssistant().getSet(AstFactory.newAUnknownType(location)));
+			type.setSetType(af.createPTypeAssistant().getSet(AstFactory.newAUnknownType(location), fromModule));
 			PTypeSet set = new PTypeSet(af);
+			boolean allSet1 = true;
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isSet(t))
+				if (af.createPTypeAssistant().isSet(t, fromModule))
 				{
-					// set.add(PTypeAssistantTC.getSet(t).getSetof());
-					set.add(t.apply(THIS).getSetof());
+					SSetType st = t.apply(THIS, fromModule);
+					set.add(st.getSetof());
+					allSet1 = allSet1 && (st instanceof ASet1SetType);
 				}
 			}
 
-			type.setSetType(set.isEmpty() ? null
-					: AstFactory.newASetSetType(location, set.getType(location)));
+			type.setSetType(set.isEmpty() ? null :
+				allSet1 ?
+					AstFactory.newASet1SetType(location, set.getType(location)) :
+					AstFactory.newASetSetType(location, set.getType(location)));
 		}
 
 		return type.getSetType();
 	}
 
 	@Override
-	public SSetType caseAUnknownType(AUnknownType type)
+	public SSetType caseAUnknownType(AUnknownType type, String fromModule)
 			throws AnalysisException
 	{
 		return AstFactory.newASetSetType(type.getLocation()); // empty
 	}
 
 	@Override
-	public SSetType defaultPType(PType type) throws AnalysisException
+	public SSetType defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		assert false : "Can't getSet of a non-set";
 		return null;

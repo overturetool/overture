@@ -340,6 +340,9 @@ public class DBGPReader
 				{
 					usage("-consoleName option requires a console name");
 				}
+			} else if (arg.equals("-strict"))
+			{
+				Settings.strict = true;
 			} else if (arg.startsWith("-"))
 			{
 				usage("Unknown option " + arg);

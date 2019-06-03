@@ -1,1 +1,1 @@
-["Error 3247: full-15.vpp at 39:7 Symbol \u0027s\u0027 is not an updatable variable","Error 3182: full-15.vpp at 39:12 Name \u0027A`s\u0027 is not in scope","Error 3313: full-15.vpp at 43:3 Operation returns void value"]
+["Error 3247: full-15.vpp at 39:7 Symbol \u0027s\u0027 is not an updatable variable","Error 3182: full-15.vpp at 39:12 Name \u0027A`s\u0027 is not in scope","Error 3328: full-15.vpp at 47:10 Statement may return void value","Error 3313: full-15.vpp at 43:3 Operation returns void value"]

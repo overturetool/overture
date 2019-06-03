@@ -23,6 +23,7 @@ package org.overture.ast.util.type;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
@@ -43,12 +44,13 @@ import org.overture.ast.types.SNumericBasicType;
 
 public class NumericFinder extends AnswerAdaptor<Boolean>
 {
-	protected static IAstAssistantFactory af;
+	protected final IAstAssistantFactory af;
+	protected final String fromModule;
 
-	@SuppressWarnings("static-access")
-	public NumericFinder(IAstAssistantFactory af)
+	public NumericFinder(IAstAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -68,10 +70,7 @@ public class NumericFinder extends AnswerAdaptor<Boolean>
 	public Boolean caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		if (type.getOpaque())
-		{
-			return false;
-		}
+		if (isOpaque(type)) return false;
 		return type.getType().apply(THIS);
 	}
 
@@ -92,7 +91,7 @@ public class NumericFinder extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createPTypeAssistant().getNumeric(type) != null;
+		return af.createPTypeAssistant().getNumeric(type, fromModule) != null;
 	}
 
 	@Override
@@ -120,5 +119,13 @@ public class NumericFinder extends AnswerAdaptor<Boolean>
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	/**
+	 * An invariant type is opaque to the caller if it is opaque (not struct exported) and
+	 * the module being used from is not the type's defining module.  
+	 */
+	protected boolean isOpaque(SInvariantType type)
+	{
+		return type.getOpaque() && fromModule != null && !type.getLocation().getModule().equals(fromModule);
+	}
 }

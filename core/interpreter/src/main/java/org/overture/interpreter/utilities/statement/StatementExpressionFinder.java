@@ -3,8 +3,10 @@ package org.overture.interpreter.utilities.statement;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAnnotatedStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ACallObjectStm;
@@ -48,12 +50,17 @@ public class StatementExpressionFinder extends
 	{
 		this.af = af;
 	}
-
+	
+	@Override
+	public PExp caseAAnnotatedStm(AAnnotatedStm node, Integer question)	throws AnalysisException
+	{
+		return node.getStmt().apply(THIS, question);
+	}
+	
 	@Override
 	public PExp caseAAlwaysStm(AAlwaysStm stm, Integer lineno)
 			throws AnalysisException
 	{
-
 		PExp found = stm.getAlways().apply(THIS, lineno);
 		if (found != null)
 		{
@@ -345,6 +352,12 @@ public class StatementExpressionFinder extends
 	public PExp defaultPStm(PStm stm, Integer lineno) throws AnalysisException
 	{
 		return null;
+	}
+	
+	@Override
+	public PExp defaultSUnaryExp(SUnaryExp node, Integer question) throws AnalysisException
+	{
+		return node.getExp().apply(THIS, question);
 	}
 
 	@Override

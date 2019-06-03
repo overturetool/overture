@@ -1,0 +1,30 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Boolean Run() {
+
+    return fun(SeqUtil.seq(1L, 2L, 3L), Utils.NAT);
+  }
+
+  public Entry() {}
+
+  private static <T> Boolean fun2(final VDMSeq ignorePattern_1, final Object _type_T) {
+
+    return true;
+  }
+
+  private static <T> Boolean fun(final Object xs, final Object _type_T) {
+
+    return fun2(((VDMSeq) Utils.copy(xs)), _type_T);
+  }
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########

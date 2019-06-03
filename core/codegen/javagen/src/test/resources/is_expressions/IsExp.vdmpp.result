@@ -12,10 +12,25 @@ public class Entry {
     final Boolean x4 = Utils.is_(new Rec(5L, 5L), Rec.class);
     final Boolean x5 = Utils.is_(new Entry(), Entry.class);
     final Boolean x6 = Utils.is_(55L, Entry.class);
-    return SeqUtil.seq(x1, x2, x3, x4, x5, x6);
+    final Boolean x7 = true;
+    final Boolean x8 = Utils.is_(SeqUtil.seq(1L, 2L, 3L), VDMSeq.class);
+    final Boolean x9 = Utils.is_(null, VDMSeq.class);
+    final Boolean x10 = Utils.is_(SetUtil.set(1L, 2L, 3L), VDMSet.class);
+    final Boolean x11 = Utils.is_(2L, VDMSet.class);
+    final Boolean x12 = Utils.is_(MapUtil.map(new Maplet(1L, 2L)), VDMMap.class);
+    final Boolean x13 = Utils.is_(SetUtil.set(), VDMMap.class);
+    final Boolean x14 = fun(null, SetUtil.set(quotes.AQuote.getInstance(), Rec.class, Utils.NAT));
+    final Boolean x15 =
+        fun(new Rec(1L, 2L), SetUtil.set(quotes.AQuote.getInstance(), Rec.class, Utils.NAT));
+    return SeqUtil.seq(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15);
   }
 
   public Entry() {}
+
+  private static <T> Boolean fun(final Object a, final Object _type_T) {
+
+    return Utils.is_(a, _type_T);
+  }
 
   public String toString() {
 
@@ -60,4 +75,7 @@ public class Entry {
   }
 }
 
+##########
+*Quotes*
+A
 ##########

@@ -1,0 +1,53 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  public static Object Run() {
+
+    return SeqUtil.seq(
+        VDMUtil.seq_of_char2val(SeqUtil.seq('0'), Utils.NAT),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('-', '1'), Utils.NAT),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('4', '2'), Utils.NAT1),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('0'), Utils.NAT1),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('-', '4'), Utils.INT),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('2', '.', '5'), Utils.INT),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('-', '3', '.', '5'), Utils.RAT),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('t', 'r', 'u', 'e'), Utils.RAT),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('1', '.', '2', '3', '4', '5'), Utils.REAL),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('n', 'i', 'l'), Utils.REAL),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('t', 'r', 'u', 'e'), Utils.BOOL),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('n', 'i', 'l'), Utils.BOOL),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('\'', 'x', '\''), Utils.CHAR),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('\'', 'x', 'x', '\''), Utils.CHAR),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('<', 'A', '>'), quotes.AQuote.getInstance()),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('<', 'A', '>'), quotes.BQuote.getInstance()),
+        VDMUtil.seq_of_char2val(
+            SeqUtil.seq('<', 'A', '>'),
+            SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
+        VDMUtil.seq_of_char2val(
+            SeqUtil.seq('<', 'B', '>'),
+            SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
+        VDMUtil.seq_of_char2val(
+            SeqUtil.seq('<', 'C', '>'),
+            SetUtil.set(quotes.AQuote.getInstance(), quotes.BQuote.getInstance())),
+        VDMUtil.seq_of_char2val(
+            SeqUtil.seq('t', 'r', 'u', 'e'), SetUtil.set(Utils.BOOL, Utils.NAT)),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('5', '5'), SetUtil.set(Utils.BOOL, Utils.NAT)),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('2', '.', '5'), SetUtil.set(Utils.BOOL, Utils.NAT)),
+        VDMUtil.seq_of_char2val(SeqUtil.seq('n', 'i', 'l'), SetUtil.set(Utils.BOOL, Utils.NAT)));
+  }
+
+  public Entry() {}
+
+  public String toString() {
+
+    return "Entry{}";
+  }
+}
+
+##########
+*Quotes*
+A,B
+##########

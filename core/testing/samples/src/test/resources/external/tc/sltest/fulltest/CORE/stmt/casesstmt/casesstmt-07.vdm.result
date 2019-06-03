@@ -1,1 +1,1 @@
-["Error 3313: casesstmt-07.vdm at 8:1 Operation returns void value"]
+["Error 3328: casesstmt-07.vdm at 12:17 Statement may return void value","Error 3313: casesstmt-07.vdm at 8:1 Operation returns void value"]

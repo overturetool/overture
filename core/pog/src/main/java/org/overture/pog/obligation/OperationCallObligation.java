@@ -29,7 +29,7 @@ public class OperationCallObligation extends ProofObligation
 		for (int i = 0; i < stm.getArgs().size(); i++)
 		{
 			PPattern orig = def.getPredef().getParamPatternList().get(0).get(i);
-			ILexNameToken origName = af.createPPatternAssistant().getAllVariableNames(orig).get(0).clone();
+			ILexNameToken origName = af.createPPatternAssistant(def.getLocation().getModule()).getAllVariableNames(orig).get(0).clone();
 			PExp new_exp = stm.getArgs().get(0);
 			subs.add(new Substitution(origName, new_exp));
 

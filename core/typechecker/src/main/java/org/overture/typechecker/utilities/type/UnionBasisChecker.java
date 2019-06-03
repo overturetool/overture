@@ -29,6 +29,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -36,9 +37,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class UnionBasisChecker extends AnswerAdaptor<Boolean>
+public class UnionBasisChecker extends TypeUnwrapper<String, Boolean>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public UnionBasisChecker(ITypeCheckerAssistantFactory af)
@@ -47,51 +47,48 @@ public class UnionBasisChecker extends AnswerAdaptor<Boolean>
 	}
 
 	@Override
-	public Boolean caseABracketType(ABracketType type) throws AnalysisException
+	public Boolean caseABracketType(ABracketType type, String fromModule) throws AnalysisException
 	{
-		return type.getType().apply(THIS);
+		return type.getType().apply(THIS, fromModule);
 	}
 
 	@Override
-	public Boolean caseANamedInvariantType(ANamedInvariantType type)
+	public Boolean caseANamedInvariantType(ANamedInvariantType type, String fromModule)
 			throws AnalysisException
 	{
-		if (type.getOpaque())
-		{
-			return false;
-		}
-		return type.getType().apply(THIS);
+		if (TypeChecker.isOpaque(type, fromModule)) return false;
+		return type.getType().apply(THIS, fromModule);
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType node)
+	public Boolean defaultSInvariantType(SInvariantType node, String fromModule)
 			throws AnalysisException
 	{
 		return false;
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean createNewReturnValue(INode node) throws AnalysisException
+	public Boolean createNewReturnValue(INode node, String fromModule)
 	{
 		return false;
 	}
 
 	@Override
-	public Boolean createNewReturnValue(Object node) throws AnalysisException
+	public Boolean createNewReturnValue(Object node, String fromModule)
 	{
 		return false;
 	}
 
 	@Override
-	public Boolean caseAOptionalType(AOptionalType node)
+	public Boolean caseAOptionalType(AOptionalType node, String fromModule)
 			throws AnalysisException
 	{
-		return node.getType().apply(THIS);
+		return node.getType().apply(THIS, fromModule);
 	}
 }

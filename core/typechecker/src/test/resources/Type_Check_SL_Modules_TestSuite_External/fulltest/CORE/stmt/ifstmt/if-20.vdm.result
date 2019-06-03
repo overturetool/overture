@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="5" line="13" message="Statement may return void value" messageType="error" number="3328" resource="if-20.vdm"/>
 <message column="3" line="11" message="Operation returns void value" messageType="error" number="3313" resource="if-20.vdm"/>
 <result/>
 </testResult>

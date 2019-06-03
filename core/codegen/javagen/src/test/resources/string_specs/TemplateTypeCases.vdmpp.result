@@ -1,0 +1,39 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class Entry {
+  private static final String val = SeqUtil.toStr(f('a', Utils.CHAR));
+
+  private String op() {
+
+    String res = SeqUtil.toStr(f('a', Utils.CHAR));
+    res = SeqUtil.toStr(f('a', Utils.CHAR));
+    return res;
+  }
+
+  public static Object Run() {
+
+    return f('a', Utils.CHAR) + g('b') + new Entry().op();
+  }
+
+  public Entry() {}
+
+  private static <T> VDMSeq f(final T t, final Object _type_T) {
+
+    return SeqUtil.seq(t);
+  }
+
+  private static String g(final Character c) {
+
+    return SeqUtil.toStr(f(c, Utils.CHAR));
+  }
+
+  public String toString() {
+
+    return "Entry{" + "val = " + Utils.toString(val) + "}";
+  }
+}
+
+##########

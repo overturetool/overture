@@ -86,8 +86,8 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	{
 		PTypeSet set = new PTypeSet(af);
 
-		set.add(af.createPPatternAssistant().getPossibleType(pattern.getLeft()));
-		set.add(af.createPPatternAssistant().getPossibleType(pattern.getRight()));
+		set.add(af.createPPatternAssistant(pattern.getLocation().getModule()).getPossibleType(pattern.getLeft()));
+		set.add(af.createPPatternAssistant(pattern.getLocation().getModule()).getPossibleType(pattern.getRight()));
 
 		PType s = set.getType(pattern.getLocation());
 
@@ -178,7 +178,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.add(af.createPPatternAssistant().getPossibleType(p));
+			list.add(af.createPPatternAssistant(pattern.getLocation().getModule()).getPossibleType(p));
 		}
 
 		return list.getType(pattern.getLocation());
@@ -190,8 +190,8 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	{
 		PTypeSet set = new PTypeSet(af);
 
-		set.add(af.createPPatternAssistant().getPossibleType(pattern.getLeft()));
-		set.add(af.createPPatternAssistant().getPossibleType(pattern.getRight()));
+		set.add(af.createPPatternAssistant(pattern.getLocation().getModule()).getPossibleType(pattern.getLeft()));
+		set.add(af.createPPatternAssistant(pattern.getLocation().getModule()).getPossibleType(pattern.getRight()));
 
 		PType s = set.getType(pattern.getLocation());
 

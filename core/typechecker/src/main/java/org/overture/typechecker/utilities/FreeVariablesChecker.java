@@ -89,6 +89,7 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAnnotatedStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -396,7 +397,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		LexNameSet names = new LexNameSet();
 		
 		if (node.getRoot() instanceof AVariableExp && node.getRoot().getType() != null &&
-			af.createPTypeAssistant().isFunction(node.getRoot().getType()))
+			af.createPTypeAssistant().isFunction(node.getRoot().getType(), null))
 		{
 			// If this is a global call, then we depend on the function
 			AVariableExp v = (AVariableExp)node.getRoot();
@@ -1173,6 +1174,13 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		return node.getExp().apply(this, info);
 	}
 	
+	@Override
+	public LexNameSet caseAAnnotatedStm(AAnnotatedStm node, FreeVarInfo question)
+			throws AnalysisException
+	{
+		return node.getStmt().apply(this, question);
+	}
+	
 	/************************* Defaults ***************************/
 	
 	@Override
@@ -1210,6 +1218,8 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		
 		return names;
 	}
+	
+	
 
 	/************************* New values etc ***************************/
 
@@ -1231,7 +1241,7 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 
 		for (PPattern p : pltp.getPatterns())
 		{
-			list.addAll(af.createPPatternAssistant().getDefinitions(p, pltp.getType(), scope));
+			list.addAll(af.createPPatternAssistant(null).getDefinitions(p, pltp.getType(), scope));
 		}
 
 		return list;

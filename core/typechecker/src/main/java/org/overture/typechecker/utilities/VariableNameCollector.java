@@ -242,7 +242,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
-		return af.createPPatternAssistant().getVariableNames(node.getPattern());
+		return af.createPPatternAssistant(node.getLocation().getModule()).getVariableNames(node.getPattern());
 	}
 
 	@Override

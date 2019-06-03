@@ -24,10 +24,18 @@
 package org.overture.parser.syntax;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.Annotation;
+import org.overture.ast.annotations.PAnnotation;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
@@ -36,6 +44,9 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.messages.InternalException;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
+import org.overture.parser.annotations.ASTAnnotation;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.LocatedException;
@@ -316,6 +327,55 @@ public abstract class SyntaxReader
 		}
 
 		throwMessage(2061, message);
+		return null;
+	}
+
+	/**
+	 * Read any annotations from the collected comments, and clear them.
+	 */
+	private static int readingAnnotations = 0;
+	
+	protected List<PAnnotation> readAnnotations(ILexCommentList comments) throws LexException, ParserException
+	{
+		List<PAnnotation> annotations = new Vector<PAnnotation>();
+		if (readingAnnotations > 0) return annotations; else readingAnnotations++;
+		
+		for (int i=0; i<comments.size(); i++)
+		{
+			if (comments.getComment(i).trim().startsWith("@"))
+			{
+				try
+				{
+					annotations.add(readAnnotation(new LexTokenReader(
+							comments.getComment(i), comments.getLocation(i), reader)));
+				}
+				catch (Exception e)
+				{
+					// ignore - comment is not parsable
+				}
+			}
+		}
+		
+		readingAnnotations--;
+		return annotations;
+	}
+	
+	private PAnnotation readAnnotation(LexTokenReader ltr) throws LexException, ParserException
+	{
+		ltr.nextToken();
+		
+		if (ltr.nextToken().is(VDMToken.IDENTIFIER))
+		{
+			LexIdentifierToken name = (LexIdentifierToken)ltr.getLast();
+			ASTAnnotation impl = loadAnnotationImpl(name);
+			List<PExp> args = impl.parse(ltr);
+			PAnnotation ast = AstFactory.newAAnnotationAnnotation(name, args);
+			ast.setImpl((Annotation) impl);
+			impl.setAST(ast);
+			return ast;
+		}
+		
+		throwMessage(0, "Comment has no @Annotation");
 		return null;
 	}
 
@@ -686,5 +746,138 @@ public abstract class SyntaxReader
 	public String toString()
 	{
 		return reader.toString();
+	}
+	
+	protected ASTAnnotation loadAnnotationImpl(LexIdentifierToken name)
+			throws ParserException, LexException
+	{
+		String classpath = System.getProperty("overture.annotations", "org.overture.annotations;annotations;org.overture.annotations.examples;org.overture.annotations.provided");
+		String[] packages = classpath.split(";|:");
+
+		for (String pack: packages)
+		{
+			try
+			{
+				Class<?> clazz = Class.forName(pack + "." + name + "Annotation");
+				Constructor<?> ctor = clazz.getConstructor();
+				return (ASTAnnotation) ctor.newInstance();
+			}
+			catch (ClassNotFoundException e)
+			{
+				// Try the next package
+			}
+			catch (Exception e)
+			{
+				throwMessage(2334, "Failed to instantiate AST" + name + "Annotation");
+			}
+		}
+
+		throwMessage(2334, "Cannot find AST" + name + "Annotation on " + classpath);
+		return null;
+	}
+		
+	protected ILexCommentList getComments()
+	{
+		return reader.getComments();
+	}
+	
+	/**
+	 * Annotation processing...
+	 */
+	protected void beforeAnnotations(SyntaxReader reader, List<PAnnotation> annotations)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				
+				// This is not as ugly as multiple overloaded beforeAnotation and beforeAnnotations!
+				if (reader instanceof DefinitionReader)
+				{
+					impl.astBefore((DefinitionReader)reader);
+				}
+				else if (reader instanceof ExpressionReader)
+				{
+					impl.astBefore((ExpressionReader)reader);
+				}
+				else if (reader instanceof StatementReader)
+				{
+					impl.astBefore((StatementReader)reader);
+				}
+				else if (reader instanceof ModuleReader)
+				{
+					impl.astBefore((ModuleReader)reader);
+				}
+				else if (reader instanceof ClassReader)
+				{
+					impl.astBefore((ClassReader)reader);
+				}
+				else
+				{
+					System.err.println("Cannot apply annoation to " + reader.getClass().getSimpleName());
+				}
+			}
+		}
+	}
+
+	protected void afterAnnotations(DefinitionReader reader, List<PAnnotation> annotations, PDefinition def)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, def);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(ExpressionReader reader, List<PAnnotation> annotations, PExp exp)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, exp);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(StatementReader reader, List<PAnnotation> annotations, PStm stmt)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, stmt);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(ModuleReader reader, List<PAnnotation> annotations, AModuleModules module)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, module);
+			}
+		}
+	}
+	
+	protected void afterAnnotations(ClassReader reader, List<PAnnotation> annotations, SClassDefinition clazz)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl() instanceof ASTAnnotation)
+			{
+				ASTAnnotation impl = (ASTAnnotation)annotation.getImpl();
+				impl.astAfter(reader, clazz);
+			}
+		}
 	}
 }

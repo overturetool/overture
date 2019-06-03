@@ -1,12 +1,11 @@
 package org.overture.typechecker.utilities.type;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.*;
+import org.overture.typechecker.TypeChecker;
 
 /**
  * Created by ldc on 31/05/17.
@@ -18,8 +17,7 @@ public class IsOrderedVisitor
 	@Override public Boolean caseANamedInvariantType(ANamedInvariantType node,
 			ILexLocation q) throws AnalysisException
 	{
-		if (node.getOpaque()
-				&& !q.getModule().equals(node.getLocation().getModule()))
+		if (TypeChecker.isOpaque(node, q.getModule()))
 			return false;
 		if (node.getOrdDef() != null)
 			return true;

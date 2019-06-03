@@ -57,7 +57,6 @@ public class ImportDefinitionFinder extends
 	public List<PDefinition> caseAAllImport(AAllImport imp,
 			AModuleModules module) throws AnalysisException
 	{
-		// return AAllImportAssistantTC.getDefinitions(imp,from);
 		imp.setFrom(module);
 
 		if (imp.getFrom().getExportdefs().isEmpty())
@@ -72,7 +71,6 @@ public class ImportDefinitionFinder extends
 			PDefinition id = AstFactory.newAImportedDefinition(imp.getLocation(), d);
 			af.createPDefinitionAssistant().markUsed(id); // So imports all is quiet
 			imported.add(id);
-
 		}
 
 		return imported; // The lot!
@@ -91,12 +89,14 @@ public class ImportDefinitionFinder extends
 		{
 			TypeCheckerErrors.report(3191, "No export declared for import of type "
 					+ imp.getName() + " from " + imp.getFrom().getName(), imp.getLocation(), imp);
-		} else
+		}
+		else
 		{
 			if (imp.getRenamed() != null)
 			{
 				expdef = AstFactory.newARenamedDefinition(imp.getRenamed(), expdef);
-			} else
+			}
+			else
 			{
 				expdef = AstFactory.newAImportedDefinition(imp.getName().getLocation(), expdef);
 			}
@@ -121,12 +121,14 @@ public class ImportDefinitionFinder extends
 		{
 			TypeCheckerErrors.report(3193, "No export declared for import of value "
 					+ name + " from " + module.getName(), imp.getLocation(), imp);
-		} else
+		}
+		else
 		{
 			if (imp.getRenamed() != null)
 			{
 				expdef = AstFactory.newARenamedDefinition(imp.getRenamed(), expdef);
-			} else
+			}
+			else
 			{
 				expdef = AstFactory.newAImportedDefinition(imp.getLocation(), expdef);
 			}

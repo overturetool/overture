@@ -63,6 +63,8 @@ import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistan
  */
 public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 {
+	protected Logger log = Logger.getLogger(this.getClass().getName());
+	
 	private ITypeCheckerAssistantFactory af;
 
 	private PDefinition enclosingDef;
@@ -74,10 +76,10 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 
-	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+	List<String> moduleNames;
 
 	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af,
-			Map<AIdentifierStateDesignator, PDefinition> idDefs)
+			Map<AIdentifierStateDesignator, PDefinition> idDefs, List<? extends INode> nodes)
 	{
 		this.af = af;
 
@@ -89,6 +91,19 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		this.renamings = new HashSet<Renaming>();
 		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
+		
+		this.moduleNames = new LinkedList<>();
+		for(INode n : nodes)
+		{
+			if(n instanceof AModuleModules)
+			{
+				this.moduleNames.add(((AModuleModules) n).getName().getName());
+			}
+			else if(n instanceof SClassDefinition)
+			{
+				this.moduleNames.add(((SClassDefinition) n).getName().getName());
+			}
+		}
 	}
 
 	@Override
@@ -140,7 +155,18 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
+		List<PDefinition> subList = node.getParamDefinitions();
+		
+		if(node.getAccess().getStatic() == null)
+		{
+			if(!subList.isEmpty() && subList.size() != node.getParameterPatterns().size())
+			{
+				// Remove 'self' from list
+				subList = node.getParamDefinitions().subList(0, node.getParamDefinitions().size() - 1);
+			}
+		}
+		
+		DefinitionInfo defInfo = new DefinitionInfo(subList, af);
 
 		openScope(defInfo, node);
 
@@ -271,8 +297,6 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
-		PBind bind = node.getBind();
 
 		handleBindConstruct(node, node.getBind(), null, node.getPredicate());
 	}
@@ -473,8 +497,8 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			node.getSet().apply(this);
 		}
 
-		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
-		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
+		PType possibleType = af.createPPatternAssistant(null).getPossibleType(node.getPattern());
+		List<PDefinition> defs = af.createPPatternAssistant(null).getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
 
 		for (PDefinition d : defs)
 		{
@@ -688,7 +712,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			for (PPattern pattern : mb.getPlist())
 			{
-				defs.addAll(af.createPPatternAssistant().getDefinitions(pattern, af.createPMultipleBindAssistant().getPossibleType(mb), NameScope.LOCAL));
+				defs.addAll(af.createPPatternAssistant(null).getDefinitions(pattern, af.createPMultipleBindAssistant().getPossibleType(mb), NameScope.LOCAL));
 			}
 		}
 
@@ -1098,6 +1122,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		// Can be null if we try to find the name for the ignore pattern
 		if (nameToCheck != null)
 		{
+			if(moduleNames.contains(nameToCheck.getName()))
+			{
+				return true;
+			}
+			
 			for (ILexNameToken name : localDefsInScope)
 			{
 				if (name != null

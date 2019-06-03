@@ -65,7 +65,7 @@ public class IdentifierPatternFinder extends
 
 		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
-			list.addAll(af.createAMapPatternMapletAssistant().findIdentifiers(p));
+			list.addAll(af.createAMapPatternMapletAssistant(pattern.getLocation().getModule()).findIdentifiers(p));
 		}
 
 		return list;

@@ -21,67 +21,31 @@
  */
 package org.overture.codegen.trans.assistants;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.ir.SExpIR;
-import org.overture.codegen.ir.SMultipleBindIR;
-import org.overture.codegen.ir.SPatternIR;
-import org.overture.codegen.ir.SStmIR;
-import org.overture.codegen.ir.STypeIR;
-import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.ADefaultClassDeclIR;
-import org.overture.codegen.ir.declarations.AFieldDeclIR;
-import org.overture.codegen.ir.declarations.AFormalParamLocalParamIR;
-import org.overture.codegen.ir.declarations.AMethodDeclIR;
-import org.overture.codegen.ir.declarations.AModuleDeclIR;
-import org.overture.codegen.ir.declarations.AStateDeclIR;
-import org.overture.codegen.ir.declarations.AVarDeclIR;
-import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
-import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.expressions.ACastUnaryExpIR;
-import org.overture.codegen.ir.expressions.ACompSeqExpIR;
-import org.overture.codegen.ir.expressions.AFieldExpIR;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.expressions.AIntLiteralExpIR;
-import org.overture.codegen.ir.expressions.ALessNumericBinaryExpIR;
-import org.overture.codegen.ir.expressions.ANewExpIR;
-import org.overture.codegen.ir.expressions.ANotUnaryExpIR;
+import org.overture.codegen.ir.declarations.*;
+import org.overture.codegen.ir.expressions.*;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.patterns.ASeqMultipleBindIR;
 import org.overture.codegen.ir.patterns.ASetMultipleBindIR;
-import org.overture.codegen.ir.statements.AAssignToExpStmIR;
-import org.overture.codegen.ir.statements.ABlockStmIR;
-import org.overture.codegen.ir.statements.ACallObjectExpStmIR;
-import org.overture.codegen.ir.statements.AForLoopStmIR;
-import org.overture.codegen.ir.statements.AIfStmIR;
-import org.overture.codegen.ir.statements.AIncrementStmIR;
-import org.overture.codegen.ir.statements.ALocalPatternAssignmentStmIR;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
-import org.overture.codegen.ir.types.AClassTypeIR;
-import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
-import org.overture.codegen.ir.types.AMethodTypeIR;
-import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.types.ASeqSeqTypeIR;
-import org.overture.codegen.ir.types.ASetSetTypeIR;
-import org.overture.codegen.ir.types.AUnknownTypeIR;
-import org.overture.codegen.ir.types.AVoidTypeIR;
-import org.overture.codegen.ir.types.SSeqTypeIR;
-import org.overture.codegen.ir.types.SSetTypeIR;
+import org.overture.codegen.ir.statements.*;
+import org.overture.codegen.ir.types.*;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.IterationVarPrefixes;
 import org.overture.config.Settings;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class TransAssistantIR extends BaseTransformationAssistant
 {
+	public static final String ITERABLE = "Iterable";
+
 	protected IRInfo info;
 
 	private Logger log = Logger.getLogger(this.getClass().getName());
@@ -136,7 +100,7 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			if (sourceNode != null && sourceNode.getVdmNode() instanceof PType)
 			{
 				PType vdmType = (PType) sourceNode.getVdmNode();
-				SSeqType seqType = info.getTcFactory().createPTypeAssistant().getSeq(vdmType);
+				SSeqType seqType = info.getTcFactory().createPTypeAssistant().getSeq(vdmType, null);
 				try
 				{
 					typeCg = seqType.apply(info.getTypeVisitor(), info);
@@ -164,13 +128,25 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			elementType = ((ASeqSeqTypeIR) t).getSeqOf().clone();
 		} else
 		{
-			log.error("Expected set or sequence type. Got: " + t);
 			elementType = new AUnknownTypeIR();
 			elementType.setSourceNode(t.getSourceNode());
+			
+			if(!(t instanceof AClassTypeIR))
+			{
+				AClassTypeIR classType = (AClassTypeIR) t;
+				
+				if(!classType.getName().equals(ITERABLE)) {
+					String vdmNodeInfo = info.getLocationAssistant().consVdmNodeInfoStr(t);
+					log.error("Expected set or sequence type. Got: " + t.getClass().getName() + "." + vdmNodeInfo);
+
+				}
+			}
+			
 		}
 
 		return elementType;
 	}
+
 
 	public AIdentifierVarExpIR consSuccessVar(String successVarName)
 	{
@@ -435,6 +411,18 @@ public class TransAssistantIR extends BaseTransformationAssistant
 			IIterationStrategy strategy, IterationVarPrefixes iteVarPrefixes)
 			throws AnalysisException
 	{
+		if(set != null && set.getType() instanceof AUnionTypeIR)
+		{
+			AClassTypeIR iteType = new AClassTypeIR();
+			iteType.setName(ITERABLE);
+			
+			ACastUnaryExpIR cast = new ACastUnaryExpIR();
+			cast.setType(iteType);
+			cast.setExp(set);
+			
+			set = cast;
+		}
+		
 		// Variable names
 		String setName = tempGen.nextVarName(iteVarPrefixes.set());
 		AIdentifierVarExpIR setVar = consSetVar(setName, set);

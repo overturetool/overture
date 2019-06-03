@@ -22,6 +22,7 @@
 package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.annotations.AAnnotationAnnotation;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.relations.PRelation;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
@@ -129,12 +130,30 @@ public class TypeCheckVisitor extends AbstractTypeCheckVisitor
 	public PType caseAModuleModules(AModuleModules node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		beforeAnnotations(node.getAnnotations(), node, question);
+		
 		for (PDefinition def : node.getDefs())
 		{
 			def.apply(this, question);
 		}
 
+		afterAnnotations(node.getAnnotations(), node, question);
 		return null;
+	}
+	
+	@Override
+	public PType caseAAnnotationAnnotation(AAnnotationAnnotation node, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		if (node.getImpl().typecheckArgs())
+		{
+			for (PExp arg: node.getArgs())
+			{
+				arg.apply(THIS, question);
+			}
+		}
+		
+		return null;	// No type for the annotation as such
 	}
 
 	@Override

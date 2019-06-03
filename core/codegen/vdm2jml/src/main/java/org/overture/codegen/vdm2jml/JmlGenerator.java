@@ -196,6 +196,7 @@ public class JmlGenerator implements IREventObserver, IJavaQuoteEventObserver
 		irSettings.setGeneratePostCondChecks(false);
 		irSettings.setGenerateInvariants(true);
 		irSettings.setGenerateTraces(true);
+		irSettings.setAddStateInvToModule(false);
 
 		JavaSettings javaSettings = getJavaSettings();
 		javaSettings.setGenRecsAsInnerClasses(false);

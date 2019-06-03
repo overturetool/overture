@@ -332,7 +332,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType, null)
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType, null, null)
 				&& !(defType instanceof AUnknownType)
 				&& !extendedAssociationMapping
 				|| Vdm2UmlAssociationUtil.validType(defType)
@@ -481,7 +481,7 @@ public class Vdm2Uml
 		for (PPattern p : def.getParamPatternList().get(0))
 		{
 			// HERE SEE: Downcast the assistantFactory here. Narrowing it to interpreter assistant.
-			List<AIdentifierPattern> ids = Vdm2UmlUtil.assistantFactory.createPPatternAssistant().findIdentifiers(p);
+			List<AIdentifierPattern> ids = Vdm2UmlUtil.assistantFactory.createPPatternAssistant(null).findIdentifiers(p);
 			if (!ids.isEmpty())
 			{
 				names.add(ids.get(0).toString());
@@ -585,7 +585,7 @@ public class Vdm2Uml
 		for (PPattern p : def.getParameterPatterns())
 		{
 			// Downcast the assistantFactory here. Narrowing it to interpreter assistant.
-			List<AIdentifierPattern> ids = ((PPatternAssistantInterpreter) Vdm2UmlUtil.assistantFactory.createPPatternAssistant()).findIdentifiers(p);
+			List<AIdentifierPattern> ids = ((PPatternAssistantInterpreter) Vdm2UmlUtil.assistantFactory.createPPatternAssistant(null)).findIdentifiers(p);
 			if (!ids.isEmpty())
 			{
 				String name = ids.get(0).toString();
@@ -639,7 +639,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType, null)
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType, null, null)
 				&& !(defType instanceof AUnknownType)
 				&& !extendedAssociationMapping
 				|| Vdm2UmlAssociationUtil.validType(defType)

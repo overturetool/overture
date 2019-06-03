@@ -8,6 +8,11 @@ Rec ::
 
 NatBool = nat * bool;
 
+functions
+
+fun[@T] : ? -> bool
+fun (a) == is_(a, @T);
+
 operations
 
 public static Run : () ==> ?
@@ -18,13 +23,23 @@ let
 		x3 = is_Rec(mk_(1,2)),
 		x4 = is_Rec(mk_Rec(5,5)),
 		x5 = is_Entry(new Entry()),
-		x6 = is_Entry(55)
+		x6 = is_Entry(55),
+    x7 = is_(nil, ?),
+    x8 = is_([1,2,3], seq of ?),
+    x9 = is_(nil, seq of ?),
+    x10 = is_({1,2,3}, set of ?),
+    x11 = is_(2, set of ?),
+    x12 = is_({1 |-> 2} , map ? to ?),
+    x13 = is_({} , map ? to ?),
+    x14 = fun[<A> | nat | Rec](nil),
+    x15 = fun[<A> | nat | Rec](mk_Rec(1,2))
+    
 --		x7 = is_([1,2,3], seq of real),
 --		x8 = is_(nil, [seq of real]),
 --		x9 = is_([1,true], seq of (bool | nat)),
 --		x10 = is_(2, (bool | nat))
 		
 in 
-	return [x1,x2,x3,x4,x5,x6];
+	return [x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15];
 
 end Entry

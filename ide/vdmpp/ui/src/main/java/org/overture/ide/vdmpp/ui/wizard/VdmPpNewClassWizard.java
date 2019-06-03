@@ -52,7 +52,7 @@ public class VdmPpNewClassWizard extends VdmNewFileWizard {
 		String className = fileName;
 		return "class " + className + "\n" + "types\n-- TODO Define types here\n"
 				+ "values\n-- TODO Define values here\n" + "instance variables\n-- TODO Define instance variables here\n"
-				+ "operations\n-- TODO Define operations here\n" + "functions\n-- TODO Define functiones here\n" 
+				+ "operations\n-- TODO Define operations here\n" + "functions\n-- TODO Define functions here\n"
 				+ "traces\n-- TODO Define Combinatorial Test Traces here\n" + "end "
 				+ className;
 	}

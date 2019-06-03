@@ -28,6 +28,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SSeqType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -35,9 +36,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class SeqBasisChecker extends TypeUnwrapper<Boolean>
+public class SeqBasisChecker extends TypeUnwrapper<String, Boolean>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public SeqBasisChecker(ITypeCheckerAssistantFactory af)
@@ -46,63 +46,41 @@ public class SeqBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean defaultSSeqType(SSeqType type) throws AnalysisException
+	public Boolean defaultSSeqType(SSeqType type, String fromModule) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType type)
+	public Boolean defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
+		if (TypeChecker.isOpaque(type, fromModule)) return false;
+
 		if (type instanceof ANamedInvariantType)
 		{
-			if (type.getOpaque())
-			{
-				return false;
-			}
-			return ((ANamedInvariantType) type).getType().apply(THIS);// PTypeAssistantTC.isSeq(type.getType());
-		} else
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return false;
 		}
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
-		// return af.createAUnionTypeAssistant().getSeq(type) != null;
-		// if (!type.getSeqDone())
-		// {
-		// type.setSeqDone(true); // Mark early to avoid recursion.
-		// type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
-		//
-		// PTypeSet set = new PTypeSet();
-		//
-		// for (PType t : type.getTypes())
-		// {
-		// if (PTypeAssistantTC.isSeq(t))
-		// {
-		// set.add(PTypeAssistantTC.getSeq(t).getSeqof());
-		// }
-		// }
-		//
-		// type.setSeqType(set.isEmpty() ? null
-		// : AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
-		// }
-		//
-		// return type.getSeqType() !=null;
-		return type.apply(af.getSeqTypeFinder()) != null;
+		return type.apply(af.getSeqTypeFinder(), fromModule) != null;
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType type, String fromModule) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultPType(PType type) throws AnalysisException
+	public Boolean defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		return false;
 	}

@@ -40,11 +40,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 {
-	protected ITypeCheckerAssistantFactory af;
+	protected final ITypeCheckerAssistantFactory af;
+	protected final String fromModule;
 
-	public AlwaysMatchingPatternChecker(ITypeCheckerAssistantFactory af)
+	public AlwaysMatchingPatternChecker(ITypeCheckerAssistantFactory af, String fromModule)
 	{
 		this.af = af;
+		this.fromModule = fromModule;
 	}
 
 	@Override
@@ -79,16 +81,16 @@ public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAConcatenationPattern(AConcatenationPattern node)
 			throws AnalysisException
 	{
-		return af.createPPatternAssistant().alwaysMatches(node.getLeft()) &&
-			   af.createPPatternAssistant().alwaysMatches(node.getRight());
+		return af.createPPatternAssistant(fromModule).alwaysMatches(node.getLeft()) &&
+			   af.createPPatternAssistant(fromModule).alwaysMatches(node.getRight());
 	}
 	
 	@Override
 	public Boolean caseAUnionPattern(AUnionPattern node)
 			throws AnalysisException
 	{
-		return af.createPPatternAssistant().alwaysMatches(node.getLeft()) &&
-			   af.createPPatternAssistant().alwaysMatches(node.getRight());
+		return af.createPPatternAssistant(fromModule).alwaysMatches(node.getLeft()) &&
+			   af.createPPatternAssistant(fromModule).alwaysMatches(node.getRight());
 	}
 
 	@Override

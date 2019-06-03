@@ -58,6 +58,14 @@ public class IsExpSimplifyTrans  extends DepthFirstAnalysisAdaptor {
                 || checkedType instanceof AStringTypeIR)
         {
             return consGeneralIsExp(exp, checkedType);
+        } else if(checkedType instanceof AUnknownTypeIR)
+        {
+            ABoolLiteralExpIR boolLiteral = new ABoolLiteralExpIR();
+            boolLiteral.setType(new ABoolBasicTypeIR());
+            boolLiteral.setValue(true);
+
+            return boolLiteral;
+
         } else
         {
             if (checkedType instanceof ASeqSeqTypeIR)
@@ -77,6 +85,26 @@ public class IsExpSimplifyTrans  extends DepthFirstAnalysisAdaptor {
                 {
                     return consGeneralIsExp(exp, checkedType);
                 }
+            }
+            else if(checkedType instanceof ASetSetTypeIR)
+            {
+                ASetSetTypeIR setType = (ASetSetTypeIR) checkedType;
+
+                if(setType.getSetOf() instanceof AUnknownTypeIR)
+                {
+                    return consGeneralIsExp(exp, checkedType);
+                }
+            }
+            else if(checkedType instanceof ATemplateTypeIR)
+            {
+                ATemplateTypeIR templateType = (ATemplateTypeIR) checkedType;
+
+                String argName = PolyFuncTrans.toTypeArgName(templateType);
+
+                AExternalTypeIR typeVar = new AExternalTypeIR();
+                typeVar.setName(argName);
+
+                return consGeneralIsExp(exp, typeVar);
             }
 
             return null;

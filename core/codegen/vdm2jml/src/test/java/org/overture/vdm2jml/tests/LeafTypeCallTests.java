@@ -73,19 +73,19 @@ public class LeafTypeCallTests
 	@Test
 	public void quoteCheck()
 	{
-		assertMethod(AQuoteTypeIR.class, Object.class, Class.class);
+		assertMethod(AQuoteTypeIR.class, Object.class, Object.class);
 	}
 
 	@Test
 	public void recTest()
 	{
-		assertMethod(ARecordTypeIR.class, Object.class, Class.class);
+		assertMethod(ARecordTypeIR.class, Object.class, Object.class);
 	}
 
 	@Test
 	public void stringTest()
 	{
-		assertMethod(AStringTypeIR.class, Object.class, Class.class);
+		assertMethod(AStringTypeIR.class, Object.class, Object.class);
 	}
 
 	private void assertMethod(Class<? extends STypeIR> type,

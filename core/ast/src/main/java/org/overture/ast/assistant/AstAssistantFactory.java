@@ -44,7 +44,6 @@ import org.overture.ast.util.type.NumericFinder;
 
 public class AstAssistantFactory implements IAstAssistantFactory
 {
-
 	@Override
 	public PAccessSpecifierAssistant createPAccessSpecifierAssistant()
 	{
@@ -58,9 +57,9 @@ public class AstAssistantFactory implements IAstAssistantFactory
 	}
 
 	@Override
-	public PPatternAssistant createPPatternAssistant()
+	public PPatternAssistant createPPatternAssistant(String fromModule)
 	{
-		return new PPatternAssistant(this);
+		return new PPatternAssistant(this, fromModule);
 	}
 
 	// @Override
@@ -114,21 +113,21 @@ public class AstAssistantFactory implements IAstAssistantFactory
 	// visitors
 
 	@Override
-	public IAnswer<LexNameList> getAllVariableNameLocator()
+	public IAnswer<LexNameList> getAllVariableNameLocator(String fromModule)
 	{
-		return new AllVariableNameLocator(this);
+		return new AllVariableNameLocator(this, fromModule);
 	}
 
 	@Override
-	public IAnswer<Boolean> getNumericFinder()
+	public IAnswer<Boolean> getNumericFinder(String fromModule)
 	{
-		return new NumericFinder(this);
+		return new NumericFinder(this, fromModule);
 	}
 
 	@Override
-	public IAnswer<SNumericBasicType> getNumericBasisChecker()
+	public IAnswer<SNumericBasicType> getNumericBasisChecker(String fromModule)
 	{
-		return new NumericBasisChecker(this);
+		return new NumericBasisChecker(this, fromModule);
 	}
 
 	@Override

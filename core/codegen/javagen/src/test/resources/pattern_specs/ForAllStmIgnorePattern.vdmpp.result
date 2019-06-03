@@ -7,7 +7,9 @@ public class Entry {
   public static Number Run() {
 
     Number result = 0L;
-    for (Iterator iterator_1 = SetUtil.set(5L, 10L, 15L).iterator(); iterator_1.hasNext(); ) {
+    for (Iterator iterator_1 = ((Iterable) SetUtil.set(5L, 10L, 15L)).iterator();
+        iterator_1.hasNext();
+        ) {
       Number ignorePattern_1 = (Number) iterator_1.next();
       result = result.longValue() + 1L;
     }

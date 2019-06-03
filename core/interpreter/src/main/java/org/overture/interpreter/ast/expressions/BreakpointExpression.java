@@ -50,7 +50,7 @@ public class BreakpointExpression extends PExpBase
 	public BreakpointExpression(Breakpoint breakpoint,
 			BreakpointCondition cond, long arg)
 	{
-		super(breakpoint.location);
+		super(breakpoint.location, null);
 		this.bp = breakpoint;
 		this.cond = cond;
 		this.arg = arg;

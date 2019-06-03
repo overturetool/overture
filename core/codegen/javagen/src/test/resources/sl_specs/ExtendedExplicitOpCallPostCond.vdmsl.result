@@ -1,0 +1,79 @@
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+final public class Entry {
+  private static St St = new St(5L);
+
+  private Entry() {}
+
+  public static void op2() {
+
+    /* skip */
+
+  }
+
+  public static void op1() {
+
+    /* skip */
+
+  }
+
+  public static Object Run() {
+
+    return post_op1(Utils.copy(St), Utils.copy(St));
+  }
+
+  public static Boolean post_op2(final St _St, final St St) {
+
+    return post_op1(Utils.copy(_St), Utils.copy(St));
+  }
+
+  public static Boolean post_op1(final St _St, final St St) {
+
+    return true;
+  }
+
+  public String toString() {
+
+    return "Entry{" + "St := " + Utils.toString(St) + "}";
+  }
+
+  public static class St implements Record {
+    public Number x;
+
+    public St(final Number _x) {
+
+      x = _x;
+    }
+
+    public boolean equals(final Object obj) {
+
+      if (!(obj instanceof St)) {
+        return false;
+      }
+
+      St other = ((St) obj);
+
+      return Utils.equals(x, other.x);
+    }
+
+    public int hashCode() {
+
+      return Utils.hashCode(x);
+    }
+
+    public St copy() {
+
+      return new St(x);
+    }
+
+    public String toString() {
+
+      return "mk_Entry`St" + Utils.formatFields(x);
+    }
+  }
+}
+
+##########

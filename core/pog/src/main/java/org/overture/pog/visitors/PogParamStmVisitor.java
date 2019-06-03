@@ -11,6 +11,7 @@ import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AAnnotatedStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -56,7 +57,7 @@ import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PogAssistantFactory;
 
 public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofObligationList>
-		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
+		extends AbstractPogParamVisitor
 {
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
@@ -95,6 +96,16 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		return new ProofObligationList();
 	}
+	
+	@Override
+	public IProofObligationList caseAAnnotatedStm(AAnnotatedStm node, IPOContextStack question)
+		throws AnalysisException
+	{
+		IProofObligationList obligations = beforeAnnotation(node.getAnnotation(), node, question);
+		obligations.addAll(node.getStmt().apply(this, question));
+		return afterAnnotation(node.getAnnotation(), node, obligations, question);
+	}
+	
 
 	@Override
 	public IProofObligationList caseAAlwaysStm(AAlwaysStm node,
@@ -721,5 +732,4 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		return new ProofObligationList();
 	}
-
 }

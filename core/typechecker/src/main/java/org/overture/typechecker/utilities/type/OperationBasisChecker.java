@@ -29,6 +29,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -36,7 +37,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class OperationBasisChecker extends TypeUnwrapper<Boolean>
+public class OperationBasisChecker extends TypeUnwrapper<String, Boolean>
 {
 
 	protected ITypeCheckerAssistantFactory af;
@@ -47,17 +48,15 @@ public class OperationBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean defaultSInvariantType(SInvariantType type)
+	public Boolean defaultSInvariantType(SInvariantType type, String fromModule)
 			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			if (type.getOpaque())
-			{
-				return false;
-			}
-			return ((ANamedInvariantType) type).getType().apply(THIS);// PTypeAssistantTC.isOperation(type.getType());
-		} else
+			if (TypeChecker.isOpaque(type, fromModule)) return false;
+			return ((ANamedInvariantType) type).getType().apply(THIS, fromModule);
+		}
+		else
 		{
 			return false;
 		}
@@ -65,95 +64,35 @@ public class OperationBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean caseAOperationType(AOperationType node)
+	public Boolean caseAOperationType(AOperationType node, String fromModule)
 			throws AnalysisException
 	{
 		return true;
 	}
 	
 	@Override
-	public Boolean caseALocalDefinition(ALocalDefinition node)
+	public Boolean caseALocalDefinition(ALocalDefinition node, String fromModule)
 		throws AnalysisException
 	{
 		return !af.createPTypeAssistant().isUnknown(af.createPDefinitionAssistant().getType(node)) &&
-			  af.createPTypeAssistant().isOperation(af.createPDefinitionAssistant().getType(node));
+			  af.createPTypeAssistant().isOperation(af.createPDefinitionAssistant().getType(node), fromModule);
 	}
 
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type, String fromModule) throws AnalysisException
 	{
-		// return af.createAUnionTypeAssistant().getOperation(type) != null;
-
-		// if (!type.getOpDone())
-		// {
-		// type.setOpDone(true);
-		// type.setOpType(PTypeAssistantTC.getOperation(AstFactory.newAUnknownType(type.getLocation())));
-		//
-		// PTypeSet result = new PTypeSet();
-		// Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
-		// List<PDefinition> defs = new Vector<PDefinition>();
-		//
-		// for (PType t : type.getTypes())
-		// {
-		// if (PTypeAssistantTC.isOperation(t))
-		// {
-		// if (t.getDefinitions() != null)
-		// {
-		// defs.addAll(t.getDefinitions());
-		// }
-		// AOperationType op = PTypeAssistantTC.getOperation(t);
-		// result.add(op.getResult());
-		//
-		// for (int p = 0; p < op.getParameters().size(); p++)
-		// {
-		// PType pt = op.getParameters().get(p);
-		// PTypeSet pset = params.get(p);
-		//
-		// if (pset == null)
-		// {
-		// pset = new PTypeSet(pt);
-		// params.put(p, pset);
-		// } else
-		// {
-		// pset.add(pt);
-		// }
-		// }
-		// }
-		// }
-		//
-		// if (!result.isEmpty())
-		// {
-		// PType rtype = result.getType(type.getLocation());
-		// PTypeList plist = new PTypeList();
-		//
-		// for (int i = 0; i < params.size(); i++)
-		// {
-		// PType pt = params.get(i).getType(type.getLocation());
-		// plist.add(pt);
-		// }
-		//
-		// type.setOpType(AstFactory.newAOperationType(type.getLocation(), plist, rtype));
-		// type.getOpType().setDefinitions(defs);
-		// } else
-		// {
-		// type.setOpType(null);
-		// }
-		// }
-		//
-		// return (AOperationType) type.getOpType() != null;
-		return type.apply(af.getOperationTypeFinder()) != null;
+		return type.apply(af.getOperationTypeFinder(), fromModule) != null;
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType type, String fromModule) throws AnalysisException
 	{
 		return true;
 	}
 
 	@Override
-	public Boolean defaultPType(PType type) throws AnalysisException
+	public Boolean defaultPType(PType type, String fromModule) throws AnalysisException
 	{
 		return false;
 	}
-
 }

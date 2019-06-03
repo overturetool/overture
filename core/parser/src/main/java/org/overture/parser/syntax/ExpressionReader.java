@@ -23,9 +23,11 @@
 
 package org.overture.parser.syntax;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
@@ -57,6 +59,7 @@ import org.overture.ast.expressions.SMapExp;
 import org.overture.ast.expressions.SSeqExp;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexCommentList;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
@@ -618,7 +621,7 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readApplicatorExpression() throws ParserException,
 			LexException
 	{
-		PExp exp = readBasicExpression();
+		PExp exp = readAnnotatedExpression();
 		boolean more = true;
 
 		while (more)
@@ -672,7 +675,7 @@ public class ExpressionReader extends SyntaxReader
 							{
 								exp = readPreExpression(ve);
 								break;
-							} else if (name.startsWith("narrow_"))
+							} else if (name.equals("narrow_"))
 							{
 								if (Settings.release == Release.CLASSIC)
 								{
@@ -808,6 +811,34 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		return exp;
+	}
+
+	private PExp readAnnotatedExpression() throws ParserException, LexException
+	{
+		ILexCommentList comments = getComments();
+		List<PAnnotation> annotations = readAnnotations(comments);
+		PExp body = null;
+
+		if (!annotations.isEmpty())
+		{
+			beforeAnnotations(this, annotations);
+			body = readExpression();
+			afterAnnotations(this, annotations, body);
+
+			Collections.reverse(annotations);	// Build the chain backwards
+			
+			for (PAnnotation annotation: annotations)
+			{
+				body = AstFactory.newAAnnotatedUnaryExp(annotation.getName().getLocation(), annotation, body);
+			}
+		}
+		else
+		{
+			body = readBasicExpression();
+		}
+		
+		body.setComments(comments);
+		return body;
 	}
 
 	private PExp readBasicExpression() throws ParserException, LexException
@@ -1022,42 +1053,13 @@ public class ExpressionReader extends SyntaxReader
 
 				PExp value = args.get(0);
 
-				switch (type)
+				if (type == VDMToken.TOKEN)
 				{
-					case BOOL:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newABooleanBasicType(ve.getLocation()), value);
-						break;
-
-					case NAT:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newANatNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case NAT1:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newANatOneNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case INT:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newAIntNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case RAT:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newARationalNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case REAL:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newARealNumericBasicType(ve.getLocation()), value);
-						break;
-
-					case CHAR:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newACharBasicType(ve.getLocation()), value);
-						break;
-
-					case TOKEN:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newATokenBasicType(ve.getLocation()), value);
-						break;
-
-					default:
-						throwMessage(2036, "Expecting mk_<type>");
+					exp = AstFactory.newAMkBasicExp(AstFactory.newATokenBasicType(ve.getLocation()), value);
+				}
+				else
+				{
+					throwMessage(2036, "Expecting mk_token");
 				}
 			} else
 			{

@@ -103,7 +103,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 						if (ut.getName().getFullName().equals("CPU"))
 						{
 							ANewExp newExp = (ANewExp) iv.getExpression();
-							PExp exp = newExp.getArgs().size() > 0 ? newExp.getArgs().get(1) : null;
+							PExp exp = newExp.getArgs().size() > 1 ? newExp.getArgs().get(1) : null;
 							double speed = 0;
 							if (exp instanceof AIntLiteralExp)
 							{
@@ -208,13 +208,13 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPrecondition() != null)
 		{
-			node.setPredef(af.createAExplicitOperationDefinitionAssistant().getPreDefinition(node, question));
+			node.setPredef(af.createAExplicitOperationDefinitionAssistant(node.getLocation().getModule()).getPreDefinition(node, question));
 			af.createPDefinitionAssistant().markUsed(node.getPredef()); // ORIGINAL CODE
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			node.setPostdef(af.createAExplicitOperationDefinitionAssistant().getPostDefinition(node, question));
+			node.setPostdef(af.createAExplicitOperationDefinitionAssistant(node.getLocation().getModule()).getPostDefinition(node, question));
 			af.createPDefinitionAssistant().markUsed(node.getPostdef());
 		}
 	}

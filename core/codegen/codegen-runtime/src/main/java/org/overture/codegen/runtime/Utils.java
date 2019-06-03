@@ -25,6 +25,23 @@ public class Utils
 {
 	public static final Object VOID_VALUE = new Object();
 
+	// Used to pass type arguments for instantiated functions in the generated code
+	public static final Object NAT = new Object();
+	public static final Object NAT1 = new Object();
+	public static final Object INT = new Object();
+	public static final Object REAL = new Object();
+	public static final Object RAT = new Object();
+	public static final Object BOOL = new Object();
+	public static final Object CHAR = new Object();
+	public static final Object TOKEN = new Object();
+	public static final Object STRING = new Object();
+	public static final Object SEQ_OF_ANYTHING = new Object();
+	public static final Object SET_OF_ANYTHING = new Object();
+	public static final Object MAP_ANYTHING_TO_ANYTHING = new Object();
+	public static final Object UNKNOWN = new Object();
+	// Only basic types, set of ?, seq of ?, map ? to ?, quotes, unions of non-collection types, strings, polymorphic types, the unknown type and records can currently be used as polymorphic type arguments
+	public static final Object TYPE_NOT_SUPPORTED = new Object();
+
 	public static boolean isVoidValue(Object value)
 	{
 		return value == VOID_VALUE;
@@ -267,9 +284,89 @@ public class Utils
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static boolean is_(Object exp, Class type)
+	public static boolean is_(Object exp, Object type)
 	{
-		return exp != null && exp.getClass() == type;
+		// Handle polymorphic type arguments
+		if(type == NAT)
+		{
+			return is_nat(exp);
+		}
+		else if(type == NAT1)
+		{
+			return is_nat1(exp);
+		}
+		else if(type == INT)
+		{
+			return is_int(exp);
+		}
+		else if(type == REAL)
+		{
+			return is_real(exp);
+		}
+		else if(type == RAT)
+		{
+			return is_rat(exp);
+		}
+		else if(type == BOOL)
+		{
+			return is_bool(exp);
+		}
+		else if(type == CHAR)
+		{
+			return is_char(exp);
+		}
+		else if(type == TOKEN)
+		{
+			return is_token(exp);
+		}
+		else if(type == TYPE_NOT_SUPPORTED)
+		{
+			throw new IllegalArgumentException("Only basic types, set of ?, seq of ?, map ? to ?, quotes, unions of non-collection types, strings, polymorphic types,"
+					+ " the unknown type and records can currently be used as polymorphic type arguments");
+		}
+		else if(type == STRING)
+		{
+			return exp instanceof String;
+		}
+		else if(type == SEQ_OF_ANYTHING)
+		{
+			return exp instanceof VDMSeq;
+		}
+		else if(type == SET_OF_ANYTHING)
+		{
+			return exp instanceof VDMSet;
+		}
+		else if(type == MAP_ANYTHING_TO_ANYTHING)
+		{
+			return exp instanceof VDMMap;
+		}
+		else if(type == UNKNOWN)
+		{
+			return true;
+		}
+		else if(type instanceof VDMSet)
+		{
+			// Special case; union of quotes
+
+			for(Object o : ((VDMSet) type))
+			{
+				if(is_(exp, o))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+		else if(type instanceof Class)
+		{
+			return ((Class) type).isInstance(exp);
+		}
+		else
+		{
+      // If we are checking if a value is a quote
+			return exp == type;
+		}
 	}
 
 	public static double divide(Object left, Object right)

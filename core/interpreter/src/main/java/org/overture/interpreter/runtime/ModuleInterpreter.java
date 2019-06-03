@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.annotations.Annotation;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -44,6 +45,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.ModuleList;
+import org.overture.interpreter.annotations.INAnnotation;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
@@ -216,6 +218,7 @@ public class ModuleInterpreter extends Interpreter
 		CPUValue.init(scheduler, assistantFactory);
 		initialContext = assistantFactory.createModuleListAssistant().createInitialContext(modules);
 		assistantFactory.createModuleListAssistant().initialize(initialContext, modules, dbgp);
+		Annotation.init(INAnnotation.class, initialContext);
 	}
 
 	@Override
