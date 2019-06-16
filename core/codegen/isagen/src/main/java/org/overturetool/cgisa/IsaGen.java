@@ -137,8 +137,8 @@ public class IsaGen extends CodeGenBase {
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
 
-    	
-    	// Typecheck the VDMToolkit module and generate the IR
+
+        // Typecheck the VDMToolkit module and generate the IR
         TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 =
                 TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
         AModuleModules isaToolkit = listTypeCheckResult1.result.
@@ -167,14 +167,14 @@ public class IsaGen extends CodeGenBase {
                     // transform away any recursion cycles
                     GroupMutRecs groupMR = new GroupMutRecs();
                     generator.applyTotalTransformation(status, groupMR);
-                    
+
                     if (status.getIrNode() instanceof AModuleDeclIR) {
                         AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();                   
                         // then sort remaining dependencies
                         SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
                         generator.applyPartialTransformation(status, sortTrans);
                     }
-                    
+
                     
                     // Transform all token types to isa_VDMToken
                     // Transform all nat types to isa_VDMNat
