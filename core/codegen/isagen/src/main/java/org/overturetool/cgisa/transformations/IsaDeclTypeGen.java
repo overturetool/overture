@@ -1,17 +1,12 @@
 package org.overturetool.cgisa.transformations;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.overture.cgisa.isair.analysis.AnswerIsaAdaptor;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.STypeIR;
 import org.overture.codegen.ir.analysis.AnalysisException;
-import org.overture.codegen.ir.declarations.AFieldDeclIR;
 import org.overture.codegen.ir.declarations.ANamedTypeDeclIR;
 import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AStateDeclIR;
-import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ARecordTypeIR;

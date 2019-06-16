@@ -25,11 +25,6 @@ import java.io.StringWriter;
 import java.util.*;
 
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.SBasicType;
 import org.overture.codegen.ir.INode;
 import org.overture.codegen.ir.SDeclIR;
 import org.overture.codegen.ir.SExpIR;
@@ -44,10 +39,8 @@ import org.overture.codegen.ir.declarations.ARecordDeclIR;
 import org.overture.codegen.ir.declarations.AStateDeclIR;
 import org.overture.codegen.ir.declarations.ATypeDeclIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.expressions.AEnumSetExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.expressions.ANewExpIR;
-import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.types.*;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
@@ -55,7 +48,6 @@ import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateManager;
 import org.overturetool.cgisa.utils.IsMethodTypeVisitor;
 import org.overturetool.cgisa.utils.IsSeqOfCharTypeVisitor;
-import org.overturetool.cgisa.utils.IsaInvNameFinder;
 import org.overturetool.cgisa.utils.IsaSymbolFinder;
 
 public class IsaTranslations {
@@ -175,6 +167,7 @@ public class IsaTranslations {
         StringBuilder sb = new StringBuilder();
 
         Iterator<? extends INode> it = params.iterator();
+
         while (it.hasNext()) {
             StringWriter writer = new StringWriter();
             it.next().apply(mergeVisitor, writer);
@@ -469,7 +462,8 @@ public class IsaTranslations {
 
     public String genInvariantsForUnaryTypeConstructor(Object node)
     {
-        if(node instanceof ASeqSeqTypeIR){
+       
+    	if(node instanceof ASeqSeqTypeIR){
             ASeqSeqTypeIR node_ = (ASeqSeqTypeIR) node;
             return concreteTypeInvariantForUnaryTypeConstructorInvariant(node_.getSeqOf(),"inv_SeqElems ");
         }

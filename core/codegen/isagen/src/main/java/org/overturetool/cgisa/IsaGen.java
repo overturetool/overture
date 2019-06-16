@@ -45,17 +45,11 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.declarations.AFuncDeclIR;
-import org.overture.codegen.ir.declarations.AInterfaceDeclIR;
 import org.overture.codegen.ir.declarations.AModuleDeclIR;
-import org.overture.codegen.ir.declarations.ATypeDeclIR;
-import org.overture.codegen.ir.declarations.SClassDeclIR;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.printer.MsgPrinter;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2java.IJavaConstants;
-import org.overture.codegen.vdm2java.JavaCodeGen;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overturetool.cgisa.transformations.*;
 
@@ -142,7 +136,9 @@ public class IsaGen extends CodeGenBase {
      */
     @Override
     protected GeneratedData genVdmToTargetLang(List<IRStatus<PIR>> statuses) throws AnalysisException {
-        // Typecheck the VDMToolkit module and generate the IR
+
+    	
+    	// Typecheck the VDMToolkit module and generate the IR
         TypeCheckerUtil.TypeCheckResult<List<AModuleModules>> listTypeCheckResult1 =
                 TypeCheckerUtil.typeCheckSl(new File("src/test/resources/VDMToolkit.vdmsl"));
         AModuleModules isaToolkit = listTypeCheckResult1.result.
@@ -171,21 +167,22 @@ public class IsaGen extends CodeGenBase {
                     // transform away any recursion cycles
                     GroupMutRecs groupMR = new GroupMutRecs();
                     generator.applyTotalTransformation(status, groupMR);
+                    
                     if (status.getIrNode() instanceof AModuleDeclIR) {
-                        AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();
-                        
+                        AModuleDeclIR cClass = (AModuleDeclIR) status.getIrNode();                   
                         // then sort remaining dependencies
                         SortDependencies sortTrans = new SortDependencies(cClass.getDecls());
                         generator.applyPartialTransformation(status, sortTrans);
                     }
                     
+                    
                     // Transform all token types to isa_VDMToken
                     // Transform all nat types to isa_VDMNat
                     // Transform all nat1 types to isa_VDMNat
                     // Transform all int types to isa_VDMInt
+
                     IsaBasicTypesConv invConv = new IsaBasicTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
                     generator.applyPartialTransformation(status, invConv);
-                    
                     
                     // Transform Seq and Set types into isa_VDMSeq and isa_VDMSet
                     IsaTypeTypesConv invSSConv = new IsaTypeTypesConv(getInfo(), this.transAssistant, vdmToolkitModuleIR);
@@ -266,7 +263,7 @@ public class IsaGen extends CodeGenBase {
         // Apply merge visitor to pretty print Isabelle syntax
         IsaTranslations isa = new IsaTranslations();
         MergeVisitor pp = isa.getMergeVisitor();
-       
+
         List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 
         for (IRStatus<PIR> status : statuses) {
@@ -277,11 +274,11 @@ public class IsaGen extends CodeGenBase {
             }
 
         }
+
         // Return syntax
         return generated;
     }
 
-    
     private GeneratedModule prettyPrint(IRStatus<? extends INode> status)
             throws org.overture.codegen.ir.analysis.AnalysisException {
         // Apply merge visitor to pretty print Isabelle syntax

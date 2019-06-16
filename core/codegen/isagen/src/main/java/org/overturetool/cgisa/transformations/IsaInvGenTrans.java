@@ -5,8 +5,6 @@ import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.analysis.AnalysisException;
 import org.overture.codegen.ir.declarations.*;
 import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
-import org.overture.codegen.ir.expressions.AApplyExpIR;
-import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AMethodTypeIR;
@@ -23,7 +21,7 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
     private final Map<String, ATypeDeclIR> isaTypeDeclIRMap;
     private IRInfo info;
     private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
-    
+
     public IsaInvGenTrans(IRInfo info, AModuleDeclIR vdmToolkitModuleIR) {
         this.info = info;
         this.vdmToolkitModule = vdmToolkitModuleIR;
@@ -46,7 +44,6 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
 
     }
 
-    
     @Override
     public void caseAStateDeclIR(AStateDeclIR node) throws AnalysisException {
     	super.caseAStateDeclIR(node);
@@ -272,8 +269,6 @@ public class IsaInvGenTrans extends DepthFirstAnalysisIsaAdaptor {
         System.out.println("Invariant function has been added");
         }
     }
-    
-   
 
     public String GenInvTypeDefinition(String arg){
         return "Definition\n" +

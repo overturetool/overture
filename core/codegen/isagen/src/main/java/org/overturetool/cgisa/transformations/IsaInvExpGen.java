@@ -7,7 +7,6 @@ import org.overture.codegen.ir.declarations.*;
 import org.overture.codegen.ir.expressions.AAndBoolBinaryExpIR;
 import org.overture.codegen.ir.expressions.AApplyExpIR;
 import org.overture.codegen.ir.expressions.AIdentifierVarExpIR;
-import org.overture.codegen.ir.name.ATypeNameIR;
 import org.overture.codegen.ir.patterns.AIdentifierPatternIR;
 import org.overture.codegen.ir.types.*;
 import org.overturetool.cgisa.IsaGen;
@@ -15,9 +14,6 @@ import org.overturetool.cgisa.utils.IsaInvNameFinder;
 
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.xml.crypto.NodeSetData;
 
 /*
 Generates the expression for an invariant.
@@ -32,7 +28,6 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 
     AIdentifierPatternIR ps;
     AMethodTypeIR methodType;
-    
     private final Map<String, AFuncDeclIR> isaFuncDeclIRMap;
 	private AIdentifierVarExpIR targetIP;
 	private final LinkedList<ANamedTypeDeclIR> invArr = new LinkedList<ANamedTypeDeclIR>();
@@ -73,8 +68,6 @@ public class IsaInvExpGen extends AnswerIsaAdaptor<SExpIR> {
 
         return exp;
     }
-    
-    
 
     
     @Override

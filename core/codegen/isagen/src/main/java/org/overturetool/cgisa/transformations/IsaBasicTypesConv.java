@@ -3,16 +3,11 @@ package org.overturetool.cgisa.transformations;
 import org.overture.cgisa.isair.analysis.DepthFirstAnalysisIsaAdaptor;
 import org.overture.codegen.ir.*;
 import org.overture.codegen.ir.declarations.*;
-import org.overture.codegen.ir.types.ABoolBasicTypeIR;
 import org.overture.codegen.ir.types.AIntNumericBasicTypeIR;
 import org.overture.codegen.ir.types.ANat1NumericBasicTypeIR;
 import org.overture.codegen.ir.types.ANatNumericBasicTypeIR;
-import org.overture.codegen.ir.types.ARecordTypeIR;
-import org.overture.codegen.ir.types.ASeqSeqTypeIR;
-import org.overture.codegen.ir.types.ASetSetTypeIR;
 import org.overture.codegen.ir.types.ATokenBasicTypeIR;
 import org.overture.codegen.trans.assistants.TransAssistantIR;
-import org.overturetool.cgisa.IsaGen;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,9 +42,7 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
                 }).map(d -> (ATypeDeclIR) d)
                 .collect(Collectors.toMap(x -> ((ANamedTypeDeclIR) x.getDecl()).getName().getName(), x -> x));
     }
-    
-    
-    
+
     //Transform int to isa_VDMInt
     public void caseAIntNumericBasicTypeIR(AIntNumericBasicTypeIR x){
     	 if(x.getNamedInvType() == null)
@@ -92,9 +85,4 @@ public class IsaBasicTypesConv extends DepthFirstAnalysisIsaAdaptor {
             x.setNamedInvType((ANamedTypeDeclIR)isa_td.getDecl().clone());
         }
     }
-
-    
-    
-    
-    
 }
