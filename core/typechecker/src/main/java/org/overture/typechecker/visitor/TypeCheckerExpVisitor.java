@@ -2165,13 +2165,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 					{
 						TypeCheckerErrors.report(3130,
 								"Modifier for " + f.getTag() + " should be "
-										+ f.getType(), node.getLocation(), node);
+										+ f.getType(), rm.getValue().getLocation(), node);
 						TypeCheckerErrors.detail("Actual", mtype);
 					}
 				} else
 				{
 					TypeCheckerErrors.report(3131, "Modifier tag " + rm.getTag()
-							+ " not found in record", node.getLocation(), node);
+							+ " not found in record", rm.getTag().getLocation(), node);
 				}
 			}
 		} else
