@@ -821,8 +821,13 @@ public class ExpressionReader extends SyntaxReader
 
 		if (!annotations.isEmpty())
 		{
+			if (lastToken().isNot(VDMToken.BRA))
+			{
+				warning(5030, "Annotation is not followed by bracketed sub-expression", lastToken().location);
+			}
+
 			beforeAnnotations(this, annotations);
-			body = readExpression();
+			body = readBasicExpression();
 			afterAnnotations(this, annotations, body);
 
 			Collections.reverse(annotations);	// Build the chain backwards
