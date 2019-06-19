@@ -41,6 +41,12 @@ public class OnFailAnnotation extends ASTAnnotationAdapter implements TCAnnotati
 	{
 		return true;	// Check args
 	}
+
+	@Override
+	public boolean isBracketed()
+	{
+		return true;
+	}
 	
 	/**
 	 * Type checker...

@@ -821,7 +821,7 @@ public class ExpressionReader extends SyntaxReader
 
 		if (!annotations.isEmpty())
 		{
-			if (lastToken().isNot(VDMToken.BRA))
+			if (lastToken().isNot(VDMToken.BRA) && isBracketed(annotations))
 			{
 				warning(5030, "Annotation is not followed by bracketed sub-expression", lastToken().location);
 			}
@@ -844,6 +844,19 @@ public class ExpressionReader extends SyntaxReader
 		
 		body.setComments(comments);
 		return body;
+	}
+
+	private boolean isBracketed(List<PAnnotation> annotations)
+	{
+		for (PAnnotation annotation: annotations)
+		{
+			if (annotation.getImpl().isBracketed())
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private PExp readBasicExpression() throws ParserException, LexException

@@ -36,6 +36,12 @@ public class NoPOGAnnotation extends ASTAnnotationAdapter implements TCAnnotatio
 	{
 		return false;
 	}
+
+	@Override
+	public boolean isBracketed()
+	{
+		return true;
+	}
 	
 	/**
 	 * Type checker...
