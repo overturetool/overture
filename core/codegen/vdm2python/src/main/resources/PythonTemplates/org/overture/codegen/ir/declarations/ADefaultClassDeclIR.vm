@@ -1,0 +1,9 @@
+## TODO: handle 'functions', 'operations' and 'traces'
+class $node.getName():
+#if ( $node.getFields().isEmpty() )
+  pass
+#else
+#**##foreach( $f in $node.getFields() )
+#**#  $PythonFormat.format($f)
+#**##end
+#end
