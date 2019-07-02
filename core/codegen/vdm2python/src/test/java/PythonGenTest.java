@@ -1,6 +1,6 @@
-import junit.framework.Assert;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
@@ -19,7 +19,7 @@ import java.util.List;
 public class PythonGenTest
 {
 
-	@BeforeAll public static void initTesting()
+	@BeforeClass public static void initTesting()
 	{
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
