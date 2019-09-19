@@ -183,6 +183,15 @@ public class OnFailAnnotation extends ASTAnnotationAdapter implements TCAnnotati
 		}
 		
 		AStringLiteralExp fmt = (AStringLiteralExp)ast.getArgs().get(0);
-		System.out.printf(fmt.getValue().getValue() + " " + ast.getName().getLocation() + "\n", values);
+		String fmts = fmt.getValue().getValue();
+		String location = "";
+		
+		if (fmts.endsWith("$"))
+		{
+			 location = ast.getName().getLocation().toString();
+			 fmts = fmts.substring(0, fmts.length() - 1);
+		}
+					
+		System.out.printf(fmts + location + "\n", values);
 	}
 }
