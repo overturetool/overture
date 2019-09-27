@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import org.overture.ast.annotations.PAnnotation;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AAnnotatedUnaryExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ADefExp;
@@ -622,6 +623,16 @@ public class ExpressionReader extends SyntaxReader
 			LexException
 	{
 		PExp exp = readAnnotatedExpression();
+		PAnnotation annotation = null;
+		
+		if (exp instanceof AAnnotatedUnaryExp)
+		{
+			// Remember and re-apply the annotation while exp is rewired.
+			AAnnotatedUnaryExp ae = (AAnnotatedUnaryExp)exp;
+			annotation = ae.getAnnotation();
+			exp = ae.getExp();
+		}
+
 		boolean more = true;
 
 		while (more)
@@ -801,13 +812,18 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.COMP))
 		{
 			nextToken();
-			return AstFactory.newACompBinaryExp(exp, token, readApplicatorExpression());
+			exp = AstFactory.newACompBinaryExp(exp, token, readApplicatorExpression());
 		}
-
-		if (token.is(VDMToken.STARSTAR))
+		else if (token.is(VDMToken.STARSTAR))
 		{
 			nextToken();
-			return AstFactory.newAStarStarBinaryExp(exp, token, readEvaluatorP6Expression());
+			exp = AstFactory.newAStarStarBinaryExp(exp, token, readEvaluatorP6Expression());
+		}
+		
+		if (annotation != null)
+		{
+			// Re-apply annotation, now that exp has been rewired.
+			exp = AstFactory.newAAnnotatedUnaryExp(exp.getLocation(), annotation, exp);
 		}
 
 		return exp;
