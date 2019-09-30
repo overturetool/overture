@@ -1236,7 +1236,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			SNumericBinaryExp node, IPOContextStack question)
 			throws AnalysisException
 	{
-		IProofObligationList obligations = new ProofObligationList();
+		IProofObligationList obligations = getNonNilObligations(node, question);
 
 		PExp left = node.getLeft();
 		PExp right = node.getRight();
@@ -1631,11 +1631,33 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 	}
-
-	public IProofObligationList getCommonOrderedObligations(
-			SNumericBinaryExp exp, IPOContextStack ctxt) throws AnalysisException
+	
+	private IProofObligationList getNonNilObligations(
+			SNumericBinaryExp exp, IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
+		
+		if (exp.getLeft().getType() instanceof AOptionalType)
+		{
+			AOptionalType op = (AOptionalType)exp.getLeft().getType();
+			TypeCompatibilityObligation obligation = TypeCompatibilityObligation.newInstance(exp.getLeft(), op.getType(), op, question, aF);
+			obligations.add(obligation);
+		}
+		
+		if (exp.getRight().getType() instanceof AOptionalType)
+		{
+			AOptionalType op = (AOptionalType)exp.getRight().getType();
+			TypeCompatibilityObligation obligation = TypeCompatibilityObligation.newInstance(exp.getRight(), op.getType(), op, question, aF);
+			obligations.add(obligation);
+		}
+
+		return obligations;
+	}
+
+	private IProofObligationList getCommonOrderedObligations(
+			SNumericBinaryExp exp, IPOContextStack ctxt) throws AnalysisException
+	{
+		IProofObligationList obligations = getNonNilObligations(exp, ctxt);
 
 		List<PType> lset = new LinkedList<>();
 		List<PType> rset = new LinkedList<>();

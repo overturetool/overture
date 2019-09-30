@@ -86,4 +86,9 @@ public abstract class Annotation
 	{
 		return true;		// By default, type check the args
 	}
+
+	public boolean isBracketed()
+	{
+		return false;		// By default, don't require bracketed subexpressions
+	}
 }

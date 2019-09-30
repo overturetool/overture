@@ -3,8 +3,6 @@
 [![License](http://img.shields.io/:license-gpl3-blue.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0.html)
 [![Maven Central](https://img.shields.io/maven-central/v/org.overturetool/core.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.overturetool.core%22)
 
-
-
 ## General Information
 
 If you'd like general information about the Overture Project, we suggest you have a look at http://overturetool.org.
@@ -19,7 +17,6 @@ This directory contains several subdirectories:
 * The Overture IDE, based on Eclipse, is found in `ide`
 * Technical Documentation for Overture is in `documentation`
 
+## Release
 
-
-
-
+The release procedure is described [here](https://github.com/overturetool/overture/wiki/New-Release-Procedure).
