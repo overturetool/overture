@@ -287,6 +287,7 @@ abstract public class TypeChecker
 
 	public static void detail(String tag, Object obj)
 	{
+		if (suppress) return;
 		if (lastMessage != null)
 		{
 			lastMessage.add(tag + ": " + obj);
