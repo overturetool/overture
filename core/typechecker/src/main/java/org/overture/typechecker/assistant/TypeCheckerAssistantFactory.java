@@ -1039,4 +1039,10 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		}
 		return mulEqCheckr;
 	}
+
+	@Override
+	public IAnswer<String> getDetailedTypeDisplayer()
+	{
+		return new DetailedTypeDisplayer(this);
+	}
 }

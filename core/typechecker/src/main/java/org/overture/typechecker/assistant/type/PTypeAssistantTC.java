@@ -444,6 +444,17 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		}
 	}
 
+	public String toDetailedString(PType type)
+	{
+		try
+		{
+			return type.apply(af.getDetailedTypeDisplayer());
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
+	}
+
 	public boolean isProduct(PType type, int size, String fromModule)
 	{
 		try

@@ -28,6 +28,7 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -415,4 +416,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<ILexLocation,Boolean> getIsEqVisitor();
 
 	IQuestion<TypeCheckInfo> getMultipleEqualityChecker();
+
+	IAnswer<String> getDetailedTypeDisplayer();
 }

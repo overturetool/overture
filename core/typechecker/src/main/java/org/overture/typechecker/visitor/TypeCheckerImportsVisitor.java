@@ -90,13 +90,15 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 				checkKind(question.assistantFactory, expdef, istype, "type", node);
 				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
 
-				if (!question.assistantFactory.getTypeComparator().compatible(def.getType(), exptype))
+				// if (!question.assistantFactory.getTypeComparator().compatible(def.getType(), exptype))
+				String detail1 = question.assistantFactory.createPTypeAssistant().toDetailedString(def.getType());
+				String detail2 = question.assistantFactory.createPTypeAssistant().toDetailedString(exptype);
+				
+				if (!detail1.equals(detail2))
 				{
 					TypeCheckerErrors.report(3192, "Type import of " + name
 							+ " does not match export from " + from.getName(), node.getLocation(), node);
-					TypeCheckerErrors.detail2("Import", def.getType().toString() // TODO: .toDetailedString()
-					, "Export", exptype.toString()); // TODO:
-														// .toDetailedString());
+					TypeCheckerErrors.detail2("Import", detail1, "Export", detail2);
 				}
 			}
 		}
