@@ -418,39 +418,48 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		PExp right = AstFactoryTC.newAVariableExp(new LexNameToken("", "y", loc.clone()));
 
 		List<PPattern> params = new LinkedList<>();
-		params.add(new AstFactoryTC().newAIdentifierPattern(new LexNameToken("", "x", loc.clone())));
-		params.add(new AstFactoryTC().newAIdentifierPattern(new LexNameToken("", "y", loc.clone())));
+		params.add(AstFactory.newAIdentifierPattern(new LexNameToken("", "x", loc.clone())));
+		params.add(AstFactory.newAIdentifierPattern(new LexNameToken("", "y", loc.clone())));
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		parameters.add(params);
 
 		AIfExp maxBody = AstFactoryTC.newAIfExp(loc.clone(),
 				AstFactoryTC.newALessEqualNumericBinaryExp(left.clone(), new LexToken(loc.clone(), VDMToken.LE), right.clone()),
-				left.clone(),
+				right.clone(),
 				new LinkedList<>(),
-				right.clone());
+				left.clone());
 
-		PTypeList ptypes = getPTypes(typeDef);
+		// PTypeList ptypes = getPTypes(typeDef);
+		PTypeList ptypes = new PTypeList();
+		ptypes.add(AstFactory.newAUnresolvedType(typeDef.getName()));
+		ptypes.add(AstFactory.newAUnresolvedType(typeDef.getName()));
 
-		AFunctionType ftype = AstFactory.newAFunctionType(loc.clone(), false, ptypes, typeDef.getInvType().clone());
+
+		AFunctionType ftype = AstFactory.newAFunctionType(loc.clone(), false, ptypes, AstFactory.newAUnresolvedType(typeDef.getName()));
 		AExplicitFunctionDefinition maxD = AstFactory.newAExplicitFunctionDefinition(typeDef.getName().getMaxName(loc), NameScope.GLOBAL, null, ftype, parameters,
 				maxBody, null, null, true, null);
 		maxD.setAccess(typeDef.getAccess().clone()); // Same as type's
 		maxD.setClassDefinition(typeDef.getClassDefinition());
 		ordRelation.setMaxDef(maxD);
 
-		AIfExp minBody = maxBody.clone();
-		minBody.setThen(right.clone());
-		minBody.setElse(left.clone());
+		AIfExp minBody = AstFactoryTC.newAIfExp(loc.clone(),
+				AstFactoryTC.newALessEqualNumericBinaryExp(left.clone(), new LexToken(loc.clone(), VDMToken.LE), right.clone()),
+				left.clone(),
+				new LinkedList<>(),
+				right.clone());
 
+		// ptypes = getPTypes(typeDef);
+		ptypes = new PTypeList();
+		ptypes.add(AstFactory.newAUnresolvedType(typeDef.getName()));
+		ptypes.add(AstFactory.newAUnresolvedType(typeDef.getName()));
 
-		ptypes = getPTypes(typeDef);
 		List<PPattern> temp = new LinkedList<>();
 		for (PPattern a : parameters.get(0)) {
 			temp.add(a.clone());
 		}
 		List<List<PPattern>> parameters2 = new LinkedList<>();
 		parameters2.add((temp));
-		ftype = AstFactory.newAFunctionType(loc.clone(), false, ptypes, typeDef.getInvType().clone());
+		ftype = AstFactory.newAFunctionType(loc.clone(), false, ptypes, AstFactory.newAUnresolvedType(typeDef.getName()));
 
 		AExplicitFunctionDefinition minD = AstFactory.newAExplicitFunctionDefinition(typeDef.getName().getMinName(loc), NameScope.GLOBAL, null, ftype, parameters2,
 				minBody, null, null, true, null);
