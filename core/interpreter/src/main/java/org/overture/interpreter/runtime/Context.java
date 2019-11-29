@@ -335,6 +335,37 @@ public class Context extends LexNameTokenMap<Value>
 		return sb.toString();
 	}
 
+	/**
+	 * This is used by the stack overflow processing in Function/OperationValue.
+	 * It is intended to print the frame titles without recursing.
+	 * @param out
+	 */
+	
+	private static final int FRAMES_LIMIT = 100;
+	
+	public void printStackFrames(PrintWriter out)
+	{
+		Context frame = this;
+		out.print(format("\t", frame));
+		int count = 0;
+
+		while (frame.outer != null)
+		{
+			if (++count < FRAMES_LIMIT)
+			{
+				out.println("In context of " + frame.title + " " + frame.location);
+			}
+			else if (count == FRAMES_LIMIT)
+			{
+				out.println("...");
+			}
+			
+			frame = frame.outer;	// NB. DON'T RECURSE!
+		}
+
+		out.println("In context of " + frame.title);
+	}
+
 	public void printStackTrace(PrintWriter out, boolean variables)
 	{
 		if (outer == null) // Don't expand initial context

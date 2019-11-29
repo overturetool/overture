@@ -67,6 +67,7 @@ import org.overture.interpreter.messages.rtlog.RTOperationMessage;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -254,25 +255,51 @@ public class OperationValue extends Value
 		}
 	}
 
+	private static Integer stackUnwind		= null;
+	private static final int UNWIND_COUNT	= 20;	// Needed by printStackFrames
+	
+	private ContextException stackOverflow(ILexLocation location, StackOverflowError e, Context ctxt)
+	{
+		if (stackUnwind == null)	// First time
+		{
+			stackUnwind = new Integer(UNWIND_COUNT);
+		}
+		else if (--stackUnwind <= 0)
+		{
+			Console.out.printf("Stack overflow %s\n", location);
+			ctxt.printStackFrames(Console.out);
+			return new ContextException(4174, "Stack overflow", location, ctxt);
+		}
+		
+		throw e;	// Unwind further to make space for printStackFrames
+	}
+
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
 			throws AnalysisException
 	{
-		// Note args cannot be Updateable, so we convert them here. This means
-		// that TransactionValues pass the local "new" value to the far end.
-		ValueList constValues = argValues.getConstant();
-
-		if (Settings.dialect == Dialect.VDM_RT)
+		try
 		{
-			if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))
+			// Note args cannot be Updateable, so we convert them here. This means
+			// that TransactionValues pass the local "new" value to the far end.
+			ValueList constValues = argValues.getConstant();
+
+			if (Settings.dialect == Dialect.VDM_RT)
 			{
-				return asyncEval(constValues, ctxt);
+				if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))
+				{
+					return asyncEval(constValues, ctxt);
+				} else
+				{
+					return localEval(from, constValues, ctxt, true);
+				}
 			} else
 			{
 				return localEval(from, constValues, ctxt, true);
 			}
-		} else
+		}
+		catch (StackOverflowError e)
 		{
-			return localEval(from, constValues, ctxt, true);
+			throw stackOverflow(from, e, ctxt);
 		}
 	}
 
