@@ -313,7 +313,16 @@ public class VDMPP extends VDMJ
 		} catch (ContextException e)
 		{
 			println("Initialization: " + e);
-			e.ctxt.printStackTrace(Console.out, true);
+			
+			if (e.isStackOverflow())
+			{
+				e.ctxt.printStackFrames(Console.out);
+			}
+			else
+			{
+				e.ctxt.printStackTrace(Console.out, true);
+			}
+			
 			dumpLogs();
 			return ExitStatus.EXIT_ERRORS;
 		} catch (Exception e)
@@ -348,7 +357,15 @@ public class VDMPP extends VDMJ
 		} catch (ContextException e)
 		{
 			println("Execution: " + e);
-			e.ctxt.printStackTrace(Console.out, true);
+			
+			if (e.isStackOverflow())
+			{
+				e.ctxt.printStackFrames(Console.out);
+			}
+			else
+			{
+				e.ctxt.printStackTrace(Console.out, true);
+			}
 		} catch (Exception e)
 		{
 			println("Execution: " + e);

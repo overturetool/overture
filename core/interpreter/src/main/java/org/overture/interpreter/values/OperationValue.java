@@ -255,25 +255,6 @@ public class OperationValue extends Value
 		}
 	}
 
-	private static Integer stackUnwind		= null;
-	private static final int UNWIND_COUNT	= 20;	// Needed by printStackFrames
-	
-	private ContextException stackOverflow(ILexLocation location, StackOverflowError e, Context ctxt)
-	{
-		if (stackUnwind == null)	// First time
-		{
-			stackUnwind = new Integer(UNWIND_COUNT);
-		}
-		else if (--stackUnwind <= 0)
-		{
-			Console.out.printf("Stack overflow %s\n", location);
-			ctxt.printStackFrames(Console.out);
-			return new ContextException(4174, "Stack overflow", location, ctxt);
-		}
-		
-		throw e;	// Unwind further to make space for printStackFrames
-	}
-
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
 			throws AnalysisException
 	{
@@ -299,7 +280,7 @@ public class OperationValue extends Value
 		}
 		catch (StackOverflowError e)
 		{
-			throw stackOverflow(from, e, ctxt);
+			throw new ContextException(4174, "Stack overflow", from, ctxt);
 		}
 	}
 

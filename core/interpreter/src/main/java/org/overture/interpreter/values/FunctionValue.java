@@ -270,25 +270,6 @@ public class FunctionValue extends Value
 		return type.toString();
 	}
 
-	private static Integer stackUnwind		= null;
-	private static final int UNWIND_COUNT	= 20;	// Needed by printStackFrames
-	
-	private ContextException stackOverflow(StackOverflowError e, Context ctxt)
-	{
-		if (stackUnwind == null)	// First time
-		{
-			stackUnwind = new Integer(UNWIND_COUNT);
-		}
-		else if (--stackUnwind <= 0)
-		{
-			Console.out.printf("Stack overflow %s\n", location);
-			ctxt.printStackFrames(Console.out);
-			return new ContextException(4174, "Stack overflow", location, ctxt);
-		}
-		
-		throw e;	// Unwind further to make space for printStackFrames
-	}
-
 	public Value eval(ILexLocation from, Value arg, Context ctxt)
 			throws AnalysisException
 	{
@@ -299,7 +280,7 @@ public class FunctionValue extends Value
 		}
 		catch (StackOverflowError e)
 		{
-			throw stackOverflow(e, ctxt);
+			throw new ContextException(4174, "Stack overflow", location, ctxt);
 		}
 	}
 
@@ -312,7 +293,7 @@ public class FunctionValue extends Value
 		}
 		catch (StackOverflowError e)
 		{
-			throw stackOverflow(e, ctxt);
+			throw new ContextException(4174, "Stack overflow", location, ctxt);
 		}
 	}
 
@@ -337,8 +318,6 @@ public class FunctionValue extends Value
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt,
 			Context sctxt) throws AnalysisException
 	{
-		stackUnwind = null;
-
 		if (uninstantiated)
 		{
 			abort(3033, "Polymorphic function has not been instantiated: "

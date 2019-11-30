@@ -460,7 +460,16 @@ public class DBGPReader
 				} catch (ContextException e)
 				{
 					System.out.println("Initialization: " + e);
-					e.ctxt.printStackTrace(Console.out, true);
+					
+					if (e.isStackOverflow())
+					{
+						e.ctxt.printStackFrames(Console.out);
+					}
+					else
+					{
+						e.ctxt.printStackTrace(Console.out, true);
+					}
+					
 					RTLogger.dump(true);
 					System.exit(3);
 				} catch (Exception e)

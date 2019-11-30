@@ -160,6 +160,13 @@ public class AModuleModulesAssistantInterpreter extends
 					initialContext.putList(af.createPDefinitionAssistant().getNamedValues(d, initialContext));
 				} catch (ContextException e)
 				{
+					if (e.isStackOverflow())	// Stack overflow returns immediately
+					{
+						trouble.clear();
+						trouble.add(e);
+						return trouble;
+					}
+
 					trouble.add(e); // Carry on...
 				}
 			}
@@ -172,6 +179,13 @@ public class AModuleModulesAssistantInterpreter extends
 				initialContext.putList(af.createPDefinitionAssistant().getNamedValues(d, initialContext));
 			} catch (ContextException e)
 			{
+				if (e.isStackOverflow())	// Stack overflow returns immediately
+				{
+					trouble.clear();
+					trouble.add(e);
+					return trouble;
+				}
+
 				trouble.add(e); // Carry on...
 			}
 		}
@@ -186,6 +200,13 @@ public class AModuleModulesAssistantInterpreter extends
 			}
 		} catch (ContextException e)
 		{
+			if (e.isStackOverflow())	// Stack overflow returns immediately
+			{
+				trouble.clear();
+				trouble.add(e);
+				return trouble;
+			}
+
 			trouble.add(e); // Carry on...
 		}
 
