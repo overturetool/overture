@@ -351,7 +351,10 @@ public abstract class SyntaxReader
 				}
 				catch (Exception e)
 				{
-					// ignore - comment is not parsable
+					if (System.getProperty("annotations.debug") != null)
+					{
+						System.err.println("Annotations: " + e);
+					}
 				}
 			}
 		}

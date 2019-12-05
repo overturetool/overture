@@ -44,7 +44,6 @@ public class ASTAnnotationAdapter extends Annotation implements ASTAnnotation
 
 	protected void parseException(String message, ILexLocation location) throws LexException
 	{
-		System.err.println("Malformed @Annotation: " + message + " " + location);
 		throw new LexException(0, "Malformed @Annotation: " + message, (LexLocation) location);
 	}
 	
@@ -73,7 +72,7 @@ public class ASTAnnotationAdapter extends Annotation implements ASTAnnotation
 	
 			if (ltr.getLast().isNot(VDMToken.KET))
 			{
-				parseException("Malformed @Annotation", ltr.getLast().getLocation());
+				parseException("Expecting ')' after annotation", ltr.getLast().getLocation());
 			}
 		}
 		
