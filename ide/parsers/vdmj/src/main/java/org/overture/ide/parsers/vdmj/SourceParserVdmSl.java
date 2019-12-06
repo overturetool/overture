@@ -48,6 +48,7 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 	{
 		file.setType(IVdmSourceUnit.VDM_MODULE_SPEC);
 		Settings.dialect = Dialect.VDM_SL;
+		System.setProperty("VDM_SL", "1");
 		try
 		{
 			Settings.release = file.getProject().getLanguageVersion();

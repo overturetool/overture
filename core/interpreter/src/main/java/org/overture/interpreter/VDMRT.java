@@ -34,6 +34,7 @@ public class VDMRT extends VDMPP
 	public VDMRT()
 	{
 		Settings.dialect = Dialect.VDM_RT;
+		System.setProperty("VDM_RT", "1");
 	}
 
 	@Override

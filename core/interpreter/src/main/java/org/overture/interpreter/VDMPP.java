@@ -68,6 +68,7 @@ public class VDMPP extends VDMJ
 	{
 		super();
 		Settings.dialect = Dialect.VDM_PP;
+		System.setProperty("VDM_PP", "1");
 	}
 
 	/**

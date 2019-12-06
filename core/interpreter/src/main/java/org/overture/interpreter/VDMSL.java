@@ -63,6 +63,7 @@ public class VDMSL extends VDMJ
 	public VDMSL()
 	{
 		Settings.dialect = Dialect.VDM_SL;
+		System.setProperty("VDM_SL", "1");
 	}
 
 	/**

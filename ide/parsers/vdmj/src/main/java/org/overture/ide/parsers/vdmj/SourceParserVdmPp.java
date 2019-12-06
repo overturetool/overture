@@ -47,6 +47,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			String charset)
 	{
 		Settings.dialect = Dialect.VDM_PP;
+		System.setProperty("VDM_PP", "1");
 		return startParseFile(file, source, charset);
 	}
 
