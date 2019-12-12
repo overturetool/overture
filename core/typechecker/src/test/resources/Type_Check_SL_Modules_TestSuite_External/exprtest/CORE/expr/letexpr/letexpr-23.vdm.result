@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="27" line="24" message="Definition 'c' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
-<message column="13" line="32" message="Definition 'init_i' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
-<message column="13" line="28" message="Definition 'post_h' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
-<message column="13" line="24" message="Definition 'pre_g' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
-<message column="15" line="20" message="Definition 'inv_f' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
+<message column="26" line="24" message="Definition 'c' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
+<message column="13" line="32" message="Definition 'ini_i' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
+<message column="13" line="28" message="Definition 'po_h' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
+<message column="13" line="24" message="Definition 'pr_g' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
+<message column="15" line="20" message="Definition 'iv_f' not used" messageType="warning" number="5000" resource="letexpr-23.vdm"/>
 <message column="14" line="11" message="Left hand of &lt; is not ordered" messageType="error" number="3139" resource="letexpr-23.vdm"/>
 <result/>
 </testResult>

@@ -1038,7 +1038,7 @@ public class ExpressionReader extends SyntaxReader
 		do
 		{
 			checkFor(VDMToken.COMMA, 2128, "Expecting comma separated record modifiers");
-			LexIdentifierToken id = readIdToken("Expecting <identifier> |-> <expression>");
+			LexIdentifierToken id = readIdToken("Expecting <identifier> |-> <expression>", true);
 			checkFor(VDMToken.MAPLET, 2129, "Expecting <identifier> |-> <expression>");
 			args.add(AstFactory.newARecordModifier(id, readExpression()));
 		} while (lastToken().is(VDMToken.COMMA));

@@ -393,7 +393,7 @@ public class StatementReader extends SyntaxReader
 
 	private PStm readSimpleCallStatement() throws ParserException, LexException
 	{
-		LexNameToken name = readNameToken("Expecting operation name in call statement");
+		LexNameToken name = readNameToken("Expecting operation name in call statement", true);
 
 		checkFor(VDMToken.BRA, 2206, "Expecting '(' after call operation name");
 		List<PExp> args = new Vector<PExp>();
