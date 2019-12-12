@@ -706,7 +706,7 @@ public class ModuleReader extends SyntaxReader
 
 		if (ignore(VDMToken.RENAMED))
 		{
-			renamed = readNameToken("Expected renamed function name");
+			renamed = readNameToken("Expected renamed function name", true);
 		}
 
 		return AstFactory.newAFunctionValueImport(defname, type, typeParams, renamed);
@@ -751,7 +751,7 @@ public class ModuleReader extends SyntaxReader
 
 		if (ignore(VDMToken.RENAMED))
 		{
-			renamed = readNameToken("Expected renamed operation name");
+			renamed = readNameToken("Expected renamed operation name", false);
 		}
 
 		return AstFactory.newAOperationValueImport(defname, type, renamed);
