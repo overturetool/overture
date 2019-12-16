@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="3" line="21" message="Recursive function has no measure" messageType="warning" number="5012" resource="extexplfndef.vdm"/>
+<message column="55" line="29" message="Type @A must be a union" messageType="warning" number="5031" resource="extexplfndef.vdm"/>
+<message column="55" line="29" message="Type @A must be a union" messageType="warning" number="5031" resource="extexplfndef.vdm"/>
 <message column="58" line="29" message="Definition 's' not used" messageType="warning" number="5000" resource="extexplfndef.vdm"/>
 <message column="14" line="39" message="Definition 'n' not used" messageType="warning" number="5000" resource="extexplfndef.vdm"/>
 <message column="27" line="72" message="Definition 'n3' not used" messageType="warning" number="5000" resource="extexplfndef.vdm"/>
-<message column="12" line="32" message="Left and right of '=' are incompatible types" messageType="error" number="3087" resource="extexplfndef.vdm"/>
 <message column="3" line="46" message="Too many curried parameters" messageType="error" number="3022" resource="extexplfndef.vdm"/>
 <message column="6" line="48" message="Left hand of + is not numeric" messageType="error" number="3139" resource="extexplfndef.vdm"/>
 <message column="6" line="48" message="Right hand of + is not numeric" messageType="error" number="3140" resource="extexplfndef.vdm"/>

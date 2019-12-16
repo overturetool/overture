@@ -43,21 +43,38 @@ public class LexNameTokenAssistant implements IAstAssistant
 
 		ILexNameToken lother = (ILexNameToken) other;
 
-		if (token.getTypeQualifier() != null
-				&& lother.getTypeQualifier() != null)
-		{
-			if (!af.getTypeComparator().compatible(token.getTypeQualifier(), lother.getTypeQualifier()))
-			{
-				return false;
-			}
-		} else if (token.getTypeQualifier() != null
-				&& lother.getTypeQualifier() == null
-				|| token.getTypeQualifier() == null
-				&& lother.getTypeQualifier() != null)
+//		if (token.getTypeQualifier() != null
+//				&& lother.getTypeQualifier() != null)
+//		{
+//			if (!af.getTypeComparator().compatible(token.getTypeQualifier(), lother.getTypeQualifier()))
+//			{
+//				return false;
+//			}
+//		} else if (token.getTypeQualifier() != null
+//				&& lother.getTypeQualifier() == null
+//				|| token.getTypeQualifier() == null
+//				&& lother.getTypeQualifier() != null)
+//		{
+//			return false;
+//		}
+//
+//		return token.matches(lother);
+
+		if (!token.matches(lother))
 		{
 			return false;
 		}
-
-		return token.matches(lother);
+		else if (token.getTypeQualifier() != null
+				&& lother.getTypeQualifier() != null)
+		{
+			return af.getTypeComparator().compatible(token.getTypeQualifier(), lother.getTypeQualifier());
+		}
+		else
+		{
+			return !(token.getTypeQualifier() != null
+					&& lother.getTypeQualifier() == null
+					|| token.getTypeQualifier() == null
+					&& lother.getTypeQualifier() != null);
+		}
 	}
 }
