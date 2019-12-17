@@ -28,6 +28,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -72,7 +73,8 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 			
 			if (expdef != null)
 			{
-				boolean istype = question.assistantFactory.createPDefinitionAssistant().isTypeDefinition(expdef);
+				boolean istype = question.assistantFactory.createPDefinitionAssistant().isTypeDefinition(expdef)
+						|| expdef instanceof AStateDefinition;	// State record imports are allowed
 				checkKind(question.assistantFactory, expdef, istype, "type", node);
 			}
 		}
