@@ -92,7 +92,19 @@ public class LatexStreamReader extends InputStreamReader
 
 					suppressLine = true;
 				}
-				else if (trimmed.startsWith("#else"))
+				else if (trimmed.startsWith("#ifndef"))
+				{
+					String label = trimmed.substring(7).trim();
+					ifstack.push(supress);
+
+					if (!supress && System.getProperty(label) != null)
+					{
+						supress = true;
+					}
+
+					suppressLine = true;
+				}
+				else if (trimmed.startsWith("#else") && !ifstack.isEmpty())
 				{
 					if (!ifstack.peek())
 					{
@@ -100,7 +112,7 @@ public class LatexStreamReader extends InputStreamReader
 						suppressLine = true;
 					}
 				}
-				else if (trimmed.startsWith("#endif"))
+				else if (trimmed.startsWith("#endif") && !ifstack.isEmpty())
 				{
 					supress = ifstack.pop();
 					suppressLine = true;
