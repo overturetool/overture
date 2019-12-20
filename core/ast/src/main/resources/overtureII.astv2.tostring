@@ -82,7 +82,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->#Map->mapComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
 %exp->#Map->mapEnum = "" + $($[members]$.isEmpty() ? "{|->}" : "{" + Utils.listToString($[members]$) + "}") + ""$
  
-%exp->#Seq->seqComp = "[" [first] " | "  [setBind] + $($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
+%exp->#Seq->seqComp = "[" [first] " | " + $($[seqBind]$ == null ? $[setBind]$ : $[seqBind]$) + ($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
 %exp->#Seq->seqEnum = "" + $Utils.listToString("[", $[members]$, ", ", "]")$
 
 %exp->#Set->setComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
