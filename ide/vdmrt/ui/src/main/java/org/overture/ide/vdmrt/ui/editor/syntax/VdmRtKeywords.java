@@ -26,7 +26,7 @@ import org.overture.ide.ui.editor.syntax.IVdmKeywords;
 public class  VdmRtKeywords implements IVdmKeywords {
 
 	public static final String[] reservedwords = {
-	      "#act", "#active", "#else", "#endif", "#fin", "#ifdef", "#req", "#waiting",
+	      "#act", "#active", "#else", "#endif", "#fin", "#ifdef", "#ifndef", "#req", "#waiting",
 	      "abs", "all", "always", "and", "async", "atomic",
 	      "be", "bool", "by", "card", "cases", "char",
 	      "class", "comp", "compose", "conc",
