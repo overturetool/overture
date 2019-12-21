@@ -366,7 +366,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		List<PType> atypes = getArgTypes(node.getArgs(), THIS, question);
 		node.getField().setTypeQualifier(atypes);
 		PDefinition fdef = classenv.findName(node.getField(), question.scope);
-		
+		node.setFieldDef(fdef);
+
 		AClassTypeAssistantTC assist = question.assistantFactory.createAClassTypeAssistant();
 
 		if (assist.isConstructor(fdef) && !assist.inConstructor(question.env))
@@ -1460,7 +1461,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		try
 		{
-			return statement.apply(question.assistantFactory.getExitTypeCollector());
+			return statement.apply(question.assistantFactory.getExitTypeCollector(), question.env);
 		} catch (AnalysisException e)
 		{
 			return new PTypeSet(question.assistantFactory);

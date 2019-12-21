@@ -95,6 +95,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ExcludedDefinitions;
 import org.overture.typechecker.FlatCheckedEnvironment;
@@ -838,6 +839,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			local.unusedCheck();
 		}
 
+		if (node.getPossibleExceptions() == null)
+		{
+			node.setPossibleExceptions(new PTypeSet(question.assistantFactory));
+			IQuestionAnswer<Environment, PTypeSet> collector = question.assistantFactory.getExitTypeCollector();
+			node.setPossibleExceptions(node.getBody().apply(collector, question.env));
+		}
+
 		node.setType(node.getType());
 		afterAnnotations(node.getAnnotations(), node, question);
 		return node.getType();
@@ -1130,6 +1138,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				&& !(node.getBody() instanceof ASubclassResponsibilityStm))
 		{
 			local.unusedCheck();
+		}
+
+		if (node.getPossibleExceptions() == null && node.getBody() != null)
+		{
+			node.setPossibleExceptions(new PTypeSet(question.assistantFactory));
+			IQuestionAnswer<Environment, PTypeSet> collector = question.assistantFactory.getExitTypeCollector();
+			node.setPossibleExceptions(node.getBody().apply(collector, question.env));
 		}
 
 		// node.setType(node.getActualResult());

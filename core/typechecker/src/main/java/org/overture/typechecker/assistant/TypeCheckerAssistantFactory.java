@@ -666,7 +666,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 		return new SelfDefinitionFinder(this);
 	}
 
-	@Override public IAnswer<PTypeSet> getExitTypeCollector()
+	@Override public IQuestionAnswer<Environment, PTypeSet> getExitTypeCollector()
 	{
 		return new ExitTypeCollector(this);
 	}

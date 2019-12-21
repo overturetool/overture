@@ -23,6 +23,7 @@ Tokens
   comment = 'java:org.overture.ast.intf.lex.ILexComment';
   comments = 'java:org.overture.ast.intf.lex.ILexCommentList';
   annotationimpl = 'java:org.overture.ast.annotations.Annotation';
+  typeset = 'java:org.overture.ast.util.PTypeSet';
   
   clonableFile ='java:org.overture.ast.util.ClonableFile';
   clonableString ='java:org.overture.ast.util.ClonableString';
@@ -452,6 +453,7 @@ definition {-> package='org.overture.ast.definitions'
     |	(state):definition.state
     |	(actualResult):type
     |	[isConstructor]:java_Boolean
+    |	[possibleExceptions]:typeset
     }
 	=	{explicit}
 			[parameterPatterns]:pattern* 
@@ -597,6 +599,7 @@ stm {-> package='org.overture.ast.statements'
     |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
     |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken 
                      [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
+                     [fieldDef]:definition
     |   {call} [name]:LexNameToken [args]:exp* (rootdef):definition
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken (invDefs):definition*

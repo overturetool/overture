@@ -21,10 +21,12 @@
  */
 package org.overture.typechecker.utilities;
 
-import java.util.Collection;
-
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AAlwaysStm;
@@ -42,14 +44,16 @@ import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
-import org.overture.ast.types.PType;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -57,9 +61,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * 
  * @author kel
  */
-public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
+public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeSet>
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public ExitTypeCollector(ITypeCheckerAssistantFactory af)
@@ -68,17 +71,17 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	}
 
 	@Override
-	public PTypeSet caseAAlwaysStm(AAlwaysStm statement)
+	public PTypeSet caseAAlwaysStm(AAlwaysStm statement, Environment env)
 			throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet(af);
-		types.addAll(statement.getBody().apply(THIS));
-		types.addAll(statement.getAlways().apply(THIS));
+		types.addAll(statement.getBody().apply(THIS, env));
+		types.addAll(statement.getAlways().apply(THIS, env));
 		return types;
 	}
 
 	@Override
-	public PTypeSet caseAAssignmentStm(AAssignmentStm statement)
+	public PTypeSet caseAAssignmentStm(AAssignmentStm statement, Environment env)
 			throws AnalysisException
 	{
 		// TODO We don't know what an expression call will raise
@@ -86,56 +89,137 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	}
 
 	@Override
-	public PTypeSet caseACallStm(ACallStm statement) throws AnalysisException
+	public PTypeSet caseACallStm(ACallStm statement, Environment env) throws AnalysisException
 	{
-		// TODO We don't know what an operation call will raise
+		PDefinition opdef = env.findName(statement.getName(), NameScope.GLOBAL);
+
+		if (opdef != null)
+		{
+			if (opdef instanceof AExplicitOperationDefinition)
+			{
+				AExplicitOperationDefinition explop = (AExplicitOperationDefinition)opdef;
+
+				if (explop.getPossibleExceptions() == null)
+				{
+					explop.setPossibleExceptions(new PTypeSet(af));
+					IQuestionAnswer<Environment, PTypeSet> collector = af.getExitTypeCollector();
+					explop.setPossibleExceptions(explop.getBody().apply(collector, env));
+				}
+
+				return explop.getPossibleExceptions();
+			}
+			else if (opdef instanceof AImplicitOperationDefinition)
+			{
+				AImplicitOperationDefinition implop = (AImplicitOperationDefinition)opdef;
+
+				if (implop.getPossibleExceptions() == null)
+				{
+					if (implop.getBody() != null)
+					{
+						implop.setPossibleExceptions(new PTypeSet(af));
+						IQuestionAnswer<Environment, PTypeSet> collector = af.getExitTypeCollector();
+						implop.setPossibleExceptions(implop.getBody().apply(collector, env));
+					}
+					else
+					{
+						return new PTypeSet(af);
+					}
+				}
+
+				return implop.getPossibleExceptions();
+			}
+		}
+
 		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 	}
 
 	@Override
-	public PTypeSet caseACallObjectStm(ACallObjectStm statement)
+	public PTypeSet caseACallObjectStm(ACallObjectStm statement, Environment env)
 			throws AnalysisException
 	{
-		// TODO We don't know what an operation call will raise
+		PDefinition fdef = statement.getFieldDef();
+
+		if (fdef != null)
+		{
+			if (fdef instanceof AExplicitOperationDefinition)
+			{
+				AExplicitOperationDefinition explop = (AExplicitOperationDefinition)fdef;
+
+				if (explop.getPossibleExceptions() == null)
+				{
+					explop.setPossibleExceptions(new PTypeSet(af));
+					IQuestionAnswer<Environment, PTypeSet> collector = af.getExitTypeCollector();
+					explop.setPossibleExceptions(explop.getBody().apply(collector, env));
+				}
+
+				return explop.getPossibleExceptions();
+			}
+			else if (fdef instanceof AImplicitOperationDefinition)
+			{
+				AImplicitOperationDefinition implop = (AImplicitOperationDefinition)fdef;
+
+				if (implop.getPossibleExceptions() == null)
+				{
+					if (implop.getBody() != null)
+					{
+						implop.setPossibleExceptions(new PTypeSet(af));
+						IQuestionAnswer<Environment, PTypeSet> collector = af.getExitTypeCollector();
+						implop.setPossibleExceptions(implop.getBody().apply(collector, env));
+					}
+					else
+					{
+						return new PTypeSet(af);
+					}
+				}
+
+				return implop.getPossibleExceptions();
+			}
+		}
+
 		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 	}
 
 	@Override
-	public PTypeSet caseACasesStm(ACasesStm statement) throws AnalysisException
+	public PTypeSet caseACasesStm(ACasesStm statement, Environment env) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet(af);
 
 		for (ACaseAlternativeStm c : statement.getCases())
 		{
-			types.addAll(c.apply(THIS));
+			types.addAll(c.apply(THIS, env));
 		}
 
 		return types;
 	}
 
 	@Override
-	public PTypeSet caseACaseAlternativeStm(ACaseAlternativeStm statement)
+	public PTypeSet caseACaseAlternativeStm(ACaseAlternativeStm statement, Environment env)
 			throws AnalysisException
 	{
-		return statement.getResult().apply(THIS);
+		return statement.getResult().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet caseAElseIfStm(AElseIfStm statement)
+	public PTypeSet caseAElseIfStm(AElseIfStm statement, Environment env)
 			throws AnalysisException
 	{
-		return statement.getThenStm().apply(THIS);
+		return statement.getThenStm().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet caseAExitStm(AExitStm statement) throws AnalysisException
+	public PTypeSet caseAExitStm(AExitStm statement, Environment env) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet(af);
 
 		if (statement.getExpression() == null)
 		{
 			types.add(AstFactory.newAVoidType(statement.getLocation()));
-		} else
+		}
+		else if (statement.getExpType() == null)
+		{
+			types.add(AstFactory.newAUnknownType(statement.getLocation()));
+		}
+		else
 		{
 			types.add(statement.getExpType());
 		}
@@ -144,60 +228,67 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	}
 
 	@Override
-	public PTypeSet caseAForAllStm(AForAllStm statement)
+	public PTypeSet caseAForAllStm(AForAllStm statement, Environment env)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS);
+		return statement.getStatement().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet caseAForIndexStm(AForIndexStm statement)
+	public PTypeSet caseAForIndexStm(AForIndexStm statement, Environment env)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS);
+		return statement.getStatement().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet caseAForPatternBindStm(AForPatternBindStm statement)
+	public PTypeSet caseAForPatternBindStm(AForPatternBindStm statement, Environment env)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS);
+		return statement.getStatement().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet caseAIfStm(AIfStm statement) throws AnalysisException
+	public PTypeSet caseAIfStm(AIfStm statement, Environment env) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet(af);
-		types.addAll(statement.getThenStm().apply(THIS));
+		types.addAll(statement.getThenStm().apply(THIS, env));
 
 		for (AElseIfStm stmt : statement.getElseIf())
 		{
-			types.addAll(stmt.apply(THIS));
+			types.addAll(stmt.apply(THIS, env));
 		}
 
 		if (statement.getElseStm() != null)
 		{
-			types.addAll(statement.getElseStm().apply(THIS));
+			types.addAll(statement.getElseStm().apply(THIS, env));
 		}
 
 		return types;
 	}
-
+	
 	@Override
-	public PTypeSet caseALetBeStStm(ALetBeStStm statement)
+	public PTypeSet caseASubclassResponsibilityStm(ASubclassResponsibilityStm statement, Environment question)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS);
+		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 	}
 
 	@Override
-	public PTypeSet caseALetStm(ALetStm statement) throws AnalysisException
+	public PTypeSet caseALetBeStStm(ALetBeStStm statement, Environment env)
+			throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS);
+		return statement.getStatement().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet caseAReturnStm(AReturnStm statement)
+	public PTypeSet caseALetStm(ALetStm statement, Environment env) throws AnalysisException
+	{
+		return statement.getStatement().apply(THIS, env);
+	}
+
+	@Override
+	public PTypeSet caseAReturnStm(AReturnStm statement, Environment env)
 			throws AnalysisException
 	{
 		if (statement.getExpression() != null)
@@ -211,72 +302,71 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	}
 
 	@Override
-	public PTypeSet defaultSSimpleBlockStm(SSimpleBlockStm statement)
+	public PTypeSet defaultSSimpleBlockStm(SSimpleBlockStm statement, Environment env)
 			throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet(af);
 
 		for (PStm stmt : statement.getStatements())
 		{
-			types.addAll(stmt.apply(THIS));
+			types.addAll(stmt.apply(THIS, env));
 		}
 
 		return types;
 	}
 
 	@Override
-	public PTypeSet caseATixeStm(ATixeStm statement) throws AnalysisException
+	public PTypeSet caseATixeStm(ATixeStm statement, Environment env) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet(af);
-		types.addAll(statement.getBody().apply(THIS));
+		types.addAll(statement.getBody().apply(THIS, env));
 
 		for (ATixeStmtAlternative tsa : statement.getTraps())
 		{
-			types.addAll(exitCheck(tsa));
+			types.addAll(exitCheck(tsa, env));
 		}
 
 		return types;
 	}
 
-	private Collection<? extends PType> exitCheck(ATixeStmtAlternative tsa)
+	private PTypeSet exitCheck(ATixeStmtAlternative tsa, Environment env)
 			throws AnalysisException
 	{
-		return tsa.getStatement().apply(THIS);
+		return tsa.getStatement().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet caseATrapStm(ATrapStm statement) throws AnalysisException
+	public PTypeSet caseATrapStm(ATrapStm statement, Environment env) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet(af);
-		types.addAll(statement.getBody().apply(THIS));
-		types.addAll(statement.getWith().apply(THIS));
+		types.addAll(statement.getBody().apply(THIS, env));
+		types.addAll(statement.getWith().apply(THIS, env));
 		return types;
 	}
 
 	@Override
-	public PTypeSet caseAWhileStm(AWhileStm statement) throws AnalysisException
+	public PTypeSet caseAWhileStm(AWhileStm statement, Environment env) throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS);
+		return statement.getStatement().apply(THIS, env);
 	}
 
 	@Override
-	public PTypeSet defaultPStm(PStm statement) throws AnalysisException
+	public PTypeSet defaultPStm(PStm statement, Environment env) throws AnalysisException
 	{
 		return new PTypeSet(af);
 	}
 
 	@Override
-	public PTypeSet createNewReturnValue(INode node)
+	public PTypeSet createNewReturnValue(INode node, Environment env)
 	{
 		assert false : "should not happen";
 		return null;
 	}
 
 	@Override
-	public PTypeSet createNewReturnValue(Object node)
+	public PTypeSet createNewReturnValue(Object node, Environment env)
 	{
 		assert false : "should not happen";
 		return null;
 	}
-
 }

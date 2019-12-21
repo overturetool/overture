@@ -380,7 +380,7 @@ public class CentralResource {
 
   public Boolean Withdrawal(final Number accountId, final Number cardId, final Number amount) {
 
-    if (IsLegalCard(accountId, cardId)) {
+    if (super.IsLegalCard(accountId, cardId)) {
       return ((Account) Utils.get(accounts, accountId)).Withdrawal(cardId, amount, clock.GetDate());
     } else {
       return false;
@@ -389,7 +389,7 @@ public class CentralResource {
 
   public Boolean PostStatement(final Number accountId, final Number cardId) {
 
-    if (IsLegalCard(accountId, cardId)) {
+    if (super.IsLegalCard(accountId, cardId)) {
       letterbox.PostStatement(
           ((Account) Utils.get(accounts, accountId)).MakeStatement(cardId, clock.GetDate()));
       return true;
@@ -608,7 +608,7 @@ public class Till {
 
     final Number cardId = curCard.GetCardId();
     final Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
-    final Boolean cardLegal = IsLegalCard();
+    final Boolean cardLegal = super.IsLegalCard();
     {
       Boolean andResult_5 = false;
 
