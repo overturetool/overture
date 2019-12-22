@@ -1814,9 +1814,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		def.setClassDefinition(node.getClassDefinition() == null ? null : node.getClassDefinition().clone());
 		def.setAccess(node.getAccess().clone());
 		question.assistantFactory.createPDefinitionAssistant().typeResolve(def, THIS, question);
-		def.apply(THIS, question);
-		
+
 		node.setMeasureDef(def);
+		def.apply(THIS, question);
 	}
 
 	/**
