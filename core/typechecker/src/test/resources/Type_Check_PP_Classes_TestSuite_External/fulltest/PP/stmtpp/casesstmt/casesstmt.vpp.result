@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="12" line="8" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt.vpp"/>
 <message column="7" line="8" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesstmt.vpp"/>
+<message column="12" line="8" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt.vpp"/>
 <message column="7" line="9" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp"/>
 <message column="12" line="4" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp"/>
 <message column="7" line="14" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt.vpp"/>
