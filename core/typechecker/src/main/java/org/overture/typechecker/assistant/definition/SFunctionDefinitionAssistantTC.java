@@ -114,7 +114,7 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 		return list;
 	}
 
-	private PDefinition findModuleDefinition(ILexNameToken sought, List<AModuleModules> modules)
+	public PDefinition findModuleDefinition(ILexNameToken sought, List<AModuleModules> modules)
 	{
 		for (AModuleModules module: modules)
 		{
@@ -142,7 +142,7 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 		return list;
 	}
 
-	private PDefinition findClassDefinition(ILexNameToken sought, List<SClassDefinition> classes)
+	public PDefinition findClassDefinition(ILexNameToken sought, List<SClassDefinition> classes)
 	{
 		for (SClassDefinition clazz: classes)
 		{

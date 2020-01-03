@@ -23,6 +23,7 @@
 
 package org.overture.typechecker.utilities.expression;
 
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -33,6 +34,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AAnnotatedUnaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACaseAlternative;
@@ -79,6 +81,7 @@ import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameSet;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASeqBind;
 import org.overture.ast.patterns.ASeqMultipleBind;
@@ -87,11 +90,31 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
 
 /**
  */
 public class ApplyFinder extends AnswerAdaptor<Set<ILexNameToken>>
 {
+	private final SFunctionDefinitionAssistantTC assistant;
+	private List<SClassDefinition> classes = null;
+	private List<AModuleModules> modules = null;
+	
+	public ApplyFinder(SFunctionDefinitionAssistantTC assistant)
+	{
+		this.assistant = assistant;
+	}
+
+	public void setClasses(List<SClassDefinition> classes)
+	{
+		this.classes = classes;
+	}
+
+	public void setModules(List<AModuleModules> modules)
+	{
+		this.modules = modules;
+	}
+
 	@Override
 	public Set<ILexNameToken> caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node) throws AnalysisException
@@ -143,7 +166,7 @@ public class ApplyFinder extends AnswerAdaptor<Set<ILexNameToken>>
 		if (node.getRoot() instanceof AVariableExp)
 		{
 			AVariableExp vexp = (AVariableExp)node.getRoot();
-			result.add(vexp.getName());
+			result.add(lookupDefName(vexp.getName()));
 		}
 		else if (node.getRoot() instanceof AFuncInstatiationExp)
 		{
@@ -152,7 +175,7 @@ public class ApplyFinder extends AnswerAdaptor<Set<ILexNameToken>>
 			if (fie.getFunction() instanceof AVariableExp)
 			{
 				AVariableExp vexp = (AVariableExp)fie.getFunction();
-				result.add(vexp.getName());
+				result.add(lookupDefName(vexp.getName()));
 			}
 		}
 
@@ -166,7 +189,25 @@ public class ApplyFinder extends AnswerAdaptor<Set<ILexNameToken>>
 		return result;
 	}
 
- 	@Override
+ 	private ILexNameToken lookupDefName(ILexNameToken sought)
+	{
+ 		if (classes != null)
+ 		{
+ 			PDefinition def = assistant.findClassDefinition(sought, classes);
+ 			return def == null ? sought : def.getName();
+ 		}
+ 		else if (modules != null)
+ 		{
+ 			PDefinition def = assistant.findModuleDefinition(sought, modules);
+ 			return def == null ? sought : def.getName();
+ 		}
+ 		else
+ 		{
+ 			return sought;
+ 		}
+	}
+
+	@Override
  	public Set<ILexNameToken> caseAAnnotatedUnaryExp(AAnnotatedUnaryExp node) throws AnalysisException
  	{
  		return node.getExp().apply(this);

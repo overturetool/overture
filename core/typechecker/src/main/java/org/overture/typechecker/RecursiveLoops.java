@@ -96,10 +96,9 @@ public class RecursiveLoops
 		}
 	}
 
-	private Map<ILexNameToken, Set<ILexNameToken>> getCallMap()
+	private Map<ILexNameToken, Set<ILexNameToken>> getCallMap(ApplyFinder finder)
 	{
 		Map<ILexNameToken, Set<ILexNameToken>> callmap = new HashMap<ILexNameToken, Set<ILexNameToken>>();
-		ApplyFinder finder = new ApplyFinder();
 
 		for (PDefinition def: applymap.keySet())
 		{
@@ -118,9 +117,11 @@ public class RecursiveLoops
 
 	public void typeCheckClasses(List<SClassDefinition> classes, ITypeCheckerAssistantFactory af)
 	{
-		Map<ILexNameToken, Set<ILexNameToken>> callmap = getCallMap();
-		recursiveLoops.clear();
 		SFunctionDefinitionAssistantTC assistant = af.createSFunctionDefinitionAssistant();
+		ApplyFinder finder = new ApplyFinder(assistant);
+		finder.setClasses(classes);
+		Map<ILexNameToken, Set<ILexNameToken>> callmap = getCallMap(finder);
+		recursiveLoops.clear();
 
 		for (ILexNameToken name: callmap.keySet())
 		{
@@ -143,9 +144,11 @@ public class RecursiveLoops
 
 	public void typeCheckModules(List<AModuleModules> modules, ITypeCheckerAssistantFactory af)
 	{
-		Map<ILexNameToken, Set<ILexNameToken>> callmap = getCallMap();
-		recursiveLoops.clear();
 		SFunctionDefinitionAssistantTC assistant = af.createSFunctionDefinitionAssistant();
+		ApplyFinder finder = new ApplyFinder(assistant);
+		finder.setModules(modules);
+		Map<ILexNameToken, Set<ILexNameToken>> callmap = getCallMap(finder);
+		recursiveLoops.clear();
 
 		for (ILexNameToken name: callmap.keySet())
 		{
