@@ -43,6 +43,7 @@ import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
@@ -270,6 +271,13 @@ public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeS
 	@Override
 	public PTypeSet caseASubclassResponsibilityStm(ASubclassResponsibilityStm statement, Environment question)
 			throws AnalysisException
+	{
+		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
+	}
+	
+	@Override
+	public PTypeSet caseANotYetSpecifiedStm(ANotYetSpecifiedStm statement,
+			Environment question) throws AnalysisException
 	{
 		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 	}
