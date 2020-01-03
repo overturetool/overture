@@ -433,11 +433,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (node.getMeasure() == null && node.getRecursive())
-		{
-			TypeCheckerErrors.warning(5012, "Recursive function has no measure", node.getLocation(), node);
-		}
-		else if (node.getMeasure() instanceof AVariableExp)
+		if (node.getMeasure() instanceof AVariableExp)
 		{
 			AVariableExp exp = (AVariableExp)node.getMeasure();
 			List<PType> params = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node);
@@ -606,10 +602,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getMeasure() != null && node.getBody() == null)
 		{
 			TypeCheckerErrors.report(3273, "Measure not allowed for an implicit function", node.getMeasure().getLocation(), node);
-		}
-		else if (node.getMeasure() == null && node.getRecursive())
-		{
-			TypeCheckerErrors.warning(5012, "Recursive function has no measure", node.getLocation(), node);
 		}
 		else if (node.getMeasure() instanceof AVariableExp)
 		{

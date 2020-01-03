@@ -226,7 +226,7 @@ public class ModuleTypeChecker extends TypeChecker
 				report(3431, te.getMessage(), null);// FIXME: internal error
 			}
 		}
-		
+
 		// Initialise any annotations
 		Annotation.init(TCAnnotation.class);
 
@@ -241,6 +241,9 @@ public class ModuleTypeChecker extends TypeChecker
 				}
 			}
 		}
+
+		// Prepare to look for recursive loops
+		RecursiveLoops.getInstance().reset();
 
 		// Proceed to type check all definitions, considering types, values
 		// and remaining definitions, in that order.
@@ -285,6 +288,9 @@ public class ModuleTypeChecker extends TypeChecker
 				}
 			}
 		}
+
+		// Prepare to look for recursive loops
+		RecursiveLoops.getInstance().typeCheckModules(modules, assistantFactory);
 
 		for (AModuleModules m: modules)
 		{

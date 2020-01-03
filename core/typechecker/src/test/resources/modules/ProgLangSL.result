@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="3" line="333" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="333" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="540" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="540" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="492" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="492" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="304" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="304" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="304" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="304" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="304" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="304" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="486" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="486" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="486" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="507" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="507" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="507" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
 <message column="3" line="238" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="238" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="238" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="238" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="238" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="238" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="228" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="228" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="228" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="228" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="228" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="228" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="228" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="449" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="449" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="449" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="449" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="449" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="467" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="462" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="462" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="462" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="1" line="518" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="1" line="518" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="343" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="343" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="343" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="187" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="187" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="187" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="187" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="187" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="187" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="187" message="Recursive function has no measure" messageType="warning" number="5012" resource="ProgLangSL"/>
+<message column="3" line="187" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="187" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
+<message column="3" line="187" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="ProgLangSL"/>
 <message column="9" line="323" message="Left hand of - is not numeric" messageType="error" number="3139" resource="ProgLangSL"/>
 <result/>
 </testResult>

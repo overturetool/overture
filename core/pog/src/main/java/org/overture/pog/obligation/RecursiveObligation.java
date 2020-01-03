@@ -92,6 +92,40 @@ public class RecursiveObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(lt_exp));
 	}
 
+	public RecursiveObligation(List<PDefinition> defs, AApplyExp apply, IPOContextStack ctxt, IPogAssistantFactory af)
+		throws AnalysisException
+	{
+		super(defs.get(0), POType.RECURSIVE, ctxt, apply.getLocation(), af);
+		PExp measureLeft_exp = null;
+		PExp measureRight_exp = null;
+		AExplicitFunctionDefinition measureDef = null;
+
+		if (defs.get(0) instanceof AExplicitFunctionDefinition)
+		{
+			measureLeft_exp = buildMeasureLeft((AExplicitFunctionDefinition)defs.get(0), apply);
+			measureDef = ((AExplicitFunctionDefinition)defs.get(0)).getMeasureDef();
+		}
+		else
+		{
+			measureLeft_exp = buildMeasureLeft((AImplicitFunctionDefinition)defs.get(0), apply);
+			measureDef = ((AImplicitFunctionDefinition)defs.get(0)).getMeasureDef();
+		}
+
+		if (defs.get(1) instanceof AExplicitFunctionDefinition)
+		{
+			measureRight_exp = buildMeasureRight((AExplicitFunctionDefinition)defs.get(1), apply);
+		}
+		else
+		{
+			measureRight_exp = buildMeasureRight((AImplicitFunctionDefinition)defs.get(1), apply);
+		}
+
+		PExp lt_exp = buildStructuralComparison(measureLeft_exp, measureRight_exp, getLex(measureDef));
+
+		stitch = lt_exp;
+		valuetree.setPredicate(ctxt.getPredWithContext(lt_exp));
+	}
+
 	private PExp buildMeasureLeft(AExplicitFunctionDefinition def,
 			AApplyExp apply) throws AnalysisException
 	{
@@ -101,7 +135,7 @@ public class RecursiveObligation extends ProofObligation
 			paramPatterns.addAll(list);
 		}
 
-		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), def.getMeasureName(), paramPatterns);
+		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), getMeasureName(def), paramPatterns);
 	}
 
 	private PExp buildMeasureLeft(AImplicitFunctionDefinition def,
@@ -113,7 +147,7 @@ public class RecursiveObligation extends ProofObligation
 			paramPatterns.addAll(pair.getPatterns());
 		}
 
-		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), def.getMeasureName(), paramPatterns);
+		return buildMeasureLeftParams(apply, def.getTypeParams(), def.getActualResult(), getMeasureName(def), paramPatterns);
 	}
 
 	private PExp buildMeasureLeftParams(AApplyExp apply,
@@ -160,13 +194,13 @@ public class RecursiveObligation extends ProofObligation
 	private PExp buildMeasureRight(AExplicitFunctionDefinition def,
 			AApplyExp apply)
 	{
-		return buildMeasureRightParams(apply, def.getMeasureName(), def.getActualResult());
+		return buildMeasureRightParams(apply, getMeasureName(def), def.getActualResult());
 	}
 
 	private PExp buildMeasureRight(AImplicitFunctionDefinition def,
 			AApplyExp apply)
 	{
-		return buildMeasureRightParams(apply, def.getMeasureName(), def.getActualResult());
+		return buildMeasureRightParams(apply, getMeasureName(def), def.getActualResult());
 	}
 
 	private PExp buildMeasureRightParams(AApplyExp apply,
@@ -297,8 +331,13 @@ public class RecursiveObligation extends ProofObligation
 	
 	private int getLex(AExplicitFunctionDefinition mdef)
 	{
+		if (mdef == null)
+		{
+			return 0;
+		}
+
 		AFunctionType ftype = (AFunctionType) mdef.getType();
-		
+
 		if (ftype.getResult() instanceof AProductType)
 		{
 			AProductType type = (AProductType)ftype.getResult();
@@ -307,6 +346,40 @@ public class RecursiveObligation extends ProofObligation
 		else
 		{
 			return 0;
+		}
+	}
+	
+	private ILexNameToken getMeasureName(PDefinition def)
+	{
+		if (def instanceof AExplicitFunctionDefinition)
+		{
+			AExplicitFunctionDefinition edef = (AExplicitFunctionDefinition)def;
+
+			if (edef.getMeasureName() != null)
+			{
+				return edef.getMeasureName();
+			}
+			else
+			{
+				return edef.getName().getMeasureName(def.getLocation());
+			}
+		}
+		else if (def instanceof AImplicitFunctionDefinition)
+		{
+			AImplicitFunctionDefinition idef = (AImplicitFunctionDefinition)def;
+
+			if (idef.getMeasureName() != null)
+			{
+				return idef.getMeasureName();
+			}
+			else
+			{
+				return idef.getName().getMeasureName(def.getLocation());
+			}
+		}
+		else
+		{
+			return null;
 		}
 	}
 }

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
+<message column="7" line="257" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="expressSL"/>
+<message column="7" line="266" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="expressSL"/>
 <result/>
 </testResult>

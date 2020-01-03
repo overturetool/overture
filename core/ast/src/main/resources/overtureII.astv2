@@ -57,7 +57,7 @@ exp {-> package='org.overture.ast.expressions'
 	| (type):type 
 	| [location]:location
 	| [comments]:comments }
-    =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursive):definition
+    =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursiveCycles):definition**
     |	{narrow} [test]:exp [typeName]:LexNameToken (basicType):type (typedef):definition
     |   #Unary
     |   #Binary
