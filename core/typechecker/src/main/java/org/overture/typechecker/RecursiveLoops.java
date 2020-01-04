@@ -49,6 +49,7 @@ import org.overture.typechecker.utilities.expression.ApplyFinder;
  */
 public class RecursiveLoops
 {
+	private static final int LOOP_SIZE_LIMIT = 8;
 	private static RecursiveLoops INSTANCE = null;
 
 	private static class Apply
@@ -230,6 +231,8 @@ public class RecursiveLoops
 			return false;
 		}
 
+		boolean found = false;
+
 		if (nextset.contains(sought))
 		{
 			stack.push(sought);
@@ -237,31 +240,30 @@ public class RecursiveLoops
 			loop.addAll(stack);
 			loops.add(loop);
 			stack.pop();
-			return true;
+			found = true;
 		}
 
 		if (System.getProperty("skip.recursion.check") != null)
 		{
-			return false;		// For now, to allow us to skip if there are issues.
+			return found;		// For now, to allow us to skip if there are issues.
 		}
 
-		boolean found = false;
-
-		for (ILexNameToken nextname: nextset)
+		if (stack.size() < LOOP_SIZE_LIMIT)
 		{
-			if (stack.contains(nextname))	// Been here before!
+			for (ILexNameToken nextname: nextset)
 			{
-				return false;
+				if (!stack.contains(nextname))	// Been here before!
+				{
+					stack.push(nextname);
+		
+					if (reachable(sought, dependencies.get(nextname), dependencies, stack, loops))
+					{
+						found = true;
+					}
+		
+					stack.pop();
+				}
 			}
-
-			stack.push(nextname);
-
-			if (reachable(sought, dependencies.get(nextname), dependencies, stack, loops))
-			{
-				found = true;
-			}
-
-			stack.pop();
 		}
 
 		return found;
