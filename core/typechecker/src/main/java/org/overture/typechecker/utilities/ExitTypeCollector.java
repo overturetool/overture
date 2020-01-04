@@ -24,13 +24,19 @@ package org.overture.typechecker.utilities;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.APrivateAccess;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
@@ -54,6 +60,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.PTypeSet;
+import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -93,8 +100,10 @@ public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeS
 	public PTypeSet caseACallStm(ACallStm statement, Environment env) throws AnalysisException
 	{
 		PDefinition opdef = env.findName(statement.getName(), NameScope.GLOBAL);
+		boolean overridable = Settings.dialect != Dialect.VDM_SL &&
+				opdef != null && !(opdef.getAccess().getAccess() instanceof APrivateAccess);
 
-		if (opdef != null)
+		if (opdef != null && !overridable)
 		{
 			if (opdef instanceof AExplicitOperationDefinition)
 			{
@@ -139,8 +148,10 @@ public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeS
 			throws AnalysisException
 	{
 		PDefinition fdef = statement.getFieldDef();
+		boolean overridable = Settings.dialect != Dialect.VDM_SL &&
+				fdef != null && !(fdef.getAccess().getAccess() instanceof APrivateAccess);
 
-		if (fdef != null)
+		if (fdef != null && !overridable)
 		{
 			if (fdef instanceof AExplicitOperationDefinition)
 			{
@@ -286,13 +297,41 @@ public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeS
 	public PTypeSet caseALetBeStStm(ALetBeStStm statement, Environment env)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS, env);
+		PTypeSet results = statement.getStatement().apply(THIS, env);
+
+		if (statement.getDef() != null && statement.getDef().getDefs() != null)
+		{
+			for (PDefinition d: statement.getDef().getDefs())
+			{
+				if (d instanceof AValueDefinition)
+				{
+					AValueDefinition vd = (AValueDefinition)d;
+					results.addAll(vd.apply(THIS, env));
+				}
+			}
+		}
+
+		return results;
 	}
 
 	@Override
 	public PTypeSet caseALetStm(ALetStm statement, Environment env) throws AnalysisException
 	{
-		return statement.getStatement().apply(THIS, env);
+		PTypeSet results = statement.getStatement().apply(THIS, env);
+
+		if (statement.getLocalDefs() != null)
+		{
+			for (PDefinition d: statement.getLocalDefs())
+			{
+				if (d instanceof AValueDefinition)
+				{
+					AValueDefinition vd = (AValueDefinition)d;
+					results.addAll(vd.getExpression().apply(THIS, env));
+				}
+			}
+		}
+
+		return results;
 	}
 
 	@Override
@@ -301,12 +340,30 @@ public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeS
 	{
 		if (statement.getExpression() != null)
 		{
-			// TODO We don't know what an expression will raise
-			return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
-		} else
+			return statement.getExpression().apply(THIS, env);
+		}
+		else
 		{
 			return new PTypeSet(af);
 		}
+	}
+
+	@Override
+	public PTypeSet caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
+			Environment question) throws AnalysisException
+	{
+		PTypeSet types = super.caseABlockSimpleBlockStm(node, question);
+
+		for (PDefinition d: node.getAssignmentDefs())
+		{
+			if (d instanceof AAssignmentDefinition)
+			{
+				AAssignmentDefinition ad = (AAssignmentDefinition)d;
+				types.addAll(ad.getExpression().apply(THIS, question));
+			}
+		}
+
+		return types;
 	}
 
 	@Override
@@ -360,6 +417,12 @@ public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeS
 
 	@Override
 	public PTypeSet defaultPStm(PStm statement, Environment env) throws AnalysisException
+	{
+		return new PTypeSet(af);
+	}
+
+	@Override
+	public PTypeSet defaultPExp(PExp expression, Environment env) throws AnalysisException
 	{
 		return new PTypeSet(af);
 	}

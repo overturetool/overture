@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="9" line="15" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
-<message column="9" line="16" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp"/>
-<message column="19" line="16" message="a at 16:9 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp"/>
 <message column="9" line="21" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp"/>
-<message column="9" line="21" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
 <message column="13" line="21" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
+<message column="9" line="21" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
 <message column="9" line="22" message="stid at 4:3 hidden by stid" messageType="warning" number="5008" resource="rectrapstmt.vpp"/>
 <message column="20" line="22" message="Definition 's' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
-<message column="9" line="41" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
 <message column="17" line="41" message="Definition 'c' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
+<message column="9" line="41" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
 <message column="9" line="42" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp"/>
+<message column="14" line="50" message="Definition 't' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
 <message column="5" line="53" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp"/>
 <message column="5" line="53" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
 <message column="9" line="63" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp"/>
 <message column="9" line="63" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp"/>
 <message column="3" line="3" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="rectrapstmt.vpp"/>
 <message column="3" line="4" message="Instance variable 'stid' is not initialized" messageType="warning" number="5001" resource="rectrapstmt.vpp"/>
-<message column="14" line="22" message="Matching expression is not a set type" messageType="error" number="3206" resource="rectrapstmt.vpp"/>
 <message column="5" line="37" message="Statement may return void value" messageType="error" number="3328" resource="rectrapstmt.vpp"/>
 <message column="3" line="27" message="Operation returns unexpected type" messageType="error" number="3027" resource="rectrapstmt.vpp"/>
-<message column="9" line="50" message="Matching expression is not a compatible record type" messageType="error" number="3201" resource="rectrapstmt.vpp"/>
-<message column="28" line="66" message="Left hand of '^' is not a sequence" messageType="error" number="3157" resource="rectrapstmt.vpp"/>
-<message column="28" line="66" message="Right hand of '^' is not a sequence" messageType="error" number="3158" resource="rectrapstmt.vpp"/>
 <result/>
 </testResult>
