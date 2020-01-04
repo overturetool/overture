@@ -171,17 +171,20 @@ public class RecursiveLoops
 
 	private void addCycle(ILexNameToken name, List<PDefinition> defs)
 	{
-		List<List<PDefinition>> existing = getCycles(name);
+		if (defs != null)
+		{
+			List<List<PDefinition>> existing = getCycles(name);
 
-		if (existing == null)
-		{
-			List<List<PDefinition>> list = new Vector<List<PDefinition>>();
-			list.add(defs);
-			recursiveLoops.put(name, list);
-		}
-		else
-		{
-			existing.add(defs);
+			if (existing == null)
+			{
+				List<List<PDefinition>> list = new Vector<List<PDefinition>>();
+				list.add(defs);
+				recursiveLoops.put(name, list);
+			}
+			else
+			{
+				existing.add(defs);
+			}
 		}
 	}
 
@@ -233,6 +236,7 @@ public class RecursiveLoops
 			Stack<ILexNameToken> loop = new Stack<ILexNameToken>();
 			loop.addAll(stack);
 			loops.add(loop);
+			stack.pop();
 			return true;
 		}
 
@@ -254,15 +258,6 @@ public class RecursiveLoops
 
 			if (reachable(sought, dependencies.get(nextname), dependencies, stack, loops))
 			{
-				Stack<ILexNameToken> loop = new Stack<ILexNameToken>();
-				loop.addAll(stack);
-				loops.add(loop);
-
-				while (!stack.peek().equals(nextname))
-				{
-					stack.pop();
-				}
-
 				found = true;
 			}
 

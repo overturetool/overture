@@ -111,7 +111,7 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 			list.add(findModuleDefinition(name, modules));
 		}
 
-		return list;
+		return list.contains(null) ? null : list;	// Usually local func definitions
 	}
 
 	public PDefinition findModuleDefinition(ILexNameToken sought, List<AModuleModules> modules)
@@ -139,7 +139,7 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 			list.add(findClassDefinition(name, classes));
 		}
 
-		return list;
+		return list.contains(null) ? null : list;	// Usually local func definitions
 	}
 
 	public PDefinition findClassDefinition(ILexNameToken sought, List<SClassDefinition> classes)
@@ -170,14 +170,17 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 
 			for (List<PDefinition> cycle: cycles)
 			{
-				if (cycle.contains(called))		// The parent cycle involves this apply call
-				{
-					recursiveCycles.add(cycle);
-					cycleNames.add(RecursiveLoops.getInstance().getCycleNames(cycle));
-					mutuallyRecursive = mutuallyRecursive || cycle.size() > 2;	// eg. [f, g, f]
-				}
+				if (cycle.size() >= 2)
+ 				{
+					if (cycle.get(1).equals(called))	// The parent cycle involves this apply call
+					{
+						recursiveCycles.add(cycle);
+						cycleNames.add(RecursiveLoops.getInstance().getCycleNames(cycle));
+						mutuallyRecursive = mutuallyRecursive || cycle.size() > 2;	// eg. [f, g, f]
+					}
 
-				checkCycleMeasures(cycle);
+					checkCycleMeasures(cycle);
+ 				}
 			}
 
 			if (parent instanceof AExplicitFunctionDefinition)
