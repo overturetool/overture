@@ -491,14 +491,14 @@ public class TypeCompatibilityObligation extends ProofObligation
 			{
 				ASubseqExp subseq = (ASubseqExp) exp;
 				PType itype = AstFactory.newANatOneNumericBasicType(exp.getLocation());
-				PExp s = oneType(true, subseq.getFrom(), itype, subseq.getFtype());
+				PExp s = oneType(true, subseq.getFrom().clone(), itype, subseq.getFtype());
 
 				if (s != null)
 				{
 					po = makeAnd(po, s);
 				}
 
-				s = oneType(true, subseq.getTo(), itype, subseq.getTtype());
+				s = oneType(true, subseq.getTo().clone(), itype, subseq.getTtype());
 
 				if (s != null)
 				{
@@ -506,9 +506,9 @@ public class TypeCompatibilityObligation extends ProofObligation
 				}
 
 				ALessEqualNumericBinaryExp le = new ALessEqualNumericBinaryExp();
-				le.setLeft(subseq.getTo());
+				le.setLeft(subseq.getTo().clone());
 				ALenUnaryExp len = new ALenUnaryExp();
-				len.setExp(subseq.getSeq());
+				len.setExp(subseq.getSeq().clone());
 				le.setRight(len);
 				po = makeAnd(po, le);
 
