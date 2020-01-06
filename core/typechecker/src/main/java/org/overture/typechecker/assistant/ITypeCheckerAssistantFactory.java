@@ -66,6 +66,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
@@ -147,7 +148,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	//ACaseAlternativeAssistantTC createACaseAlternativeAssistant();
 
-	//PExpAssistantTC createPExpAssistant();
+	PExpAssistantTC createPExpAssistant(ITypeCheckerAssistantFactory af);
 
 //	SBinaryExpAssistantTC createSBinaryExpAssistant();
 

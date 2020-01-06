@@ -10,7 +10,6 @@
 <message column="13" line="54" message="Definition 'l' not used" messageType="warning" number="5000" resource="trapstmt.vpp"/>
 <message column="3" line="3" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="trapstmt.vpp"/>
 <message column="3" line="4" message="Instance variable 'stid' is not initialized" messageType="warning" number="5001" resource="trapstmt.vpp"/>
-<message column="3" line="15" message="Body of trap statement does not throw exceptions" messageType="error" number="3241" resource="trapstmt.vpp"/>
 <message column="5" line="33" message="Statement may return void value" messageType="error" number="3328" resource="trapstmt.vpp"/>
 <message column="3" line="26" message="Body of trap statement does not throw exceptions" messageType="error" number="3241" resource="trapstmt.vpp"/>
 <message column="33" line="27" message="Value is not of the right type" messageType="error" number="3327" resource="trapstmt.vpp"/>

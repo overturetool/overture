@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="9" line="18" message="Definition 'one' not used" messageType="warning" number="5000" resource="if-19.vdm"/>
+<message column="8" line="24" message="Definition 'err' not used" messageType="warning" number="5000" resource="if-19.vdm"/>
 <result/>
 </testResult>

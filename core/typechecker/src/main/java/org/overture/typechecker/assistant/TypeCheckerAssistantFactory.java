@@ -66,6 +66,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
@@ -1044,5 +1045,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory
 	public IAnswer<String> getDetailedTypeDisplayer()
 	{
 		return new DetailedTypeDisplayer(this);
+	}
+
+	@Override
+	public PExpAssistantTC createPExpAssistant(ITypeCheckerAssistantFactory af)
+	{
+		return new PExpAssistantTC(af);
 	}
 }

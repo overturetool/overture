@@ -2,7 +2,6 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="17" line="15" message="Value is not of the right type" messageType="error" number="3327" resource="casesstmt-17.vdm"/>
 <message column="17" line="19" message="Value is not of the right type" messageType="error" number="3327" resource="casesstmt-17.vdm"/>
-<message column="15" line="18" message="Body of trap statement does not throw exceptions" messageType="error" number="3241" resource="casesstmt-17.vdm"/>
 <message column="29" line="18" message="Operation ErrorAction is not in scope" messageType="error" number="3213" resource="casesstmt-17.vdm"/>
 <result/>
 </testResult>

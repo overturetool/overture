@@ -10,9 +10,9 @@
 <message column="11" line="62" message="bom at 15:1 hidden by bom" messageType="warning" number="5008" resource="BOMSL"/>
 <message column="13" line="67" message="bom at 15:1 hidden by bom" messageType="warning" number="5008" resource="BOMSL"/>
 <message column="15" line="73" message="bom at 15:1 hidden by bom" messageType="warning" number="5008" resource="BOMSL"/>
-<message column="1" line="42" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="BOMSL"/>
 <message column="1" line="47" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="BOMSL"/>
 <message column="1" line="47" message="Recursive function has no measure" messageType="warning" number="5012" resource="BOMSL"/>
+<message column="1" line="42" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="BOMSL"/>
 <message column="1" line="18" message="Definition 'cycle' not used" messageType="warning" number="5000" resource="BOMSL"/>
 <message column="1" line="56" message="Definition 'Enter' not used" messageType="warning" number="5000" resource="BOMSL"/>
 <message column="1" line="61" message="Definition 'Delete' not used" messageType="warning" number="5000" resource="BOMSL"/>
