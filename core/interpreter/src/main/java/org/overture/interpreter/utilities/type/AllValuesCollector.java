@@ -1,5 +1,6 @@
 package org.overture.interpreter.utilities.type;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -154,6 +155,11 @@ public class AllValuesCollector extends
 			}
 		}
 
+		if (type.getOrdDef() != null)
+		{
+			Collections.sort(result);
+		}
+
 		Settings.invchecks = checks;
 		return result;
 	}
@@ -181,6 +187,11 @@ public class AllValuesCollector extends
 			{
 				// Value does not match invariant, so ignore it
 			}
+		}
+
+		if (type.getOrdDef() != null)
+		{
+			Collections.sort(results);
 		}
 
 		return results;
@@ -286,6 +297,7 @@ public class AllValuesCollector extends
 			list.add(new SetValue(v));
 		}
 
+		Collections.sort(list);
 		return list;
 	}
 

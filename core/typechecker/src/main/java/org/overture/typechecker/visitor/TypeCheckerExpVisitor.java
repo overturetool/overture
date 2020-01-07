@@ -2444,8 +2444,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind()));
 		def.parent(node.getBind());
-
 		def.apply(THIS, question.newConstraint(null));
+
+		if (node.getBind() instanceof ATypeBind)
+		{
+			ATypeBind tb = (ATypeBind) node.getBind();
+			question.assistantFactory.createATypeBindAssistant().typeResolve(tb, THIS, question);
+		}
 
 		if ((node.getBind() instanceof ASetBind || node.getBind() instanceof ATypeBind) && (
 				question.assistantFactory.createPPatternAssistant(question.fromModule).getVariableNames(node.getBind().getPattern()).size()
