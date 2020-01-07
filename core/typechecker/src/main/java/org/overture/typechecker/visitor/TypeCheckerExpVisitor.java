@@ -2442,37 +2442,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseASeqCompSeqExp(ASeqCompSeqExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		// TODO: check if this is still needed?!
-		// save these so we can clone them after they have been type checked
-		// PExp setBindSet = node.getSetBind().getSet();
-		// PPattern setBindPattern = node.getSetBind().getPattern();
-		//
-		// List<PPattern> plist = new ArrayList<PPattern>();
-		// plist.add(setBindPattern);
-		// List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		// mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist,
-		// setBindSet));
-
-		PDefinition def = null;
-
-		if (node.getSetBind() != null)
-		{
-			def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
-			def.parent(node.getSetBind());
-		} else
-		{
-			def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSeqBind()));
-			def.parent(node.getSeqBind());
-		}
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind()));
+		def.parent(node.getBind());
 
 		def.apply(THIS, question.newConstraint(null));
 
-		// now they are typechecked, add them again
-		// node.getSetBind().setSet(setBindSet.clone());
-		// node.getSetBind().setPattern(setBindPattern.clone());
-
-		if (node.getSetBind() != null && (
-				question.assistantFactory.createPPatternAssistant(question.fromModule).getVariableNames(node.getSetBind().getPattern()).size()
+		if ((node.getBind() instanceof ASetBind || node.getBind() instanceof ATypeBind) && (
+				question.assistantFactory.createPPatternAssistant(question.fromModule).getVariableNames(node.getBind().getPattern()).size()
 						> 1
 						|| !question.assistantFactory.createPTypeAssistant().isOrdered(question.assistantFactory.createPDefinitionAssistant().getType(def), node.getLocation())))
 		{

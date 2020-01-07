@@ -1820,14 +1820,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		obligations.addAll(first.apply(mainVisitor, question));
 		question.pop();
 
-		if (node.getSetBind() != null)
-		{
-			obligations.addAll(node.getSetBind().apply(rootVisitor, question));
-		}
-		else
-		{
-			obligations.addAll(node.getSeqBind().apply(rootVisitor, question));
-		}
+		obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 		PExp predicate = node.getPredicate();
 		if (predicate != null)

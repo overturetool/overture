@@ -560,15 +560,7 @@ public class ApplyFinder extends AnswerAdaptor<Set<ILexNameToken>>
 	{
 		Set<ILexNameToken> all = new HashSet<ILexNameToken>();
 		all.addAll(node.getFirst().apply(this));
-
-		if (node.getSeqBind() != null)
-		{
-			all.addAll(caseBind(node.getSeqBind()));
-		}
-		else if (node.getSetBind() != null)
-		{
-			all.addAll(caseBind(node.getSetBind()));
-		}
+		all.addAll(caseBind(node.getBind()));
 
 		if (node.getPredicate() != null)
 		{

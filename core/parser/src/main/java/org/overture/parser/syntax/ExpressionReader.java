@@ -1388,7 +1388,7 @@ public class ExpressionReader extends SyntaxReader
 		{
 			nextToken();
 			BindReader br = getBindReader();
-			PBind setbind = br.readSetSeqBind();
+			PBind setbind = br.readBind();
 			PExp exp = null;
 
 			if (lastToken().is(VDMToken.AMPERSAND))

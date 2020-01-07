@@ -438,7 +438,7 @@ public class ExpressionValueCollector extends
 	{
 
 		ValueList list = exp.getFirst().apply(THIS, ctxt);
-		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt, false));
+		list.addAll(af.createPBindAssistant().getBindValues(exp.getBind(), ctxt, false));
 
 		if (exp.getPredicate() != null)
 		{

@@ -852,9 +852,9 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 	{
 		ACompSeqExpIR seqComp = new ACompSeqExpIR();
 
-		if (node.getSetBind() != null)
+		if (node.getBind() instanceof ASetBind)
 		{
-			ASetBind setBind = node.getSetBind();
+			ASetBind setBind = (ASetBind) node.getBind();
 			SBindIR bindTempCg = setBind.apply(question.getBindVisitor(), question);
 
 			if (!(bindTempCg instanceof ASetBindIR))
@@ -866,12 +866,13 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			ASetBindIR setBindCg = (ASetBindIR) bindTempCg;
 			seqComp.setSetBind(setBindCg);
 
-			PExp set = node.getSetBind().getSet();
+			PExp set = setBind.getSet();
 			SExpIR setCg = set.apply(question.getExpVisitor(), question);
 			seqComp.setSetSeq(setCg);
-		} else
+		}
+		else if (node.getBind() instanceof ASeqBind)
 		{
-			ASeqBind seqBind = node.getSeqBind();
+			ASeqBind seqBind = (ASeqBind) node.getBind();
 			SBindIR bindTempCg = seqBind.apply(question.getBindVisitor(), question);
 
 			if (!(bindTempCg instanceof ASeqBindIR))
@@ -884,9 +885,14 @@ public class ExpVisitorIR extends AbstractVisitorIR<IRInfo, SExpIR>
 			ASeqBindIR seqBindCg = (ASeqBindIR) bindTempCg;
 			seqComp.setSeqBind(seqBindCg);
 
-			PExp seq = node.getSeqBind().getSeq();
+			PExp seq = seqBind.getSeq();
 			SExpIR seqCg = seq.apply(question.getExpVisitor(), question);
 			seqComp.setSetSeq(seqCg);
+		}
+		else
+		{
+			question.addUnsupportedNode(node, "Expected seq or set bind for sequence comprehension. Got type bind.");
+			return null;
 		}
 
 		PType type = node.getType();

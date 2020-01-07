@@ -71,6 +71,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AErrorCase;
@@ -1518,7 +1519,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		if (node.getSetBind() != null)
+		if (node.getBind() instanceof ASetBind)
 		{
 			return evalSetBind(node, ctxt);
 		}
@@ -1530,7 +1531,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	private Value evalSeqBind(ASeqCompSeqExp node, Context ctxt) throws AnalysisException
 	{
-		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSeqBind(), ctxt, false);
+		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt, false);
 		ValueList seq = new ValueList();	// Bind variable values
 
 		for (Value val: allValues)
@@ -1538,7 +1539,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "seq comprehension", ctxt);
-				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant(node.getLocation().getModule()).getNamedValues(node.getSeqBind().getPattern(), val, ctxt);
+				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant(node.getLocation().getModule()).getNamedValues(node.getBind().getPattern(), val, ctxt);
 
 				evalContext.putList(nvpl);
 
@@ -1564,7 +1565,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 	private Value evalSetBind(ASeqCompSeqExp node, Context ctxt) throws AnalysisException
 	{
-		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getSetBind(), ctxt, false);
+		ValueList allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt, false);
 		ValueSet seq = new ValueSet(); // Bind variable values
 		ValueMap map = new ValueMap(); // Map bind values to output values
 		int count = 0;
@@ -1574,7 +1575,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "seq comprehension", ctxt);
-				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant(node.getLocation().getModule()).getNamedValues(node.getSetBind().getPattern(), val, ctxt);
+				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant(node.getLocation().getModule()).getNamedValues(node.getBind().getPattern(), val, ctxt);
 				Value sortOn = nvpl.isEmpty() ? new NaturalValue(count++) : nvpl.get(0).value;
 
 				if (map.get(sortOn) == null)

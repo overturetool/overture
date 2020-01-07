@@ -788,15 +788,7 @@ public class ExitTypeCollector extends QuestionAnswerAdaptor<Environment, PTypeS
 			throws AnalysisException
 	{
 		PTypeSet result = exp.getFirst().apply(THIS, env);
-
-		if (exp.getSeqBind() != null)
-		{
-			result.addAll(exp.getSeqBind().apply(THIS, env));
-		}
-		else
-		{
-			result.addAll(exp.getSetBind().apply(THIS, env));
-		}
+		result.addAll(exp.getBind().apply(THIS, env));
 
 		if (exp.getPredicate() != null) result.addAll(exp.getPredicate().apply(THIS, env));
 		return result;
