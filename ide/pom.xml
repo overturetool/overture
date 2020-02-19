@@ -164,9 +164,9 @@ the manifests, though.
 
   <repositories>
     <repository>
-      <id>eclipse-oxygen</id>
+      <id>eclipse-2019-12</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/oxygen</url>
+      <url>http://download.eclipse.org/releases/2019-12</url>
     </repository>
   </repositories>
 
