@@ -31,8 +31,10 @@ import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.ARecordPattern;
+import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
+import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.codegen.ir.IRInfo;
@@ -47,8 +49,10 @@ import org.overture.codegen.ir.patterns.ANullPatternIR;
 import org.overture.codegen.ir.patterns.AQuotePatternIR;
 import org.overture.codegen.ir.patterns.ARealPatternIR;
 import org.overture.codegen.ir.patterns.ARecordPatternIR;
+import org.overture.codegen.ir.patterns.ASetPatternIR;
 import org.overture.codegen.ir.patterns.AStringPatternIR;
 import org.overture.codegen.ir.patterns.ATuplePatternIR;
+import org.overture.codegen.ir.patterns.AUnionPatternIR;
 
 public class PatternVisitorIR extends AbstractVisitorIR<IRInfo, SPatternIR>
 {
@@ -171,6 +175,36 @@ public class PatternVisitorIR extends AbstractVisitorIR<IRInfo, SPatternIR>
 		}
 
 		return tuplePatternCg;
+	}
+
+	@Override
+	public SPatternIR caseASetPattern(ASetPattern node, IRInfo question)
+			throws AnalysisException {
+		ASetPatternIR setPatternCg = new ASetPatternIR();
+
+		for (PPattern currentPattern : node.getPlist()) {
+			SPatternIR patternCg = currentPattern.apply(question.getPatternVisitor(), question);
+
+			if (patternCg != null) {
+				setPatternCg.getPatterns().add(patternCg);
+			} else {
+				return null;
+			}
+		}
+
+		return setPatternCg;
+	}
+
+	@Override
+	public SPatternIR caseAUnionPattern(AUnionPattern node, IRInfo question)
+			throws AnalysisException {
+		AUnionPatternIR unionPatternCg = new AUnionPatternIR();
+		SPatternIR leftPatternCg = node.getLeft().apply(question.getPatternVisitor(), question);
+		SPatternIR rightPatternCg = node.getRight().apply(question.getPatternVisitor(), question);
+		unionPatternCg.setLeft(leftPatternCg);
+		unionPatternCg.setRight(rightPatternCg);
+
+		return unionPatternCg;
 	}
 
 	@Override
