@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.rttraceviewer"
       label="RT Trace Viewer"
-      version="2.7.3.qualifier">
+      version="2.7.4">
 
    <description>
       %description
