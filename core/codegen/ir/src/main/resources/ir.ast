@@ -101,8 +101,6 @@ IR {-> package='org.overture.codegen.ir'
 	| {string} [value]:java_String
 	| {tuple} [patterns]:IR.#pattern*
 	| {record} [typename]:java_String [patterns]:IR.#pattern* [type]:IR.#type
-	| {set} [patterns]:IR.#pattern*
-    | {union} [left]:IR.#pattern [right]:IR.#pattern
 	;
 
 #bind {-> package='org.overture.codegen.ir.patterns'
