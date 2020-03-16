@@ -95,6 +95,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ExcludedDefinitions;
 import org.overture.typechecker.FlatCheckedEnvironment;
@@ -432,11 +433,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (node.getMeasure() == null && node.getRecursive())
-		{
-			TypeCheckerErrors.warning(5012, "Recursive function has no measure", node.getLocation(), node);
-		}
-		else if (node.getMeasure() instanceof AVariableExp)
+		if (node.getMeasure() instanceof AVariableExp)
 		{
 			AVariableExp exp = (AVariableExp)node.getMeasure();
 			List<PType> params = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node);
@@ -605,10 +602,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getMeasure() != null && node.getBody() == null)
 		{
 			TypeCheckerErrors.report(3273, "Measure not allowed for an implicit function", node.getMeasure().getLocation(), node);
-		}
-		else if (node.getMeasure() == null && node.getRecursive())
-		{
-			TypeCheckerErrors.warning(5012, "Recursive function has no measure", node.getLocation(), node);
 		}
 		else if (node.getMeasure() instanceof AVariableExp)
 		{
@@ -836,6 +829,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				&& !(node.getBody() instanceof ASubclassResponsibilityStm))
 		{
 			local.unusedCheck();
+		}
+
+		if (node.getPossibleExceptions() == null)
+		{
+			node.setPossibleExceptions(new PTypeSet(question.assistantFactory));
+			IQuestionAnswer<Environment, PTypeSet> collector = question.assistantFactory.getExitTypeCollector();
+			node.setPossibleExceptions(node.getBody().apply(collector, question.env));
 		}
 
 		node.setType(node.getType());
@@ -1130,6 +1130,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				&& !(node.getBody() instanceof ASubclassResponsibilityStm))
 		{
 			local.unusedCheck();
+		}
+
+		if (node.getPossibleExceptions() == null && node.getBody() != null)
+		{
+			node.setPossibleExceptions(new PTypeSet(question.assistantFactory));
+			IQuestionAnswer<Environment, PTypeSet> collector = question.assistantFactory.getExitTypeCollector();
+			node.setPossibleExceptions(node.getBody().apply(collector, question.env));
 		}
 
 		// node.setType(node.getActualResult());
@@ -1799,9 +1806,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		def.setClassDefinition(node.getClassDefinition() == null ? null : node.getClassDefinition().clone());
 		def.setAccess(node.getAccess().clone());
 		question.assistantFactory.createPDefinitionAssistant().typeResolve(def, THIS, question);
-		def.apply(THIS, question);
-		
+
 		node.setMeasureDef(def);
+		def.apply(THIS, question);
 	}
 
 	/**

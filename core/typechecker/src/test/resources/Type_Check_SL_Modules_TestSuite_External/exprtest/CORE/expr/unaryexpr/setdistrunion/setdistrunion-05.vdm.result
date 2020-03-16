@@ -2,7 +2,5 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="36" line="22" message="Empty set used in bind" messageType="warning" number="5009" resource="setdistrunion-05.vdm"/>
 <message column="20" line="18" message="Name 'f' is not in scope" messageType="error" number="3182" resource="setdistrunion-05.vdm"/>
-<message column="20" line="20" message="Matching expression is not a compatible record type" messageType="error" number="3201" resource="setdistrunion-05.vdm"/>
-<message column="39" line="20" message="Name 'UnaryTest`u' is not in scope" messageType="error" number="3182" resource="setdistrunion-05.vdm"/>
 <result/>
 </testResult>

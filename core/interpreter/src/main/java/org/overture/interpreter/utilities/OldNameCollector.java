@@ -426,15 +426,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			throws AnalysisException
 	{
 		LexNameList list = af.createPExpAssistant().getOldNames(expression.getFirst());
-		
-		if (expression.getSetBind() != null)
-		{
-			list.addAll(expression.getSetBind().apply(this));
-		}
-		else
-		{
-			list.addAll(expression.getSeqBind().apply(this));
-		}
+		list.addAll(expression.getBind().apply(this));
 
 		if (expression.getPredicate() != null)
 		{

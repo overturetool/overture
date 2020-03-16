@@ -28,6 +28,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -72,7 +73,8 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 			
 			if (expdef != null)
 			{
-				boolean istype = question.assistantFactory.createPDefinitionAssistant().isTypeDefinition(expdef);
+				boolean istype = question.assistantFactory.createPDefinitionAssistant().isTypeDefinition(expdef)
+						|| expdef instanceof AStateDefinition;	// State record imports are allowed
 				checkKind(question.assistantFactory, expdef, istype, "type", node);
 			}
 		}
@@ -90,13 +92,15 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 				checkKind(question.assistantFactory, expdef, istype, "type", node);
 				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
 
-				if (!question.assistantFactory.getTypeComparator().compatible(def.getType(), exptype))
+				// if (!question.assistantFactory.getTypeComparator().compatible(def.getType(), exptype))
+				String detail1 = question.assistantFactory.createPTypeAssistant().toDetailedString(def.getType());
+				String detail2 = question.assistantFactory.createPTypeAssistant().toDetailedString(exptype);
+				
+				if (!detail1.equals(detail2))
 				{
 					TypeCheckerErrors.report(3192, "Type import of " + name
 							+ " does not match export from " + from.getName(), node.getLocation(), node);
-					TypeCheckerErrors.detail2("Import", def.getType().toString() // TODO: .toDetailedString()
-					, "Export", exptype.toString()); // TODO:
-														// .toDetailedString());
+					TypeCheckerErrors.detail2("Import", detail1, "Export", detail2);
 				}
 			}
 		}

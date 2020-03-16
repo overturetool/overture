@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -58,6 +59,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.utilities.type.ParameterFinder;
 
 /**
  * A class for static type checking comparisons.
@@ -123,13 +125,13 @@ public class TypeComparator
 			return a.hashCode() + b.hashCode();
 		}
 	}
-	
+
 	/**
 	 * The current module name. This is set as the type checker goes from module
 	 * to module, and is used to affect the processing of opaque "non-struct"
 	 * type exports.
 	 */
-	
+
 	private String currentModule = null;
 
 	public String getCurrentModule()
@@ -281,7 +283,7 @@ public class TypeComparator
 		{
 			return Result.Yes; // Not defined "yet"...?
 		}
-		
+
 		// Correct for one-type unions
 		if (to instanceof AUnionType && ((AUnionType)to).getTypes().size() == 1)
 		{
@@ -315,7 +317,7 @@ public class TypeComparator
     		if (to instanceof SInvariantType)
     		{
     			SInvariantType ito =(SInvariantType)to;
-    			
+
 	    		if (to instanceof ANamedInvariantType && !TypeChecker.isOpaque(ito, currentModule))
 	    		{
 	    			to = ((ANamedInvariantType)to).getType();
@@ -326,7 +328,7 @@ public class TypeComparator
     		if (from instanceof SInvariantType)
     		{
     			SInvariantType ifrom =(SInvariantType)from;
-    			
+
 	    		if (from instanceof ANamedInvariantType && !TypeChecker.isOpaque(ifrom, currentModule))
 	    		{
 	    			from = ((ANamedInvariantType)from).getType();
@@ -361,24 +363,25 @@ public class TypeComparator
 
 			resolved = true;
 		}
-		
+
 		if (from instanceof AParameterType)
 		{
-			// If the to type includes the "from" parameter anywhere, then the types must be identical,
-			// otherwise they match. We can only test for that easily with toString() :-(
-			// See overture bug #562.
-			
-			String fstr = from.toString();
-			String tstr = to.toString();
-			
-			if (tstr.indexOf(fstr) >= 0)
+			try
 			{
-				return to.equals(from) ? Result.Yes : Result.No;
+				String fstr = from.apply(new ParameterFinder()).get(0);
+				List<String> tstr = to.apply(new ParameterFinder());
+
+				if (tstr.contains(fstr) && !(to instanceof AParameterType))
+				{
+					TypeChecker.warning(5031, "Type " + from + " must be a union", from.getLocation());	// See bug #562
+				}
 			}
-			else
+			catch (AnalysisException e)
 			{
-				return Result.Yes;
+				// Can't happen
 			}
+
+			return Result.Yes;	// Runtime checked...
 		}
 
 		// OK... so we have fully resolved the basic types...
@@ -445,12 +448,12 @@ public class TypeComparator
 
 				SSetType sa = (SSetType) to;
 				SSetType sb = (SSetType) from;
-				
+
 				if (to instanceof ASet1SetType && sb.getEmpty())
 				{
 					return Result.No;
 				}
-				
+
 				return sa.getEmpty()
 						|| sb.getEmpty()
 						|| searchCompatible(sa.getSetof(), sb.getSetof(), paramOnly) == Result.Yes ? Result.Yes
@@ -552,21 +555,22 @@ public class TypeComparator
 			} 
 			else if (to instanceof AParameterType)
 			{
-				// If the from type includes the "to" parameter anywhere, then the types must be identical,
-				// otherwise they match. We can only test for that easily with toString() :-(
-				// See overture bug #562.
-				
-				String fstr = from.toString();
-				String tstr = to.toString();
-				
-				if (fstr.indexOf(tstr) >= 0)
+				try
 				{
-					return to.equals(from) ? Result.Yes : Result.No;
+					String tstr = to.apply(new ParameterFinder()).get(0);
+					List<String> fstr = from.apply(new ParameterFinder());
+
+					if (fstr.contains(tstr) && !(from instanceof AParameterType))
+					{
+						TypeChecker.warning(5031, "Type " + to + " must be a union", to.getLocation());	// See bug #562
+					}
 				}
-				else
+				catch (AnalysisException e)
 				{
-					return Result.Yes;
+					// Can't happen
 				}
+
+				return Result.Yes;	// Runtime checked...
 			}
 			else
 			{
@@ -889,7 +893,7 @@ public class TypeComparator
 				{
 					return Result.No;
 				}
-				
+
 			} else if (sub instanceof SSeqType) // Includes seq1
 			{
 				if (!(sup instanceof SSeqType))
@@ -1174,7 +1178,7 @@ public class TypeComparator
 			return AstFactory.newAUnionType(a.getLocation(), list);
 		}
 	}
-	
+
 	/**
 	 * Return the narrowest of two types/type lists.
 	 */
@@ -1182,7 +1186,7 @@ public class TypeComparator
 	{
 		return allSubTypes(t1, t2, false) == Result.Yes ? t1 : t2;
 	}
-	
+
 	public synchronized PType narrowest(PType t1, PType t2)
 	{
 		return isSubType(t1, t2) ? t1 : t2;

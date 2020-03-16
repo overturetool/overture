@@ -69,14 +69,7 @@ public class POForAllContext extends POContext
 	public POForAllContext(ASeqCompSeqExp exp,
 			IPogAssistantFactory assistantFactory)
 	{
-		if (exp.getSetBind() != null)
-		{
-			this.bindings = getMultipleBindList(exp.getSetBind());
-		}
-		else
-		{
-			this.bindings = getMultipleBindList(exp.getSeqBind());
-		}
+		this.bindings = getMultipleBindList(exp.getBind());
 	}
 
 	public POForAllContext(AForAllExp exp)

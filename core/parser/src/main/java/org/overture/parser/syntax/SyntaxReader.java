@@ -46,6 +46,8 @@ import org.overture.ast.lex.VDMToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.parser.annotations.ASTAnnotation;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
@@ -263,6 +265,12 @@ public abstract class SyntaxReader
 	protected LexIdentifierToken readIdToken(String message)
 			throws LexException, ParserException
 	{
+		return readIdToken(message, false);
+	}
+
+	protected LexIdentifierToken readIdToken(String message, boolean reservedOK)
+			throws LexException, ParserException
+	{
 		LexToken tok = reader.getLast();
 
 		if (tok.type == VDMToken.IDENTIFIER)
@@ -273,6 +281,11 @@ public abstract class SyntaxReader
 			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
+			}
+
+			if (!reservedOK && isReserved(id.name))
+			{
+				throwMessage(2295, "Name contains a reserved prefix", tok);
 			}
 
 			return id;
@@ -298,7 +311,12 @@ public abstract class SyntaxReader
 	 * @throws ParserException
 	 */
 
-	protected LexNameToken readNameToken(String message) throws LexException,
+	protected LexNameToken readNameToken(String message) throws LexException, ParserException
+	{
+		return readNameToken(message, false);
+	}
+
+	protected LexNameToken readNameToken(String message, boolean reservedOK) throws LexException,
 			ParserException
 	{
 		LexToken tok = reader.getLast();
@@ -313,6 +331,11 @@ public abstract class SyntaxReader
 				throwMessage(2295, "Can't use old name here", tok);
 			}
 
+			if (!reservedOK && isReserved(name.name))
+			{
+				throwMessage(2295, "Name contains a reserved prefix", tok);
+			}
+
 			return name;
 		} else if (tok instanceof LexIdentifierToken)
 		{
@@ -321,6 +344,11 @@ public abstract class SyntaxReader
 			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
+			}
+
+			if (!reservedOK && isReserved(id.name))
+			{
+				throwMessage(2295, "Name contains a reserved prefix", tok);
 			}
 
 			return new LexNameToken(reader.currentModule, id);
@@ -351,7 +379,10 @@ public abstract class SyntaxReader
 				}
 				catch (Exception e)
 				{
-					// ignore - comment is not parsable
+					if (System.getProperty("annotations.debug") != null)
+					{
+						System.err.println("Annotations: " + e);
+					}
 				}
 			}
 		}
@@ -879,5 +910,21 @@ public abstract class SyntaxReader
 				impl.astAfter(reader, clazz);
 			}
 		}
+	}
+
+	protected boolean isReserved(String name)
+	{
+		return
+			name.startsWith("pre_") ||
+			name.startsWith("post_") ||
+			name.startsWith("inv_") ||
+			name.startsWith("init_") ||
+			Settings.release == Release.VDM_10 &&
+			(
+				name.startsWith("eq_") ||
+				name.startsWith("ord_") ||
+				name.startsWith("min_") ||
+				name.startsWith("max_")
+			);
 	}
 }

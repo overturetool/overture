@@ -199,7 +199,7 @@ public class PTypeResolver extends
 		{
 			try
 			{
-				fixed.add(af.createPTypeAssistant().typeResolve(ft, question.root, question.rootVisitor, question.question));
+				fixed.add(af.createPTypeAssistant().typeResolve(ft, null, question.rootVisitor, question.question));
 			}
 			catch (TypeCheckException e)
 			{
@@ -219,7 +219,7 @@ public class PTypeResolver extends
 		try
 		{
 			type.setParameters(fixed);
-			type.setResult(af.createPTypeAssistant().typeResolve(type.getResult(), question.root, question.rootVisitor, question.question));
+			type.setResult(af.createPTypeAssistant().typeResolve(type.getResult(), null, question.rootVisitor, question.question));
 		}
 		catch (TypeCheckException e)
 		{

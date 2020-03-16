@@ -12,6 +12,6 @@ with
 in
   let mk_(a,a) = mk_(1,1)
   in
-    return a
-    
+    if false then exit mk_(0,0) else return a;
+
 end Entry

@@ -11,6 +11,7 @@
 <message column="9" line="44" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="17" line="44" message="Definition 'c' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="9" line="45" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
+<message column="14" line="53" message="Definition 't' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="5" line="56" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
 <message column="5" line="56" message="Definition 'a' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="9" line="66" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vdm"/>
@@ -18,9 +19,7 @@
 <message column="3" line="16" message="Definition 'RecTrap1' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="3" line="51" message="Definition 'RecTrap5' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
 <message column="3" line="64" message="Definition 'RecTrap6' not used" messageType="warning" number="5000" resource="rectrapstmt.vdm"/>
-<message column="14" line="25" message="Matching expression is not a set type" messageType="error" number="3206" resource="rectrapstmt.vdm"/>
 <message column="5" line="40" message="Statement may return void value" messageType="error" number="3328" resource="rectrapstmt.vdm"/>
 <message column="3" line="30" message="Operation returns unexpected type" messageType="error" number="3027" resource="rectrapstmt.vdm"/>
-<message column="9" line="53" message="Matching expression is not a compatible record type" messageType="error" number="3201" resource="rectrapstmt.vdm"/>
 <result/>
 </testResult>

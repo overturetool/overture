@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="56" line="23" message="Type @A must be a union" messageType="warning" number="5031" resource="modules17.vdm"/>
+<message column="56" line="23" message="Type @A must be a union" messageType="warning" number="5031" resource="modules17.vdm"/>
 <message column="59" line="23" message="Definition 's' not used" messageType="warning" number="5000" resource="modules17.vdm"/>
 <message column="10" line="34" message="Definition 'Dummy_fun' not used" messageType="warning" number="5000" resource="modules17.vdm"/>
 <message column="7" line="48" message="Definition 'FunDefSl7' not used" messageType="warning" number="5000" resource="modules17.vdm"/>
@@ -8,7 +10,6 @@
 <message column="9" line="188" message="From module CALC: Unable to resolve type name 'integer'" messageType="error" number="3430" resource="modules17.vdm"/>
 <message column="9" line="188" message="From module CALC: Unable to resolve type name 'integer'" messageType="error" number="3430" resource="modules17.vdm"/>
 <message column="9" line="188" message="From module CALC: Unable to resolve type name 'integer'" messageType="error" number="3430" resource="modules17.vdm"/>
-<message column="12" line="26" message="Left and right of '=' are incompatible types" messageType="error" number="3087" resource="modules17.vdm"/>
 <message column="9" line="188" message="Unable to resolve type name 'integer'" messageType="error" number="3431" resource="modules17.vdm"/>
 <result/>
 </testResult>

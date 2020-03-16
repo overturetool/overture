@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="1" line="18" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-32.vdm"/>
 <message column="12" line="19" message="Definition 'h' not used" messageType="warning" number="5000" resource="recfun-32.vdm"/>
+<message column="1" line="18" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-32.vdm"/>
 <message column="1" line="24" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-32.vdm"/>
 <message column="41" line="26" message="Value is not of the right type" messageType="error" number="3327" resource="recfun-32.vdm"/>
 <message column="3" line="26" message="Constructor field 2 is of wrong type" messageType="error" number="3129" resource="recfun-32.vdm"/>

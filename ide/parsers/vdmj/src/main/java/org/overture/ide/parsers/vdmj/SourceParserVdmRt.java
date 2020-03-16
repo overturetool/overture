@@ -33,6 +33,7 @@ public class SourceParserVdmRt extends SourceParserVdmPp
 			String charset)
 	{
 		Settings.dialect = Dialect.VDM_RT;
+		System.setProperty("VDM_RT", "1");
 		return startParseFile(file, source, charset);
 	}
 

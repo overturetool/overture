@@ -2,8 +2,6 @@ package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.*;
@@ -132,24 +130,12 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				i++;
 			}
 
-			PDefinition recursive = node.getRecursive();
+			List<List<PDefinition>> recursive = node.getRecursiveCycles();
 			if (recursive != null)
 			{
-				if (recursive instanceof AExplicitFunctionDefinition)
+				for (List<PDefinition> def: recursive)
 				{
-					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) recursive;
-					if (def.getMeasureName() != null)
-					{
-						obligations.add(new RecursiveObligation(def, node, question, aF));
-					}
-				} else if (recursive instanceof AImplicitFunctionDefinition)
-				{
-					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition) recursive;
-					if (def.getMeasureName() != null)
-					{
-						obligations.add(new RecursiveObligation(def, node, question, aF));
-					}
-
+					obligations.add(new RecursiveObligation(def, node, question, aF));
 				}
 			}
 		}
@@ -1834,14 +1820,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		obligations.addAll(first.apply(mainVisitor, question));
 		question.pop();
 
-		if (node.getSetBind() != null)
-		{
-			obligations.addAll(node.getSetBind().apply(rootVisitor, question));
-		}
-		else
-		{
-			obligations.addAll(node.getSeqBind().apply(rootVisitor, question));
-		}
+		obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 		PExp predicate = node.getPredicate();
 		if (predicate != null)

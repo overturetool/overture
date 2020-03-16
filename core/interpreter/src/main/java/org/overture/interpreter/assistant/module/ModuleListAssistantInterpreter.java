@@ -62,6 +62,12 @@ public class ModuleListAssistantInterpreter
 				if (e != null)
 				{
 					problems.addAll(e);
+
+					if (e.size() == 1 && e.iterator().next().isStackOverflow())
+        			{
+        				retries = 0;
+        				break;
+        			}
 				}
 			}
 		} while (--retries > 0 && !problems.isEmpty());

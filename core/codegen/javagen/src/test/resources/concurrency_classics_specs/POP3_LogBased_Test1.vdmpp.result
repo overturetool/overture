@@ -1905,10 +1905,10 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
     sentinel.entering(((POP3Server_sentinel) sentinel).DeleteMessage);
     try {
-      final POP3Message oldMsg = ((POP3Message) Utils.get(GetUserMessages(user), index));
+      final POP3Message oldMsg = ((POP3Message) Utils.get(super.GetUserMessages(user), index));
       final POP3Message newMsg = oldMsg.Delete();
       SetUserMessages(
-          user, SeqUtil.mod(GetUserMessages(user), MapUtil.map(new Maplet(index, newMsg))));
+          user, SeqUtil.mod(super.GetUserMessages(user), MapUtil.map(new Maplet(index, newMsg))));
 
     } finally {
       sentinel.leaving(((POP3Server_sentinel) sentinel).DeleteMessage);
@@ -1943,7 +1943,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
     sentinel.entering(((POP3Server_sentinel) sentinel).ResetDeletedMessages);
     try {
-      final VDMSeq oldMsgs = GetUserMessages(user);
+      final VDMSeq oldMsgs = super.GetUserMessages(user);
       VDMSeq seqCompResult_3 = SeqUtil.seq();
       VDMSet set_6 = SeqUtil.inds(oldMsgs);
       for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext(); ) {

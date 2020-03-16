@@ -711,8 +711,6 @@ abstract public class CommandReader
 	{
 		try
 		{
-			Set<File> loaded = interpreter.getSourceFiles();
-
 			if (line.equals("coverage"))
 			{
 				for (File file : interpreter.getSourceFiles())
@@ -746,17 +744,26 @@ abstract public class CommandReader
 
 			for (int p = 1; p < parts.length; p++)
 			{
-				File f = new File(parts[p]);
+				File farg = new File(parts[p]);
+				boolean done = false;
+				
+				for (File file: interpreter.getSourceFiles())
+    			{
+					if (file.getCanonicalFile().equals(farg.getCanonicalFile()))
+					{
+						doCoverage(file);	// NB. don't use canonical files
+						done = true;
+						break;
+					}
+    			}
 
-				if (loaded.contains(f))
-				{
-					doCoverage(f);
-				} else
-				{
-					println(f + " is not loaded - try 'files'");
-				}
+				if (!done)
+    			{
+    				println(farg + " is not loaded - try 'files'");
+    			}
 			}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			println("Usage: coverage clear|write <dir>|merge <dir>|<filenames>");
 		}
@@ -789,8 +796,6 @@ abstract public class CommandReader
 	{
 		try
 		{
-			Set<File> loaded = interpreter.getSourceFiles();
-
 			if (line.equals("word"))
 			{
 				for (File file : interpreter.getSourceFiles())
@@ -805,17 +810,26 @@ abstract public class CommandReader
 
 			for (int p = 1; p < parts.length; p++)
 			{
-				File f = new File(parts[p]);
+				File farg = new File(parts[p]);
+				boolean done = false;
+				
+				for (File file: interpreter.getSourceFiles())
+    			{
+					if (file.getCanonicalFile().equals(farg.getCanonicalFile()))
+					{
+						doWord(file);	// NB. don't use canonical files
+						done = true;
+						break;
+					}
+    			}
 
-				if (loaded.contains(f))
-				{
-					doWord(f);
-				} else
-				{
-					println(f + " is not loaded - try 'files'");
-				}
+				if (!done)
+    			{
+    				println(farg + " is not loaded - try 'files'");
+    			}
 			}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			println("Usage: word [<filenames>]");
 		}
@@ -850,8 +864,6 @@ abstract public class CommandReader
 	{
 		try
 		{
-			Set<File> loaded = interpreter.getSourceFiles();
-
 			if (line.equals("save"))
 			{
 				for (File file : interpreter.getSourceFiles())
@@ -866,15 +878,23 @@ abstract public class CommandReader
 
 			for (int p = 1; p < parts.length; p++)
 			{
-				File f = new File(parts[p]);
+				File farg = new File(parts[p]);
+				boolean done = false;
+				
+				for (File file: interpreter.getSourceFiles())
+    			{
+					if (file.getCanonicalFile().equals(farg.getCanonicalFile()))
+					{
+						doSave(file);	// NB. don't use canonical files
+						done = true;
+						break;
+					}
+    			}
 
-				if (loaded.contains(f))
-				{
-					doSave(f);
-				} else
-				{
-					println(f + " is not loaded - try 'files'");
-				}
+				if (!done)
+    			{
+    				println(farg + " is not loaded - try 'files'");
+    			}
 			}
 		} catch (Exception e)
 		{
@@ -921,8 +941,6 @@ abstract public class CommandReader
 	{
 		try
 		{
-			Set<File> loaded = interpreter.getSourceFiles();
-
 			if (line.equals("latex") || line.equals("latexdoc"))
 			{
 				for (File file : interpreter.getSourceFiles())
@@ -937,17 +955,26 @@ abstract public class CommandReader
 
 			for (int p = 1; p < parts.length; p++)
 			{
-				File f = new File(parts[p]);
+				File farg = new File(parts[p]);
+				boolean done = false;
+				
+				for (File file: interpreter.getSourceFiles())
+    			{
+					if (file.getCanonicalFile().equals(farg.getCanonicalFile()))
+					{
+						doLatex(file, headers);	// NB. don't use canonical files
+						done = true;
+						break;
+					}
+    			}
 
-				if (loaded.contains(f))
-				{
-					doLatex(f, headers);
-				} else
-				{
-					println(f + " is not loaded - try 'files'");
-				}
+				if (!done)
+    			{
+    				println(farg + " is not loaded - try 'files'");
+    			}
 			}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			println("Usage: latex|latexdoc <filenames>");
 		}

@@ -399,7 +399,7 @@ public class ModuleReader extends SyntaxReader
 			LexException
 	{
 		LexToken token = lastToken();
-		List<ILexNameToken> nameList = readIdList();
+		List<ILexNameToken> nameList = readIdList(false);
 		checkFor(VDMToken.COLON, 2175, "Expecting ':' after export name");
 		PType type = getTypeReader().readType();
 		return AstFactory.newAValueExport(token.location, nameList, type);
@@ -431,7 +431,7 @@ public class ModuleReader extends SyntaxReader
 			LexException
 	{
 		LexToken token = lastToken();
-		List<ILexNameToken> nameList = readIdList();
+		List<ILexNameToken> nameList = readIdList(true);
 		List<ILexNameToken> typeParams = ignoreTypeParams();
 		checkFor(VDMToken.COLON, 2176, "Expecting ':' after export name");
 		PType type = getTypeReader().readType();
@@ -464,21 +464,21 @@ public class ModuleReader extends SyntaxReader
 			LexException
 	{
 		LexToken token = lastToken();
-		List<ILexNameToken> nameList = readIdList();
+		List<ILexNameToken> nameList = readIdList(false);
 		checkFor(VDMToken.COLON, 2177, "Expecting ':' after export name");
 		PType type = getTypeReader().readOperationType();
 		return AstFactory.newAOperationExport(token.location, nameList, type);
 	}
 
-	private List<ILexNameToken> readIdList() throws ParserException,
+	private List<ILexNameToken> readIdList(boolean reservedOK) throws ParserException,
 			LexException
 	{
 		List<ILexNameToken> list = new Vector<ILexNameToken>();
-		list.add(readNameToken("Expecting name list"));
+		list.add(readNameToken("Expecting name list", reservedOK));
 
 		while (ignore(VDMToken.COMMA))
 		{
-			list.add(readNameToken("Expecting name list"));
+			list.add(readNameToken("Expecting name list", reservedOK));
 		}
 
 		return list;
@@ -690,7 +690,7 @@ public class ModuleReader extends SyntaxReader
 	private AFunctionValueImport readImportedFunction(LexIdentifierToken from)
 			throws ParserException, LexException
 	{
-		LexNameToken name = readNameToken("Expecting imported function name");
+		LexNameToken name = readNameToken("Expecting imported function name", true);
 		LexNameToken defname = getDefName(from, name);
 		LexNameList typeParams = getDefinitionReader().readTypeParams();
 
@@ -706,7 +706,7 @@ public class ModuleReader extends SyntaxReader
 
 		if (ignore(VDMToken.RENAMED))
 		{
-			renamed = readNameToken("Expected renamed function name");
+			renamed = readNameToken("Expected renamed function name", true);
 		}
 
 		return AstFactory.newAFunctionValueImport(defname, type, typeParams, renamed);
@@ -737,7 +737,7 @@ public class ModuleReader extends SyntaxReader
 	private AOperationValueImport readImportedOperation(LexIdentifierToken from)
 			throws ParserException, LexException
 	{
-		LexNameToken name = readNameToken("Expecting imported operation name");
+		LexNameToken name = readNameToken("Expecting imported operation name", false);
 		LexNameToken defname = getDefName(from, name);
 		PType type = null;
 
@@ -751,7 +751,7 @@ public class ModuleReader extends SyntaxReader
 
 		if (ignore(VDMToken.RENAMED))
 		{
-			renamed = readNameToken("Expected renamed operation name");
+			renamed = readNameToken("Expected renamed operation name", false);
 		}
 
 		return AstFactory.newAOperationValueImport(defname, type, renamed);

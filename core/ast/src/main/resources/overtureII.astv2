@@ -23,6 +23,7 @@ Tokens
   comment = 'java:org.overture.ast.intf.lex.ILexComment';
   comments = 'java:org.overture.ast.intf.lex.ILexCommentList';
   annotationimpl = 'java:org.overture.ast.annotations.Annotation';
+  typeset = 'java:org.overture.ast.util.PTypeSet';
   
   clonableFile ='java:org.overture.ast.util.ClonableFile';
   clonableString ='java:org.overture.ast.util.ClonableString';
@@ -56,7 +57,7 @@ exp {-> package='org.overture.ast.expressions'
 	| (type):type 
 	| [location]:location
 	| [comments]:comments }
-    =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursive):definition
+    =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursiveCycles):definition**
     |	{narrow} [test]:exp [typeName]:LexNameToken (basicType):type (typedef):definition
     |   #Unary
     |   #Binary
@@ -125,7 +126,7 @@ exp {-> package='org.overture.ast.expressions'
     |   {indices}  
     |   {len} 
     |   {mapDomain} 
-    |   {mapInverse} (mapType):type.#Map
+    |   {mapInverse} (mapType):type.#map
     |   {mapRange} 
     |   {not}  
     |   {powerSet} 
@@ -191,7 +192,7 @@ exp {-> package='org.overture.ast.expressions'
     ;
     
 #Seq {-> package='org.overture.ast.expressions'}
-    =   {seqComp} [first]:exp [setBind]:bind.set [seqBind]:bind.seq [predicate]:exp
+    =   {seqComp} [first]:exp [bind]:bind [predicate]:exp
     |   {seqEnum} [members]:exp* (types):type*
     ;
     
@@ -220,7 +221,7 @@ type {-> package='org.overture.ast.types'
     |   {class} [name]:LexNameToken (classdef):definition.#class //change classdef to graf - is this correct dont see how it could have worked before
     |   {function} [partial]:java_Boolean (parameters):type* (result):type [instantiated]:java_Boolean
     |   #invariant
-    |   #Map 
+    |   #map 
     |   {operation} (parameters):type* (result):type (pure):java_Boolean
     |   {optional} (type):type
     |   {parameter} [name]:LexNameToken
@@ -232,7 +233,7 @@ type {-> package='org.overture.ast.types'
     |   {union} (types):type* [infinite]:java_Boolean [expanded]:java_Boolean 
         (seqDone):java_Boolean (seqType):type.#seq 
         (setDone):java_Boolean (setType):type.#set 
-        (mapDone):java_Boolean (mapType):type.#Map
+        (mapDone):java_Boolean (mapType):type.#map
         (prodCard):java_Integer (prodType):type.product
         (funcDone):java_Boolean (funcType):type
         (opDone):java_Boolean (opType):type
@@ -261,7 +262,7 @@ type {-> package='org.overture.ast.types'
     |   {set1} 
     ;
 
-#Map  {-> package='org.overture.ast.types'
+#map  {-> package='org.overture.ast.types'
 	|	(from):type 
 	|	(to):type 
 	|	[empty]:java_Boolean}
@@ -452,6 +453,7 @@ definition {-> package='org.overture.ast.definitions'
     |	(state):definition.state
     |	(actualResult):type
     |	[isConstructor]:java_Boolean
+    |	[possibleExceptions]:typeset
     }
 	=	{explicit}
 			[parameterPatterns]:pattern* 
@@ -597,6 +599,7 @@ stm {-> package='org.overture.ast.statements'
     |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
     |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken 
                      [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
+                     [fieldDef]:definition
     |   {call} [name]:LexNameToken [args]:exp* (rootdef):definition
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken (invDefs):definition*
@@ -637,7 +640,7 @@ stateDesignator {-> package='org.overture.ast.statements'
 	|	(type):type}
     =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
     |   {identifier} [name]:LexNameToken
-    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp (mapType):type.#Map (seqType):type.#seq
+    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp (mapType):type.#map (seqType):type.#seq
     ;
     
 objectDesignator {-> package='org.overture.ast.statements'

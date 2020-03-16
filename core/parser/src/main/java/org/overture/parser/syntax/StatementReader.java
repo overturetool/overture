@@ -393,7 +393,7 @@ public class StatementReader extends SyntaxReader
 
 	private PStm readSimpleCallStatement() throws ParserException, LexException
 	{
-		LexNameToken name = readNameToken("Expecting operation name in call statement");
+		LexNameToken name = readNameToken("Expecting operation name in call statement", true);
 
 		checkFor(VDMToken.BRA, 2206, "Expecting '(' after call operation name");
 		List<PExp> args = new Vector<PExp>();
@@ -998,7 +998,7 @@ public class StatementReader extends SyntaxReader
 	{
 		checkFor(VDMToken.SEQ_OPEN, 2241, "Expecting '['");
 		DefinitionReader dr = getDefinitionReader();
-		ASpecificationStm stmt = dr.readSpecification(token, false);
+		ASpecificationStm stmt = dr.readSpecification(token, true);
 		checkFor(VDMToken.SEQ_CLOSE, 2242, "Expecting ']' after specification statement");
 		return stmt;
 	}

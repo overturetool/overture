@@ -125,7 +125,7 @@ instance variables
   static private num : nat := 0;
 
   -- we limit the number of inserted stimuli
-  protected max_stimuli : nat := 0;
+  protected mx_stimuli : nat := 0;
 
   -- administration for the event traces
   -- e2s is used for all out-going stimuli (environment to system)
@@ -147,7 +147,7 @@ operations
   public EnvironmentTask: seq of char * EventDispatcher * nat ==>
          EnvironmentTask
   EnvironmentTask (tnm, disp, pno) == 
-  ( max_stimuli := pno; AbstractTask(tnm,disp) );
+  ( mx_stimuli := pno; AbstractTask(tnm,disp) );
 
   protected handleEvent: Event ==> ()
   handleEvent (-) == skip;
@@ -204,7 +204,7 @@ sync
   mutex(logEnvToSys);
   mutex(logSysToEnv);
   -- getMinMaxAverage is blocked until all responses have been received
-  per getMinMaxAverage => card dom s2e = max_stimuli
+  per getMinMaxAverage => card dom s2e = mx_stimuli
 
 end EnvironmentTask
 \end{vdm_al}
@@ -335,7 +335,7 @@ operations
   createSignal: () ==> ()
   createSignal () ==
     duration (0)
-      if (card dom e2s < max_stimuli) then
+      if (card dom e2s < mx_stimuli) then
         ( dcl num : nat := getNum();
           logEnvToSys(num);
           raiseInterrupt("HandleKeyPress", num) );
@@ -819,7 +819,7 @@ operations
   createSignal: () ==> ()
   createSignal () ==
     duration (0)
-      if (card dom e2s < max_stimuli) then
+      if (card dom e2s < mx_stimuli) then
         ( dcl num : nat := getNum();
           logEnvToSys(num);
           raiseInterrupt("HandleTMC", num) );
@@ -855,7 +855,7 @@ operations
   createSignal: () ==> ()
   createSignal () ==
     duration (0)
-      if (card dom e2s < max_stimuli) then
+      if (card dom e2s < mx_stimuli) then
         ( dcl num : nat := getNum();
           logEnvToSys(num);
           raiseInterrupt("HandleKeyPress", num) );

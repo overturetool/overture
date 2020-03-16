@@ -1,1 +1,1 @@
-["Error 3206: rectrapstmt.vdm at 25:14 Matching expression is not a set type","Error 3328: rectrapstmt.vdm at 40:5 Statement may return void value","Error 3027: rectrapstmt.vdm at 30:3 Operation returns unexpected type","Error 3201: rectrapstmt.vdm at 53:9 Matching expression is not a compatible record type"]
+["Error 3328: rectrapstmt.vdm at 40:5 Statement may return void value","Error 3027: rectrapstmt.vdm at 30:3 Operation returns unexpected type"]

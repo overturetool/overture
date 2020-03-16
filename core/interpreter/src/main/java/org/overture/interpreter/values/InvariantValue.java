@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
@@ -211,7 +212,12 @@ public class InvariantValue extends ReferenceValue
 		{
 			if (equality != null)
 			{
-				Context ctxt = Interpreter.getInstance().initialContext;
+    			if (other instanceof NilValue && !(type.getType() instanceof AOptionalType))
+    			{
+    				return false;
+    			}
+
+    			Context ctxt = Interpreter.getInstance().initialContext;
 				ctxt.setThreadState(null, null);
 				ctxt.threadState.setAtomic(true);
 

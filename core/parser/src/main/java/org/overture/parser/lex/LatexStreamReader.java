@@ -30,8 +30,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Stack;
 
-import org.overture.config.Settings;
-
 /**
  * A class to read LaTeX encoded VDM files.
  */
@@ -53,7 +51,7 @@ public class LatexStreamReader extends InputStreamReader
 		String line = br.readLine();
 
 		boolean supress = false;
-		boolean begin = false;
+		boolean suppressLine = false;
 		int pos = 0;
 
 		while (line != null)
@@ -64,70 +62,80 @@ public class LatexStreamReader extends InputStreamReader
 			{
 				supress = true;
 				// line = "";
-			} else if (trimmed.startsWith("\\"))
+			}
+			else if (trimmed.startsWith("\\"))
 			{
 				if (trimmed.startsWith("\\begin{vdm_al}"))
 				{
 					supress = false;
-					begin = true;
-					// line = "";
-				} else if (trimmed.startsWith("\\end{vdm_al}")
+					suppressLine = true;
+				}
+				else if (trimmed.startsWith("\\end{vdm_al}")
 						|| trimmed.startsWith("\\section")
 						|| trimmed.startsWith("\\subsection")
 						|| trimmed.startsWith("\\document"))
 				{
 					supress = true;
-					// line = "";
 				}
-			} else if (trimmed.startsWith("#"))
+			}
+			else if (trimmed.startsWith("#"))
 			{
 				if (trimmed.startsWith("#ifdef"))
 				{
 					String label = trimmed.substring(6).trim();
 					ifstack.push(supress);
 
-					if (!supress && !label.equals(Settings.dialect.name()))
+					if (!supress && System.getProperty(label) == null)
 					{
 						supress = true;
 					}
 
-					// line = "";
-				} else if (trimmed.startsWith("#else"))
+					suppressLine = true;
+				}
+				else if (trimmed.startsWith("#ifndef"))
+				{
+					String label = trimmed.substring(7).trim();
+					ifstack.push(supress);
+
+					if (!supress && System.getProperty(label) != null)
+					{
+						supress = true;
+					}
+
+					suppressLine = true;
+				}
+				else if (trimmed.startsWith("#else") && !ifstack.isEmpty())
 				{
 					if (!ifstack.peek())
 					{
 						supress = !supress;
-						// line = "";
+						suppressLine = true;
 					}
-				} else if (trimmed.startsWith("#endif"))
+				}
+				else if (trimmed.startsWith("#endif") && !ifstack.isEmpty())
 				{
 					supress = ifstack.pop();
-					// line = "";
+					suppressLine = true;
 				}
 			}
 
-			if (!supress && !begin)
+			if (!supress && !suppressLine)
 			{
 				line.getChars(0, line.length(), array, pos);
 				pos += line.length();
-			} else
+			}
+			else
 			{
 				for (int i = 0; i < line.length(); i++)
 				{
 					array[pos++] = ' ';
 				}
-
 			}
 
-			begin = false;
+			suppressLine = false;
 			if (pos < array.length)
 			{
 				array[pos++] = '\n';
-				// //array[pos++] = ' ';
-				// if(pos < array.length)
-				// {
-				//
-				// }
 			}
 			line = br.readLine();
 		}

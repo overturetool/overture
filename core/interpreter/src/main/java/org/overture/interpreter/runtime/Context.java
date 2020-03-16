@@ -24,6 +24,8 @@
 package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -333,6 +335,57 @@ public class Context extends LexNameTokenMap<Value>
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * This is used by the stack overflow processing via Function/OperationValue.
+	 * It is intended to print the frame titles without recursing, and to
+	 * suppress all but the top and bottom of the (presumably large) stack.
+	 */
+	private static final int FRAMES_LIMIT	= 50;	// Top count
+	private static final int TAIL_LIMIT		= 5;	// Bottom count
+	
+	public void printStackFrames(PrintWriter out)
+	{
+		Context frame = this;
+		out.print(format("\t", frame));
+		int count = 0;
+		List<String> saved = new LinkedList<String>();
+
+		while (frame.outer != null)
+		{
+			if (++count < FRAMES_LIMIT)
+			{
+				out.println("In context of " + frame.title + " " + frame.location);
+			}
+			else
+			{
+				saved.add(String.format("In context of " + frame.title + " " + frame.location));
+			}
+			
+			frame = frame.outer;	// NB. DON'T RECURSE!
+		}
+		
+		int skipped = saved.size();
+		
+		if (skipped < TAIL_LIMIT)
+		{
+			for (String s: saved)
+			{
+				out.println(s);
+			}
+		}
+		else
+		{
+			out.println("... skipped " + (skipped - TAIL_LIMIT));
+			
+			for (int i = skipped - TAIL_LIMIT; i < skipped; i++)
+			{
+				out.println(saved.get(i));
+			}
+		}
+
+		out.println("In context of " + frame.title);
 	}
 
 	public void printStackTrace(PrintWriter out, boolean variables)

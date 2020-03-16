@@ -293,8 +293,9 @@ public class LexTokenReader extends BacktrackInputReader
 	@Override
 	public String toString()
 	{
-		return "Last token [" + last + "], last char [" + ch + "] in " + file
-				+ ":" + linecount + ":" + charpos;
+		return "Last token [" + last + "], last char [" +
+				(ch == EOF ? "EOF" : ch) +
+				"] in " + file + " at " + linecount + ":" + charpos;
 	}
 
 	/**

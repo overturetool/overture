@@ -2,6 +2,7 @@
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="3" line="18" message="Definition 'n' not used" messageType="warning" number="5000" resource="recfun-05.vdm"/>
 <message column="1" line="20" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-05.vdm"/>
+<message column="1" line="20" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-05.vdm"/>
 <message column="9" line="18" message="Value is not of the right type" messageType="error" number="3327" resource="recfun-05.vdm"/>
 <message column="1" line="17" message="Function returns unexpected type" messageType="error" number="3018" resource="recfun-05.vdm"/>
 <result/>

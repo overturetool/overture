@@ -177,6 +177,9 @@ public class ClassTypeChecker extends TypeChecker
 			}
 		}
 
+		// Prepare to look for recursive loops
+		RecursiveLoops.getInstance().reset();
+
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> tc = getTypeCheckVisitor();
 		for (Pass pass : Pass.values())
 		{
@@ -206,7 +209,10 @@ public class ClassTypeChecker extends TypeChecker
 				}
 			}
 		}
-		
+
+		// Look for recursive loops
+		RecursiveLoops.getInstance().typeCheckClasses(classes, assistantFactory);
+
 		for (SClassDefinition c: classes)
 		{
 			for (PAnnotation annotation: c.getAnnotations())

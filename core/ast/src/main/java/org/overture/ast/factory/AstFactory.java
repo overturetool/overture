@@ -1944,16 +1944,7 @@ public class AstFactory
 		initExpression(result, start);
 
 		result.setFirst(first);
-		
-		if (bind instanceof ASetBind)
-		{
-			result.setSetBind((ASetBind) bind);
-		}
-		else // ASeqBind
-		{
-			result.setSeqBind((ASeqBind) bind);
-		}
-		
+		result.setBind(bind);
 		result.setPredicate(predicate);
 
 		return result;

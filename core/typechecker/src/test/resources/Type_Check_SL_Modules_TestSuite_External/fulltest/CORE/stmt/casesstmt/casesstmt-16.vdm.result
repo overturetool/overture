@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
-<message column="27" line="15" message="Unexpected type for argument 1" messageType="error" number="3217" resource="casesstmt-16.vdm"/>
-<message column="28" line="19" message="Unexpected type for argument 1" messageType="error" number="3217" resource="casesstmt-16.vdm"/>
 <result/>
 </testResult>

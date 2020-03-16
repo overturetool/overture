@@ -62,6 +62,7 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
+import org.overture.typechecker.RecursiveLoops;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
@@ -101,21 +102,21 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		PDefinition func = question.env.getEnclosingDefinition();
+		PDefinition enclfunc = question.env.getEnclosingDefinition();
 		boolean inFunction = question.env.isFunctional();
 		boolean inOperation = !inFunction;
-		boolean inReserved = (func == null || func.getName() == null) ?
+		boolean inReserved = (enclfunc == null || enclfunc.getName() == null) ?
 				false :
-				func.getName().isReserved();
+				enclfunc.getName().isReserved();
 
 		if (inFunction)
 		{
-			PDefinition called = getRecursiveDefinition(node, question);
+			PDefinition calling = getRecursiveDefinition(node, question);
 
-			if (called instanceof AExplicitFunctionDefinition)
+			if (calling instanceof AExplicitFunctionDefinition)
 			{
 
-				AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) called;
+				AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) calling;
 
 				if (def.getIsCurried())
 				{
@@ -124,33 +125,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 					if (node.getType() instanceof AFunctionType
 							&& ((AFunctionType) node.getType()).getResult() instanceof AFunctionType)
 					{
-						called = null;
+						calling = null;
 					}
 				}
 
 			}
 
-			if (called != null)
+			if (enclfunc != null && calling != null)
 			{
-				if (func instanceof AExplicitFunctionDefinition)
-				{
-					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) func;
-
-					if (called == def)
-					{
-						node.setRecursive(def);
-						def.setRecursive(true);
-					}
-				} else if (func instanceof AImplicitFunctionDefinition)
-				{
-					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition) func;
-
-					if (called == def)
-					{
-						node.setRecursive(def);
-						def.setRecursive(true);
-					}
-				}
+				RecursiveLoops.getInstance().addApplyExp(enclfunc, node, calling);
 			}
 		}
 
@@ -198,7 +181,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 								+ "' cannot be called from here", node.getLocation(), node);
 				results.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else if (inOperation && Settings.release == Release.VDM_10
-					&& func != null && func.getAccess().getPure()
+					&& enclfunc != null && enclfunc.getAccess().getPure()
 					&& !ot.getPure())
 			{
 				TypeCheckerErrors.report(3339,
@@ -2459,37 +2442,18 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseASeqCompSeqExp(ASeqCompSeqExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		// TODO: check if this is still needed?!
-		// save these so we can clone them after they have been type checked
-		// PExp setBindSet = node.getSetBind().getSet();
-		// PPattern setBindPattern = node.getSetBind().getPattern();
-		//
-		// List<PPattern> plist = new ArrayList<PPattern>();
-		// plist.add(setBindPattern);
-		// List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		// mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist,
-		// setBindSet));
-
-		PDefinition def = null;
-
-		if (node.getSetBind() != null)
-		{
-			def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
-			def.parent(node.getSetBind());
-		} else
-		{
-			def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSeqBind()));
-			def.parent(node.getSeqBind());
-		}
-
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind()));
+		def.parent(node.getBind());
 		def.apply(THIS, question.newConstraint(null));
 
-		// now they are typechecked, add them again
-		// node.getSetBind().setSet(setBindSet.clone());
-		// node.getSetBind().setPattern(setBindPattern.clone());
+		if (node.getBind() instanceof ATypeBind)
+		{
+			ATypeBind tb = (ATypeBind) node.getBind();
+			question.assistantFactory.createATypeBindAssistant().typeResolve(tb, THIS, question);
+		}
 
-		if (node.getSetBind() != null && (
-				question.assistantFactory.createPPatternAssistant(question.fromModule).getVariableNames(node.getSetBind().getPattern()).size()
+		if ((node.getBind() instanceof ASetBind || node.getBind() instanceof ATypeBind) && (
+				question.assistantFactory.createPPatternAssistant(question.fromModule).getVariableNames(node.getBind().getPattern()).size()
 						> 1
 						|| !question.assistantFactory.createPTypeAssistant().isOrdered(question.assistantFactory.createPDefinitionAssistant().getType(def), node.getLocation())))
 		{

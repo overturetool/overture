@@ -273,14 +273,28 @@ public class FunctionValue extends Value
 	public Value eval(ILexLocation from, Value arg, Context ctxt)
 			throws AnalysisException
 	{
-		ValueList args = new ValueList(arg);
-		return eval(from, args, ctxt, null);
+		try
+		{
+			ValueList args = new ValueList(arg);
+			return eval(from, args, ctxt, null);
+		}
+		catch (StackOverflowError e)
+		{
+			throw new ContextException(4174, "Stack overflow", location, ctxt);
+		}
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
 			throws AnalysisException
 	{
-		return eval(from, argValues, ctxt, null);
+		try
+		{
+			return eval(from, argValues, ctxt, null);
+		}
+		catch (StackOverflowError e)
+		{
+			throw new ContextException(4174, "Stack overflow", location, ctxt);
+		}
 	}
 
 	public void setSelf(ObjectValue self)

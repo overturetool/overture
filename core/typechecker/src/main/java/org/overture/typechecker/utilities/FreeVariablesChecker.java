@@ -688,20 +688,10 @@ public class FreeVariablesChecker extends QuestionAnswerAdaptor<FreeVarInfo, Lex
 		FreeVarInfo local = null;
 		LexNameSet names = new LexNameSet();	// Note "first" is conditional
 		
-		if (node.getSeqBind() != null)
-		{
-			PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPBindAssistant().getMultipleBindList(node.getSeqBind()));
-			def.parent(node.getSeqBind());
-			local = info.set(new FlatEnvironment(af, def, info.env));
-			names.addAll(node.getSeqBind().apply(this, local));
-		}
-		else if (node.getSetBind() != null)
-		{
-			PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPBindAssistant().getMultipleBindList(node.getSetBind()));
-			def.parent(node.getSetBind());
-			local = info.set(new FlatEnvironment(af, def, info.env));
-			names.addAll(node.getSetBind().apply(this, local));
-		}
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), af.createPBindAssistant().getMultipleBindList(node.getBind()));
+		def.parent(node.getBind());
+		local = info.set(new FlatEnvironment(af, def, info.env));
+		names.addAll(node.getBind().apply(this, local));
 		
 		if (node.getPredicate() != null)
 		{

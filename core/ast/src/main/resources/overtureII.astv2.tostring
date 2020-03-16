@@ -82,7 +82,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->#Map->mapComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
 %exp->#Map->mapEnum = "" + $($[members]$.isEmpty() ? "{|->}" : "{" + Utils.listToString($[members]$) + "}") + ""$
  
-%exp->#Seq->seqComp = "[" [first] " | "  [setBind] + $($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
+%exp->#Seq->seqComp = "[" [first] " | " [bind] $+($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
 %exp->#Seq->seqEnum = "" + $Utils.listToString("[", $[members]$, ", ", "]")$
 
 %exp->#Set->setComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
@@ -106,8 +106,8 @@ import org.overture.ast.util.ToStringUtil;
 %type->bracket = [type]
 %type->class =[classdef]$.getName().getName()$
 %type->function = "(" + $($ [parameters]$.isEmpty() ? "()" : Utils.listToString($[parameters]$, " * ")) + ($[partial]$ ? " -> " : " +> ")$ + [result] + ")"
-%type->#invariant->named = [name]$.getExplicit(true).toString()$
-%type->#invariant->record = ""+$Utils.recNameToString($[name]$)$
+%type->#invariant->named = [name]$.getExplicit(true).toString() + (getOpaque() != null && getOpaque() ? " /* opaque */" : "")$
+%type->#invariant->record = ""+$Utils.recNameToString($[name]$) + (getOpaque() != null && getOpaque() ? " /* opaque */" : "")$
 //map
 %type->#Map->inMap="inmap (" [from]  ") to ("  [to] ")"
 %type->#Map->map="map (" [from]  ") to ("  [to] ")"
