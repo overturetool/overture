@@ -164,9 +164,9 @@ the manifests, though.
 
   <repositories>
     <repository>
-      <id>eclipse-oxygen</id>
+      <id>eclipse-2019-12</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/oxygen</url>
+      <url>http://download.eclipse.org/releases/2019-12</url>
     </repository>
   </repositories>
 
@@ -175,33 +175,6 @@ the manifests, though.
          being executed on and then build the matching version of
          Overture for that OS.  -jwc/23Jan2014
     -->
-    <profile>
-      <id>win</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <os>
-          <family>windows</family>
-          <arch>x86</arch>
-        </os>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <environments>
-                <environment>
-                  <os>win32</os>
-                  <ws>win32</ws>
-                  <arch>x86</arch>
-                </environment>
-              </environments>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
 
     <profile>
       <id>win64</id>
@@ -275,35 +248,6 @@ the manifests, though.
     </profile>
 
     <profile>
-      <id>linux</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <os>
-          <family>unix</family>
-          <name>linux</name>
-          <arch>x86</arch>
-        </os>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <environments>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>x86</arch>
-                </environment>
-              </environments>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
       <id>linux64</id>
       <activation>
         <activeByDefault>false</activeByDefault>
@@ -323,7 +267,7 @@ the manifests, though.
                 <environment>
                   <os>linux</os>
                   <ws>gtk</ws>
-                  <arch>x86</arch>
+                  <arch>x86_64</arch>
                 </environment>
                 <environment>
                   <os>linux</os>
@@ -355,17 +299,7 @@ the manifests, though.
                 <environment>
                   <os>win32</os>
                   <ws>win32</ws>
-                  <arch>x86</arch>
-                </environment>
-                <environment>
-                  <os>win32</os>
-                  <ws>win32</ws>
                   <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>x86</arch>
                 </environment>
                 <environment>
                   <os>linux</os>
