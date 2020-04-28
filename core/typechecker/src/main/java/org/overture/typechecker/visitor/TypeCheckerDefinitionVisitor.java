@@ -362,8 +362,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getPredef() != null)
 		{
 			// building the new scope for subtypechecks
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			pre.setFunctional(true);
+			pre.setEnclosingDefinition(node.getPredef());
 
-			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMES));
+			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMES));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
 			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
@@ -387,6 +390,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			List<PDefinition> rdefs = question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(rp, expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, rdefs, local, NameScope.NAMES);
 			post.setFunctional(true);
+			post.setEnclosingDefinition(node.getPostdef());
 
 			// building the new scope for subtypechecks
 			PType b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMES));
@@ -515,7 +519,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getPredef() != null)
 		{
-			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			pre.setFunctional(true);
+			pre.setEnclosingDefinition(node.getPredef());
+
+			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, question.scope));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
 			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
@@ -581,7 +589,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				List<PDefinition> postdefs = question.assistantFactory.createAPatternTypePairAssistant(question.fromModule).getDefinitions(node.getResult());
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMES);
 				post.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
-				post.setEnclosingDefinition(node);
+				post.setEnclosingDefinition(node.getPostdef());
 				post.setFunctional(true);
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMES));
 				post.unusedCheck();

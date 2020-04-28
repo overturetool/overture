@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="7" line="27" message="x at 25:13 hidden by x" messageType="warning" number="5008" resource="recfun-31.vdm"/>
-<message column="1" line="16" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-31.vdm"/>
-<message column="1" line="16" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-31.vdm"/>
 <message column="1" line="24" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-31.vdm"/>
 <message column="1" line="24" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-31.vdm"/>
+<message column="1" line="16" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-31.vdm"/>
+<message column="1" line="16" message="Recursive function has no measure" messageType="warning" number="5012" resource="recfun-31.vdm"/>
 <message column="3" line="19" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="recfun-31.vdm"/>
 <message column="3" line="19" message="Pattern cannot match" messageType="error" number="3311" resource="recfun-31.vdm"/>
 <message column="30" line="19" message="Name 'A`y' is not in scope" messageType="error" number="3182" resource="recfun-31.vdm"/>

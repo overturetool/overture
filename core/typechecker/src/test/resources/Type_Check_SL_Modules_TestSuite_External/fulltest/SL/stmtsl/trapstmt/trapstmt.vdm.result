@@ -6,8 +6,8 @@
 <message column="12" line="29" message="a at 10:3 hidden by a" messageType="warning" number="5008" resource="trapstmt.vdm"/>
 <message column="15" line="47" message="Definition 'arg2' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
 <message column="10" line="58" message="b at 57:11 hidden by b" messageType="warning" number="5008" resource="trapstmt.vdm"/>
-<message column="13" line="57" message="Definition 'l' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
 <message column="9" line="57" message="Definition 'n' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
+<message column="13" line="57" message="Definition 'l' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
 <message column="3" line="11" message="Definition 'stid' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
 <message column="3" line="16" message="Definition 'Trap1' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>
 <message column="3" line="38" message="Definition 'Trap4' not used" messageType="warning" number="5000" resource="trapstmt.vdm"/>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
-<message column="23" line="71" message="lights at 20:3 hidden by lights" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="30" line="71" message="conflicts at 26:3 hidden by conflicts" messageType="warning" number="5008" resource="trafficSL"/>
+<message column="23" line="71" message="lights at 20:3 hidden by lights" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="26" line="75" message="p1 at 12:3 hidden by p1" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="29" line="75" message="p2 at 14:3 hidden by p2" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="21" line="81" message="lights at 20:3 hidden by lights" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="28" line="81" message="conflicts at 26:3 hidden by conflicts" messageType="warning" number="5008" resource="trafficSL"/>
-<message column="30" line="88" message="conflicts at 26:3 hidden by conflicts" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="23" line="88" message="lights at 20:3 hidden by lights" messageType="warning" number="5008" resource="trafficSL"/>
+<message column="30" line="88" message="conflicts at 26:3 hidden by conflicts" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="12" line="93" message="lights at 20:3 hidden by lights" messageType="warning" number="5008" resource="trafficSL"/>
 <message column="3" line="36" message="Definition 'kernel' not used" messageType="warning" number="5000" resource="trafficSL"/>
 <message column="3" line="43" message="Definition 'Time' not used" messageType="warning" number="5000" resource="trafficSL"/>
