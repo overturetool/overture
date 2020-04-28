@@ -8,23 +8,19 @@
 <message column="8" line="423" message="Definition 'e' not used" messageType="warning" number="5000" resource="STVSL"/>
 <message column="16" line="473" message="Definition 's' not used" messageType="warning" number="5000" resource="STVSL"/>
 <message column="35" line="539" message="i at 503:8 hidden by i" messageType="warning" number="5008" resource="STVSL"/>
-<message column="3" line="419" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="3" line="419" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="3" line="419" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
 <message column="1" line="106" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
 <message column="3" line="280" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
 <message column="3" line="280" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="3" line="431" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="3" line="431" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="3" line="431" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="3" line="431" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="1" line="290" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="1" line="370" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="1" line="414" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
+<message column="3" line="419" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
+<message column="3" line="419" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
 <message column="1" line="150" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
 <message column="3" line="268" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
 <message column="3" line="268" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
-<message column="3" line="268" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
+<message column="1" line="414" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
+<message column="1" line="290" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
+<message column="3" line="431" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
+<message column="3" line="431" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
+<message column="1" line="370" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL"/>
 <message column="1" line="11" message="Definition 'Votes' not used" messageType="warning" number="5000" resource="STVSL"/>
 <message column="1" line="615" message="Definition 'CONDUCT_ELECTION' not used" messageType="warning" number="5000" resource="STVSL"/>
 <result/>
