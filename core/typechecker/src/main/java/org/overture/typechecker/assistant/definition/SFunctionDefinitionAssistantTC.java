@@ -176,13 +176,18 @@ public class SFunctionDefinitionAssistantTC implements IAstAssistant
 					{
 						recursiveCycles.add(cycle);
 						cycleNames.add(RecursiveLoops.getInstance().getCycleNames(cycle));
-						mutuallyRecursive = mutuallyRecursive || cycle.size() > 2;	// eg. [f, g, f]
+						mutuallyRecursive = mutuallyRecursive || cycle.size() > 2;	// eg. [f, g, f] not [f, f]
+						checkCycleMeasures(cycle);
 					}
-
-					checkCycleMeasures(cycle);
  				}
 			}
 
+			if (cycleNames.isEmpty())
+			{
+				// No recursion via this "called" apply
+				return;
+			}
+			
 			if (parent instanceof AExplicitFunctionDefinition)
 			{
 				AExplicitFunctionDefinition def = (AExplicitFunctionDefinition)parent;
