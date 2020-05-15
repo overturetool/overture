@@ -2,30 +2,24 @@
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="4" line="836" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="4" line="836" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="836" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1467" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1467" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1467" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="908" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="908" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="908" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1658" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1658" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="856" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="856" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="1139" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="1139" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="4" line="1681" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="4" line="1681" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1726" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1726" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1139" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1139" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1139" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="1699" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="856" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="856" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="4" line="1152" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="4" line="1152" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="908" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="908" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="908" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="1726" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="1467" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="1467" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="4" line="1479" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="4" line="1479" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1699" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
-<message column="4" line="1699" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
+<message column="4" line="1658" message="Recursive function has no measure" messageType="warning" number="5012" resource="raildirSL"/>
 <message column="17" line="1005" message="Definition 'Tracks' not used" messageType="warning" number="5000" resource="raildirSL"/>
 <message column="50" line="1010" message="Definition 'Point_control' not used" messageType="warning" number="5000" resource="raildirSL"/>
 <message column="28" line="1015" message="Definition 'Signals' not used" messageType="warning" number="5000" resource="raildirSL"/>
