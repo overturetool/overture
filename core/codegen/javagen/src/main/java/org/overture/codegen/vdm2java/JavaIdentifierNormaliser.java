@@ -59,7 +59,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 
 			String newModule = module;
 			if (module != null && !isImplicitlyNamed(module)
-					&& !JavaCodeGenUtil.isValidJavaIdentifier(module))
+					&& !JavaCodeGenUtil.isValidJavaIdentifier(module) && !module.equals(""))
 			{
 				newModule = getReplacementName(module);
 				rename = true;
