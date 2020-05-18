@@ -413,13 +413,14 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 	private void setMinMax(AOrdRelation ordRelation, ATypeDefinition typeDef) {
 		ILexLocation loc = ordRelation.getRelDef().getLocation().clone();
+		String module = typeDef.getName().getModule();
 
-		PExp left = AstFactoryTC.newAVariableExp(new LexNameToken("", "x", loc.clone()));
-		PExp right = AstFactoryTC.newAVariableExp(new LexNameToken("", "y", loc.clone()));
+		PExp left = AstFactoryTC.newAVariableExp(new LexNameToken(module, "x", loc.clone()));
+		PExp right = AstFactoryTC.newAVariableExp(new LexNameToken(module, "y", loc.clone()));
 
 		List<PPattern> params = new LinkedList<>();
-		params.add(AstFactory.newAIdentifierPattern(new LexNameToken("", "x", loc.clone())));
-		params.add(AstFactory.newAIdentifierPattern(new LexNameToken("", "y", loc.clone())));
+		params.add(AstFactory.newAIdentifierPattern(new LexNameToken(module, "x", loc.clone())));
+		params.add(AstFactory.newAIdentifierPattern(new LexNameToken(module, "y", loc.clone())));
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		parameters.add(params);
 
