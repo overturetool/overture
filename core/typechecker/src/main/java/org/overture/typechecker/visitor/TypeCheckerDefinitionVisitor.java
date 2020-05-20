@@ -92,9 +92,11 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SInvariantTypeBase;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ExcludedDefinitions;
@@ -1509,10 +1511,33 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		else
 		{
 			node.setPass(Pass.DEFS);		// Come back later to do inv definitions above.
-			
 			PType type = question.assistantFactory.createPDefinitionAssistant().getType(node);
 			node.setType(type);
-	
+			String fromModule = node.getLocation().getModule();
+
+			if (question.assistantFactory.createPTypeAssistant().isUnion(type, fromModule))
+			{
+				AUnionType ut = question.assistantFactory.createPTypeAssistant().getUnion(type, fromModule);
+
+				for (PType t: ut.getTypes())
+				{
+					if (t instanceof SInvariantTypeBase)
+					{
+						SInvariantTypeBase it = (SInvariantTypeBase) t;
+
+						if (node.getOrdRelation() != null && it.getOrdDef() != null)
+						{
+							TypeChecker.warning(5019, "Order of union member " + t + " will be overridden", node.getLocation());
+						}
+
+						if (node.getEqRelation() != null && it.getEqDef() != null)
+						{
+							TypeChecker.warning(5020, "Equality of union member " + t + " will be overridden", node.getLocation());
+						}
+					}
+				}
+			}
+
 			// We have to do the "top level" here, rather than delegating to the types
 			// because the definition pointer from these top level types just refers
 			// to the definition we are checking, which is never "narrower" than itself.
