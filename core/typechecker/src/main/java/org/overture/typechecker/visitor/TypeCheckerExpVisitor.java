@@ -3405,6 +3405,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			t = AstFactory.newAIntNumericBasicType(node.getLocation());
 			question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, t, node.getLocation());
 		}
+		else if (!question.assistantFactory.createPTypeAssistant().isNumeric(t, question.fromModule))
+		{
+			TypeChecker.report(3288, "'-' expression must be numeric", node.getLocation());
+		}
 
 		node.setType(t);
 		return t;
@@ -3414,8 +3418,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
-		node.setType(node.getExp().apply(THIS, question));
-		return node.getType();
+		PType t = node.getExp().apply(THIS, question);
+
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(t, question.fromModule))
+		{
+			TypeChecker.report(3289, "'+' expression must be numeric", node.getLocation());
+		}
+
+		node.setType(t);
+		return t;
 	}
 
 	@Override public PType caseAElementsUnaryExp(AElementsUnaryExp node,
