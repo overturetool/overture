@@ -23,14 +23,17 @@
 
 package org.overture.ast.lex;
 
+import java.io.Serializable;
+
 import org.overture.ast.intf.lex.ILexComment;
 import org.overture.ast.intf.lex.ILexLocation;
 
 /**
  * A comment within the spec. This isn't part of the grammar, as such.
  */
-public class LexComment implements ILexComment
+public class LexComment implements ILexComment, Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private final ILexLocation location;
 	private final String comment;
 	private final boolean block;
