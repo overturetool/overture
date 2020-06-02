@@ -36,6 +36,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.node.INode;
@@ -363,6 +364,9 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		} else if (node instanceof AModuleImports)
 		{
 			return getNodeOffset(((AModuleImports) node).getName().getLocation());
+		} else if (node instanceof AModuleModules)
+		{
+			return getNodeOffset(((AModuleModules) node).getName().getLocation());
 		}
 		return new int[] { -1, -1 };
 	}
