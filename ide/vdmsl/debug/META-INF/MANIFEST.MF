@@ -16,3 +16,4 @@ Export-Package: org.overture.ide.vdmsl.debug,org.overture.ide.vdmsl.de
  bug.ui.launchconfigurations,org.overture.ide.vdmsl.debug.ui.launching
 Bundle-Activator: org.overture.ide.vdmsl.debug.Activator
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.vdmsl.debug

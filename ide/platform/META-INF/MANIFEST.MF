@@ -14,4 +14,5 @@ Bundle-Vendor: Overture
 Bundle-Activator: org.overture.ide.platform.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.platform
 

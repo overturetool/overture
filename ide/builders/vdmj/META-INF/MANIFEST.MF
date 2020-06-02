@@ -20,3 +20,4 @@ Export-Package: org.overture.ast.factory,org.overture.ide.builders.vdm
 Bundle-Activator: org.overture.ide.builders.vdmj.Activator
 Bundle-ClassPath: .,
  jars/typechecker.jar
+Automatic-Module-Name: org.overture.ide.builders.vdmj

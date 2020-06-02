@@ -18,3 +18,4 @@ Require-Bundle: org.overture.ide.ui,
 Bundle-Activator: org.overture.ide.vdmrt.ui.VdmRtUIPlugin
 Export-Package: org.overture.ide.vdmrt.ui.editor.core
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.vdmrt.ui
