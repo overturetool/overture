@@ -3609,6 +3609,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.concern(isSimple, 3268, "Empty sequence cannot be applied", node.getLocation(), node);
 		}
 
+		if (node.getArgs().size() == 1 && node.getArgs().get(0) instanceof AIntLiteralExp)
+		{
+			AIntLiteralExp index = (AIntLiteralExp)node.getArgs().get(0);
+
+			if (index.getValue().getValue() <= 0)	// Common enough to explicitly check!
+			{
+				TypeCheckerErrors.concern(isSimple, 3056, "Sequence application argument must > 0", node.getLocation(), node);	
+			}
+		}
+
 		return seq.getSeqof();
 	}
 

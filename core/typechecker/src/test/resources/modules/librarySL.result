@@ -2,18 +2,18 @@
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="14" line="187" message="field at 99:1 hidden by field" messageType="warning" number="5008" resource="librarySL"/>
 <message column="37" line="352" message="x at 351:16 hidden by x" messageType="warning" number="5008" resource="librarySL"/>
+<message column="1" line="226" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
+<message column="1" line="226" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
+<message column="1" line="216" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
+<message column="1" line="216" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
+<message column="1" line="183" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
+<message column="1" line="183" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
+<message column="1" line="161" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
+<message column="1" line="161" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
 <message column="1" line="174" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
 <message column="1" line="174" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
 <message column="1" line="174" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
-<message column="1" line="226" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
-<message column="1" line="226" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
 <message column="1" line="206" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
-<message column="1" line="216" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
-<message column="1" line="216" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
-<message column="1" line="161" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
-<message column="1" line="161" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
-<message column="1" line="183" message="Mutually recursive cycle has no measure" messageType="warning" number="5013" resource="librarySL"/>
-<message column="1" line="183" message="Recursive function has no measure" messageType="warning" number="5012" resource="librarySL"/>
 <message column="1" line="369" message="Definition 'CREATE' not used" messageType="warning" number="5000" resource="librarySL"/>
 <message column="1" line="412" message="Definition 'UPDATE' not used" messageType="warning" number="5000" resource="librarySL"/>
 <message column="1" line="465" message="Definition 'COMPLETE' not used" messageType="warning" number="5000" resource="librarySL"/>
