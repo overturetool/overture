@@ -752,12 +752,20 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getPostdef() != null)
 		{
-			LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
-			PPattern rp = AstFactory.newAIdentifierPattern(result);
-			List<PDefinition> rdefs = question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(rp, ((AOperationType) node.getType()).getResult(), NameScope.NAMESANDANYSTATE);
+			List<PDefinition> rdefs = new Vector<PDefinition>();
 			FlatEnvironment post = new FlatEnvironment(question.assistantFactory, rdefs, local);
+			AOperationType type = (AOperationType) node.getType();
+
+			if (!(type.getResult() instanceof AVoidType))
+			{
+				LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
+				PPattern rp = AstFactory.newAIdentifierPattern(result);
+				rdefs.addAll(question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(rp, ((AOperationType) node.getType()).getResult(), NameScope.NAMESANDANYSTATE));
+			}
+
 			post.setEnclosingDefinition(node.getPostdef());
 			post.setFunctional(true);
+
 			PType b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
