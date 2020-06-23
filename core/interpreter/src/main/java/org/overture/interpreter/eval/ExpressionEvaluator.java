@@ -310,7 +310,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			} catch (ValueException e)
 			{
-				VdmRuntimeError.abort(node.getLocation(), e);
+				VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 			} catch (PatternMatchException e)
 			{
 				// Ignore pattern mismatches
@@ -366,10 +366,17 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					}
 				}
 
-				if (matches
-						&& node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
+				try
 				{
-					return new BooleanValue(true);
+					if (matches
+							&& node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
+					{
+						return new BooleanValue(true);
+					}
+				}
+				catch (ValueException e)
+				{
+					VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 				}
 			}
 		} catch (ValueException e)
@@ -467,10 +474,17 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					}
 				}
 
-				if (matches
-						&& !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
+				try
 				{
-					return new BooleanValue(false);
+					if (matches
+							&& !node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
+					{
+						return new BooleanValue(false);
+					}
+				}
+				catch (ValueException e)
+				{
+					return VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 				}
 			}
 		} catch (ValueException e)
@@ -786,7 +800,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			} catch (ValueException e)
 			{
-				VdmRuntimeError.abort(node.getLocation(), e);
+				VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 			} catch (PatternMatchException e)
 			{
 				// Ignore pattern mismatches
@@ -982,20 +996,27 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					}
 				}
 
-				if (matches
-						&& (node.getPredicate() == null || node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
+				try
 				{
-					Value dom = node.getFirst().getLeft().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
-					Value rng = node.getFirst().getRight().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
-					node.getFirst().getLocation().hit();
-
-					Value old = map.put(dom, rng);
-
-					if (old != null && !old.equals(rng))
+					if (matches
+							&& (node.getPredicate() == null || node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
 					{
-						VdmRuntimeError.abort(node.getLocation(), 4016, "Duplicate map keys have different values: "
-								+ dom, ctxt);
+						Value dom = node.getFirst().getLeft().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+						Value rng = node.getFirst().getRight().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+						node.getFirst().getLocation().hit();
+
+						Value old = map.put(dom, rng);
+
+						if (old != null && !old.equals(rng))
+						{
+							VdmRuntimeError.abort(node.getLocation(), 4016, "Duplicate map keys have different values: "
+									+ dom, ctxt);
+						}
 					}
+				}
+				catch (ValueException e)
+				{
+					return VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 				}
 			}
 		} catch (ValueException e)
@@ -1552,7 +1573,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 			catch (ValueException e)
 			{
-				VdmRuntimeError.abort(node.getLocation(), e);
+				VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 			}
 			catch (PatternMatchException e)
 			{
@@ -1598,7 +1619,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 			catch (ValueException e)
 			{
-				VdmRuntimeError.abort(node.getLocation(), e);
+				VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 			}
 			catch (PatternMatchException e)
 			{
@@ -1714,10 +1735,17 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					}
 				}
 
-				if (matches
-						&& (node.getPredicate() == null || node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
+				try
 				{
-					set.add(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), evalContext));
+					if (matches
+							&& (node.getPredicate() == null || node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
+					{
+						set.add(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), evalContext));
+					}
+				}
+				catch (ValueException e)
+				{
+					return VdmRuntimeError.abort(node.getPredicate().getLocation(), e);
 				}
 			}
 
