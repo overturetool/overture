@@ -301,8 +301,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 				abort("Could not create DBGP Service", null);
 			}
 
-			DebugPlugin.getDefault().getBreakpointManager().setEnabled(true);
-
 			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL, service, debugSessionId.toString(), launch, null);
 			target.setVdmProject(vdmProject);
 			launch.addDebugTarget(target);
