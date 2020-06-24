@@ -48,6 +48,7 @@
          point="org.eclipse.ui.intro">
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            icon="$nl$/icons/ctool16/overture_misc.png"
             id="org.overture.ide.platform.intro">
       </intro>
       <introProductBinding
