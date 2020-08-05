@@ -17,4 +17,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.overture.ide.vdmpp.ui.editor.core,org.overture.ide
  .vdmpp.ui.wizard
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.vdmpp.ui
 

@@ -21,7 +21,6 @@
  */
 package org.overture.ide.debug.core.model.internal;
 
-import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,9 +32,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -424,14 +421,10 @@ public class VdmStackFrame extends VdmDebugElement implements IVdmStackFrame
 	{
 		ILaunchConfiguration configuration = this.getDebugTarget().getLaunch().getLaunchConfiguration();
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
-		IPath wsp = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-		IPath prp = project.getFullPath();
-		IPath pp = wsp.append(prp);
-		
-		URI uri = level.getFileURI();
-		IPath fp = new Path(uri.getPath());
-		IPath res = fp.makeRelativeTo(pp);
-		return res.toOSString();
+		URI prp = project.getLocationURI();
+		URI fp = level.getFileURI();
+		URI rep = prp.relativize(fp);
+		return rep.getPath();
 	}
 
 	public boolean hasRegisterGroups() throws DebugException

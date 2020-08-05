@@ -31,3 +31,4 @@ Export-Package: org.overture.ide.ui,org.overture.ide.ui.adapters,org.o
  .ide.ui.utility,org.overture.ide.ui.utility.ast,org.overture.ide.ui.w
  izard,org.overture.ide.ui.wizard.pages
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.ui

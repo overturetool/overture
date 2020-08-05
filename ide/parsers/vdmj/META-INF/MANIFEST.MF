@@ -12,3 +12,4 @@ Require-Bundle: org.overture.ide.core
 Bundle-Activator: org.overture.ide.parsers.vdmj.Activator
 Bundle-ClassPath: .
 Export-Package: org.overture.ide.parsers.vdmj
+Automatic-Module-Name: org.overture.ide.parsers.vdmj

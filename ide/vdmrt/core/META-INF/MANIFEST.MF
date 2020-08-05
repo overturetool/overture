@@ -12,3 +12,4 @@ Bundle-Activator: org.overture.ide.vdmrt.core.VdmRtCorePlugin
 Require-Bundle: org.overture.ide.core
 Export-Package: org.overture.ide.vdmrt.core
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.vdmrt.core

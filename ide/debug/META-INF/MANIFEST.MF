@@ -43,3 +43,4 @@ Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
 Bundle-ClassPath: .,
  jars/interpreter.jar,
  jars/pog.jar
+Automatic-Module-Name: org.overture.ide.debug

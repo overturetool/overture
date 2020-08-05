@@ -17,5 +17,6 @@ Export-Package: org.overture.ide.vdmpp.debug,org.overture.ide.vdmpp.de
  ,org.overture.ide.vdmpp.debug.utils
 Bundle-Activator: org.overture.ide.vdmpp.debug.Activator
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.vdmpp.debug
 
 

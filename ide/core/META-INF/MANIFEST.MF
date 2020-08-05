@@ -33,3 +33,4 @@ Eclipse-AutoStart: true
 Bundle-ClassPath: .,
  jars/ast.jar,
  jars/parser.jar
+Automatic-Module-Name: org.overture.ide.core

@@ -16,3 +16,4 @@ Export-Package: org.overture.ide.vdmrt.debug,org.overture.ide.vdmrt.de
  bug.ui.launching
 Bundle-Activator: org.overture.ide.vdmrt.debug.Activator
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.vdmrt.debug

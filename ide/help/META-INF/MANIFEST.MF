@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.overture.ide.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.help

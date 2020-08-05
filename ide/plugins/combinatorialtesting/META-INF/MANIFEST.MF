@@ -25,4 +25,5 @@ Bundle-Activator: org.overture.ide.plugins.combinatorialtesting.OvertureTracesPl
 Bundle-ClassPath: .,
  jars/ctruntime.jar,
  jars/ctutils.jar
+Automatic-Module-Name: org.overture.ide.plugins.combinatorialtesting
 
