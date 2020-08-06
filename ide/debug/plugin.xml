@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
+	<extension
+     point="org.eclipse.ui.perspectives">
+    <perspective
+        name="%DebugPerspective.name"
+        icon="$nl$/icons/eview16/debug_vdm.png"
+        class="org.overture.ide.debug.ui.DebugPerspectiveFactory"
+        id="org.overture.ide.debug.DebugPerspective">
+     <description>
+        %DebugPerspective.description
+     </description>
+    </perspective>
+    </extension>
+    
+    <extension
+     point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+        targetID="org.overture.ide.debug.DebugPerspective">
+     <view
+           id="org.eclipse.ui.views.ContentOutline"
+           minimized="false"
+           ratio="0.75"
+           relationship="right"
+           relative="org.eclipse.ui.editorss">
+     </view>
+    </perspectiveExtension>
+    </extension>
+
+
+    <extension point="org.eclipse.ui.perspectiveExtensions">
+	<perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
+	
+    <view id="org.eclipse.ui.views.ContentOutline" 
+	relative="org.eclipse.debug.ui.VariableView"
+	ratio="0.4"
+	relationship="bottom"/>	
+		
+	
+	</perspectiveExtension>
+    </extension>
+	
+
+	
 	<extension-point id="org.overture.ide.debug.sourceviewerEditor"
 		name="Source Viewer Editor" schema="schema/org.overture.ide.debug.sourceviewerEditor.exsd" />
 

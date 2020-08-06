@@ -35,12 +35,12 @@
 			type="org.overture.ide.vdmrt.debug.launchConfigurationType">
 			<launchMode 
                   mode="debug"
-                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  perspective="org.overture.ide.debug.DebugPerspective"
                   description="%localVdmRtApplicationTabGroupDescription.debug">
             </launchMode>
             <launchMode
                   mode="run"
-                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  perspective="org.overture.ide.debug.DebugPerspective"
                   description="%localVdmRtApplicationTabGroupDescription.run">
             </launchMode>
 		</launchConfigurationTabGroup>
