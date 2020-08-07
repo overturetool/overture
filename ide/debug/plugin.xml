@@ -2,224 +2,225 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-	<extension
+  <!-- Create VDM Debug perspective with VDM layout -->
+  <extension
      point="org.eclipse.ui.perspectives">
     <perspective
         name="%DebugPerspective.name"
         icon="$nl$/icons/eview16/debug_vdm.png"
         class="org.overture.ide.debug.ui.DebugPerspectiveFactory"
         id="org.overture.ide.debug.DebugPerspective">
-     <description>
+      <description>
         %DebugPerspective.description
-     </description>
+      </description>
     </perspective>
-    </extension>
-    
-    <extension
+  </extension>
+
+  <!-- Add VDM outline to the VDM Debug perspective -->
+  <extension
      point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension
         targetID="org.overture.ide.debug.DebugPerspective">
-     <view
+      <view
            id="org.eclipse.ui.views.ContentOutline"
            minimized="false"
            ratio="0.75"
            relationship="right"
            relative="org.eclipse.ui.editorss">
-     </view>
+      </view>
     </perspectiveExtension>
-    </extension>
+  </extension>
 
+  <!-- Add VDM outline to the standard Debug perspective -->
+  <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+		targetID="org.eclipse.debug.ui.DebugPerspective">
+      <view 
+    	id="org.eclipse.ui.views.ContentOutline" 
+		relative="org.eclipse.debug.ui.VariableView"
+		ratio="0.4"
+		relationship="bottom"
+	 />
 
-    <extension point="org.eclipse.ui.perspectiveExtensions">
-	<perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
-	
-    <view id="org.eclipse.ui.views.ContentOutline" 
-	relative="org.eclipse.debug.ui.VariableView"
-	ratio="0.4"
-	relationship="bottom"/>	
-		
-	
-	</perspectiveExtension>
-    </extension>
-	
+    </perspectiveExtension>
+  </extension>
 
-	
-	<extension-point id="org.overture.ide.debug.sourceviewerEditor"
+  <extension-point id="org.overture.ide.debug.sourceviewerEditor"
 		name="Source Viewer Editor" schema="schema/org.overture.ide.debug.sourceviewerEditor.exsd" />
 
-	<!--
+  <!--
 
 		add breakpoint actionsSet to the OverturePerspective (this is the menu
 		-> run -> (toggle breakpoint, remove all breakpoints, etc)
 	-->
-	<extension point="org.eclipse.ui.perspectiveExtensions">
-		<perspectiveExtension targetID="org.overture.ide.ui.perspective">
-			<actionSet id="org.eclipse.debug.ui.breakpointActionSet"></actionSet>
-   <actionSet
+  <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension targetID="org.overture.ide.ui.perspective">
+      <actionSet id="org.eclipse.debug.ui.breakpointActionSet"></actionSet>
+      <actionSet
          id="org.eclipse.debug.ui.launchActionSet">
-   </actionSet>
-		</perspectiveExtension>
-	</extension>
+      </actionSet>
+    </perspectiveExtension>
+  </extension>
 
-	<!-- Breakpoints -->
+  <!-- Breakpoints -->
 
-	<extension point="org.eclipse.debug.core.breakpoints">
-		<breakpoint class="org.overture.ide.debug.core.model.internal.VdmLineBreakpoint"
+  <extension point="org.eclipse.debug.core.breakpoints">
+    <breakpoint class="org.overture.ide.debug.core.model.internal.VdmLineBreakpoint"
 					id="org.overture.ide.debug.breakpoint" 
 					markerType="vdm.lineBreakpoint.marker"
 					name="Vdm Line Breakpoint">
-		</breakpoint>
-	</extension>
-	<extension id="vdm.lineBreakpoint.marker" 
+    </breakpoint>
+  </extension>
+  <extension id="vdm.lineBreakpoint.marker" 
 			   point="org.eclipse.core.resources.markers">
-		<super type="org.eclipse.debug.core.lineBreakpointMarker"></super>
-		<persistent value="true">
-		</persistent>
-	</extension>
-	<extension point="org.eclipse.core.runtime.adapters">
-		<factory adaptableType="org.eclipse.ui.texteditor.ITextEditor"
+    <super type="org.eclipse.debug.core.lineBreakpointMarker"></super>
+    <persistent value="true">
+    </persistent>
+  </extension>
+  <extension point="org.eclipse.core.runtime.adapters">
+    <factory adaptableType="org.eclipse.ui.texteditor.ITextEditor"
 			class="org.overture.ide.debug.ui.model.VdmBreakpointAdapterFactory">
-			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
-			</adapter>
-		</factory>
-	</extension>
-	
-	
-	
-	<!-- source locator -->
-	<extension point="org.eclipse.debug.core.sourceLocators">
-		<sourceLocator
+      <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
+      </adapter>
+    </factory>
+  </extension>
+
+
+
+  <!-- source locator -->
+  <extension point="org.eclipse.debug.core.sourceLocators">
+    <sourceLocator
 			class="org.overture.ide.debug.core.launching.VdmSourceLocatorDirector"
 			id="org.overture.ide.debug.sourceLocator" 
 			name="Vdm Source Locator">
-		</sourceLocator>
-	</extension>
-	<extension point="org.eclipse.debug.core.sourcePathComputers">
-		<sourcePathComputer
+    </sourceLocator>
+  </extension>
+  <extension point="org.eclipse.debug.core.sourcePathComputers">
+    <sourcePathComputer
 			class="org.overture.ide.debug.core.launching.VdmSourcePathComputerDelegate"
 			id="org.overture.ide.debug.sourcePathComputer">
-		</sourcePathComputer>
-	</extension>
-	<extension point="org.eclipse.debug.ui.debugModelPresentations">
-		<debugModelPresentation
+    </sourcePathComputer>
+  </extension>
+  <extension point="org.eclipse.debug.ui.debugModelPresentations">
+    <debugModelPresentation
 			class="org.overture.ide.debug.ui.model.VdmDebugModelPresentation" 
 			id="org.overture.ide.debug.vdm">
-		</debugModelPresentation>
-	</extension>
+    </debugModelPresentation>
+  </extension>
 
 
 
 
 
 
-<!-- Adds the launch and java debug actions whenever a java relevant part is open.
+  <!-- Adds the launch and java debug actions whenever a java relevant part is open.
 	Makes the Run and Debug bottons clickable in the VDM Explorer -->
-   <extension point="org.eclipse.ui.actionSetPartAssociations">
-       <actionSetPartAssociation
+  <extension point="org.eclipse.ui.actionSetPartAssociations">
+    <actionSetPartAssociation
             targetID="org.eclipse.debug.ui.launchActionSet">
-          <part
+      <part
                 id="org.overture.ide.ui.VdmExplorer">
-          </part>
-      </actionSetPartAssociation>
-      
-      
-   </extension>
-   <extension
+      </part>
+    </actionSetPartAssociation>
+
+
+  </extension>
+  <extension
          point="org.eclipse.ui.popupMenus">
-      <viewerContribution
+    <viewerContribution
             id="org.overture.ide.debug.rulerbarPopupMenu"
             targetID="org.overture.ide.ui.rulerbar">
-         <action
+      <action
                class="org.overture.ide.debug.ui.actions.VdmLineBreakpointPropertiesRulerActionDelegate"
                id="org.overture.ide.rulerbar.vdmLineBreakpointAction"
                label="Breakpoint properties..."
                menubarPath="addictions">
-         </action>
-      </viewerContribution>
-   </extension>
-   <extension
+      </action>
+    </viewerContribution>
+  </extension>
+  <extension
          point="org.eclipse.ui.propertyPages">
-      <page
+    <page
             class="org.overture.ide.debug.ui.propertypages.VdmLineBreakpointPropertyPage"
             id="org.overture.ide.debug.vdmLineBreakpointPropertyPage"
             name="Breakpoint properties"
             objectClass="org.overture.ide.debug.core.model.internal.VdmLineBreakpoint"
             >
-      </page>
-   </extension>
-   <extension
+    </page>
+  </extension>
+  <extension
          point="org.eclipse.ui.console.consoleFactories">
-      <consoleFactory
+    <consoleFactory
             class="org.overture.ide.debug.core.ConsoleFactoryDebug"
             icon="icons/cview16/vdmpp_file_tsk.png"
             label="Overture Debug">
-      </consoleFactory>
-   </extension>
-   <extension
+    </consoleFactory>
+  </extension>
+  <extension
          point="org.eclipse.ui.console.consoleFactories">
-      <consoleFactory
+    <consoleFactory
             class="org.overture.ide.debug.core.ConsoleFactoryLogging"
             label="VDM Debug log">
-      </consoleFactory>
-   </extension>
-   
-   
-      <extension
+    </consoleFactory>
+  </extension>
+
+
+  <extension
          point="org.eclipse.ui.console.consolePageParticipants">
-      <consolePageParticipant
+    <consolePageParticipant
             class="org.overture.ide.debug.ui.ProcessConsolePageParticipant"
             id="org.overture.ide.debug.ui.processConsolePageParticipant">
-         <enablement>
-            <instanceof value="org.overture.ide.debug.ui.VdmDebugConsole"/>
-         </enablement>
-      </consolePageParticipant>
-   </extension>
-   
-   <!-- This ensures that the debug context menu shows correctly. The solution is inspired by the blog
+      <enablement>
+        <instanceof value="org.overture.ide.debug.ui.VdmDebugConsole"/>
+      </enablement>
+    </consolePageParticipant>
+  </extension>
+
+  <!-- This ensures that the debug context menu shows correctly. The solution is inspired by the blog
    found on the following link: http://www.sigasi.com/content/run-menu-item-strangely-disappearing-context-menu
    -->
-	<extension point="org.eclipse.core.runtime.adapters">
-	  <factory class="org.eclipse.core.runtime.IAdaptable"
+  <extension point="org.eclipse.core.runtime.adapters">
+    <factory class="org.eclipse.core.runtime.IAdaptable"
 	           adaptableType="org.eclipse.core.resources.IResource">
-	     <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
-	  </factory>
-	</extension>
+      <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+    </factory>
+  </extension>
 
-   <extension
+  <extension
          point="org.eclipse.ui.views">
-      <view
+    <view
             allowMultiple="false"
             category="org.overture.ide.ui.view.category"
             class="org.overture.ide.debug.logging.LogView"
             id="org.overture.ide.debug.logging.logview"
             name="VDM Debug Log Viewer Events"
             restorable="true">
-      </view>
-   </extension>
-   
-	<extension point="org.eclipse.ui.views">
-		<view
+    </view>
+  </extension>
+
+  <extension point="org.eclipse.ui.views">
+    <view
         category="org.overture.ide.ui.view.category"
         class="org.overture.ide.debug.ui.log.VdmDebugLogView"
         id="org.overture.ide.debug.ui.log.dbgpLogView"
         name="Vdm Log Viewer Messages">
-		</view>
-		
-		
-		 <!--view
+    </view>
+
+
+    <!--view
             name="%DebugView.name"
             icon="icons/eview16/debug_view.gif"
             category="org.overture.ide.ui.view.category"
             class="org.overture.ide.debug.internal.ui.views.launch.VdmLaunchView"
             id="org.overture.ide.debug.ui.DebugView">
       </view-->
-	</extension>
+  </extension>
 
 
 
 
 
-<!--
+  <!--
 ====================================
 
 Watch
@@ -231,20 +232,20 @@ Watch
 
 
 
- <extension
+  <extension
        point="org.eclipse.debug.core.watchExpressionDelegates">
     <watchExpressionDelegate
           debugModel="org.overture.ide.debug.vdm"
           delegateClass="org.overture.ide.debug.core.model.internal.VdmWatchExpressionDelegate">
     </watchExpressionDelegate>
- </extension>
- <extension
+  </extension>
+  <extension
        point="org.eclipse.ui.actionSets">
     <actionSet
           id="org.overture.ide.debug.debugActionSet"
           label="Vdm Action Set"
           visible="false">
-       <action
+      <action
              class="org.overture.ide.debug.ui.actions.VdmWatchAction"
              definitionId="org.overture.ide.debug.command.watch"
              icon="icons/dtool16/watch_exp.gif"
@@ -252,23 +253,23 @@ Watch
              label="Watch"
              menubarPath="org.eclipse.ui.run/vdmGroup"
              style="push">
-          <enablement>
-             <and>
-                <systemProperty
+        <enablement>
+          <and>
+            <systemProperty
                       name="org.overture.ide.debug.core.debuggerActive"
                       value="true">
-                </systemProperty>
-                
-                   <objectClass
+            </systemProperty>
+
+            <objectClass
                          name="org.eclipse.jface.text.ITextSelection">
-                   </objectClass>
-                
-             </and>
-          </enablement>
-       </action>
+            </objectClass>
+
+          </and>
+        </enablement>
+      </action>
     </actionSet>
- </extension>
- <extension
+  </extension>
+  <extension
        point="org.eclipse.ui.commands">
     <command
           categoryId="org.eclipse.ui.category.textEditor"
@@ -276,8 +277,8 @@ Watch
           id="org.overture.ide.debug.command.watch"
           name="Watch Command">
     </command>
- </extension>
- <extension
+  </extension>
+  <extension
        point="org.eclipse.core.expressions.propertyTesters">
     <propertyTester
           class="org.overture.ide.debug.ui.actions.PropertyTester1"
@@ -286,46 +287,46 @@ Watch
           properties="debuggerActive"
           type="org.eclipse.core.resources.IResource">
     </propertyTester>
- </extension>
-	
-	
-   
-   <!-- Watch context menu-->
+  </extension>
+
+
+
+  <!-- Watch context menu-->
   <extension
         point="org.eclipse.ui.popupMenus">
-         <viewerContribution
+    <viewerContribution
             targetID="#TextEditorContext"
             id="org.overture.ide.debug.ui.SourceUnitPopupActions">
-         <visibility>
-            <and>
-               <systemProperty
+      <visibility>
+        <and>
+          <systemProperty
                      name="org.overture.ide.debug.core.debuggerActive"
                      value="true">
-               </systemProperty>
-               <objectClass
+          </systemProperty>
+          <objectClass
                      name="org.eclipse.jface.text.ITextSelection">
-               </objectClass>
-            </and>
-         </visibility>
- <action
+          </objectClass>
+        </and>
+      </visibility>
+      <action
                label="%Watch.label"
                icon="icons/dtool16/watch_exp.gif"
                helpContextId="watch_action_context"
                class="org.overture.ide.debug.ui.actions.VdmWatchAction"
                menubarPath="additions"
                id="org.overture.ide.debug.ui.SourceUnitPopup.Watch">
-         </action>
-</viewerContribution>
+      </action>
+    </viewerContribution>
   </extension>
-	
-   <!-- Preference pages -->
-	 <extension
+
+  <!-- Preference pages -->
+  <extension
          point="org.eclipse.ui.preferencePages">
-      <page
+    <page
             category="org.overture.ide.ui.vdm"
             class="org.overture.ide.debug.preferences.WorkbenchPreferencePage1"
             id="org.overture.ide.debug.page1"
             name="Debugger">
-      </page>
-   </extension>
+    </page>
+  </extension>
 </plugin>
