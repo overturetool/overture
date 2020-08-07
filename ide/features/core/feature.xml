@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.core"
       label="Overture Core"
-      version="2.7.5.qualifier"
+      version="3.0.0.qualifier"
       plugin="org.overture.ide.platform">
 
    <description>
