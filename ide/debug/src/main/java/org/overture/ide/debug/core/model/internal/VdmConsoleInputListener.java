@@ -65,6 +65,7 @@ public class VdmConsoleInputListener
 								IDbgpSession session = target.getSessions()[0];
 								final String result = session.getExtendedCommands().execute(line).getValue();
 								proxy.writeStdout(result);
+								proxy.writeStdout("> ");
 							}
 						} catch (DbgpException e)
 						{

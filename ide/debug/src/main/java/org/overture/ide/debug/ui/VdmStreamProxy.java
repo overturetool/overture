@@ -153,10 +153,7 @@ public class VdmStreamProxy implements IVdmStreamProxy
 			}
 		}
 		write(stdOut, value);
-		if (interactiveMode)
-		{
-			write(stdOut, "> ");
-		}
+
 	}
 
 	public void writeStderr(String value)
