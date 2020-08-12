@@ -2047,9 +2047,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			file.mkdirs();
 			writeCoverage(interpreter, file);
+			StringBuilder hdr = new StringBuilder("success=\"1\"");
 			StringBuilder sb = new StringBuilder();
 			sb.append("Coverage written to: " + file.toURI().toASCIIString());
-			xcmdOvertureResponse(DBGPXCmdOvertureCommandType.WRITE_COMPLETE_COVERAGE, null, sb);
+			xcmdOvertureResponse(DBGPXCmdOvertureCommandType.WRITE_COMPLETE_COVERAGE, hdr, sb);
 		}
 	}
 

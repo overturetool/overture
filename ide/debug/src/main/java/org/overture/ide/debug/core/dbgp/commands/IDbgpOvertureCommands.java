@@ -30,7 +30,7 @@ public interface IDbgpOvertureCommands
 
 	public void getCoverage(File file) throws DbgpException;
 
-	public void writeCompleteCoverage(File file) throws DbgpException;
+	public String writeCompleteCoverage(File file) throws DbgpException;
 
 	public void writeLog(String file) throws DbgpException;
 
