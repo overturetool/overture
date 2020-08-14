@@ -59,6 +59,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.IDebugPreferenceConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
+import org.overture.ide.debug.ui.DebugConsoleManager;
 import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.util.Base64;
@@ -108,6 +109,10 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 				// Waiting for debugging engine to connect
 				waitDebuggerConnected(launch, acceptor);
+
+				// Show the interactive console for this launch on top of the others
+				DebugConsoleManager.getInstance().showLaunchConsoleOnTop(launch);
+				
 			} finally
 			{
 				acceptor.disposeStatusHandler();

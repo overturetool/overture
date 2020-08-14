@@ -282,6 +282,7 @@ public class DebugConsoleManager implements ILaunchesListener2
 							interactiveConsoleMode = launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, false);
 						} catch (CoreException e)
 						{
+							e.printStackTrace();
 						}
 						target.setStreamProxy(new VdmStreamProxy(console, interactiveConsoleMode));
 					}
@@ -386,6 +387,24 @@ public class DebugConsoleManager implements ILaunchesListener2
 			fDefaultColorProvider = new ConsoleColorProvider();
 		}
 		return fDefaultColorProvider;
+	}
+
+	
+	/**
+	 * 
+	 * Shows the VDM console for a launch on top of the other consoles 
+	 * in the console view
+	 * 
+	 * @param launch 
+	 */
+	public void showLaunchConsoleOnTop(ILaunch launch) {
+		
+		final VdmDebugConsole console = launchToConsoleMap.get(launch);
+		final IConsoleManager manager = ConsolePlugin.getDefault().getConsoleManager();
+
+		if(console != null && manager != null) {
+			manager.showConsoleView(console);
+		}
 	}
 
 }
