@@ -183,4 +183,11 @@ public class VdmStreamProxy implements IVdmStreamProxy
 		}
 	}
 
+	@Override
+	public void printPrompt() {
+		if (interactiveMode) 
+			write(stdOut,"> ");
+		
+	}
+
 }
