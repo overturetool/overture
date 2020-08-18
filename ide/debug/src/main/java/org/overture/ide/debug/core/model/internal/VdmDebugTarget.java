@@ -833,7 +833,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		}
 	}
 
-	public void handleCustomTerminationCommands(IDbgpSession dbgpSession)
+	public Boolean handleCustomTerminationCommands(IDbgpSession dbgpSession)
 	{
 
 		try
@@ -873,7 +873,10 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			{
 				e.printStackTrace();
 			}
+			return false;
 		}
+
+		return true;
 
 	}
 }

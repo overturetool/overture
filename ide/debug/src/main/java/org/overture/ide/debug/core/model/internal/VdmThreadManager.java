@@ -502,7 +502,6 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener
 			if (threads.length > 0)
 			{
 				waitingForThreads = false;
-				handleCustomPreTerminationCommands();
 			}
 			for (int i = 0; i < threads.length; ++i)
 			{
@@ -637,28 +636,17 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener
 		}
 	}
 
-	public void handleCustomTerminationCommands()
+	public Boolean handleCustomTerminationCommands()
 	{
 		synchronized (threads)
 		{
 			if (threads.size() == 1)
 			{
-				target.handleCustomTerminationCommands(threads.get(0).getDbgpSession());
-			}
+				return target.handleCustomTerminationCommands(threads.get(0).getDbgpSession());
+			}else return false;
 		}
 
 	}
 
-	public void handleCustomPreTerminationCommands()
-	{
-		synchronized (threads)
-		{
-			if (!threads.isEmpty())
-			{
-				target.handleCustomTerminationCommands(threads.get(0).getDbgpSession());
-			}
-		}
-
-	}
 
 }

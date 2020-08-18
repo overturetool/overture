@@ -21,20 +21,29 @@
  */
 package org.overture.ide.debug.core.model.internal.operations;
 
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.IVdmThread;
+import org.overture.ide.debug.core.model.internal.VdmThread;
 
 public class DbgpTerminateOperation extends DbgpOperation
 {
 	private static final String JOB_NAME = "Terminate Operation";
+	private IVdmThread thread;
 
 	public DbgpTerminateOperation(IVdmThread thread, IResultHandler finish)
 	{
 		super(thread, JOB_NAME, finish);
+		this.thread = thread;	
 	}
 
 	protected void process() throws DbgpException
 	{
+		// Call coverage before send the quit command to the interpreter
+		final Boolean success = thread.handleCoverage();
+		if(success == false) 
+			VdmDebugPlugin.logError("Coverage writing did not succeeed!");
+		
 		callFinish(getCore().stop());
 	}
 }

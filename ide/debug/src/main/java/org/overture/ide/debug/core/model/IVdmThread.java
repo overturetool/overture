@@ -56,4 +56,6 @@ public interface IVdmThread extends IThread /* , IFilteredStep */
 	void updateStackFrames();
 
 	IDbgpStatusInterpreterThreadState getInterpreterState();
+	
+	Boolean handleCoverage();
 }

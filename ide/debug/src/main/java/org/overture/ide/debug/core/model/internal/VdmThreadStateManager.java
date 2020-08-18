@@ -289,6 +289,14 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback
 
 	public void endResume(DbgpException e, IDbgpStatus status)
 	{
+		// Call coverage before setting the interpreter state to stopped
+		if (e != null && status != null && status.isStopped() && status.reasonOk()) {
+			final VdmThread t = (VdmThread) this.handler;
+			final Boolean success = t.handleCoverage();
+			if(success == false) 
+				VdmDebugPlugin.logError("Coverage writing did not succeeed!");
+		}
+		
 		handleStatus(e, status, DebugEvent.BREAKPOINT);
 	}
 

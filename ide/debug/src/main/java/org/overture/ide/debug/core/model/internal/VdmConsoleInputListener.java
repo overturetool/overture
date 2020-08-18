@@ -65,10 +65,21 @@ public class VdmConsoleInputListener
 							if (target.getSessions().length > 0)
 							{
 								IDbgpSession session = target.getSessions()[0];
+								
+								// Print coverage before send the quit command to the interpreter 
+								if( line.equals("q") || line.equals("quit") ) {
+									target.handleCustomTerminationCommands(session);
+								}
+								
 								final IDbgpProperty property = session.getExtendedCommands().execute(line);
 								if(property != null) {
 									final String result = property.getValue();
 									proxy.writeStdout(result);
+									
+									// No need to print prompt
+									if( line.equals("q") || line.equals("quit") ) 
+										return;
+				
 									proxy.printPrompt();
 								}else { 
 									VdmDebugPlugin.logWarning("Interpreter response did not contain a value!");									
