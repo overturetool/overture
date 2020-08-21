@@ -264,6 +264,8 @@ public class ProcessConsolePageParticipant implements IConsolePageParticipant,
 						{
 							fTerminate.update();
 						}
+						if (fView != null)
+							fView.display(fConsole);
 					}
 				};
 

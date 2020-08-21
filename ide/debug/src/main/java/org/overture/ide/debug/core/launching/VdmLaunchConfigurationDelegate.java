@@ -109,9 +109,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 				// Waiting for debugging engine to connect
 				waitDebuggerConnected(launch, acceptor);
-
-				// Show the interactive console for this launch on top of the others
-				DebugConsoleManager.getInstance().showLaunchConsoleOnTop(launch);
 				
 			} finally
 			{
