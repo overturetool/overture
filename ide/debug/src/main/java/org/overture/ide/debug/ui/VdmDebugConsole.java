@@ -367,7 +367,11 @@ public class VdmDebugConsole extends IOConsole implements
 			if (iConsole instanceof VdmDebugConsole)
 			{
 				VdmDebugConsole vdmC = (VdmDebugConsole) iConsole;
-				vdmC.activate();
+
+				if(vdmC != null && vdmC.getProcess() == getProcess()) 
+				{
+					vdmC.activate();
+				}
 			}
 		}
 
