@@ -215,6 +215,7 @@ alternative {-> package='org.overture.ast.expressions'}
 type {-> package='org.overture.ast.types'
 	|	[location]:location 
 	|	[resolved]:java_Boolean 
+	|	[resolveErrors]:java_Long 
 	|	(definitions):definition*}
     =   #basic
     |   {bracket} (type):type
