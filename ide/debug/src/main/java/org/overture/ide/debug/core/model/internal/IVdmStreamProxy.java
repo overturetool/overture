@@ -41,4 +41,6 @@ public interface IVdmStreamProxy
 	String getEncoding();
 
 	void setEncoding(String encoding);
+
+	void printPrompt();
 }

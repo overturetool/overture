@@ -833,7 +833,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		}
 	}
 
-	public void handleCustomTerminationCommands(IDbgpSession dbgpSession)
+	public Boolean handleCustomTerminationCommands(IDbgpSession dbgpSession)
 	{
 
 		try
@@ -845,7 +845,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 				coverageDir.mkdirs();
 
-				dbgpSession.getOvertureCommands().writeCompleteCoverage(coverageDir);
+				final String result = dbgpSession.getOvertureCommands().writeCompleteCoverage(coverageDir);
+				this.streamProxy.writeStdout("\n");
+				this.streamProxy.writeStdout(result);
 
 				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
 				{
@@ -871,7 +873,10 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			{
 				e.printStackTrace();
 			}
+			return false;
 		}
+
+		return true;
 
 	}
 }

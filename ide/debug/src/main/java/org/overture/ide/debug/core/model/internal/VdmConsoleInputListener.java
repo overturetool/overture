@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
@@ -63,8 +65,25 @@ public class VdmConsoleInputListener
 							if (target.getSessions().length > 0)
 							{
 								IDbgpSession session = target.getSessions()[0];
-								final String result = session.getExtendedCommands().execute(line).getValue();
-								proxy.writeStdout(result);
+								
+								// Print coverage before send the quit command to the interpreter 
+								if( line.equals("q") || line.equals("quit") ) {
+									target.handleCustomTerminationCommands(session);
+								}
+								
+								final IDbgpProperty property = session.getExtendedCommands().execute(line);
+								if(property != null) {
+									final String result = property.getValue();
+									proxy.writeStdout(result);
+									
+									// No need to print prompt
+									if( line.equals("q") || line.equals("quit") ) 
+										return;
+				
+									proxy.printPrompt();
+								}else { 
+									VdmDebugPlugin.logWarning("Interpreter response did not contain a value!");									
+								}
 							}
 						} catch (DbgpException e)
 						{

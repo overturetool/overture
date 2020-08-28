@@ -113,7 +113,6 @@ public class DebugConsoleManager implements ILaunchesListener2
 		}
 		final IConsoleManager manager = getConsoleManager();
 		manager.addConsoles(new IConsole[] { console });
-		manager.showConsoleView(console);
 		console.activate();
 
 		return console;
@@ -282,6 +281,7 @@ public class DebugConsoleManager implements ILaunchesListener2
 							interactiveConsoleMode = launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, false);
 						} catch (CoreException e)
 						{
+							e.printStackTrace();
 						}
 						target.setStreamProxy(new VdmStreamProxy(console, interactiveConsoleMode));
 					}
@@ -387,5 +387,7 @@ public class DebugConsoleManager implements ILaunchesListener2
 		}
 		return fDefaultColorProvider;
 	}
+
+
 
 }

@@ -41,7 +41,10 @@ public class DbgpExtendedCommands extends DbgpBaseCommands implements
 		if (DbgpXmlParser.parseSuccess(response))
 		{
 			NodeList list = response.getElementsByTagName(DbgpXmlEntityParser.TAG_PROPERTY);
+			if(list.getLength() > 0)
+			{
 			return DbgpXmlEntityParser.parseProperty((Element) list.item(0));
+			}
 		}
 		return null;
 	}
@@ -75,22 +78,6 @@ public class DbgpExtendedCommands extends DbgpBaseCommands implements
 	{
 		DbgpRequest request = createRequest(EVAL_COMMAND);
 		request.setData(snippet);
-		return parseResponse(communicate(request));
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public IDbgpProperty evaluate(String snippet, int depth)
-			throws DbgpException
-	{
-		return evaluate(snippet);
-	}
-
-	public IDbgpProperty expression(String expression) throws DbgpException
-	{
-		DbgpRequest request = createRequest(EXPR_COMMAND);
-		request.setData(expression);
 		return parseResponse(communicate(request));
 	}
 

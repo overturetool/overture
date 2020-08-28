@@ -36,11 +36,11 @@
      <launchMode
            description="%localVdmSlApplicationTabGroupDescription.debug"
            mode="debug"
-           perspective="org.eclipse.debug.ui.DebugPerspective">
+           perspective="org.overture.ide.debug.DebugPerspective">
      </launchMode>
       <launchMode
                   mode="run"
-                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  perspective="org.overture.ide.debug.DebugPerspective"
                   description="%localVdmSlApplicationTabGroupDescription.run">
             </launchMode>
 		</launchConfigurationTabGroup>

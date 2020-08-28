@@ -8,7 +8,7 @@
     <version>7</version>
   </parent>
 
-	<prerequisites>
+  <prerequisites>
     <maven>3.0</maven>
   </prerequisites>
 
@@ -19,7 +19,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.7.4</version>
+  <version>3.0.0</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -29,7 +29,7 @@
   <modules>
     <module>externals</module>
     <module>core</module>
-		<module>documentation</module>
+    <module>documentation</module>
     <!-- <module>tools</module> -->
     <!-- The ide module is Tycho and the -PWith-IDE profile. -->
     <!-- <module>ide</module> -->
@@ -56,8 +56,8 @@
       </modules>
     </profile>
 
-		
-		<profile>
+
+    <profile>
       <id>codesigning</id>
       <build>
         <plugins>
@@ -65,12 +65,12 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jarsigner-plugin</artifactId>
             <configuration>
-							
-							<!-- This is an attempt to disable the test error: java.lang.SecurityException: class ...'s signer information does not match signer information of other classes in the same package
+
+              <!-- This is an attempt to disable the test error: java.lang.SecurityException: class ...'s signer information does not match signer information of other classes in the same package
 							-->
-							<removeExistingSignatures>true</removeExistingSignatures>
-              
-							<storetype>${keystore.type}</storetype>
+              <removeExistingSignatures>true</removeExistingSignatures>
+
+              <storetype>${keystore.type}</storetype>
               <keystore>${keystore.path}</keystore>
               <alias>${keystore.alias}</alias>
               <storepass>${keystore.store.password}</storepass>
@@ -120,49 +120,49 @@ http://mojo.codehaus.org/versions-maven-plugin/
         </configuration>
       </plugin>
 
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.6.201602180812</version>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.6.201602180812</version>
 
-				<configuration>
-					<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
-					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
-					<!-- Exclude the overture AST -->
-					<excludes>
-						<exclude>**/org/overture/ast/analysis/**/*.*</exclude>
-						<exclude>**/org/overture/ast/expressions/**/*.*</exclude>
-						<exclude>**/org/overture/ast/modules/**/*.*</exclude>
-						<exclude>**/org/overture/ast/node/**/*.*</exclude>
-						<exclude>**/org/overture/ast/patterns/**/*.*</exclude>
-						<exclude>**/org/overture/ast/statements/**/*.*</exclude>
-						<exclude>**/org/overture/ast/types/**/*.*</exclude>
+        <configuration>
+          <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+          <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+          <!-- Exclude the overture AST -->
+          <excludes>
+            <exclude>**/org/overture/ast/analysis/**/*.*</exclude>
+            <exclude>**/org/overture/ast/expressions/**/*.*</exclude>
+            <exclude>**/org/overture/ast/modules/**/*.*</exclude>
+            <exclude>**/org/overture/ast/node/**/*.*</exclude>
+            <exclude>**/org/overture/ast/patterns/**/*.*</exclude>
+            <exclude>**/org/overture/ast/statements/**/*.*</exclude>
+            <exclude>**/org/overture/ast/types/**/*.*</exclude>
 
-						<!-- ir AST -->
-						<exclude>**/org/overture/codegen/ir/**/*</exclude>
+            <!-- ir AST -->
+            <exclude>**/org/overture/codegen/ir/**/*</exclude>
 
-						<!-- Overture IDE - it has currently no tests -->
-						<exclude>**/org/overture/ide/**/*</exclude>
+            <!-- Overture IDE - it has currently no tests -->
+            <exclude>**/org/overture/ide/**/*</exclude>
 
-						
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>jacoco-initialize</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>jacoco-site</id>
-						<phase>package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>jacoco-initialize</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jacoco-site</id>
+            <phase>package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
 
     <!-- Configuration of plugins for inheriting pom.xml files should
@@ -219,11 +219,11 @@ http://mojo.codehaus.org/versions-maven-plugin/
           </configuration>
         </plugin>
 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>3.4</version>
-				</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.4</version>
+        </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -292,18 +292,18 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <version>1.8</version>
         </plugin>
 
-				<plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>2.8.1</version>
         </plugin>
 
-			  <plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jarsigner-plugin</artifactId>
           <version>1.2</version>
         </plugin>
-				
+
 
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -331,14 +331,14 @@ http://mojo.codehaus.org/versions-maven-plugin/
           <artifactId>maven-release-plugin</artifactId>
           <version>2.5.3</version>
           <configuration>
-						<releaseProfiles>release,With-IDE,all-platforms,codesigning</releaseProfiles>
+            <releaseProfiles>release,With-IDE,all-platforms,codesigning</releaseProfiles>
             <tagNameFormat>Release/@{project.version}</tagNameFormat>
           </configuration>
         </plugin>
 
 
-				<!-- Disable the maven enforcer warning in Eclipse -->
-				<plugin>
+        <!-- Disable the maven enforcer warning in Eclipse -->
+        <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>
           <version>1.0.0</version>
@@ -363,32 +363,32 @@ http://mojo.codehaus.org/versions-maven-plugin/
           </configuration>
         </plugin>
 
-				<!-- Plugin for license headers-->
-				<plugin>
+        <!-- Plugin for license headers-->
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>
           <version>1.8</version>
-					<configuration>
-						<verbose>true</verbose>
-						<addSvnKeyWords>false</addSvnKeyWords>
-						<processEndTag>#~%</processEndTag>
-						<processStartTag>#%~</processStartTag>
-						<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-						<!--descriptionTemplate>${basedir}/src/license/myDescriptionTemplate.ftl</descriptionTemplate-->
+          <configuration>
+            <verbose>true</verbose>
+            <addSvnKeyWords>false</addSvnKeyWords>
+            <processEndTag>#~%</processEndTag>
+            <processStartTag>#%~</processStartTag>
+            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+            <!--descriptionTemplate>${basedir}/src/license/myDescriptionTemplate.ftl</descriptionTemplate-->
             <licenseName>gpl_v3</licenseName>
             <roots>
               <root>src/main/java</root>
               <root>src/test/java</root>
             </roots>
 
-						<includes>
+            <includes>
               <include>**/*.java</include>
             </includes>
-						<excludes>
+            <excludes>
               <exclude>*.ftl</exclude>
 
             </excludes>
-					</configuration>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -406,7 +406,7 @@ http://mojo.codehaus.org/versions-maven-plugin/
     <url>git@github.com:overturetool/overture.git</url>
     <connection>scm:git:git://github.com/overturetool/overture.git</connection>
     <developerConnection>scm:git:git@github.com:overturetool/overture.git</developerConnection>
-    <tag>Release/2.7.4</tag>
+    <tag>Release/3.0.0</tag>
   </scm>
 
   <developers>

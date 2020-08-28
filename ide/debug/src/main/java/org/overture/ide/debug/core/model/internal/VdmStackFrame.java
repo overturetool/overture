@@ -21,7 +21,6 @@
  */
 package org.overture.ide.debug.core.model.internal;
 
-import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,14 +29,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.osgi.util.NLS;
+import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugManager;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.IDbgpProperty;
@@ -405,15 +409,22 @@ public class VdmStackFrame extends VdmDebugElement implements IVdmStackFrame
 		//
 		//		name += " (" + level.getFileURI().getPath() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
-		return getOnlyFileName() + " line: " + getLineNumber();
+		try {
+			return getOnlyFileName() + " line: " + getLineNumber();
+		} catch (CoreException e) {
+			e.printStackTrace();
+			throw new DebugException(e.getStatus());
+		}
 	}
 
-	public String getOnlyFileName()
+	public String getOnlyFileName() throws CoreException
 	{
-		URI uri = level.getFileURI();
-		String res = new File(uri).getName();// .toASCIIString();
-
-		return res;// .substring(res.lastIndexOf('/') + 1);
+		ILaunchConfiguration configuration = this.getDebugTarget().getLaunch().getLaunchConfiguration();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
+		URI prp = project.getLocationURI();
+		URI fp = level.getFileURI();
+		URI rep = prp.relativize(fp);
+		return rep.getPath();
 	}
 
 	public boolean hasRegisterGroups() throws DebugException

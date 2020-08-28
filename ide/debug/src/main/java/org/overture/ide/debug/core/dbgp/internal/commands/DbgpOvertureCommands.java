@@ -28,15 +28,27 @@ import org.overture.ide.debug.core.dbgp.DbgpRequest;
 import org.overture.ide.debug.core.dbgp.IDbgpCommunicator;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpOvertureCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
+import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlParser;
 import org.overture.util.Base64;
+import org.w3c.dom.Element;
 
-public class DbgpOvertureCommands extends DbgpBaseCommands implements
+public class DbgpOvertureCommands extends DbgpExtendedCommands implements
 		IDbgpOvertureCommands
 {
 
 	private final static String OVERTURE_COMMAND = "xcmd_overture_cmd";
 
-	public DbgpOvertureCommands(IDbgpCommunicator communicator)
+	private String parseResponse(Element response)
+	{
+		if (DbgpXmlParser.parseSuccess(response))
+		{
+			return response.getTextContent();
+		}
+		return "";
+	}
+
+
+	public DbgpOvertureCommands(IDbgpCommunicator communicator) throws DbgpException
 	{
 		super(communicator);
 
@@ -53,13 +65,13 @@ public class DbgpOvertureCommands extends DbgpBaseCommands implements
 
 	}
 
-	public void writeCompleteCoverage(File file) throws DbgpException
+	public String writeCompleteCoverage(File file) throws DbgpException
 	{
 		DbgpRequest request = createRequest(OVERTURE_COMMAND);
 		request.addOption("-c", "write_complete_coverage"); //$NON-NLS-1$
 		request.setData(file.toURI().toString());
 
-		send(request);
+		return parseResponse(communicate(request));
 	}
 
 	public void writeLog(String file) throws DbgpException

@@ -174,8 +174,6 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 			}
 		}
 
-		manager.handleCustomTerminationCommands();
-
 		session.requestTermination();
 		try
 		{
@@ -613,6 +611,13 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	public void setErrorState()
 	{
 		errorState = true;
+
+	}
+
+	@Override
+	public Boolean handleCoverage() {
+		
+		return manager.handleCustomTerminationCommands();
 
 	}
 }

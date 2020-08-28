@@ -199,6 +199,11 @@ public class InvariantValue extends ReferenceValue
 				ctxt.threadState.setAtomic(false);
 			}
 		}
+		else if (equality != null && equals(other))
+		{
+			// Works with Maps of invariants that define "eq" (ValueMap is a TreeMap)
+			return 0;
+		}
 		else
 		{
 			return super.compareTo(other);
@@ -254,5 +259,21 @@ public class InvariantValue extends ReferenceValue
 	public boolean isOrdered()
 	{
 		return (ordering != null) ? true : value.isOrdered();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		if (equality != null)
+		{
+			// We have to have a hashCode that is consistent with the equality function
+			// (ie. the equals method), but since we cannot distinguish unequal values,
+			// all we can do to be consistent with the contract is return a fixed value.
+			return 0;
+		}
+		else
+		{
+			return super.hashCode();
+		}
 	}
 }

@@ -3,6 +3,7 @@ package org.overture.interpreter.utilities.pattern;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
@@ -386,14 +387,14 @@ public class AllNamedValuesLocator
 		// are not constrained however, the initial ordering will be
 		// fine.
 
-		List<ValueMap> allMaps;
+		List<Map<Value, Value>> allMaps;
 
 		if (pattern.apply(af.getConstrainedPatternChecker()))
 		{
 			allMaps = values.permutedMaps();
 		} else
 		{
-			allMaps = new Vector<ValueMap>();
+			allMaps = new Vector<Map<Value, Value>>();
 			allMaps.add(values);
 		}
 
@@ -406,7 +407,7 @@ public class AllNamedValuesLocator
 			return finalResults;
 		}
 
-		for (ValueMap mapPerm : allMaps)
+		for (Map<Value, Value> mapPerm : allMaps)
 		{
 			Iterator<Entry<Value, Value>> iter = mapPerm.entrySet().iterator();
 
@@ -562,14 +563,14 @@ public class AllNamedValuesLocator
 		// are not constrained however, the initial ordering will be
 		// fine.
 
-		List<ValueMap> allMaps;
+		List<Map<Value, Value>> allMaps;
 
 		if (pattern.apply(af.getConstrainedPatternChecker()))
 		{
 			allMaps = values.permutedMaps();
 		} else
 		{
-			allMaps = new Vector<ValueMap>();
+			allMaps = new Vector<Map<Value, Value>>();
 			allMaps.add(values);
 		}
 
@@ -580,7 +581,7 @@ public class AllNamedValuesLocator
 
 		for (Integer lsize : leftSizes)
 		{
-			for (ValueMap setPerm : allMaps)
+			for (Map<Value, Value> setPerm : allMaps)
 			{
 				Iterator<Entry<Value, Value>> iter = setPerm.entrySet().iterator();
 				ValueMap first = new ValueMap();

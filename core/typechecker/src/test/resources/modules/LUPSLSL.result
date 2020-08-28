@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="1" line="32" message="Recursive function has no measure" messageType="warning" number="5012" resource="LUPSLSL"/>
-<message column="1" line="32" message="Recursive function has no measure" messageType="warning" number="5012" resource="LUPSLSL"/>
 <message column="1" line="9" message="Definition 'a1' not used" messageType="warning" number="5000" resource="LUPSLSL"/>
 <message column="1" line="10" message="Definition 'a2' not used" messageType="warning" number="5000" resource="LUPSLSL"/>
 <message column="1" line="11" message="Definition 'a3' not used" messageType="warning" number="5000" resource="LUPSLSL"/>

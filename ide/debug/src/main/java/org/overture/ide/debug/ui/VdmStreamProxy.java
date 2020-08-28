@@ -153,10 +153,7 @@ public class VdmStreamProxy implements IVdmStreamProxy
 			}
 		}
 		write(stdOut, value);
-		if (interactiveMode)
-		{
-			write(stdOut, "> ");
-		}
+
 	}
 
 	public void writeStderr(String value)
@@ -184,6 +181,13 @@ public class VdmStreamProxy implements IVdmStreamProxy
 			}
 			VdmDebugPlugin.log(e);
 		}
+	}
+
+	@Override
+	public void printPrompt() {
+		if (interactiveMode) 
+			write(stdOut,"> ");
+		
 	}
 
 }

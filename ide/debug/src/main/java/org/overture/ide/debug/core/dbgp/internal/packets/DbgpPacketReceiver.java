@@ -141,6 +141,7 @@ public class DbgpPacketReceiver extends DbgpWorkingThread
 	private static final String RESPONSE_TAG = "response"; //$NON-NLS-1$
 	private static final String STREAM_TAG = "stream"; //$NON-NLS-1$
 	private static final String NOTIFY_TAG = "notify"; //$NON-NLS-1$
+	private static final String XCMD_OVERTURE_RESPONSE_TAG = "xcmd_overture_response"; //$NON-NLS-1$
 
 	private final ResponcePacketWaiter responseWaiter;
 	private final PacketWaiter notifyWaiter;
@@ -192,6 +193,10 @@ public class DbgpPacketReceiver extends DbgpWorkingThread
 		} else if (tag.equals(NOTIFY_TAG))
 		{
 			notifyWaiter.put(DbgpXmlPacketParser.parseNotifyPacket(element));
+		}else if (tag.equals(XCMD_OVERTURE_RESPONSE_TAG)) {
+			DbgpResponsePacket packet = DbgpXmlPacketParser.parseResponsePacket(element);
+
+			responseWaiter.put(packet);
 		}
 	}
 

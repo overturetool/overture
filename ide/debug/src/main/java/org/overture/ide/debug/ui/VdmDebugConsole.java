@@ -183,6 +183,7 @@ public class VdmDebugConsole extends IOConsole implements
 		synchronized (streamMonitor)
 		{
 			IOConsoleOutputStream stream = newOutputStream();
+			stream.setActivateOnWrite(true);
 			stream.setColor(fColorProvider.getColor(streamIdentifier));
 			StreamListener listener = new StreamListener(streamMonitor, stream);
 			fStreamListeners.add(listener);
@@ -366,7 +367,11 @@ public class VdmDebugConsole extends IOConsole implements
 			if (iConsole instanceof VdmDebugConsole)
 			{
 				VdmDebugConsole vdmC = (VdmDebugConsole) iConsole;
-				vdmC.activate();
+
+				if(vdmC != null && vdmC.getProcess() == getProcess()) 
+				{
+					vdmC.activate();
+				}
 			}
 		}
 

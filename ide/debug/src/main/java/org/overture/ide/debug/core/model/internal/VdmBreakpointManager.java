@@ -35,6 +35,7 @@ import org.eclipse.debug.core.IBreakpointListener;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.IBreakpointManagerListener;
 import org.eclipse.debug.core.IDebugEventSetListener;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.osgi.util.NLS;
 import org.overture.ide.core.resources.IVdmProject;
@@ -515,6 +516,10 @@ public class VdmBreakpointManager implements IBreakpointListener,
 	public void initializeSession(IDbgpSession session, IProgressMonitor monitor)
 	{
 		if (!addSession(session))
+		{
+			return;
+		}
+		if (!target.getLaunch().getLaunchMode().equals(ILaunchManager.DEBUG_MODE))
 		{
 			return;
 		}

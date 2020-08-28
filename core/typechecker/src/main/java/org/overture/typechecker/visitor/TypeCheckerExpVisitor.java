@@ -3405,6 +3405,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			t = AstFactory.newAIntNumericBasicType(node.getLocation());
 			question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, t, node.getLocation());
 		}
+		else if (!question.assistantFactory.createPTypeAssistant().isNumeric(t, question.fromModule))
+		{
+			TypeChecker.report(3288, "'-' expression must be numeric", node.getLocation());
+		}
 
 		node.setType(t);
 		return t;
@@ -3414,8 +3418,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
-		node.setType(node.getExp().apply(THIS, question));
-		return node.getType();
+		PType t = node.getExp().apply(THIS, question);
+
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(t, question.fromModule))
+		{
+			TypeChecker.report(3289, "'+' expression must be numeric", node.getLocation());
+		}
+
+		node.setType(t);
+		return t;
 	}
 
 	@Override public PType caseAElementsUnaryExp(AElementsUnaryExp node,
@@ -3596,6 +3607,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		} else if (seq.getEmpty())
 		{
 			TypeCheckerErrors.concern(isSimple, 3268, "Empty sequence cannot be applied", node.getLocation(), node);
+		}
+
+		if (node.getArgs().size() == 1 && node.getArgs().get(0) instanceof AIntLiteralExp)
+		{
+			AIntLiteralExp index = (AIntLiteralExp)node.getArgs().get(0);
+
+			if (index.getValue().getValue() <= 0)	// Common enough to explicitly check!
+			{
+				TypeCheckerErrors.concern(isSimple, 3056, "Sequence application argument must > 0", node.getLocation(), node);	
+			}
 		}
 
 		return seq.getSeqof();

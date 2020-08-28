@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
-Bundle-Version: 2.7.4
+Bundle-Version: 3.0.0
 Eclipse-BuddyPolicy: registered
 Eclipse-BundleShape: dir
 Bundle-Localization: plugin
@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.overture.ide.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
+Automatic-Module-Name: org.overture.ide.help

@@ -92,9 +92,11 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SInvariantTypeBase;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ExcludedDefinitions;
@@ -362,8 +364,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getPredef() != null)
 		{
 			// building the new scope for subtypechecks
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			pre.setFunctional(true);
+			pre.setEnclosingDefinition(node.getPredef());
 
-			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMES));
+			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMES));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
 			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
@@ -387,6 +392,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			List<PDefinition> rdefs = question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(rp, expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, rdefs, local, NameScope.NAMES);
 			post.setFunctional(true);
+			post.setEnclosingDefinition(node.getPostdef());
 
 			// building the new scope for subtypechecks
 			PType b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMES));
@@ -515,7 +521,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getPredef() != null)
 		{
-			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			pre.setFunctional(true);
+			pre.setEnclosingDefinition(node.getPredef());
+
+			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, question.scope));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
 			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
@@ -581,7 +591,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				List<PDefinition> postdefs = question.assistantFactory.createAPatternTypePairAssistant(question.fromModule).getDefinitions(node.getResult());
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMES);
 				post.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
-				post.setEnclosingDefinition(node);
+				post.setEnclosingDefinition(node.getPostdef());
 				post.setFunctional(true);
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMES));
 				post.unusedCheck();
@@ -742,12 +752,20 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getPostdef() != null)
 		{
-			LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
-			PPattern rp = AstFactory.newAIdentifierPattern(result);
-			List<PDefinition> rdefs = question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(rp, ((AOperationType) node.getType()).getResult(), NameScope.NAMESANDANYSTATE);
+			List<PDefinition> rdefs = new Vector<PDefinition>();
 			FlatEnvironment post = new FlatEnvironment(question.assistantFactory, rdefs, local);
+			AOperationType type = (AOperationType) node.getType();
+
+			if (!(type.getResult() instanceof AVoidType))
+			{
+				LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
+				PPattern rp = AstFactory.newAIdentifierPattern(result);
+				rdefs.addAll(question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(rp, ((AOperationType) node.getType()).getResult(), NameScope.NAMESANDANYSTATE));
+			}
+
 			post.setEnclosingDefinition(node.getPostdef());
 			post.setFunctional(true);
+
 			PType b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
@@ -1501,10 +1519,33 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		else
 		{
 			node.setPass(Pass.DEFS);		// Come back later to do inv definitions above.
-			
 			PType type = question.assistantFactory.createPDefinitionAssistant().getType(node);
 			node.setType(type);
-	
+			String fromModule = node.getLocation().getModule();
+
+			if (question.assistantFactory.createPTypeAssistant().isUnion(type, fromModule))
+			{
+				AUnionType ut = question.assistantFactory.createPTypeAssistant().getUnion(type, fromModule);
+
+				for (PType t: ut.getTypes())
+				{
+					if (t instanceof SInvariantTypeBase)
+					{
+						SInvariantTypeBase it = (SInvariantTypeBase) t;
+
+						if (node.getOrdRelation() != null && it.getOrdDef() != null)
+						{
+							TypeChecker.warning(5019, "Order of union member " + t + " will be overridden", node.getLocation());
+						}
+
+						if (node.getEqRelation() != null && it.getEqDef() != null)
+						{
+							TypeChecker.warning(5020, "Equality of union member " + t + " will be overridden", node.getLocation());
+						}
+					}
+				}
+			}
+
 			// We have to do the "top level" here, rather than delegating to the types
 			// because the definition pointer from these top level types just refers
 			// to the definition we are checking, which is never "narrower" than itself.

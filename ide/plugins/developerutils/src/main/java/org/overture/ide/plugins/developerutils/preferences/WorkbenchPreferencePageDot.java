@@ -21,7 +21,7 @@
  */
 package org.overture.ide.plugins.developerutils.preferences;
 /*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others.
+ * Copyright (c) 2009-2020 Overture Team and others.
  *
  * Overture is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

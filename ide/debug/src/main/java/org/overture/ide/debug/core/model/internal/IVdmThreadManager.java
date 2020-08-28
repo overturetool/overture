@@ -65,5 +65,5 @@ public interface IVdmThreadManager extends IDbgpThreadAcceptor, ITerminate,
 
 	void stepReturn() throws DebugException;
 
-	void handleCustomTerminationCommands();
+	Boolean handleCustomTerminationCommands();
 }

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.7.4
+Bundle-Version: 3.0.0
 Eclipse-BuddyPolicy: registered
 Eclipse-BundleShape: dir
 Bundle-Localization: plugin
@@ -25,4 +25,5 @@ Bundle-Activator: org.overture.ide.plugins.combinatorialtesting.OvertureTracesPl
 Bundle-ClassPath: .,
  jars/ctruntime.jar,
  jars/ctutils.jar
+Automatic-Module-Name: org.overture.ide.plugins.combinatorialtesting
 
