@@ -58,8 +58,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void caseABracketType(ABracketType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -73,8 +71,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void caseAClassType(AClassType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (type.getResolved())
 		{
 			type.setResolved(false);
@@ -90,8 +86,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void caseAFunctionType(AFunctionType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -112,8 +106,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	public void caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -129,8 +121,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	public void caseARecordInvariantType(ARecordInvariantType type)
 			throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -149,15 +139,12 @@ public class TypeUnresolver extends AnalysisAdaptor
 	public void defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
 		type.setResolved(false);
 	}
 
 	@Override
 	public void defaultSMapType(SMapType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -177,8 +164,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	public void caseAOperationType(AOperationType type)
 			throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -198,8 +183,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void caseAOptionalType(AOptionalType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -214,8 +197,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void caseAProductType(AProductType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -233,8 +214,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void defaultSSeqType(SSeqType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -248,8 +227,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void defaultSSetType(SSetType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -263,8 +240,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
-
 		if (!type.getResolved())
 		{
 			return;
@@ -282,17 +257,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 	@Override
 	public void defaultPType(PType type) throws AnalysisException
 	{
-		if (tooManyErrors(type)) return;
 		type.setResolved(false);
-	}
-
-	private static final Long MAX_RESOLVE_ERRORS = new Long(100);
-
-	private boolean tooManyErrors(PType node)
-	{
-		Long errors = node.getResolveErrors();
-		if (errors == null) errors = new Long(0);
-		node.setResolveErrors(++errors);
-		return errors > MAX_RESOLVE_ERRORS;
 	}
 }

@@ -213,6 +213,7 @@ public class PTypeResolver extends
 				}
 				
 				fixed.add(AstFactory.newAUnknownType(type.getLocation()));
+				type.setResolved(true);
 			}
 		}
 
@@ -231,8 +232,6 @@ public class PTypeResolver extends
 			{
 				problem.addExtra(e);
 			}
-			
-			fixed.add(AstFactory.newAUnknownType(type.getLocation()));
 		}
 		
 		if (problem != null)
@@ -303,6 +302,8 @@ public class PTypeResolver extends
 				{
 					problem.addExtra(e);
 				}
+
+				type.setResolved(true);
 			}
 
 			if (question.root != null)
@@ -415,6 +416,7 @@ public class PTypeResolver extends
 				}
 				
 				fixed.add(AstFactory.newAUnknownType(type.getLocation()));
+				type.setResolved(true);
 			}
 		}
 
@@ -433,8 +435,6 @@ public class PTypeResolver extends
 			{
 				problem.addExtra(e);
 			}
-			
-			fixed.add(AstFactory.newAUnknownType(type.getLocation()));
 		}
 		
 		if (problem != null)
@@ -522,6 +522,8 @@ public class PTypeResolver extends
 				{
 					problem.addExtra(e);
 				}
+
+				type.setResolved(true);
 			}
 		}
 		
@@ -626,6 +628,8 @@ public class PTypeResolver extends
 				{
 					problem.addExtra(e);
 				}
+
+				type.setResolved(true);
 			}
 
 			if (question.root != null)
