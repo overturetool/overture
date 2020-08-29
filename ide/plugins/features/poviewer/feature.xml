@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.poviewer"
       label="New POG Plugin"
-      version="3.0.0.qualifier">
+      version="3.0.1.qualifier">
 
    <description>
       %description
