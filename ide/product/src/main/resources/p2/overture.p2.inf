@@ -13,10 +13,10 @@ instructions.configure=\
   addRepository(type:1,name:Overture FMI Support Development,enabled:false,location:http${#58}//overture.au.dk/into-cps/vdm-tool-wrapper/development/latest/);\
   addRepository(type:0,name:Overture Graphics Plugin,enabled:true,location:http${#58}//overture.au.dk/overture-graphics-plugin/master/repository/);\
   addRepository(type:1,name:Overture Graphics Plugin,enabled:true,location:http${#58}//overture.au.dk/overture-graphics-plugin/master/repository/);\
-  addRepository(type:0,name:2019-12,enabled:true,location:http${#58}//download.eclipse.org/releases/2019-12/);\
-  addRepository(type:1,name:2019-12,enabled:true,location:http${#58}//download.eclipse.org/releases/2019-12/);\
-  addRepository(type:0,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.14);\
-  addRepository(type:1,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.14);
+  addRepository(type:0,name:2020-09,enabled:true,location:http${#58}//download.eclipse.org/releases/2020-09/);\
+  addRepository(type:1,name:2020-09,enabled:true,location:http${#58}//download.eclipse.org/releases/2020-09/);\
+  addRepository(type:0,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.17);\
+  addRepository(type:1,name:The Eclipse Project Updates,enabled:true,location:http${#58}//download.eclipse.org/eclipse/updates/4.17);
 instructions.configure.import=\
   org.eclipse.equinox.p2.touchpoint.natives.chmod,\
   org.eclipse.equinox.p2.touchpoint.natives.copy,\
