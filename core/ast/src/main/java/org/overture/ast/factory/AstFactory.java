@@ -2911,13 +2911,14 @@ public class AstFactory
 	}
 
 	public static ALetStm newALetStm(ILexLocation token,
-			List<PDefinition> localDefs, PStm readStatement)
+			List<PDefinition> localDefs, PStm readStatement, boolean isDef)
 	{
 		ALetStm result = new ALetStm();
 		initStatement(result, token);
 
 		result.setLocalDefs(localDefs);
 		result.setStatement(readStatement);
+		result.setIsDef(isDef);
 		return result;
 	}
 

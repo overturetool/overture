@@ -613,7 +613,7 @@ stm {-> package='org.overture.ast.statements'
     |   {forPatternBind} [patternBind]:patternBind.def [reverse]:java_Boolean [exp]:exp [statement]:stm (seqType):type.#seq
     |   {if} [ifExp]:exp [thenStm]:stm [elseIf]:stm.elseIf* [elseStm]:stm
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [statement]:stm (def):definition.multiBindList
-    |	{let} [localDefs]:definition* [statement]:stm
+    |	{let} [localDefs]:definition* [statement]:stm [isDef]:java_Boolean
     |   {notYetSpecified} [opname]:LexNameToken [args]:exp* /* FIXME -- these params are probably useless */
     |   {return} [expression]:exp
     |   #SimpleBlock

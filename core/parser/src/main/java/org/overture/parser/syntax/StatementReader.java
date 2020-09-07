@@ -909,7 +909,7 @@ public class StatementReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.IN, 2231, "Expecting 'in' after local definitions");
-		return AstFactory.newALetStm(token, localDefs, readStatement());
+		return AstFactory.newALetStm(token, localDefs, readStatement(), false);
 	}
 
 	private ALetBeStStm readLetBeStStatement(ILexLocation token)
@@ -990,7 +990,7 @@ public class StatementReader extends SyntaxReader
 
 		checkFor(VDMToken.IN, 2240, "Expecting 'in' after equals definitions");
 
-		return AstFactory.newALetStm(token, equalsDefs, readStatement());
+		return AstFactory.newALetStm(token, equalsDefs, readStatement(), true);
 	}
 
 	private ASpecificationStm readSpecStatement(ILexLocation token)

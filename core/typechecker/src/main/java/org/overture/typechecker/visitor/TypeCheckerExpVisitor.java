@@ -176,9 +176,19 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			if (inFunction && Settings.release == Release.VDM_10
 					&& !ot.getPure())
 			{
-				TypeCheckerErrors.report(3300,
-						"Impure operation '" + node.getRoot()
-								+ "' cannot be called from here", node.getLocation(), node);
+				if (question.env.isFunctionalError())
+				{
+					TypeCheckerErrors.report(3300,
+							"Impure operation '" + node.getRoot()
+									+ "' cannot be called from here", node.getLocation(), node);
+				}
+				else
+				{
+					TypeCheckerErrors.warning(3300,
+							"Impure operation '" + node.getRoot()
+									+ "' cannot be called from here", node.getLocation(), node);
+				}
+
 				results.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else if (inOperation && Settings.release == Release.VDM_10
 					&& enclfunc != null && enclfunc.getAccess().getPure()
@@ -1863,7 +1873,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), mbinds);
 		def.apply(THIS, question.newConstraint(null));
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
-		local.setFunctional(true);
+		local.setFunctional(true, true);
 		local.setEnclosingDefinition(def); // Prevent recursive checks
 		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope);
 
@@ -1877,7 +1887,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseALetBeStExp(ALetBeStExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getSuchThat(), node.getValue(), question);
+		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getSuchThat(), node.getValue(), question, false);
 		node.setDef(res.getValue());
 		node.setType(res.getKey());
 		return node.getType();
@@ -1886,7 +1896,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseALetDefExp(ALetDefExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.setType(typeCheckLet(node, node.getLocalDefs(), node.getExpression(), question));
+		node.setType(typeCheckLet(node, node.getLocalDefs(), node.getExpression(), question, false));
 		return node.getType();
 	}
 

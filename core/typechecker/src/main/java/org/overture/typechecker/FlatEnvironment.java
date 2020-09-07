@@ -70,10 +70,10 @@ public class FlatEnvironment extends Environment
 		this.definitions.add(one);
 	}
 
-	public FlatEnvironment(ITypeCheckerAssistantFactory af, Environment env, boolean functional)
+	public FlatEnvironment(ITypeCheckerAssistantFactory af, Environment env, Boolean functional, boolean errors)
 	{
 		this(af, new ArrayList<PDefinition>(), env);
-		setFunctional(functional);
+		setFunctional(functional, errors);
 	}
 
 	public void add(PDefinition one)

@@ -48,8 +48,11 @@ abstract public class Environment
 	/** The enclosing func/op definition at this point, or null. */
 	private PDefinition enclosingDefinition = null;
 	
-	/** Whether we are in a functional (true) or operational (false) context, or null. */
+	/** Whether we are in a functional or operational context. */
 	private Boolean isFunctional = null;
+	
+	/** Whether a functional context should generate errors or warnings for operation calls. */
+	private Boolean isFunctionalError = false;
 
 	/**
 	 * Create an environment linking to the given outer chain.
@@ -159,9 +162,28 @@ abstract public class Environment
 		return outer == null ? false : outer.isFunctional();
 	}
 	
-	public void setFunctional(boolean functional)
+	public boolean isFunctionalError()
 	{
-		isFunctional = Boolean.valueOf(functional);
+		if (isFunctional != null)	// Only valid when isFunctional set
+		{
+			return isFunctionalError;
+		}
+
+		return outer == null ? false : outer.isFunctionalError();
+	}
+	
+	public void setFunctional(Boolean functional, Boolean errors)
+	{
+		isFunctional = functional;
+
+		if (functional != null && functional)
+		{
+			isFunctionalError = errors;
+		}
+		else
+		{
+			isFunctionalError = false;
+		}
 	}
 
 	/**

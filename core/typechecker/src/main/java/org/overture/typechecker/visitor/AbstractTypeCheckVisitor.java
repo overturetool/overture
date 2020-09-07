@@ -45,8 +45,10 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
+import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.annotations.TCAnnotation;
@@ -195,10 +197,18 @@ public class AbstractTypeCheckVisitor extends
 	 * @throws AnalysisException
 	 */
 	protected PType typeCheckLet(INode node, LinkedList<PDefinition> localDefs,
-			INode body, TypeCheckInfo question) throws AnalysisException
+			INode body, TypeCheckInfo question, boolean statement) throws AnalysisException
 	{
-		// Each local definition is in scope for later local definitions...
-		Environment local = question.env;
+		Environment local = null;
+
+		if (statement && Settings.strict)
+		{
+			local = new FlatEnvironment(question.assistantFactory, question.env, true, false);
+		}
+		else
+		{
+			local = question.env;
+		}
 
 		for (PDefinition d : localDefs)
 		{
@@ -229,6 +239,11 @@ public class AbstractTypeCheckVisitor extends
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}
 		}
+		
+		if (statement)
+		{
+			local = new FlatEnvironment(question.assistantFactory, local, false, false);
+		}
 
 		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null, question.fromModule, question.mandatory));
 		local.unusedCheck(question.env);
@@ -248,15 +263,26 @@ public class AbstractTypeCheckVisitor extends
 	 */
 	protected Map.Entry<PType, AMultiBindListDefinition> typecheckLetBeSt(
 			INode node, ILexLocation nodeLocation, PMultipleBind bind,
-			PExp suchThat, INode body, TypeCheckInfo question)
+			PExp suchThat, INode body, TypeCheckInfo question, boolean statement)
 			throws AnalysisException
 	{
 		final PDefinition def = AstFactory.newAMultiBindListDefinition(nodeLocation, question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList((PMultipleBind) bind));
 
-		def.apply(THIS, question.newConstraint(null));
-		
+		Environment funcEnv = null;
+
+		if (statement && Settings.strict)
+		{
+			funcEnv = new FlatEnvironment(question.assistantFactory, question.env, true, false);
+		}
+		else
+		{
+			funcEnv = question.env;
+		}
+
+		def.apply(THIS, question.newConstraint(null).newInfo(funcEnv));
+
 		List<PDefinition> qualified = new Vector<PDefinition>();
-		
+
 		for (PDefinition d: question.assistantFactory.createPDefinitionAssistant().getDefinitions(def))
 		{
 			PDefinition copy = d.clone();

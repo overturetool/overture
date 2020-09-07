@@ -207,7 +207,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	public PType caseAClassInvariantDefinition(AClassInvariantDefinition node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true, true);
 		newEnv.setEnclosingDefinition(node);
 		TypeCheckInfo functional = question.newInfo(newEnv);
 		functional.qualifiers = null;
@@ -339,7 +339,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
-		local.setFunctional(true);
+		local.setFunctional(true, true);
 
 
 		// building the new scope for subtypechecks
@@ -365,7 +365,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			// building the new scope for subtypechecks
 			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
-			pre.setFunctional(true);
+			pre.setFunctional(true, true);
 			pre.setEnclosingDefinition(node.getPredef());
 
 			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMES));
@@ -391,7 +391,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			PPattern rp = AstFactory.newAIdentifierPattern(result);
 			List<PDefinition> rdefs = question.assistantFactory.createPPatternAssistant(question.fromModule).getDefinitions(rp, expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, rdefs, local, NameScope.NAMES);
-			post.setFunctional(true);
+			post.setFunctional(true, true);
 			post.setEnclosingDefinition(node.getPostdef());
 
 			// building the new scope for subtypechecks
@@ -513,7 +513,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
-		local.setFunctional(true);
+		local.setFunctional(true, true);
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
@@ -522,7 +522,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getPredef() != null)
 		{
 			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
-			pre.setFunctional(true);
+			pre.setFunctional(true, true);
 			pre.setEnclosingDefinition(node.getPredef());
 
 			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, question.scope));
@@ -592,7 +592,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMES);
 				post.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 				post.setEnclosingDefinition(node.getPostdef());
-				post.setFunctional(true);
+				post.setFunctional(true, true);
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMES));
 				post.unusedCheck();
 			} else
@@ -680,7 +680,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, node.getParamDefinitions(), question.env, NameScope.NAMESANDSTATE);
 		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
-		local.setFunctional(false);
+		local.setFunctional(false, false);
 
 		if (question.env.isVDMPP())
 		{
@@ -730,7 +730,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
 			pre.setEnclosingDefinition(node.getPredef());
-			pre.setFunctional(true);
+			pre.setFunctional(true, true);
 
 			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
 
@@ -764,7 +764,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 
 			post.setEnclosingDefinition(node.getPostdef());
-			post.setFunctional(true);
+			post.setFunctional(true, true);
 
 			PType b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
@@ -957,7 +957,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		local.setLimitStateScope(limitStateScope);
 		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
-		local.setFunctional(false);
+		local.setFunctional(false, false);
 
 		if (question.env.isVDMPP())
 		{
@@ -995,7 +995,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, argdefs, question.env);
 			pre.setLimitStateScope(limitStateScope);
 			pre.setEnclosingDefinition(node.getPredef());
-			pre.setFunctional(true);
+			pre.setFunctional(true, true);
 			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
@@ -1102,14 +1102,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMESANDANYSTATE);
 				post.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 				post.setEnclosingDefinition(node.getPostdef());
-				post.setFunctional(true);
+				post.setFunctional(true, true);
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
 				post.unusedCheck();
 			} else
 			{
 				FlatEnvironment post = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
 				post.setEnclosingDefinition(node.getPostdef());
-				post.setFunctional(true);
+				post.setFunctional(true, true);
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
 			}
 
@@ -1679,7 +1679,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			ALetDefBindingTraceDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		return typeCheckLet(node, node.getLocalDefs(), node.getBody(), question);
+		return typeCheckLet(node, node.getLocalDefs(), node.getBody(), question, false);
 	}
 
 	@Override
@@ -1687,7 +1687,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			ALetBeStBindingTraceDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getStexp(), node.getBody(), question);
+		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getStexp(), node.getBody(), question, false);
 		node.setDef(res.getValue());
 		return res.getKey();
 	}
