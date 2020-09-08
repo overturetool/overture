@@ -271,6 +271,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			} else if (arg.equals("-measures"))
 			{
 				Settings.measureChecks = false;
+			} else if (arg.equals("-strict"))
+			{
+				Settings.strict = true;
 			} else if (arg.equals("-log"))
 			{
 				if (i.hasNext())
