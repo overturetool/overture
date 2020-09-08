@@ -56,6 +56,7 @@ public interface IDebugConstants
 	static final String VDM_LAUNCH_CONFIG_POST_CHECKS = "vdm_launch_config_post_checks";
 	static final String VDM_LAUNCH_CONFIG_PRE_CHECKS = "vdm_launch_config_pre_checks";
 	static final String VDM_LAUNCH_CONFIG_MEASURE_CHECKS = "vdm_launch_config_measure_checks";
+	static final String VDM_LAUNCH_CONFIG_STRICT_LET_DEF_CHECKS = "vdm_launch_config_strict_let_def_checks";
 
 	static final String VDM_LAUNCH_CONFIG_CONSOLE_ENTRY = "vdm_launch_config_console_entry";
 

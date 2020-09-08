@@ -231,6 +231,10 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		{
 			commandList.add("-measures");
 		}
+		if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_STRICT_LET_DEF_CHECKS, false))
+		{
+			commandList.add("-strict");
+		}
 
 		commandList.add("-c");
 		commandList.add(charSet);
