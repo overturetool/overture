@@ -184,8 +184,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				}
 				else
 				{
-					TypeCheckerErrors.warning(3300,
-							"Impure operation '" + node.getRoot()
+					TypeCheckerErrors.warning(5031,
+							"Strict: impure operation '" + node.getRoot()
 									+ "' cannot be called from here", node.getLocation(), node);
 				}
 
