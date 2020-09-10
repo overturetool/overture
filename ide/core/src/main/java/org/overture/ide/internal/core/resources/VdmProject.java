@@ -76,6 +76,8 @@ public class VdmProject implements IVdmProject
 	// private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
 	// private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
+	private static final String USE_STRICT_LET_DEF = "USE_STRICT_LET_DEF";
+
 	// private static final String MEASURE_CHECKS_ARGUMENT_KEY = "MEASURE_CHECKS";
 	
 	
@@ -322,6 +324,15 @@ public class VdmProject implements IVdmProject
 		return hasArgument(SUPRESS_WARNINGS_ARGUMENT_KEY, false);
 	}
 
+	
+	@Override
+	public boolean hasUseStrictLetDef() 
+	{
+		return hasArgument(USE_STRICT_LET_DEF, false);
+	}
+	
+
+
 	// /*
 	// * (non-Javadoc)
 	// * @see org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang. Boolean)
@@ -370,6 +381,12 @@ public class VdmProject implements IVdmProject
 	public void setSuppressWarnings(Boolean value) throws CoreException
 	{
 		addBuilder(getProject(), ICoreConstants.BUILDER_ID, SUPRESS_WARNINGS_ARGUMENT_KEY, value.toString());
+	}
+	
+	@Override
+	public void setUseStrictLetDef(Boolean value) throws CoreException 
+	{
+		addBuilder(getProject(), ICoreConstants.BUILDER_ID, USE_STRICT_LET_DEF , value.toString());
 	}
 
 	private boolean hasArgument(String argumentKey, boolean defaultValue)
@@ -855,6 +872,9 @@ public class VdmProject implements IVdmProject
 		}
 		return options;
 	}
+
+
+		
 
 	// @Override
 	// public boolean equals(Object obj)

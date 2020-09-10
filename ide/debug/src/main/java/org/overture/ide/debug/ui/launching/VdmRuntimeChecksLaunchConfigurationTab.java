@@ -70,7 +70,6 @@ public class VdmRuntimeChecksLaunchConfigurationTab extends
 	private Button checkBoxInvChecks = null;
 	private Button checkBoxDynamicTypeChecks = null;
 	private Button checkBoxUseMeasure = null;
-	private Button checkBoxUseStrictLetDef = null;
 
 	public void createControl(Composite parent)
 	{
@@ -125,10 +124,6 @@ public class VdmRuntimeChecksLaunchConfigurationTab extends
 		checkBoxUseMeasure = new Button(interperterGroup, SWT.CHECK);
 		checkBoxUseMeasure.setText("Measure Run-Time checks");
 		checkBoxUseMeasure.addSelectionListener(fListener);
-		
-		checkBoxUseStrictLetDef = new Button(interperterGroup, SWT.CHECK);
-		checkBoxUseStrictLetDef.setText("Strict let def checks");
-		checkBoxUseStrictLetDef.addSelectionListener(fListener);
 
 	}
 
@@ -146,7 +141,6 @@ public class VdmRuntimeChecksLaunchConfigurationTab extends
 			checkBoxUsePostChecks.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_POST_CHECKS, true));
 			checkBoxUsePreChecks.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PRE_CHECKS, true));
 			checkBoxUseMeasure.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MEASURE_CHECKS, true));
-			checkBoxUseStrictLetDef.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_STRICT_LET_DEF_CHECKS, false));
 
 		} catch (CoreException e)
 		{
@@ -164,7 +158,6 @@ public class VdmRuntimeChecksLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_POST_CHECKS, checkBoxUsePostChecks.getSelection());
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PRE_CHECKS, checkBoxUsePreChecks.getSelection());
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MEASURE_CHECKS, checkBoxUseMeasure.getSelection());
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_STRICT_LET_DEF_CHECKS, checkBoxUseStrictLetDef.getSelection());
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
@@ -174,7 +167,6 @@ public class VdmRuntimeChecksLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_POST_CHECKS, true);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PRE_CHECKS, true);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MEASURE_CHECKS, true);
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_STRICT_LET_DEF_CHECKS, false);
 	}
 
 }

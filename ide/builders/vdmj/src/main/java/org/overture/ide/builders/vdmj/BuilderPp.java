@@ -58,6 +58,7 @@ public class BuilderPp extends VdmjBuilder {
 		try
 		{
 			Settings.release = getProject().getLanguageVersion();
+			Settings.strict = getProject().hasUseStrictLetDef();
 		} catch (CoreException e1)
 		{
 			e1.printStackTrace();
