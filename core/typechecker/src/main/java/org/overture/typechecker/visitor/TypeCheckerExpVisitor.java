@@ -2230,7 +2230,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
 		{
-			TypeCheckerErrors.report(3348, "Cannot use 'new' in a functional context", node.getLocation(), node);
+			if (question.env.isFunctionalError())
+			{
+				TypeCheckerErrors.report(3348, "Cannot use 'new' in a functional context", node.getLocation(), node);
+			}
+			else
+			{
+				TypeCheckerErrors.warning(5033, "Cannot use 'new' in a functional context", node.getLocation(), node);
+			}
 		}
 
 		node.setClassdef((SClassDefinition) cdef);
@@ -2737,7 +2744,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
 		{
-			TypeCheckerErrors.report(3348, "Cannot use 'threadid' in a functional context", node.getLocation(), node);
+			if (question.env.isFunctionalError())
+			{
+				TypeCheckerErrors.report(3348, "Cannot use 'threadid' in a functional context", node.getLocation(), node);
+			}
+			else
+			{
+				TypeCheckerErrors.warning(5032, "Cannot use 'threadid' in a functional context", node.getLocation(), node);
+			}
 		}
 
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
@@ -2755,7 +2769,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
 		{
-			TypeCheckerErrors.report(3348, "Cannot use 'time' in a functional context", node.getLocation(), node);
+			if (question.env.isFunctionalError())
+			{
+				TypeCheckerErrors.report(3348, "Cannot use 'time' in a functional context", node.getLocation(), node);
+			}
+			else
+			{
+				TypeCheckerErrors.warning(5034, "Cannot use 'time' in a functional context", node.getLocation(), node);
+			}
 		}
 
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
