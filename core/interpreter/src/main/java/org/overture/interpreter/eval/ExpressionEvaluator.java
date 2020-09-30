@@ -927,14 +927,20 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
 
-			if (self != null && d instanceof AExplicitFunctionDefinition)
+			if (d instanceof AExplicitFunctionDefinition)
 			{
 				for (NameValuePair nvp : values)
 				{
 					if (nvp.value instanceof FunctionValue)
 					{
 						FunctionValue fv = (FunctionValue) nvp.value;
-						fv.setSelf(self);
+						if (self != null) fv.setSelf(self);
+
+						if (fv.name.equals(d.getName().getName()))
+						{
+							fv.freeVariables = ctxt.getVisibleVariables();
+							fv.freeVariables.put(d.getName(), fv);
+						}
 					}
 				}
 			}
