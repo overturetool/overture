@@ -438,6 +438,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			node.getRight().getType().apply(mEqC,question);
 		}
 
+		if (question.assistantFactory.createPTypeAssistant().isFunctionType(node.getLeft().getType(), node.getLocation()) ||
+			question.assistantFactory.createPTypeAssistant().isFunctionType(node.getRight().getType(), node.getLocation()))
+		{
+			TypeCheckerErrors.warning(5037, "Function equality cannot be reliably computed", node.getLocation(), node);
+		}
+
 		if (!question.assistantFactory.getTypeComparator().compatible(node.getLeft().getType(), node.getRight().getType())
 				|| !question.assistantFactory.getTypeComparator().compatible(node.getRight().getType(), node.getLeft().getType()))
 		{
@@ -2538,6 +2544,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question = new TypeCheckInfo(question.assistantFactory, local, question.scope);
 
 		PType etype = node.getFirst().apply(THIS, question.newConstraint(null));
+
+		if (question.assistantFactory.createPTypeAssistant().isFunctionType(etype, node.getLocation()))
+		{
+			TypeCheckerErrors.warning(5037, "Function equality cannot be reliably computed", node.getFirst().getLocation(), node.getFirst());
+		}
+
 		PExp predicate = node.getPredicate();
 
 		if (predicate != null)
@@ -2578,6 +2590,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			PType mt = ex.apply(THIS, elemConstraint);
 			ts.add(mt);
 			types.add(mt);
+
+			if (node.getMembers().size() > 1 && question.assistantFactory.createPTypeAssistant().isFunctionType(mt, node.getLocation()))
+			{
+				TypeCheckerErrors.warning(5037, "Function equality cannot be reliably computed", ex.getLocation(), ex);
+			}
 		}
 
 		node.setType(ts.isEmpty() ?
