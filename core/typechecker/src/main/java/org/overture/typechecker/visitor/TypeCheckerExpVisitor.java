@@ -2541,9 +2541,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		def.apply(THIS, question.newConstraint(null));
 
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
-		question = new TypeCheckInfo(question.assistantFactory, local, question.scope);
+		question = question.newInfo(local);
+		PType elemConstraint = null;
 
-		PType etype = node.getFirst().apply(THIS, question.newConstraint(null));
+		if (question.constraint != null && question.assistantFactory.createPTypeAssistant().isSet(question.constraint, question.fromModule))
+		{
+			elemConstraint = question.assistantFactory.createPTypeAssistant().
+								getSet(question.constraint, question.fromModule).getSetof();
+		}
+
+		PType etype = node.getFirst().apply(THIS, question.newConstraint(elemConstraint));
 
 		if (question.assistantFactory.createPTypeAssistant().isFunctionType(etype, node.getLocation()))
 		{
