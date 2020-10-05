@@ -37,6 +37,7 @@ import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.SSetType;
@@ -613,6 +614,30 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 		} catch (AnalysisException e)
 		{
 			return false;
+		}
+	}
+
+	public boolean isFunctionType(PType type, ILexLocation from)
+	{
+		if (type instanceof AUnionType)
+		{
+			AUnionType union = (AUnionType)type;
+
+			for (PType element: union.getTypes())
+			{
+				if (isFunctionType(element, from))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+		else
+		{
+			return isFunction(type, from.getModule()) &&
+				!(type instanceof AOptionalType) &&		// eg. nil is not a function
+				!(type instanceof AUnknownType);		// eg. ? is not a function
 		}
 	}
 }

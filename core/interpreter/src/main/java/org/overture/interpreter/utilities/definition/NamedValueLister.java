@@ -178,7 +178,7 @@ public class NamedValueLister extends
 			throws AnalysisException
 	{
 		NameValuePairList nvl = new NameValuePairList();
-		Context free = initialContext.getVisibleVariables();
+		Context free = null;	// initialContext.getVisibleVariables();
 
 		FunctionValue prefunc = def.getPredef() == null ? null
 				: new FunctionValue(def.getPredef(), null, null, free);
@@ -211,7 +211,7 @@ public class NamedValueLister extends
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			// This is needed for recursive local functions
-			free.putList(nvl);
+			// free.putList(nvl);
 		}
 
 		return nvl;
@@ -256,7 +256,7 @@ public class NamedValueLister extends
 			throws AnalysisException
 	{
 		NameValuePairList nvl = new NameValuePairList();
-		Context free = initialContext.getVisibleVariables();
+		Context free = null;	// initialContext.getVisibleVariables();
 
 		FunctionValue prefunc = def.getPredef() == null ? null
 				: new FunctionValue(def.getPredef(), null, null, free);
@@ -293,7 +293,7 @@ public class NamedValueLister extends
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			// This is needed for recursive local functions
-			free.putList(nvl);
+			// free.putList(nvl);
 		}
 
 		return nvl;

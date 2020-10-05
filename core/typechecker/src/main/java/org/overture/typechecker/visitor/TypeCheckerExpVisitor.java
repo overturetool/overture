@@ -184,8 +184,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				}
 				else
 				{
-					TypeCheckerErrors.warning(3300,
-							"Impure operation '" + node.getRoot()
+					TypeCheckerErrors.warning(5031,
+							"Strict: impure operation '" + node.getRoot()
 									+ "' cannot be called from here", node.getLocation(), node);
 				}
 
@@ -436,6 +436,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			IQuestion<TypeCheckInfo> mEqC = question.assistantFactory.getMultipleEqualityChecker();
 			node.getRight().getType().apply(mEqC,question);
+		}
+
+		if (question.assistantFactory.createPTypeAssistant().isFunctionType(node.getLeft().getType(), node.getLocation()) ||
+			question.assistantFactory.createPTypeAssistant().isFunctionType(node.getRight().getType(), node.getLocation()))
+		{
+			TypeCheckerErrors.warning(5037, "Function equality cannot be reliably computed", node.getLocation(), node);
 		}
 
 		if (!question.assistantFactory.getTypeComparator().compatible(node.getLeft().getType(), node.getRight().getType())
@@ -2230,7 +2236,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
 		{
-			TypeCheckerErrors.report(3348, "Cannot use 'new' in a functional context", node.getLocation(), node);
+			if (question.env.isFunctionalError())
+			{
+				TypeCheckerErrors.report(3348, "Cannot use 'new' in a functional context", node.getLocation(), node);
+			}
+			else
+			{
+				TypeCheckerErrors.warning(5033, "Cannot use 'new' in a functional context", node.getLocation(), node);
+			}
 		}
 
 		node.setClassdef((SClassDefinition) cdef);
@@ -2531,6 +2544,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question = new TypeCheckInfo(question.assistantFactory, local, question.scope);
 
 		PType etype = node.getFirst().apply(THIS, question.newConstraint(null));
+
+		if (question.assistantFactory.createPTypeAssistant().isFunctionType(etype, node.getLocation()))
+		{
+			TypeCheckerErrors.warning(5037, "Function equality cannot be reliably computed", node.getFirst().getLocation(), node.getFirst());
+		}
+
 		PExp predicate = node.getPredicate();
 
 		if (predicate != null)
@@ -2571,6 +2590,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			PType mt = ex.apply(THIS, elemConstraint);
 			ts.add(mt);
 			types.add(mt);
+
+			if (node.getMembers().size() > 1 && question.assistantFactory.createPTypeAssistant().isFunctionType(mt, node.getLocation()))
+			{
+				TypeCheckerErrors.warning(5037, "Function equality cannot be reliably computed", ex.getLocation(), ex);
+			}
 		}
 
 		node.setType(ts.isEmpty() ?
@@ -2737,7 +2761,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
 		{
-			TypeCheckerErrors.report(3348, "Cannot use 'threadid' in a functional context", node.getLocation(), node);
+			if (question.env.isFunctionalError())
+			{
+				TypeCheckerErrors.report(3348, "Cannot use 'threadid' in a functional context", node.getLocation(), node);
+			}
+			else
+			{
+				TypeCheckerErrors.warning(5032, "Cannot use 'threadid' in a functional context", node.getLocation(), node);
+			}
 		}
 
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
@@ -2755,7 +2786,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (Settings.release == Release.VDM_10 && question.env.isFunctional())
 		{
-			TypeCheckerErrors.report(3348, "Cannot use 'time' in a functional context", node.getLocation(), node);
+			if (question.env.isFunctionalError())
+			{
+				TypeCheckerErrors.report(3348, "Cannot use 'time' in a functional context", node.getLocation(), node);
+			}
+			else
+			{
+				TypeCheckerErrors.warning(5034, "Cannot use 'time' in a functional context", node.getLocation(), node);
+			}
 		}
 
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
