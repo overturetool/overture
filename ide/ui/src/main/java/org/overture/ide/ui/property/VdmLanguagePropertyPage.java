@@ -139,7 +139,7 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		checkBoxSuppressWarnings.setSelection(project.hasSuppressWarnings());
 		
 		checkBoxUseStrictLetDef = new Button(typeGroup, SWT.CHECK);
-		checkBoxUseStrictLetDef.setText("Strict let def checks");
+		checkBoxUseStrictLetDef.setText("Strict type checking");
 		checkBoxUseStrictLetDef.setSelection(project.hasUseStrictLetDef());
 
 	}

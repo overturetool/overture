@@ -66,6 +66,7 @@ public class VdmRtMainLaunchConfigurationTab extends
 		{
 			Settings.dialect = Dialect.VDM_RT;
 			Settings.release = project.getLanguageVersion();
+ 			Settings.strict = project.hasUseStrictLetDef();
 			Console.charset = getProject().getDefaultCharset();
 			IVdmModel model = project.getModel();
 			if (!model.isTypeCorrect())

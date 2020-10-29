@@ -52,6 +52,7 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 		try
 		{
 			Settings.release = file.getProject().getLanguageVersion();
+ 			Settings.strict = file.getProject().hasUseStrictLetDef();
 		} catch (CoreException e1)
 		{
 			if (Activator.DEBUG)

@@ -62,6 +62,7 @@ public class VdmSlMainLaunchConfigurationTab extends
 		{
 			Settings.dialect = Dialect.VDM_SL;
 			Settings.release = project.getLanguageVersion();
+ 			Settings.strict = project.hasUseStrictLetDef();
 			Console.charset = getProject().getDefaultCharset();
 			IVdmModel model = project.getModel();
 			if (!model.isTypeCorrect())
