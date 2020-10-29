@@ -52,6 +52,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -146,7 +147,18 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return ((AImportedDefinition) node).getDef().apply(THIS);
+		PType type = node.getType();
+
+		if (type != null && !(type instanceof AFunctionType))
+		{
+			// Only for non-function types (polymorphic params cause trouble)
+			// See bug #760
+			return type;
+		}
+		else
+		{
+			return ((AImportedDefinition) node).getDef().apply(THIS);
+		}
 	}
 
 	public static void checkSuperDefinition(AInheritedDefinition d)
@@ -231,7 +243,18 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return ((ARenamedDefinition) node).getDef().apply(THIS);
+		PType type = node.getType();
+
+		if (type != null && !(type instanceof AFunctionType))
+		{
+			// Only for non-function types (polymorphic params cause trouble)
+			// See bug #760
+			return type;
+		}
+		else
+		{
+			return ((ARenamedDefinition) node).getDef().apply(THIS);
+		}
 	}
 
 	@Override
