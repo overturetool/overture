@@ -358,7 +358,7 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 	public void resume() throws DebugException
 	{
-		this.manager.resume();
+		this.resumeInner();
 	}
 
 	public void resumeInner() throws DebugException
