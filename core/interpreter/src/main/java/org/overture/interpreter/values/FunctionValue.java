@@ -50,6 +50,7 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
@@ -804,7 +805,7 @@ public class FunctionValue extends Value
 					List<PType> domain = tc.narrowest(type.getParameters(), restrictedType.getParameters());
 					PType range = tc.narrowest(type.getResult(), restrictedType.getResult());
 					AFunctionType newType = AstFactory.newAFunctionType(location, true, domain, range);
-					
+
 					// Create a new function with the narrowest domain/range.
 					FunctionValue restricted = new FunctionValue(location, name,
 						newType, paramPatternList, body, precondition, postcondition,
@@ -812,7 +813,15 @@ public class FunctionValue extends Value
 						measureValues, result);
 
 					restricted.typeValues = typeValues;
-					return restricted;
+
+					if (to instanceof ANamedInvariantType)
+					{
+						return new InvariantValue((ANamedInvariantType)to, restricted, ctxt);
+					}
+					else
+					{
+						return restricted;
+					}
 				}
 			}
 		}
