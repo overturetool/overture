@@ -200,7 +200,7 @@ public class AllDefinitionLocator
 
 		ARecordInvariantType pattype = af.createPTypeAssistant().getRecord(type, pattern.getLocation().getModule());
 
-		if (!af.createPTypeAssistant().isType(question.ptype, pattype.getClass()))
+		if (!af.getTypeComparator().compatible(pattype, question.ptype))
 		{
 			TypeCheckerErrors.report(3201, "Matching expression is not a compatible record type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail2("Pattern type", type, "Expression type", question.ptype);
