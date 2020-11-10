@@ -48,7 +48,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class TypeUnresolver extends AnalysisAdaptor
 {
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public TypeUnresolver(ITypeCheckerAssistantFactory af)
@@ -260,5 +259,4 @@ public class TypeUnresolver extends AnalysisAdaptor
 	{
 		type.setResolved(false);
 	}
-
 }

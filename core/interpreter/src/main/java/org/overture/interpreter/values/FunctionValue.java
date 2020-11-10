@@ -50,6 +50,7 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
@@ -85,7 +86,7 @@ public class FunctionValue extends Value
 	public final PExp body;
 	public final FunctionValue precondition;
 	public final FunctionValue postcondition;
-	public final Context freeVariables;
+	public Context freeVariables;
 
 	// Causes parameter assignments to check their invariants (if any).
 	// This is set to false for inv_() functions, which cannot check them.
@@ -699,15 +700,55 @@ public class FunctionValue extends Value
 		{
 			Value val = ((Value) other).deref();
 
-			if (val instanceof CompFunctionValue
-					|| val instanceof IterFunctionValue)
+			if (val == this)
+			{
+				return true;	// Same object!
+			}
+			else if (val instanceof CompFunctionValue || val instanceof IterFunctionValue)
 			{
 				return false; // Play safe - we can't really tell
-			} else if (val instanceof FunctionValue)
+			}
+			else if (val instanceof FunctionValue)
 			{
 				FunctionValue ov = (FunctionValue) val;
-				return ov.type.equals(type) && // Param and result types same
-						ov.body.equals(body); // Not ideal - a string comparison in fact
+				boolean fvars;
+
+				if (ov.freeVariables != null)
+				{
+					if (freeVariables != null)
+					{
+						fvars = true;
+
+						// Compare "my" fvs with the other's (ie. mine can be a subset)
+						for (ILexNameToken key: freeVariables.keySet())
+						{
+							Value myval = freeVariables.get(key);
+
+							if (!(myval instanceof ParameterValue))		// Ignore parameters
+							{
+								Value oval = ov.freeVariables.get(key);
+
+								if (oval == null || !myval.equals(oval))
+					    		{
+					    			fvars = false;
+					    			break;
+					    		}
+							}
+						}
+					}
+					else
+					{
+						fvars = false;
+					}
+				}
+				else
+				{
+					fvars = (freeVariables == null);
+				}
+
+				return fvars &&						// Free variables the same
+					   ov.type.equals(type) &&		// Param and result types same
+				       ov.body.equals(body);		// Not ideal - a string comparison in fact
 			}
 		}
 
@@ -764,7 +805,7 @@ public class FunctionValue extends Value
 					List<PType> domain = tc.narrowest(type.getParameters(), restrictedType.getParameters());
 					PType range = tc.narrowest(type.getResult(), restrictedType.getResult());
 					AFunctionType newType = AstFactory.newAFunctionType(location, true, domain, range);
-					
+
 					// Create a new function with the narrowest domain/range.
 					FunctionValue restricted = new FunctionValue(location, name,
 						newType, paramPatternList, body, precondition, postcondition,
@@ -772,7 +813,15 @@ public class FunctionValue extends Value
 						measureValues, result);
 
 					restricted.typeValues = typeValues;
-					return restricted;
+
+					if (to instanceof ANamedInvariantType)
+					{
+						return new InvariantValue((ANamedInvariantType)to, restricted, ctxt);
+					}
+					else
+					{
+						return restricted;
+					}
 				}
 			}
 		}

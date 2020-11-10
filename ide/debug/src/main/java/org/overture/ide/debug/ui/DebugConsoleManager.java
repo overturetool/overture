@@ -84,6 +84,18 @@ public class DebugConsoleManager implements ILaunchesListener2
 		{
 			return false;
 		}
+		// Do not interfere with tools launched using External Tools
+		try {
+			if (launch.getLaunchConfiguration() != null
+					&& launch.getLaunchConfiguration().getCategory() != null
+					   && launch.getLaunchConfiguration().getCategory().equals("org.eclipse.ui.externaltools"))			
+			{
+				return false;
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return launch.getProcesses().length != 0
 				&& true // DLTKDebugLaunchConstants.isDebugConsole(launch)
 				|| launch.getDebugTarget() instanceof IVdmDebugTarget
@@ -313,6 +325,7 @@ public class DebugConsoleManager implements ILaunchesListener2
 	{
 		for (ILaunch launch : launches)
 		{
+
 			final VdmDebugConsole console = launchToConsoleMap.get(launch);
 			if (console != null)
 			{

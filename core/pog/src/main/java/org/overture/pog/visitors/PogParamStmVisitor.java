@@ -679,7 +679,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			throw new POException(node, e.getMessage());
 		}
 	}
-
+	
 	public IProofObligationList defaultSSimpleBlockStm(SSimpleBlockStm node,
 			IPOContextStack question) throws AnalysisException
 	{

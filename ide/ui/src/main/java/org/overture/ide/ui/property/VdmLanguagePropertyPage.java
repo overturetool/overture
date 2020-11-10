@@ -49,6 +49,8 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 {
 	private Combo comboBoxLanguageVersion = null;
 	private Button checkBoxSuppressWarnings = null;
+	private Button checkBoxUseStrictLetDef = null;
+
 	private IVdmProject project = null;
 
 	private Group typeGroup;
@@ -135,6 +137,10 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		checkBoxSuppressWarnings = new Button(typeGroup, SWT.CHECK);
 		checkBoxSuppressWarnings.setText("Suppress warnings");
 		checkBoxSuppressWarnings.setSelection(project.hasSuppressWarnings());
+		
+		checkBoxUseStrictLetDef = new Button(typeGroup, SWT.CHECK);
+		checkBoxUseStrictLetDef.setText("Strict type checking");
+		checkBoxUseStrictLetDef.setSelection(project.hasUseStrictLetDef());
 
 	}
 
@@ -171,6 +177,7 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		{
 			project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
 			project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
+			project.setUseStrictLetDef(checkBoxUseStrictLetDef.getSelection());
 
 			VdmTypeCheckerUi.typeCheck(getShell(), project);
 		} catch (CoreException e)

@@ -271,6 +271,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			} else if (arg.equals("-measures"))
 			{
 				Settings.measureChecks = false;
+			} else if (arg.equals("-strict"))
+			{
+				Settings.strict = true;
 			} else if (arg.equals("-log"))
 			{
 				if (i.hasNext())
@@ -904,13 +907,15 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		sb.append(statusReason);
 		sb.append("\"");
 
-		StringBuilder body = new StringBuilder();
-		body.append("<internal ");
+		StringBuilder body = null;
 
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
-
+		
 		if (th != null)
 		{
+			body = new StringBuilder();
+			body.append("<internal ");
+
 			body.append("threadId=\"");
 			body.append(th.getId());
 			body.append("\" ");
@@ -922,10 +927,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			body.append("threadState=\"");
 			body.append(th.getRunState().toString());
 			body.append("\" ");
+			body.append("/>");
 
 		}
 
-		body.append("/>");
 
 		response(sb, body);
 	}

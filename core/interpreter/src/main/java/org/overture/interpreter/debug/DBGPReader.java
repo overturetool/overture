@@ -563,6 +563,8 @@ public class DBGPReader
 			connected = true;
 			addThisReader();
 			init();
+			interpreter.init(this);
+
 			run(); // New threads wait for a "run -i"
 		}
 	}
@@ -570,7 +572,6 @@ public class DBGPReader
 	protected void startup(RemoteControl remote) throws IOException
 	{
 		remoteControl = remote; // Main thread only
-		interpreter.init(this);
 		connect();
 	}
 

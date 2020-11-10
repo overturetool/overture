@@ -57,6 +57,11 @@ public interface IVdmProject extends IAdaptable
 
 	public void setSuppressWarnings(Boolean value)
 			throws CoreException;
+	
+	public boolean hasUseStrictLetDef();
+
+	public void setUseStrictLetDef(Boolean value) 
+			throws CoreException;
 
 	public boolean typeCheck(IProgressMonitor monitor)
 			throws CoreException;

@@ -194,6 +194,9 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 		@SuppressWarnings("unchecked")
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getCurriedPostType((AFunctionType) d.getType(), d.getIsCurried()), parameters, d.getPostcondition(), null, null, false, null);
 
+		def.getType().getDefinitions().clear();
+		def.getType().getDefinitions().add(def.clone());
+
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
@@ -205,6 +208,9 @@ public class AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 
 		@SuppressWarnings("unchecked")
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getCurriedPreType((AFunctionType) d.getType(), d.getIsCurried()), (LinkedList<List<PPattern>>) d.getParamPatternList().clone(), d.getPrecondition(), null, null, false, null);
+
+		def.getType().getDefinitions().clear();
+		def.getType().getDefinitions().add(def.clone());
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());

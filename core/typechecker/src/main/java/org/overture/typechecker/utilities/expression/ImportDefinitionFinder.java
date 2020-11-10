@@ -132,6 +132,11 @@ public class ImportDefinitionFinder extends
 			{
 				expdef = AstFactory.newAImportedDefinition(imp.getLocation(), expdef);
 			}
+			
+			if (imp.getImportType() != null)
+			{
+				expdef.setType(imp.getImportType());
+			}
 
 			list.add(expdef);
 		}

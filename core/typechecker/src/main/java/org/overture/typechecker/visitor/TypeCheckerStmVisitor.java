@@ -675,7 +675,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3346, "Cannot use cycles in pure operations", node.getLocation(), node);
 		}
 
-		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true, true);
 		TypeCheckInfo functional = question.newInfo(newEnv);
 		PType argType = node.getCycles().apply(THIS, functional);
 
@@ -688,13 +688,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		return node.getStatement().apply(THIS, question);
 	}
 
-	// TODO: Missing the other DefStatement
-
 	@Override
 	public PType caseALetStm(ALetStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setType(typeCheckLet(node, node.getLocalDefs(),node.getStatement(),question));
+		node.setType(typeCheckLet(node, node.getLocalDefs(),node.getStatement(), question, !node.getIsDef()));
 		return node.getType();
 	}
 
@@ -709,7 +707,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3346, "Cannot use duration in pure operations", node.getLocation(), node);
 		}
 
-		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+		Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true, true);
 		TypeCheckInfo functional = question.newInfo(newEnv);
 		PType argType = node.getDuration().apply(THIS, functional);
 
@@ -835,7 +833,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getSuchThat(), node.getStatement(), question);
+		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getSuchThat(), node.getStatement(), question, true);
 		node.setDef(res.getValue());
 		node.setType(res.getKey());
 		return node.getType();
@@ -1106,7 +1104,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3287, "Periodic thread must have 4 argument(s)", node.getLocation(), node);
 		} else
 		{
-			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true, true);
 			TypeCheckInfo functional = question.newInfo(newEnv);
 
 			for (PExp arg : args)
@@ -1192,7 +1190,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3287, "Sporadic thread must have 3 arguments", node.getLocation(), node);
 		} else
 		{
-			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true);
+			Environment newEnv = new FlatEnvironment(question.assistantFactory, question.env, true, true);
 			TypeCheckInfo functional = question.newInfo(newEnv);
 
 			for (PExp arg : args)

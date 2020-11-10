@@ -298,7 +298,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 		{
 			System.out.println("handleChange " + thread);
 		}
-		if (isRunning(thread))
+		if (isRunning(thread) || isWaiting(thread))
 		{
 			IStackFrame frame = null;
 			try
@@ -568,6 +568,18 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 			IVdmThread t = (IVdmThread) thread;
 			return t.getInterpreterState() != null
 					&& t.getInterpreterState().getState() == InterpreterThreadStatus.RUNNING;
+		}
+		return false;
+
+	}
+	
+	public boolean isWaiting(IThread thread)
+	{
+		if (thread instanceof IVdmThread)
+		{
+			IVdmThread t = (IVdmThread) thread;
+			return t.getInterpreterState() != null
+					&& t.getInterpreterState().getState() == InterpreterThreadStatus.WAITING;
 		}
 		return false;
 

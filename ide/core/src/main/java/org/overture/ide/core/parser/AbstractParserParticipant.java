@@ -191,7 +191,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
 
 			if (result.getWarnings().size() > 0 && vdmProject != null
-					&& vdmProject.hasSuppressWarnings())
+					&& !vdmProject.hasSuppressWarnings())
 			{
 				for (VDMWarning warning : result.getWarnings())
 				{

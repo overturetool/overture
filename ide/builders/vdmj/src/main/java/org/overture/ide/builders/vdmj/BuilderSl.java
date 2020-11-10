@@ -57,6 +57,7 @@ public class BuilderSl extends VdmjBuilder
 		try
 		{
 			Settings.release = getProject().getLanguageVersion();
+			Settings.strict = getProject().hasUseStrictLetDef();
 //			Settings.dynamictypechecks = getProject().hasDynamictypechecks();
 //			Settings.invchecks = getProject().hasInvchecks();
 //			Settings.postchecks = getProject().hasPostchecks();
