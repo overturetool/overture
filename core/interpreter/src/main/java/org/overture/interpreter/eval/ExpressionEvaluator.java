@@ -65,6 +65,7 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
@@ -79,6 +80,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapTypeBase;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.BreakpointManager;
@@ -176,11 +178,19 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			} else if (object instanceof SeqValue)
 			{
 				Value arg = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+				arg = arg.convertTo(AstFactory.newANatOneNumericBasicType(node.getLocation()), ctxt);
 				SeqValue sv = (SeqValue) object;
 				return sv.get(arg, ctxt);
 			} else if (object instanceof MapValue)
 			{
 				Value arg = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+
+				if (node.getRoot().getType() instanceof SMapTypeBase)
+				{
+					SMapTypeBase mtype = (SMapTypeBase)node.getRoot().getType();
+					arg = arg.convertTo(mtype.getFrom(), ctxt);
+				}
+
 				MapValue mv = (MapValue) object;
 				return mv.lookup(arg, ctxt);
 			} else
