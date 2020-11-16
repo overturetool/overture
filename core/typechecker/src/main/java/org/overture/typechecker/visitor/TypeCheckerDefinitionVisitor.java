@@ -674,7 +674,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			return null;
 		}
 
-		node.setParamDefinitions(question.assistantFactory.createAExplicitOperationDefinitionAssistant(question.fromModule).getParamDefinitions(node));
+		node.setParamDefinitions(question.assistantFactory.createAExplicitOperationDefinitionAssistant(question.fromModule).getParamDefinitions(node, question.env));
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getParamDefinitions(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, node.getParamDefinitions(), question.env, NameScope.NAMESANDSTATE);
