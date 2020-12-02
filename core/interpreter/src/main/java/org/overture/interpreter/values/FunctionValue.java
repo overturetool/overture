@@ -51,6 +51,7 @@ import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
@@ -784,6 +785,10 @@ public class FunctionValue extends Value
 			if (type.equals(to) || assistant.isUnknown(to))
 			{
 				return this;
+			}
+			else if (to instanceof AUnionType)
+			{
+				return super.convertValueTo(to, ctxt, done);
 			}
 			else
 			{
