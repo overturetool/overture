@@ -56,7 +56,7 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 	}
 
 	public List<? extends PDefinition> getParamDefinitions(
-			AExplicitOperationDefinition node)
+			AExplicitOperationDefinition node, Environment env)
 	{
 
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -64,7 +64,9 @@ public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 
 		for (PPattern p : node.getParameterPatterns())
 		{
-			defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p, titer.next(), NameScope.LOCAL));
+			PType ptype = titer.next();
+			defs.addAll(af.createPPatternAssistant(fromModule).getDefinitions(p, ptype,
+				af.createPTypeAssistant().isClass(ptype, env, fromModule) ? NameScope.STATE : NameScope.LOCAL));
 		}
 
 		return af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs);

@@ -493,11 +493,11 @@ public class SClassDefinitionAssistantTC implements IAstAssistant
 	}
 
 	public PDefinition findConstructor(SClassDefinition classdef,
-			List<PType> argtypes)
+			List<PType> argtypes, ILexLocation elocation)
 	{
 
 		LexNameToken constructor = getCtorName(classdef, argtypes);
-		return af.createPDefinitionAssistant().findName(classdef, constructor, NameScope.NAMES);
+		return af.createPDefinitionAssistant().findName(classdef, constructor, NameScope.NAMES, elocation);
 	}
 
 	public static LexNameToken getCtorName(SClassDefinition classdef,

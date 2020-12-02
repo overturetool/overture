@@ -44,6 +44,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
@@ -65,11 +66,13 @@ public class NameFinder extends
 	{
 		public final ILexNameToken sought;
 		public final NameScope scope;
+		public final ILexLocation elocation;		// Where to report errors
 
-		public Newquestion(ILexNameToken sought, NameScope scope)
+		public Newquestion(ILexNameToken sought, NameScope scope, ILexLocation elocation)
 		{
 			this.scope = scope;
 			this.sought = sought;
+			this.elocation = elocation;
 		}
 
 	}
@@ -113,7 +116,7 @@ public class NameFinder extends
 							&& af.createPDefinitionAssistant().isFunctionOrOperation(def))
 					{
 						TypeCheckerErrors.report(3010, "Name "
-								+ question.sought + " is ambiguous", question.sought.getLocation(), question.sought);
+								+ question.sought + " is ambiguous", question.elocation, question.sought);
 						TypeCheckerErrors.detail2("1", def.getLocation(), "2", found.getLocation());
 						break;
 					}

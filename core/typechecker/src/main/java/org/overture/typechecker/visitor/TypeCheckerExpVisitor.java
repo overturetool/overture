@@ -2283,7 +2283,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			argtypes.add(a.apply(THIS, question.newConstraint(null)));
 		}
 
-		PDefinition opdef = question.assistantFactory.createSClassDefinitionAssistant().findConstructor(classdef, argtypes);
+		PDefinition opdef = question.assistantFactory.createSClassDefinitionAssistant().findConstructor(classdef, argtypes, node.getClassName().getLocation());
 
 		if (opdef == null)
 		{

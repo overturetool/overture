@@ -1014,7 +1014,7 @@ public class AstFactory
 		// interface
 		result.setOperationName(new LexNameToken(statement.getLocation().getModule(), "thread", statement.getLocation()));
 		result.getOperationName().setTypeQualifier(new Vector<PType>());
-		result.setAccess(af.createPAccessSpecifierAssistant().getProtected());
+		result.setAccess(af.createPAccessSpecifierAssistant().getPublic());
 
 		return result;
 	}

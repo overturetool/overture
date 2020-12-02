@@ -38,6 +38,7 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameSet;
@@ -141,13 +142,20 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 		}
 	}
 
+
 	public PDefinition findName(PDefinition d, ILexNameToken sought,
 			NameScope scope)
+	{
+		return findName(d, sought, scope, sought == null ? d.getLocation() : sought.getLocation());
+	}
+	
+	public PDefinition findName(PDefinition d, ILexNameToken sought,
+			NameScope scope, ILexLocation elocation)
 	{
 
 		try
 		{
-			return d.apply(af.getNameFinder(), new NameFinder.Newquestion(sought, scope));
+			return d.apply(af.getNameFinder(), new NameFinder.Newquestion(sought, scope, elocation));
 		} catch (AnalysisException e)
 		{
 			return null;
