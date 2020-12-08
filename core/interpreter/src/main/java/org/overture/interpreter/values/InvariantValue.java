@@ -276,4 +276,9 @@ public class InvariantValue extends ReferenceValue
 			return super.hashCode();
 		}
 	}
+
+	public FunctionValue getEq()
+	{
+		return equality;
+	}
 }
