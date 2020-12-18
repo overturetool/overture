@@ -91,6 +91,9 @@ abstract public class CommandReader
 	/** The type of trace reduction. */
 	private TraceReductionType reductionType = TraceReductionType.RANDOM;
 
+	/** The seed for the trace PRNG */
+	private long traceseed = 0;
+
 	/** The IDE DBGPReader, if any */
 	private DBGPReader dbgp = null;
 
@@ -314,6 +317,9 @@ abstract public class CommandReader
 				} else if (line.startsWith("filter"))
 				{
 					carryOn = doFilter(line);
+				} else if (line.startsWith("seedtrace"))
+				{
+					carryOn = doSeedtrace(line);
 				} else
 				{
 					println("Bad command. Try 'help'");
@@ -396,31 +402,62 @@ abstract public class CommandReader
 
 		if (parts.length != 2)
 		{
-			println("Usage: filter %age | RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES");
-		} else
+			println("Usage: filter %age | RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES | NONE");
+		}
+		else
 		{
 			try
 			{
+				if (parts[1].endsWith("%"))
+				{
+					parts[1] = parts[1].substring(0, parts[1].lastIndexOf('%'));
+				}
+
 				reduction = Float.parseFloat(parts[1]) / 100.0F;
 
 				if (reduction > 1 || reduction < 0)
 				{
 					println("Usage: filter %age (1-100)");
 				}
-			} catch (NumberFormatException e)
+			}
+			catch (NumberFormatException e)
 			{
 				try
 				{
 					reductionType = TraceReductionType.valueOf(parts[1].toUpperCase());
-				} catch (Exception e1)
+				}
+				catch (Exception e1)
 				{
-					println("Usage: filter %age | RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES");
+					println("Usage: filter %age | RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES | NONE");
 				}
 			}
 		}
 
-		println("Trace filter currently " + reduction * 100 + "% "
-				+ reductionType);
+		println("Trace filter currently " + reduction*100 + "% " + reductionType + " (seed " + traceseed + ")");
+		return true;
+	}
+
+	protected boolean doSeedtrace(String line)
+	{
+		String[] parts = line.split("\\s+");
+		
+		if (parts.length != 2)
+		{
+			println("seedtrace <number>");
+		}
+		else
+		{
+			try
+			{
+				traceseed = Long.parseLong(parts[1]);
+				println("Trace filter currently " + reduction*100 + "% " + reductionType + " (seed " + traceseed + ")");
+			}
+			catch (NumberFormatException e)
+			{
+				println("seedtrace <number>");
+			}
+		}
+
 		return true;
 	}
 
@@ -446,7 +483,7 @@ abstract public class CommandReader
 		try
 		{
 			long before = System.currentTimeMillis();
-			boolean passed = interpreter.runtrace(line, testNo, debug, reduction, reductionType, 0);
+			boolean passed = interpreter.runtrace(line, testNo, debug, reduction, reductionType, traceseed);
 			long after = System.currentTimeMillis();
 			println("Executed in " + (double) (after - before) / 1000
 					+ " secs. ");
@@ -1284,6 +1321,7 @@ abstract public class CommandReader
 		println("runtrace <name> [test number] - run CT trace(s)");
 		println("debugtrace <name> [test number] - debug CT trace(s)");
 		println("filter %age | <reduction type> - reduce CT trace(s)");
+		println("seedtrace <number> - seed CT trace random generator");
 		println("assert <file> - run assertions from a file");
 		println("init - re-initialize the global environment");
 		println("env - list the global symbols in the default environment");
