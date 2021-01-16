@@ -50,7 +50,7 @@ public class ModuleListAssistantInterpreter
 		initialContext.setThreadState(dbgp, null);
 		Set<ContextException> problems = new HashSet<ContextException>();
 		int lastProblemCount;
-		int retries = 10;
+		int retries = 3;
 
 		do
 		{

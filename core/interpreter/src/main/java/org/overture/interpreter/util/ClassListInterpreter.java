@@ -114,11 +114,13 @@ public class ClassListInterpreter extends ClassList
 		// retry mechanism, looking for "forward reference" like exceptions.
 
 		ContextException failed = null;
+		int lastProblemCount;
 		int retries = 3; // Potentially not enough.
 		Set<ContextException> trouble = new HashSet<ContextException>();
 
 		do
 		{
+			lastProblemCount = trouble.isEmpty() ? Integer.MAX_VALUE : trouble.size();
 			failed = null;
 			trouble.clear();
 
@@ -127,7 +129,8 @@ public class ClassListInterpreter extends ClassList
 				try
 				{
 					af.createSClassDefinitionAssistant().staticValuesInit(cdef, globalContext);
-				} catch (ContextException e)
+				}
+				catch (ContextException e)
 				{
 					trouble.add(e);
 					// These two exceptions mean that a member could not be
@@ -136,13 +139,20 @@ public class ClassListInterpreter extends ClassList
 					if (e.number == 4034 || e.number == 6)
 					{
 						failed = e;
-					} else
+					}
+					else
 					{
 						throw e;
 					}
 				}
 			}
-		} while (--retries > 0 && failed != null);
+
+			if (trouble.size() == lastProblemCount)
+			{
+				retries--;
+			}
+		}
+		while ((retries > 0 || trouble.size() < lastProblemCount) && !trouble.isEmpty() && failed != null);
 
 		if (!trouble.isEmpty())
 		{
