@@ -49,13 +49,13 @@ public class ModuleListAssistantInterpreter
 		StateContext initialContext = (StateContext) ctxt;
 		initialContext.setThreadState(dbgp, null);
 		Set<ContextException> problems = new HashSet<ContextException>();
-
 		int lastProblemCount;
+		int retries = 10;
+
 		do
 		{
 			lastProblemCount = problems.isEmpty() ? Integer.MAX_VALUE : problems.size();
 			problems.clear();
-
 
 			for (AModuleModules m : modules)
 			{
@@ -72,7 +72,13 @@ public class ModuleListAssistantInterpreter
         			}
 				}
 			}
-		} while (problems.size() < lastProblemCount && !problems.isEmpty());
+
+			if (problems.size() == lastProblemCount)
+			{
+				retries--;
+			}
+		}
+		while ((retries > 0 || problems.size() < lastProblemCount) && !problems.isEmpty());
 
 		if (!problems.isEmpty())
 		{
