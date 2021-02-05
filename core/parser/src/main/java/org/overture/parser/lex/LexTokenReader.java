@@ -929,10 +929,11 @@ public class LexTokenReader extends BacktrackInputReader
 					StringBuilder sb = new StringBuilder();
 					rdCh();
 					ILexLocation here = location(linecount, charpos, tokline, tokpos);
+					int nestedCount = 0;
 
 					while (ch != EOF)
 					{
-					    while (ch != '*' && ch != EOF)
+					    while (ch != '*' && ch != '/' && ch != EOF)
 					    {
 					    	sb.append(ch);
 					    	rdCh();
@@ -942,11 +943,32 @@ public class LexTokenReader extends BacktrackInputReader
 					    {
 					    	throwMessage(1011, tokline, tokpos, "Unterminated block comment");
 					    }
+					    else if (ch == '/')
+					    {
+					    	sb.append('/');
+
+					    	if (rdCh() == '*')
+						    {
+						    	nestedCount++;
+						    	sb.append('*');
+						    	rdCh();
+						    }
+					    }
 					    else
 					    {
 						    if (rdCh() == '/')
 						    {
-						    	break;
+						    	if (nestedCount == 0)
+						    	{
+						    		break;
+						    	}
+						    	else
+						    	{
+						    		nestedCount--;
+						    		sb.append('*');
+						    		sb.append('/');
+						    		rdCh();
+						    	}
 						    }
 						    else
 						    {
