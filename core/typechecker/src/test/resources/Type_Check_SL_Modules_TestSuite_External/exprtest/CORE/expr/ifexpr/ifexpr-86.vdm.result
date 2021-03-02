@@ -14,17 +14,11 @@
 <message column="51" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="57" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="50" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="11" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="13" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="10" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="20" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="26" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="33" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="39" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="19" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="11" line="44" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="13" line="44" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="10" line="44" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="21" line="44" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="27" line="44" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="34" line="44" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
@@ -35,18 +29,12 @@
 <message column="24" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="30" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="10" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="47" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="49" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="46" line="46" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="43" line="46" message="Restriction of map should be set of ((nat1 * bool) | seq1 of (char))" messageType="error" number="3153" resource="ifexpr-86.vdm"/>
 <message column="11" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="17" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="24" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="30" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="10" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="48" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="50" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
-<message column="47" line="48" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="43" line="48" message="Restriction of map should be set of ((nat1 * bool) | seq1 of (char))" messageType="error" number="3150" resource="ifexpr-86.vdm"/>
 <message column="11" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>
 <message column="17" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-86.vdm"/>

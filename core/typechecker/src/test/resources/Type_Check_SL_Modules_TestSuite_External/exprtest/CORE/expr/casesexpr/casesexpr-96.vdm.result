@@ -13,17 +13,11 @@
 <message column="52" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="58" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="51" line="41" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="12" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="14" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="11" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="21" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="27" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="34" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="40" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="20" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="12" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="14" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="11" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="22" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="28" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="35" line="50" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
@@ -34,18 +28,12 @@
 <message column="25" line="53" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="31" line="53" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="11" line="53" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="48" line="53" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="50" line="53" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="47" line="53" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="44" line="53" message="Restriction of map should be set of ((nat1 * bool) | seq1 of (char))" messageType="error" number="3153" resource="casesexpr-96.vdm"/>
 <message column="12" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="18" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="25" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="31" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="11" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="49" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="51" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
-<message column="48" line="56" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="44" line="56" message="Restriction of map should be set of ((nat1 * bool) | seq1 of (char))" messageType="error" number="3150" resource="casesexpr-96.vdm"/>
 <message column="12" line="59" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>
 <message column="18" line="59" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-96.vdm"/>

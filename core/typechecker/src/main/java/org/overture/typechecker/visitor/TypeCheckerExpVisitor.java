@@ -343,14 +343,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseADomainResByBinaryExp(ADomainResByBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		TypeCheckInfo domConstraint = question;
-
-		if (question.constraint != null
-				&& question.assistantFactory.createPTypeAssistant().isMap(question.constraint, question.fromModule))
-		{
-			PType stype = question.assistantFactory.createPTypeAssistant().getMap(question.constraint, question.fromModule).getFrom();
-			domConstraint = question.newConstraint(AstFactory.newASetSetType(node.getLocation(), stype));
-		}
+		TypeCheckInfo domConstraint = question.newConstraint(null);	// Can be anything
 
 		node.getLeft().apply(THIS, domConstraint);
 		node.getRight().apply(THIS, question);
@@ -381,14 +374,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseADomainResToBinaryExp(ADomainResToBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		TypeCheckInfo domConstraint = question;
-
-		if (question.constraint != null
-				&& question.assistantFactory.createPTypeAssistant().isMap(question.constraint, question.fromModule))
-		{
-			PType stype = question.assistantFactory.createPTypeAssistant().getMap(question.constraint, question.fromModule).getFrom();
-			domConstraint = question.newConstraint(AstFactory.newASetSetType(node.getLocation(), stype));
-		}
+		TypeCheckInfo domConstraint = question.newConstraint(null);	// Can be anything
 
 		node.getLeft().apply(THIS, domConstraint);
 		node.getRight().apply(THIS, question);
@@ -856,14 +842,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseARangeResByBinaryExp(ARangeResByBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		TypeCheckInfo rngConstraint = question;
-
-		if (question.constraint != null
-				&& question.assistantFactory.createPTypeAssistant().isMap(question.constraint, question.fromModule))
-		{
-			PType stype = question.assistantFactory.createPTypeAssistant().getMap(question.constraint, question.fromModule).getTo();
-			rngConstraint = question.newConstraint(AstFactory.newASetSetType(node.getLocation(), stype));
-		}
+		TypeCheckInfo rngConstraint = question.newConstraint(null);	// Range can be anything
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, rngConstraint);
@@ -897,14 +876,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override public PType caseARangeResToBinaryExp(ARangeResToBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		TypeCheckInfo rngConstraint = question;
-
-		if (question.constraint != null
-				&& question.assistantFactory.createPTypeAssistant().isMap(question.constraint, question.fromModule))
-		{
-			PType stype = question.assistantFactory.createPTypeAssistant().getMap(question.constraint, question.fromModule).getTo();
-			rngConstraint = question.newConstraint(AstFactory.newASetSetType(node.getLocation(), stype));
-		}
+		TypeCheckInfo rngConstraint = question.newConstraint(null);	// Range can be anything
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, rngConstraint);
