@@ -28,8 +28,12 @@ public class StateDesignatorToExpVisitor extends AnswerAdaptor<PExp>
 		AFieldExp fieldExp = new AFieldExp();
 		fieldExp.setObject(value.clone());
 		fieldExp.setField(node.getField().clone());
-		// Not 100% sure these 2 match
-		fieldExp.setMemberName(node.getObjectfield().clone());
+
+		if (node.getObjectfield() != null)
+		{
+			fieldExp.setMemberName(node.getObjectfield().clone());
+		}
+
 		fieldExp.setType(node.getType().clone());
 
 		return fieldExp;
