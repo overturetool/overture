@@ -45,6 +45,7 @@ import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.parser.config.Properties;
+import org.overture.parser.syntax.SyntaxReader;
 
 /**
  * The main lexical analyser class.
@@ -85,7 +86,10 @@ public class LexTokenReader extends BacktrackInputReader
 	/** Comments read since last getComments call */
 	private LexCommentList comments = new LexCommentList();
 
-	
+	/** The primary SyntaxReader (ie. class or module) using this reader */
+	private SyntaxReader syntaxReader = null;
+
+
 	/**
 	 * An inner class to hold all the position details that need to be saved and restored on push/pop.
 	 */
@@ -278,6 +282,7 @@ public class LexTokenReader extends BacktrackInputReader
 		this.currentModule = reader.currentModule;
 		this.file = location.getFile();
 		this.dialect = reader.dialect;
+		this.syntaxReader = reader.syntaxReader;
 		rdCh();
 		this.linecount = location.getStartLine();
 		this.charpos = location.getStartPos();
@@ -930,6 +935,7 @@ public class LexTokenReader extends BacktrackInputReader
 					rdCh();
 					ILexLocation here = location(linecount, charpos, tokline, tokpos);
 					int nestedCount = 0;
+					int nestingSupport = Properties.parser_comment_nesting;
 
 					while (ch != EOF)
 					{
@@ -949,7 +955,27 @@ public class LexTokenReader extends BacktrackInputReader
 
 					    	if (rdCh() == '*')
 						    {
-						    	nestedCount++;
+					    		switch (nestingSupport)
+					    		{
+					    			case 3:	// ignored - ie. original behaviour, no nest count
+					    				break;
+
+					    			case 2:	// error
+					    				nestedCount++;
+					    				report(1013, "Illegal nested block comment", location(linecount, charpos-1, tokline, tokpos));
+					    				break;
+
+					    			case 1:	// warning
+					    				warning(1012, "Deprecated nested block comment", location(linecount, charpos-1, tokline, tokpos));
+					    				nestedCount++;
+					    				break;
+
+					    			case 0:	// supported
+					    			default:
+								    	nestedCount++;
+					    				break;
+					    		}
+
 						    	sb.append('*');
 						    	rdCh();
 						    }
@@ -1361,5 +1387,33 @@ public class LexTokenReader extends BacktrackInputReader
 		}
 
 		return id.toString();
+	}
+
+	/**
+	 * These methods allow the LexTokenReader to report an error or warning to
+	 * its enclosing SyntaxReader, if any.
+	 */
+	public void setSyntaxReader(SyntaxReader syntaxReader)
+	{
+		if (this.syntaxReader == null)
+		{
+			this.syntaxReader = syntaxReader;
+		}
+	}
+	
+	private void warning(int no, String msg, ILexLocation location)
+	{
+		if (syntaxReader != null)
+		{
+			syntaxReader.warning(no, msg, location);
+		}
+	}
+
+	private void report(int no, String msg, ILexLocation location)
+	{
+		if (syntaxReader != null)
+		{
+			syntaxReader.report(no, msg, location);
+		}
 	}
 }

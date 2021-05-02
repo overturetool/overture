@@ -38,6 +38,9 @@ public class Properties extends ConfigBase
 {
 	/** The tab stop for source files. */
 	public static int parser_tabstop = 4;
+	
+	/** Nesting of block comments: 0-3 = support, warning, error, ignore. */
+	public static int parser_comment_nesting = 3;
 
 	/** The maximum number of expansions for "+" and "*" trace patterns. */
 	public static int traces_max_repeats = 5;
