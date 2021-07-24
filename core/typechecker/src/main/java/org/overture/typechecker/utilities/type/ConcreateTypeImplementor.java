@@ -92,7 +92,7 @@ public class ConcreateTypeImplementor extends
 
 		// PType polyresult = PTypeAssistantTC.polymorph(type.getResult(), question.pname, question.actualType);
 		PType polyresult = type.getResult().apply(this, question);
-		AFunctionType ftype = AstFactory.newAFunctionType(type.getLocation(), false, polyparams, polyresult);
+		AFunctionType ftype = AstFactory.newAFunctionType(type.getLocation(), type.getPartial(), polyparams, polyresult);
 		ftype.setDefinitions(type.getDefinitions());
 		ftype.setInstantiated(true);
 		return ftype;

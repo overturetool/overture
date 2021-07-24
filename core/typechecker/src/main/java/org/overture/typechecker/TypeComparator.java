@@ -487,6 +487,11 @@ public class TypeComparator
 				AFunctionType fa = (AFunctionType) to;
 				AFunctionType fb = (AFunctionType) from;
 
+				if (fb.getPartial() && !fa.getPartial())
+				{
+					return Result.No;
+				}
+
 				return allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes
 						&& (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes) ? Result.Yes
 						: Result.No;

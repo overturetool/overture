@@ -2,18 +2,18 @@
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
 <message column="10" line="1160" message="Definition 'out' not used" messageType="warning" number="5000" resource="DFDexampleSL"/>
 <message column="1" line="25" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="1305" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="1214" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="200" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="740" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="1115" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="1835" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
 <message column="1" line="1059" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="1134" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
-<message column="1" line="1134" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="1835" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="1115" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="1214" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
 <message column="1" line="1256" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
 <message column="1" line="1256" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="1305" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="200" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="1134" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="1134" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
 <message column="1" line="640" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
+<message column="1" line="740" message="Recursive function has no measure" messageType="warning" number="5012" resource="DFDexampleSL"/>
 <message column="1" line="1606" message="Definition 'SA' not used" messageType="warning" number="5000" resource="DFDexampleSL"/>
 <message column="1" line="1754" message="Definition 'DFDSigConsistent' not used" messageType="warning" number="5000" resource="DFDexampleSL"/>
 <message column="1" line="1801" message="Definition 'LowerLevelUsed' not used" messageType="warning" number="5000" resource="DFDexampleSL"/>
