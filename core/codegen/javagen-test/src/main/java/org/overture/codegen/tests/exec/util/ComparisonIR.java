@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.runtime.Record;
+import org.overture.codegen.runtime.VDMRecord;
 import org.overture.codegen.runtime.Token;
 import org.overture.codegen.runtime.Tuple;
 import org.overture.codegen.runtime.VDMMap;
@@ -195,13 +195,13 @@ public class ComparisonIR
 
 	private boolean handleRecord(Object cgValue, Value vdmValue)
 	{
-		if (!(cgValue instanceof Record))
+		if (!(cgValue instanceof VDMRecord))
 		{
 			return false;
 		}
 
 		RecordValue vdmRecord = (RecordValue) vdmValue;
-		Record cgRecord = (Record) cgValue;
+		VDMRecord cgRecord = (VDMRecord) cgValue;
 
 		if (!cgRecord.getClass().getName().endsWith(vdmRecord.type.getName().getName()))
 		{
