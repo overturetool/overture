@@ -40,7 +40,7 @@ final public class Entry {
     return "Entry{" + "St := " + Utils.toString(St) + "}";
   }
 
-  public static class St implements Record {
+  public static class St implements VDMRecord {
     public Number x;
 
     public St(final Number _x) {

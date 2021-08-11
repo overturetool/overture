@@ -18,7 +18,7 @@ final public class Entry {
     return "Entry{" + "Other := " + Utils.toString(Other) + "}";
   }
 
-  public static class Other implements Record {
+  public static class Other implements VDMRecord {
     public Number x;
 
     public Other(final Number _x) {

@@ -71,7 +71,7 @@ public class Entry implements java.io.Serializable {
     return "Entry{" + "xs = " + Utils.toString(xs) + "}";
   }
 
-  private static class A implements Record {
+  private static class A implements VDMRecord {
     public Number a;
 
     public A(final Number _a) {

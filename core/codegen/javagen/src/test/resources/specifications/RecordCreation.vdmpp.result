@@ -18,7 +18,7 @@ public class Records {
     return "Records{" + "v := " + Utils.toString(v) + "}";
   }
 
-  public static class Vector2D implements Record {
+  public static class Vector2D implements VDMRecord {
     public Number x;
     public Number y;
 

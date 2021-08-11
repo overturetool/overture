@@ -2239,7 +2239,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     }
   }
 
-  public static class MessageInfo implements Record {
+  public static class MessageInfo implements VDMRecord {
     public Number index;
     public Number size;
 
@@ -2276,7 +2276,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     }
   }
 
-  public static class MailBox implements Record {
+  public static class MailBox implements VDMRecord {
     public VDMSeq msgs;
     public Boolean locked;
 
@@ -2917,7 +2917,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class QUIT implements Record {
+  public static class QUIT implements VDMRecord {
 
     public QUIT() {}
 
@@ -2942,7 +2942,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class STAT implements Record {
+  public static class STAT implements VDMRecord {
 
     public STAT() {}
 
@@ -2967,7 +2967,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class LIST implements Record {
+  public static class LIST implements VDMRecord {
     public Number messageNumber;
 
     public LIST(final Number _messageNumber) {
@@ -3002,7 +3002,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class RETR implements Record {
+  public static class RETR implements VDMRecord {
     public Number messageNumber;
 
     public RETR(final Number _messageNumber) {
@@ -3037,7 +3037,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class DELE implements Record {
+  public static class DELE implements VDMRecord {
     public Number messageNumber;
 
     public DELE(final Number _messageNumber) {
@@ -3072,7 +3072,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class NOOP implements Record {
+  public static class NOOP implements VDMRecord {
 
     public NOOP() {}
 
@@ -3097,7 +3097,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class RSET implements Record {
+  public static class RSET implements VDMRecord {
 
     public RSET() {}
 
@@ -3122,7 +3122,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class TOP implements Record {
+  public static class TOP implements VDMRecord {
     public Number messageNumber;
     public Number numLines;
 
@@ -3160,7 +3160,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class UIDL implements Record {
+  public static class UIDL implements VDMRecord {
     public Number messageNumber;
 
     public UIDL(final Number _messageNumber) {
@@ -3195,7 +3195,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class USER implements Record {
+  public static class USER implements VDMRecord {
     public String name;
 
     public USER(final String _name) {
@@ -3230,7 +3230,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class PASS implements Record {
+  public static class PASS implements VDMRecord {
     public String string;
 
     public PASS(final String _string) {
@@ -3265,7 +3265,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class APOP implements Record {
+  public static class APOP implements VDMRecord {
     public String name;
     public String digest;
 
@@ -3302,7 +3302,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class OkResponse implements Record {
+  public static class OkResponse implements VDMRecord {
     public String data;
 
     public OkResponse(final String _data) {
@@ -3337,7 +3337,7 @@ public class POP3Types implements EvaluatePP {
     }
   }
 
-  public static class ErrResponse implements Record {
+  public static class ErrResponse implements VDMRecord {
     public String data;
 
     public ErrResponse(final String _data) {

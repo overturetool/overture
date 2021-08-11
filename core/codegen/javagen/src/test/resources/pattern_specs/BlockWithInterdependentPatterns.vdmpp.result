@@ -70,7 +70,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  private static class Rec implements Record {
+  private static class Rec implements VDMRecord {
     public Number f1;
     public Number f2;
 

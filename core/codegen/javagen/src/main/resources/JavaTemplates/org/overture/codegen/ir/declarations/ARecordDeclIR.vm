@@ -1,4 +1,4 @@
-static class $node.getName() implements Record
+static class $node.getName() implements VDMRecord
 {
 	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)

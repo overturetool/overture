@@ -11,7 +11,7 @@ public class A {
     return "A{}";
   }
 
-  public static class RecA implements Record {
+  public static class RecA implements VDMRecord {
     public Number i;
     public Character c;
     public Number r;

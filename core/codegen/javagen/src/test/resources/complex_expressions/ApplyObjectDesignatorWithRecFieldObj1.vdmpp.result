@@ -27,7 +27,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class A implements Record {
+  public static class A implements VDMRecord {
     public VDMSeq es;
 
     public A(final VDMSeq _es) {

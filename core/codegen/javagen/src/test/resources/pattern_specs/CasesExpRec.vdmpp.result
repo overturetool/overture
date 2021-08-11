@@ -95,7 +95,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class Rec implements Record {
+  public static class Rec implements VDMRecord {
     public Number a;
     public Number b;
     public Number c;

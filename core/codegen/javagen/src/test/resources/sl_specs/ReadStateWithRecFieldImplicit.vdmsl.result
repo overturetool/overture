@@ -18,7 +18,7 @@ final public class Entry {
     return "Entry{" + "St := " + Utils.toString(St) + "}";
   }
 
-  public static class R implements Record {
+  public static class R implements VDMRecord {
     public Number r;
 
     public R(final Number _r) {
@@ -53,7 +53,7 @@ final public class Entry {
     }
   }
 
-  public static class St implements Record {
+  public static class St implements VDMRecord {
     public R x;
 
     public St(final R _x) {

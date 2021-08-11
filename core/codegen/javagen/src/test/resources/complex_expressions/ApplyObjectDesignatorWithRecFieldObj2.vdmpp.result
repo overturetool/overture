@@ -27,7 +27,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class A implements Record {
+  public static class A implements VDMRecord {
     public VDMSeq bs;
 
     public A(final VDMSeq _bs) {
@@ -62,7 +62,7 @@ public class Entry {
     }
   }
 
-  public static class B implements Record {
+  public static class B implements VDMRecord {
     public C c;
 
     public B(final C _c) {
@@ -97,7 +97,7 @@ public class Entry {
     }
   }
 
-  public static class C implements Record {
+  public static class C implements VDMRecord {
     public Entry e;
 
     public C(final Entry _e) {

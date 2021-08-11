@@ -30,7 +30,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class Rec1 implements Record {
+  public static class Rec1 implements VDMRecord {
     public Number a;
     public Rec2 b;
 
@@ -67,7 +67,7 @@ public class Entry {
     }
   }
 
-  public static class Rec2 implements Record {
+  public static class Rec2 implements VDMRecord {
     public Number c;
     public Rec1 d;
 

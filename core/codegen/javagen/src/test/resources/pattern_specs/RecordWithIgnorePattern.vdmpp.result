@@ -31,7 +31,7 @@ public class A {
     return "A{}";
   }
 
-  public static class Rec implements Record {
+  public static class Rec implements VDMRecord {
     public Number n;
     public Rec next;
 

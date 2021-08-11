@@ -54,7 +54,7 @@ final public class A_Module {
     return "A_Module{" + "A := " + Utils.toString(A) + "}";
   }
 
-  public static class A implements Record {
+  public static class A implements VDMRecord {
     public Number id;
 
     public A(final Number _id) {
@@ -104,7 +104,7 @@ final public class X_Module {
     return "X_Module{}";
   }
 
-  public static class X implements Record {
+  public static class X implements VDMRecord {
     public Number x;
 
     public X(final Number _x) {

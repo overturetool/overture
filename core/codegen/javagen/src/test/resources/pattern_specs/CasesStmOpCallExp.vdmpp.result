@@ -66,7 +66,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class A implements Record {
+  public static class A implements VDMRecord {
     public Number a;
 
     public A(final Number _a) {
@@ -101,7 +101,7 @@ public class Entry {
     }
   }
 
-  public static class B implements Record {
+  public static class B implements VDMRecord {
     public Number b;
 
     public B(final Number _b) {

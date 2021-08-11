@@ -52,7 +52,7 @@ public class A {
     return "A{}";
   }
 
-  private static class Rec implements Record {
+  private static class Rec implements VDMRecord {
     public Number x;
 
     public Rec(final Number _x) {

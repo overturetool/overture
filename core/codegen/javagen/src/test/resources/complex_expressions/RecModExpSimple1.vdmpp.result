@@ -23,7 +23,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class Rec implements Record {
+  public static class Rec implements VDMRecord {
     public Number x;
     public Boolean b;
 
