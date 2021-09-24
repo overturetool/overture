@@ -67,6 +67,7 @@ public class JavaCodeGenMain
 	public static final String GEN_PRE_CONDITIONS = "-pre";
 	public static final String GEN_POST_CONDITIONS = "-post";
 	public static final String GEN_INVARIANTS = "-inv";
+	public static final String SKIP_CLA_MO = "-skip";
 
 	// Folder names
 	private static final String GEN_MODEL_CODE_FOLDER = "main";
@@ -105,6 +106,7 @@ public class JavaCodeGenMain
 		Settings.release = Release.VDM_10;
 
 		boolean separateTestCode = false;
+		String claModToSkip = null;
 
 		for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
 		{
@@ -238,6 +240,19 @@ public class JavaCodeGenMain
 			{
 				irSettings.setGenerateInvariants(true);
 			}
+			else if(arg.equals(SKIP_CLA_MO))
+			{
+				if (i.hasNext())
+				{
+					if (claModToSkip == null) claModToSkip = i.next();
+					 else usage("You can only call -skip once!");
+						
+					
+				} else
+				{
+					usage(OUTPUT_ARG + " requires a string");
+				}
+			}
 			else
 			{
 				// It's a file or a directory
@@ -256,6 +271,8 @@ public class JavaCodeGenMain
 			}
 		}
 
+		javaSettings.setModulesToSkip(GeneralCodeGenUtils.getClassesToSkip(claModToSkip) );
+		
 		if (Settings.dialect == null)
 		{
 			usage("No VDM dialect specified");
@@ -621,16 +638,17 @@ public class JavaCodeGenMain
 		MsgPrinter.getPrinter().errorln(VDM_LOC
 				+ ": Generate VDM location information for code generated constructs");
 		MsgPrinter.getPrinter().errorln(NO_CLONING
-				+ ": To disable deep cloning of value types");
-
+				+ ": to disable deep cloning of value types");
+		MsgPrinter.getPrinter().errorln(NO_STRINGS
+				+ ": to not generate char sequences as strings");
 		MsgPrinter.getPrinter().errorln(CONC
-				+ ": To enable code generation of VDM++'s concurrency constructs");
-		
+				+ ": to enable code generation of VDM++'s concurrency constructs");
 		MsgPrinter.getPrinter().errorln(GEN_SYS_CLASS
-				+ ": To generate the VDM-RT system class");
+				+ ": to generate the VDM-RT system class");
 		MsgPrinter.getPrinter().errorln(NO_WARNINGS
-				+ ": To suppress printing detailed warning messages");
-
+				+ ": to suppress printing detailed warning messages");
+		MsgPrinter.getPrinter().errorln(SKIP_CLA_MO
+				+ " <classes/modules>: skip the classes/modules. Separate by ';' e.g.: \"World;Env\"");
 		// Terminate
 		System.exit(1);
 	}
