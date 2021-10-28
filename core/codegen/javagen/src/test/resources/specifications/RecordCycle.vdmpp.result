@@ -11,7 +11,7 @@ public class A {
     return "A{}";
   }
 
-  public static class RecA implements Record {
+  public static class RecA implements VDMRecord {
     public B.RecB b;
 
     public RecA(final B.RecB _b) {
@@ -61,7 +61,7 @@ public class B {
     return "B{}";
   }
 
-  public static class RecB implements Record {
+  public static class RecB implements VDMRecord {
     public A.RecA a;
 
     public RecB(final A.RecA _a) {

@@ -61,7 +61,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class R1 implements Record {
+  public static class R1 implements VDMRecord {
     public Number a;
     public Number b;
 
@@ -98,7 +98,7 @@ public class Entry {
     }
   }
 
-  public static class R2 implements Record {
+  public static class R2 implements VDMRecord {
     public Boolean c;
     public Character d;
 

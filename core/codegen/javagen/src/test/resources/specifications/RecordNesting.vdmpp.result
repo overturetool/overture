@@ -14,7 +14,7 @@ public class A {
     return "A{" + "x = " + Utils.toString(x) + ", y = " + Utils.toString(y) + "}";
   }
 
-  public static class R1 implements Record {
+  public static class R1 implements VDMRecord {
     public Number x;
 
     public R1(final Number _x) {
@@ -49,7 +49,7 @@ public class A {
     }
   }
 
-  public static class R2 implements Record {
+  public static class R2 implements VDMRecord {
     public R1 r;
 
     public R2(final R1 _r) {
@@ -84,7 +84,7 @@ public class A {
     }
   }
 
-  public static class R3 implements Record {
+  public static class R3 implements VDMRecord {
     public Number x;
     public R2 r;
 

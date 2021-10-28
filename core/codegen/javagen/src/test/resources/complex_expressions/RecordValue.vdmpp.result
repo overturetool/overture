@@ -16,7 +16,7 @@ public class A {
     return "A{}";
   }
 
-  public static class Node implements Record {
+  public static class Node implements VDMRecord {
     public Number e;
     public Node r;
 

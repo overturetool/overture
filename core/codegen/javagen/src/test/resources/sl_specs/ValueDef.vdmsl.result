@@ -19,7 +19,7 @@ final public class Entry {
     return "Entry{" + "x = " + Utils.toString(x) + ", St := " + Utils.toString(St) + "}";
   }
 
-  public static class St implements Record {
+  public static class St implements VDMRecord {
     public Number p;
 
     public St(final Number _p) {

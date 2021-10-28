@@ -39,7 +39,7 @@ public class A {
     return "A{}";
   }
 
-  public static class Rec implements Record {
+  public static class Rec implements VDMRecord {
     public Tuple t;
 
     public Rec(final Tuple _t) {

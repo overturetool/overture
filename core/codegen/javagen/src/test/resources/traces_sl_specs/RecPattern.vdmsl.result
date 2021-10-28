@@ -80,7 +80,7 @@ final public class Entry implements java.io.Serializable {
     return "Entry{}";
   }
 
-  public static class R implements Record {
+  public static class R implements VDMRecord {
     public Number x;
     public Number y;
 

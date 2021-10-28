@@ -11,7 +11,7 @@ public class A {
     return "A{}";
   }
 
-  private static class Vector2D implements Record {
+  private static class Vector2D implements VDMRecord {
     public Number x;
     public Number y;
 
@@ -48,7 +48,7 @@ public class A {
     }
   }
 
-  public static class Real implements Record {
+  public static class Real implements VDMRecord {
     public Number r;
 
     public Real(final Number _r) {

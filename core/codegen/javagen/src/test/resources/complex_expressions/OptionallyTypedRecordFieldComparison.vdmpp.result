@@ -36,7 +36,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  private static class NatList implements Record {
+  private static class NatList implements VDMRecord {
     public Number e;
     public NatList t;
 

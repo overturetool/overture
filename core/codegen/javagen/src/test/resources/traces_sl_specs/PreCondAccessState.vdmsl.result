@@ -65,7 +65,7 @@ final public class Entry implements java.io.Serializable {
     return "Entry{" + "St := " + Utils.toString(St) + "}";
   }
 
-  public static class R implements Record {
+  public static class R implements VDMRecord {
     public Number x;
 
     public R(final Number _x) {
@@ -100,7 +100,7 @@ final public class Entry implements java.io.Serializable {
     }
   }
 
-  public static class St implements Record {
+  public static class St implements VDMRecord {
     public R r;
 
     public St(final R _r) {

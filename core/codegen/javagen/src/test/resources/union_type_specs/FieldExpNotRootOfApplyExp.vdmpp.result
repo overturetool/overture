@@ -62,7 +62,7 @@ public class Entry {
     return "Entry{" + "x := " + Utils.toString(x) + "}";
   }
 
-  public static class Rec implements Record {
+  public static class Rec implements VDMRecord {
     public Number x;
 
     public Rec(final Number _x) {

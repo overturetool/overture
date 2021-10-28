@@ -18,7 +18,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class A implements Record {
+  public static class A implements VDMRecord {
     public VDMMap x;
 
     public A(final VDMMap _x) {

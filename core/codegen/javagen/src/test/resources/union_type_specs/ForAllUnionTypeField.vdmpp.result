@@ -28,7 +28,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  private static class R implements Record {
+  private static class R implements VDMRecord {
     public Object x;
 
     public R(final Object _x) {

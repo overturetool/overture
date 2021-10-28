@@ -219,7 +219,7 @@ public class Account {
         + "}";
   }
 
-  public static class Transaction implements Record {
+  public static class Transaction implements VDMRecord {
     public VDMSeq date;
     public Number cardId;
     public Number amount;

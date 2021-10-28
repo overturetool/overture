@@ -19,7 +19,7 @@ public class A {
     return "A{}";
   }
 
-  public static class Vector2D implements Record {
+  public static class Vector2D implements VDMRecord {
     public Number x;
     public Number y;
 

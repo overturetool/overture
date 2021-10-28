@@ -43,7 +43,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class Vec implements Record {
+  public static class Vec implements VDMRecord {
     public Number x;
     public Number y;
 

@@ -19,7 +19,7 @@ public class Entry {
     return "Entry{}";
   }
 
-  public static class M implements Record {
+  public static class M implements VDMRecord {
 
     public M() {}
 

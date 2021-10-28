@@ -21,7 +21,7 @@
  */
 package org.overture.codegen.runtime;
 
-public interface Record extends ValueType
+public interface VDMRecord extends ValueType
 {
-	public Record copy();
+	public VDMRecord copy();
 }

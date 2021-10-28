@@ -32,7 +32,7 @@ public class Entry {
     return "Entry{" + "m := " + Utils.toString(m) + "}";
   }
 
-  private static class Rec implements Record {
+  private static class Rec implements VDMRecord {
     public Number field;
 
     public Rec(final Number _field) {
