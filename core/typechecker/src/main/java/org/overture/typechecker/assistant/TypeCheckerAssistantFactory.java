@@ -21,6 +21,7 @@
  */
 package org.overture.typechecker.assistant;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -134,8 +135,10 @@ import org.overture.typechecker.visitor.QualificationVisitor;
  * @author ldc
  */
 public class TypeCheckerAssistantFactory extends AstAssistantFactory
-		implements ITypeCheckerAssistantFactory
+		implements ITypeCheckerAssistantFactory, Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	// instance variables of things to return
 	transient TypeComparator typeComp;
 	transient LexNameTokenAssistant lnt;
