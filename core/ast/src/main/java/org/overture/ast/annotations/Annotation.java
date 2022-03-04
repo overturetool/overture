@@ -91,4 +91,17 @@ public abstract class Annotation
 	{
 		return false;		// By default, don't require bracketed subexpressions
 	}
+	
+	public static void close()
+	{
+		for (Annotation annotation: instances)
+		{
+			annotation.doClose();
+		}
+	}
+	
+	public void doClose()
+	{
+		// Nothing by default
+	}
 }

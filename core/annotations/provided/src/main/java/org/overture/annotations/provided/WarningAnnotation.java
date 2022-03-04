@@ -22,6 +22,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.annotations.TCAnnotation;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -144,6 +145,27 @@ public class WarningAnnotation extends ASTAnnotationAdapter implements TCAnnotat
 
 			if (suppressed.contains((long) w.number))
 			{
+				witer.remove();
+			}
+		}
+	}
+	
+	@Override
+	public void doClose()
+	{
+		Iterator<VDMWarning> witer = TypeChecker.getWarnings().iterator();
+		int myLine = ast.getName().getLocation().getStartLine();
+		File myFile = ast.getName().getLocation().getFile();
+
+		while (witer.hasNext())
+		{
+			VDMWarning w = witer.next();
+
+			if (w.location.getStartLine() == myLine + 1 &&
+				w.location.getFile().equals(myFile) &&
+				suppressed.contains((long)w.number))
+			{
+				// Warning is on the line after the one we annotated, so remove it
 				witer.remove();
 			}
 		}

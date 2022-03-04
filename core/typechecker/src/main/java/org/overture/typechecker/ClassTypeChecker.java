@@ -213,6 +213,18 @@ public class ClassTypeChecker extends TypeChecker
 		// Look for recursive loops
 		RecursiveLoops.getInstance().typeCheckClasses(classes, assistantFactory);
 
+		List<PDefinition> allDefs = new Vector<PDefinition>();
+
+		for (SClassDefinition c : classes)
+		{
+			if (!c.getTypeChecked())
+			{
+				assistantFactory.createSClassDefinitionAssistant().initializedCheck(c);
+				assistantFactory.createPDefinitionAssistant().unusedCheck(c);
+				allDefs.addAll(c.getDefinitions());
+			}
+		}
+
 		for (SClassDefinition c: classes)
 		{
 			for (PAnnotation annotation: c.getAnnotations())
@@ -225,18 +237,9 @@ public class ClassTypeChecker extends TypeChecker
 			}
 		}
 
-		List<PDefinition> allDefs = new Vector<PDefinition>();
-
-		for (SClassDefinition c : classes)
-		{
-			if (!c.getTypeChecked())
-			{
-				assistantFactory.createSClassDefinitionAssistant().initializedCheck(c);
-				assistantFactory.createPDefinitionAssistant().unusedCheck(c);
-				allDefs.addAll(c.getDefinitions());
-			}
-		}
-    	
+		// Close any annotations
+		Annotation.close();
+	
     	cyclicDependencyCheck(allDefs);
 	}
 
