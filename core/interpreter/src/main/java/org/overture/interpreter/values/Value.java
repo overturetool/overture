@@ -229,11 +229,11 @@ abstract public class Value implements Comparable<Value>, Serializable,
     					// Pre/post/inv failures
     				}
 				}
+			}
 
-				if (matched != null)
-				{
-					return matched;		// Last non-perfect match
-				}
+			if (matched != null)
+			{
+				return matched;		// Last non-perfect match
 			}
 		} else if (to instanceof AParameterType)
 		{
