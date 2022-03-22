@@ -200,6 +200,7 @@ abstract public class Value implements Comparable<Value>, Serializable,
 		if (to instanceof AUnionType)
 		{
 			AUnionType uto = (AUnionType) to;
+			Value matched = null;
 
 			for (PType ut : uto.getTypes())
 			{
@@ -212,7 +213,12 @@ abstract public class Value implements Comparable<Value>, Serializable,
     						done.add(ut);
     					}
 
-    					return convertValueTo(ut, ctxt, done);
+    					matched = convertValueTo(ut, ctxt, done);
+
+    					if (matched.equals(this))
+    					{
+    						return matched;		// Immediate return for perfect match
+    					}
     				}
     				catch (ValueException e)
     				{
@@ -222,6 +228,11 @@ abstract public class Value implements Comparable<Value>, Serializable,
     				{
     					// Pre/post/inv failures
     				}
+				}
+
+				if (matched != null)
+				{
+					return matched;		// Last non-perfect match
 				}
 			}
 		} else if (to instanceof AParameterType)

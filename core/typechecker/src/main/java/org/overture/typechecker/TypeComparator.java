@@ -809,8 +809,18 @@ public class TypeComparator
 				return Result.No;
 			} else if (sub instanceof ANamedInvariantType)
 			{
-				ANamedInvariantType subn = (ANamedInvariantType) sub;
-				return searchSubType(subn.getType(), sup, invignore);
+//				ANamedInvariantType subn = (ANamedInvariantType) sub;
+//				return searchSubType(subn.getType(), sup, invignore);
+				if (sup instanceof ANamedInvariantType)
+				{
+					// both have an invariant and we're not ignoring them, so check for equality
+					return sub.equals(sup) ? Result.Yes : Result.No;
+				}
+				else
+				{
+					// sub has an invariant and we're not ignoring it, so No.
+					return Result.No;
+				}
 			} else if (sup instanceof AOptionalType)
 			{
 				// Supertype includes a nil value, and the subtype is not
