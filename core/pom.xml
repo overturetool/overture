@@ -30,6 +30,7 @@
     <module>codegen</module>
     <module>isapog</module>
     <module>annotations</module>
+    <module>uml2</module>
   </modules>
 
   <build>

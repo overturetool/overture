@@ -3,32 +3,32 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.overturetool.ide</groupId>
-		<artifactId>org.overture.ide.plugins</artifactId>
+		<groupId>org.overturetool</groupId>
+		<artifactId>core</artifactId>
 		<version>3.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<packaging>eclipse-plugin</packaging>
-
-	<groupId>org.overturetool.ide.plugins</groupId>
-	<artifactId>org.overture.ide.plugins.uml2</artifactId>
-	<name>UML2 Translator</name>
+   <groupId>org.overturetool.core</groupId>
+   <artifactId>uml2</artifactId>
+   <name>UML2 Translator</name>
 
 
 	<build>
+	
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<includes>
-						<include>**/*Test.java</include>
-						<include>**/*Test?.java</include>
-						<include>**/*TestSuite.java</include>
-					</includes>
-				</configuration>
-			</plugin>
+
+<plugin>
+  <groupId>org.eclipse.tycho</groupId>
+  <artifactId>tycho-p2-repository-plugin</artifactId>
+  <version>1.7.0</version>
+  <configuration>
+    <includeAllDependencies>true</includeAllDependencies>
+    <profileProperties>
+      <macosx-bundled>true</macosx-bundled>
+    </profileProperties>
+  </configuration>
+</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -76,7 +76,7 @@
 				<archive>
 				<manifest>
 				<addClasspath>true</addClasspath>
-				<mainClass>org.overture.ide.plugins.uml2.Vdm2UmlMain</mainClass>
+				<mainClass>org.overture.core.uml2.Vdm2UmlMain</mainClass>
 				</manifest>
 				</archive>
 				<descriptorRefs>
@@ -94,35 +94,44 @@
 				</executions>
 				</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-dependency-plugin</artifactId>
-										<versionRange>[1.0.0,)</versionRange>
-										<goals>
-											<goal>copy</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<runOnIncremental>false</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
+
+	 <dependencies>
+   <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>ast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>parser</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>typechecker</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>interpreter</artifactId>
+      <version>${project.version}</version>     
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core.codegen</groupId>
+      <artifactId>ir</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+	<dependency>
+		<groupId>org.eclipse.uml2.common</groupId>
+		<artifactId>common</artifactId>
+		<version>1.7.0</version>
+	</dependency>
+  </dependencies>
+
 </project>
