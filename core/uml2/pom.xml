@@ -14,21 +14,11 @@
    <name>UML2 Translator</name>
 
 
+
+
 	<build>
 	
 		<plugins>
-
-<plugin>
-  <groupId>org.eclipse.tycho</groupId>
-  <artifactId>tycho-p2-repository-plugin</artifactId>
-  <version>1.7.0</version>
-  <configuration>
-    <includeAllDependencies>true</includeAllDependencies>
-    <profileProperties>
-      <macosx-bundled>true</macosx-bundled>
-    </profileProperties>
-  </configuration>
-</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -127,11 +117,39 @@
       <artifactId>ir</artifactId>
       <version>${project.version}</version>
     </dependency>
+
 	<dependency>
-		<groupId>org.eclipse.uml2.common</groupId>
-		<artifactId>common</artifactId>
-		<version>1.7.0</version>
+  <groupId>org.eclipse.uml2</groupId>
+  <artifactId>common</artifactId>
+  <scope>system</scope>
+  <version>2.5.0.v20200302-1312</version>
+  <systemPath>${basedir}/src/lib/org.eclipse.uml2.common_2.5.0.v20200302-1312.jar</systemPath>
 	</dependency>
+
+	<dependency>
+  <groupId>org.eclipse.uml2</groupId>
+  <artifactId>uml</artifactId>
+  <scope>system</scope>
+  <version>5.5.0.v20200302-1312</version>
+  <systemPath>${basedir}/src/lib/org.eclipse.uml2.uml_5.5.0.v20200302-1312.jar</systemPath>
+	</dependency>
+
+		<dependency>
+  <groupId>org.eclipse.emf</groupId>
+  <artifactId>ecore</artifactId>
+  <scope>system</scope>
+  <version>2.23.0.v20200630-0516</version>
+  <systemPath>${basedir}/src/lib/org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar</systemPath>
+	</dependency>
+
+		<dependency>
+  <groupId>org.eclipse.emf</groupId>
+  <artifactId>common</artifactId>
+  <scope>system</scope>
+  <version>2.20.0.v20200822-0801</version>
+  <systemPath>${basedir}/src/lib/org.eclipse.emf.common_2.20.0.v20200822-0801.jar</systemPath>
+	</dependency>
+
   </dependencies>
 
 </project>

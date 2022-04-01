@@ -35,7 +35,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
@@ -63,6 +62,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.core.uml2.UmlConsole;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
@@ -81,7 +81,7 @@ public class Uml2Vdm
 
 	public Uml2Vdm()
 	{
-		console = System.out;
+		console = new UmlConsole();
 		tc = new VdmTypeCreator(console);
 	}
 
@@ -107,12 +107,9 @@ public class Uml2Vdm
 	{
 		if (model != null)
 		{
-			try
-			{
-				console.show();
-			} catch (PartInitException e2)
-			{
-			}
+
+			console.show();
+
 			console.out.println("#\n# Starting translation of model: "
 					+ model.getName() + "\n#");
 			console.out.println("# Into: " + outputDir + "\n#");
@@ -151,10 +148,10 @@ public class Uml2Vdm
 			out.close();
 		} catch (IOException e)
 		{
-			System.out.log("Error in writeclassfile", e);
+			System.out.print("Error in writeclassfile" + e.getMessage());
 		} catch (AnalysisException e)
 		{
-			System.out.log("Error in writeclassfile", e);
+			System.out.print("Error in writeclassfile" + e.getMessage());
 		}
 	}
 

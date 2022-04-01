@@ -1,4 +1,5 @@
-/*package org.overture.core.uml2;
+/*
+package org.overture.core.uml2;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;

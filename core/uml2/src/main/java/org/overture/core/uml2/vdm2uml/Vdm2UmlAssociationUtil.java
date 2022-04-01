@@ -23,7 +23,7 @@ package org.overture.core.uml2.vdm2uml;
 
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
+
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
@@ -46,6 +46,9 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.SSetType;
+
+import junit.framework.Assert;
+
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -359,7 +362,7 @@ public class Vdm2UmlAssociationUtil
 	{
 		Type referencedClass = Vdm2UmlAssociationUtil.getReferenceClass(defType, classes);
 
-		Assert.isNotNull(referencedClass, "association end with: "+defType+" cannot be found");
+		Assert.assertNotNull("association end with: "+defType+" cannot be found",referencedClass);
 		
 		int lower = Vdm2UmlUtil.extractLower(defType);
 

@@ -37,7 +37,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.LiteralString;
@@ -157,12 +156,10 @@ public class Vdm2Uml
 
 	public Model convert(String name, List<SClassDefinition> classes)
 	{
-		try
-		{
-			console.show();
-		} catch (PartInitException e)
-		{
-		}
+
+		console.show();
+
+		
 		console.out.println("#\n# Starting translation of project: " + name
 				+ "\n#");
 		console.out.println("# Properties:");
