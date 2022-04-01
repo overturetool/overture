@@ -1,4 +1,4 @@
-/*package org.overture.ide.plugins.uml2;
+package org.overture.ide.plugins.uml2;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
@@ -151,4 +151,3 @@ public class Vdm2UmlMain
         System.exit(1);
     }   
 }
-*/

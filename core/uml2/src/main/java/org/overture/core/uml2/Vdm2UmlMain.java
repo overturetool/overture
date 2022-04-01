@@ -1,4 +1,4 @@
-/*
+
 package org.overture.core.uml2;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -11,6 +11,9 @@ import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.core.uml2.vdm2uml.Vdm2Uml;
 import org.eclipse.emf.common.util.URI;
+import org.overture.codegen.printer.MsgPrinter;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.utils.GeneralUtils;
 
 import java.io.File;
 import java.util.*;
@@ -22,6 +25,8 @@ public class Vdm2UmlMain
 
     public static void main(String[] args)
     {
+        File outputDir = null;
+
         if (args == null || args.length <= 1)
         {
             usage("Too few arguments provided");
@@ -152,4 +157,4 @@ public class Vdm2UmlMain
         System.exit(1);
     }   
 }
-*/
+
