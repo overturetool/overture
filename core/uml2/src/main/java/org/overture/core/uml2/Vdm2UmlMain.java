@@ -16,6 +16,7 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Vdm2UmlMain
@@ -86,15 +87,16 @@ public class Vdm2UmlMain
             usage("No output directory specified");
         }
 
-        handlePp();
+        handlePp(files,outputDir);
 
         MsgPrinter.getPrinter().println("Finished UML transformation! Bye...\n");
     }   
 
-    public static void handlePp(List<File> files, File outputDir)
+    public static void handlePp(List<File> files, File path)
     {
-        try
-        {
+        Vdm2Uml vdm2uml = new Vdm2Uml(false, false);
+        String projectName = "Example";
+
             TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
             
             if (GeneralCodeGenUtils.hasErrors(tcResult))
@@ -104,14 +106,11 @@ public class Vdm2UmlMain
                 return;
             }
 
-            String projectName = path.getName();
-            List<SClassDefinition> classList = tcResult.getClasses();
+            List<SClassDefinition> classList = tcResult.result;
 
             vdm2uml.convert(projectName, classList);
             
-        } catch (AnalysisException e) {
-            MsgPrinter.getPrinter().println("Could not generate UML: " + e.getMessage());
-        }
+        
         
         URI uri = URI.createFileURI(path + "/" + projectName);
         try
@@ -120,10 +119,7 @@ public class Vdm2UmlMain
         } catch (IOException e)
         {
             e.printStackTrace();
-        } catch (CoreException e)
-        {
-            e.printStackTrace();
-        }
+        } 
     }
 
     public static List<File> filterFiles(List<File> files)
