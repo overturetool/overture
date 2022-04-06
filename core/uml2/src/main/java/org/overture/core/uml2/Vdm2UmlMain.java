@@ -40,6 +40,9 @@ public class Vdm2UmlMain
         {
             String arg = i.next();
             
+            Settings.release = Release.VDM_10;
+            Settings.dialect = Dialect.VDM_PP;
+
             if (arg.equals(FOLDER_ARG))
             {
                 if (i.hasNext())
@@ -97,18 +100,18 @@ public class Vdm2UmlMain
         Vdm2Uml vdm2uml = new Vdm2Uml(false, false);
         String projectName = "Example";
 
-            TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
-            
-            if (GeneralCodeGenUtils.hasErrors(tcResult))
-            {
-                MsgPrinter.getPrinter().error("Found errors in VDM model:");
-                MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
-                return;
-            }
+        TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
+        
+        if (GeneralCodeGenUtils.hasErrors(tcResult))
+        {
+            MsgPrinter.getPrinter().error("Found errors in VDM model:");
+            MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
+            return;
+        }
 
-            List<SClassDefinition> classList = tcResult.result;
+        List<SClassDefinition> classList = tcResult.result;
 
-            vdm2uml.convert(projectName, classList);
+        vdm2uml.convert(projectName, classList);
             
         
         
