@@ -13,9 +13,6 @@
    <artifactId>uml2</artifactId>
    <name>UML2 Translator</name>
 
-
-
-
 	<build>
 	
 		<plugins>
@@ -140,6 +137,7 @@
   <scope>system</scope>
   <version>2.23.0.v20200630-0516</version>
   <systemPath>${basedir}/src/lib/org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar</systemPath>
+  
 	</dependency>
 
 		<dependency>
@@ -149,6 +147,15 @@
   <version>2.20.0.v20200822-0801</version>
   <systemPath>${basedir}/src/lib/org.eclipse.emf.common_2.20.0.v20200822-0801.jar</systemPath>
 	</dependency>
+
+	<dependency>
+		<groupId>org.eclipse.uml2</groupId>
+		<artifactId>types</artifactId>
+		<scope>system</scope>
+		<version>2.0.0-v20140602-0749</version>
+		<systemPath>${basedir}/src/lib/types-2.0.0-v20140602-0749.jar</systemPath>
+	</dependency>
+
 
   </dependencies>
 
