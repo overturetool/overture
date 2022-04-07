@@ -36,7 +36,9 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.LiteralString;
@@ -159,7 +161,7 @@ public class Vdm2Uml
 
 		console.show();
 
-		
+	
 		console.out.println("#\n# Starting translation of project: " + name
 				+ "\n#");
 		console.out.println("# Properties:");
@@ -194,8 +196,14 @@ public class Vdm2Uml
 
 	public void save(URI uri) throws IOException
 	{
-		console.out.println("Saving UML model to: " + uri.toFileString()+".uml");
-		Resource resource = new ResourceSetImpl().createResource(uri.appendFileExtension(UMLResource.FILE_EXTENSION));
+		console.out.println("Saving UML model to: " + uri.appendFileExtension(UMLResource.FILE_EXTENSION).toFileString());
+		
+		ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getResourceFactoryRegistry()
+			.getExtensionToFactoryMap()
+			.put("*",new XMIResourceFactoryImpl());
+		Resource resource = resourceSet.createResource(uri.appendFileExtension(UMLResource.FILE_EXTENSION));
+
 		resource.getContents().add(modelWorkingCopy);
 
 		resource.save(null);

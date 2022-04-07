@@ -1,10 +1,7 @@
-
 package org.overture.core.uml2;
 
-import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -112,10 +109,8 @@ public class Vdm2UmlMain
         List<SClassDefinition> classList = tcResult.result;
 
         vdm2uml.convert(projectName, classList);
-            
         
-        
-        URI uri = URI.createFileURI(path + "/" + projectName);
+        URI uri = URI.createFileURI(path.getPath() + "/" + projectName);
         try
         {
             vdm2uml.save(uri);
