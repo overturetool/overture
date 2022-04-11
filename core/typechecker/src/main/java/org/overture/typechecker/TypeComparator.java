@@ -232,7 +232,7 @@ public class TypeComparator
 		}
 
 		// The pair.result is "Maybe" until this call returns.
-		pair.result = test(to, from, paramOnly);
+		pair.result = comptest(to, from, paramOnly);
 
 		return pair.result;
 	}
@@ -257,7 +257,7 @@ public class TypeComparator
 	 * @return Yes or No.
 	 */
 
-	private Result test(PType to, PType from, boolean paramOnly)
+	private Result comptest(PType to, PType from, boolean paramOnly)
 	{
 		if (to instanceof AUnresolvedType)
 		{
@@ -487,10 +487,10 @@ public class TypeComparator
 				AFunctionType fa = (AFunctionType) to;
 				AFunctionType fb = (AFunctionType) from;
 
-				if (fb.getPartial() && !fa.getPartial())
-				{
-					return Result.No;
-				}
+//				if (fb.getPartial() && !fa.getPartial())
+//				{
+//					return Result.No;
+//				}
 
 				return allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes
 						&& (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes) ? Result.Yes
@@ -945,6 +945,11 @@ public class TypeComparator
 
 				AFunctionType subf = (AFunctionType) sub;
 				AFunctionType supf = (AFunctionType) sup;
+
+				if (subf.getPartial() && !supf.getPartial())
+				{
+					return Result.No;
+				}
 
 				return allSubTypes(subf.getParameters(), supf.getParameters(), invignore) == Result.Yes
 						&& searchSubType(subf.getResult(), supf.getResult(), invignore) == Result.Yes ? Result.Yes
