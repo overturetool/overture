@@ -33,12 +33,12 @@ public class Vdm2UmlMain
         List<String> listArgs = Arrays.asList(args);
         List<File> files = new LinkedList<File>();
 
+        Settings.release = Release.VDM_10;
+        Settings.dialect = Dialect.VDM_PP;
+
         for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
         {
-            String arg = i.next();
-            
-            Settings.release = Release.VDM_10;
-            Settings.dialect = Dialect.VDM_PP;
+            String arg = i.next();    
 
             if (arg.equals(FOLDER_ARG))
             {
@@ -62,7 +62,7 @@ public class Vdm2UmlMain
                 if (i.hasNext())
                 {
                     outputDir = new File(i.next());
-                    outputDir.mkdirs();
+                    outputDir.mkdirs(); 
 
                     if (!outputDir.isDirectory())
                     {
