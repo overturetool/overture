@@ -117,7 +117,7 @@ public class Vdm2UmlMain
         } catch (IOException e)
         {
             e.printStackTrace();
-        } 
+        }
     }
 
     public static List<File> filterFiles(List<File> files)
@@ -138,7 +138,7 @@ public class Vdm2UmlMain
 
     public static void usage(String msg)
     {
-        MsgPrinter.getPrinter().errorln("VDM-to-Java Code Generator: " + msg
+        MsgPrinter.getPrinter().errorln("VDM-to-UML Transformation: " + msg
             + "\n");
 
         MsgPrinter.getPrinter().errorln(FOLDER_ARG

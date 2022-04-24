@@ -34,6 +34,8 @@ import java.util.Vector;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
@@ -86,22 +88,28 @@ public class Uml2Vdm
 	}
 
 	public boolean initialize(URI uri, String extension)
-	{
-		if (extension != null)
-		{
-			this.extension = extension;
-		}
-		Resource resource = new ResourceSetImpl().getResource(uri, true);
-		for (EObject c : resource.getContents())
-		{
-			if (c instanceof Model)
-			{
-				model = (Model) c;
-			}
-		}
+    {
+        if (extension != null)
+        {
+            this.extension = extension;
+        }
+        ResourceSet resourceSet = new ResourceSetImpl();
+        resourceSet.getResourceFactoryRegistry()
+            .getExtensionToFactoryMap()
+            .put("*",new XMIResourceFactoryImpl());
+		
+        Resource resource = resourceSet.getResource(uri, true);
 
-		return model != null;
-	}
+        for (EObject c : resource.getContents())
+        {
+            if (c instanceof Model)
+            {
+                model = (Model) c;
+            }
+        }
+
+        return model != null;
+    }
 
 	public void convert(File outputDir)
 	{
