@@ -69,11 +69,11 @@ public class Uml2VdmMain {
         String parentDir = umlPath.getParent();
         
         //name of UML file
-        String name = umlPath.getName();
+        //String name = umlPath.getName();
         
-        //File outputDir = new File(parentDir + name);
+        File outputDir = new File(parentDir + "/uml_import"); //+name
 
-        File outputDir = new File("UML Import");
+        //File outputDir = new File("UML Import");
 
 
         uml2vdm.convert(outputDir);
