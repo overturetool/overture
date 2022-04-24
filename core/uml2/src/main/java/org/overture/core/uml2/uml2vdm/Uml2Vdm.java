@@ -35,7 +35,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
@@ -45,6 +44,8 @@ import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.resource.UMLResource;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -94,9 +95,12 @@ public class Uml2Vdm
             this.extension = extension;
         }
         ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
         resourceSet.getResourceFactoryRegistry()
             .getExtensionToFactoryMap()
-            .put("*",new XMIResourceFactoryImpl());
+            .put(UMLResource.FILE_EXTENSION, UMLResource.Factory.INSTANCE);
+		UMLPackage.eINSTANCE.eClass();
+		resourceSet.createResource(uri);
 		
         Resource resource = resourceSet.getResource(uri, true);
 

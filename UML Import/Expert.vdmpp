@@ -1,0 +1,19 @@
+class Expert
+types
+  public Qualification = Qualification_BioChemElecMech__2036422190;
+  public Qualification_BioChemElecMech__2036422190 = (<Bio> | <Chem> | <Elec> | <Mech>);
+
+instance variables
+  quali:? := (undefined);
+
+operations
+  public  Expert : ? ==> Expert
+  Expert(qs) ==
+    is not yet specified;
+
+  public  GetQuali : ()  ==> ?
+  GetQuali() ==
+    is not yet specified;
+
+
+end Expert

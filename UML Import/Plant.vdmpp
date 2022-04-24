@@ -1,0 +1,33 @@
+class Plant
+types
+  public Period = token;
+
+instance variables
+  alarms:set of (Alarm) := (undefined);
+  schedule:? := (undefined);
+
+operations
+  public  ExpertToPage : Alarm * Period ==> Expert
+  ExpertToPage(a, p) ==
+    is not yet specified;
+
+  public  NumberOfExperts : Period ==> nat
+  NumberOfExperts(p) ==
+    is not yet specified;
+
+  public  ExpertIsOnDuty : Expert ==> ?
+  ExpertIsOnDuty(ex) ==
+    is not yet specified;
+
+  public  Plant : set of (Alarm) * ? ==> Plant
+  Plant(als, sch) ==
+    is not yet specified;
+
+
+functions
+  private static PlantInv: set of (Alarm) * ? -> bool
+  PlantInv(as, sch) ==
+    undefined;
+
+
+end Plant

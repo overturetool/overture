@@ -1,0 +1,19 @@
+class Alarm
+types
+  public String = seq of (char);
+
+instance variables
+  descr:String := (undefined);
+  reqQuali:Expert`Qualification := (undefined);
+
+operations
+  public  Alarm : Expert`Qualification * String ==> Alarm
+  Alarm(quali, str) ==
+    is not yet specified;
+
+  public  GetReqQuali : ()  ==> Expert`Qualification
+  GetReqQuali() ==
+    is not yet specified;
+
+
+end Alarm
