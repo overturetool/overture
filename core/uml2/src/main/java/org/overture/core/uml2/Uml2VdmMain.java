@@ -1,13 +1,7 @@
 package org.overture.core.uml2;
-
-import org.overture.ast.lex.Dialect;
-import org.overture.config.Release;
-import org.overture.config.Settings;
 import org.overture.core.uml2.uml2vdm.Uml2Vdm;
 import org.eclipse.emf.common.util.URI;
 import org.overture.codegen.printer.MsgPrinter;
-//import org.overture.codegen.utils.GeneralCodeGenUtils;
-//import org.overture.codegen.utils.GeneralUtils;
 import java.io.File;
 //import java.io.IOException;
 import java.util.*;
@@ -18,7 +12,6 @@ public class Uml2VdmMain {
 
     public static void main(String[] args)
     {
-
         File umlPath = null;
 
         if (args == null)
@@ -26,9 +19,6 @@ public class Uml2VdmMain {
             usage("Too few arguments provided");
         }
         List<String> listArgs = Arrays.asList(args);
-
-        //Settings.release = Release.VDM_10;
-        //Settings.dialect = Dialect.VDM_PP;
 
         for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
         {
@@ -65,20 +55,12 @@ public class Uml2VdmMain {
 
         MsgPrinter.getPrinter().println("Model initialized...\n");
         
-        //extracting parrent directory
         String parentDir = umlPath.getParent();
         
-        //name of UML file
-        //String name = umlPath.getName();
-        
-        File outputDir = new File(parentDir + "/uml_import"); //+name
-
-        //File outputDir = new File("UML Import");
-
+        File outputDir = new File(parentDir + "/uml_import"); 
 
         uml2vdm.convert(outputDir);
     }
-
 
     public static void usage(String msg)
     {
