@@ -90,22 +90,10 @@ public class Vdm2UmlMain
                 dialect = RT;
             } else if (arg.equals(ASOC)) 
             {
-                if (i.hasNext())
-                {
-                    preferAssociations = Boolean.parseBoolean(i.next());
-                } else
-                {
-                    usage(ASOC + " requires true or false");
-                }
+                preferAssociations = true;
             } else if (arg.equals(DEPLOY)) 
             {
-                if (i.hasNext())
-                {
-                    deployArtifactsOutsideNodes = Boolean.parseBoolean(i.next());
-                } else
-                {
-                    usage(DEPLOY + " requires true or false");
-                }
+                deployArtifactsOutsideNodes = true;
             }
         }
 
