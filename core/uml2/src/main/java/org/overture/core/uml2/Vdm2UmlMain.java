@@ -1,5 +1,6 @@
 package org.overture.core.uml2;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -24,14 +25,13 @@ public class Vdm2UmlMain
 	public static final String RT_ARG = "-rt";
     public static final String ASOC = "-preferasoc";
     public static final String DEPLOY = "-deployoutside";
-    public static final String PP = "PP";
-	public static final String RT = "RT";
 
     public static void main(String[] args)
     {
         File outputDir = null;
-        String dialect, projectName;
-        boolean preferAssociations, deployArtifactsOutsideNodes = false;        
+        String projectName = "";
+        boolean preferAssociations = false;
+        boolean deployArtifactsOutsideNodes = false;        
 
         if (args == null || args.length <= 1)
         {
@@ -52,7 +52,7 @@ public class Vdm2UmlMain
                 if (i.hasNext())
                 {
                     File path = new File(i.next());
-                    projectName = path.getPath();
+                    projectName = path.getName();
 
                     if (path.isDirectory())
                     {
@@ -83,11 +83,9 @@ public class Vdm2UmlMain
             } else if (arg.equals(OO_ARG)) 
             {
                 Settings.dialect = Dialect.VDM_PP;
-                dialect = PP;
             } else if (arg.equals(RT_ARG)) 
             {
                 Settings.dialect = Dialect.VDM_RT;
-                dialect = RT;
             } else if (arg.equals(ASOC)) 
             {
                 preferAssociations = true;
@@ -109,71 +107,54 @@ public class Vdm2UmlMain
             usage("No output directory specified");
         }
 
-        if (dialect.equals(PP)) {
-            handlePp(files,outputDir,preferAssociations,deployArtifactsOutsideNodes,projectName);
-        } else if (dialect.equals(RT)) {
-            handleRt(files,outputDir,preferAssociations,deployArtifactsOutsideNodes,projectName);
-        } else {
-            usage("No dialect specified");
-        }
+        handleOo(files,outputDir,preferAssociations,deployArtifactsOutsideNodes,Settings.dialect,projectName);
 
         MsgPrinter.getPrinter().println("Finished UML transformation! Bye...\n");
     }   
 
-    public static void handlePp(List<File> files, File outputDir, 
-        boolean preferAssociations, boolean deployArtifactsOutsideNodes, String projectName)
+    public static void handleOo(List<File> files, File outputDir, 
+        boolean preferAssociations, boolean deployArtifactsOutsideNodes, 
+        Dialect dialect, String projectName)
     {
-        Vdm2Uml vdm2uml = new Vdm2Uml(preferAssociations, deployArtifactsOutsideNodes);
-
-        TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckPp(files);
-        
-        if (GeneralCodeGenUtils.hasErrors(tcResult))
+        try 
         {
-            MsgPrinter.getPrinter().error("Found errors in VDM model:");
-            MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
-            return;
+            Vdm2Uml vdm2uml = new Vdm2Uml(preferAssociations, deployArtifactsOutsideNodes);
+
+            TypeCheckResult<List<SClassDefinition>> tcResult = null; // TypeCheckerUtil.typeCheckPp(files);
+
+            if (dialect == Dialect.VDM_PP) 
+            {
+                tcResult = TypeCheckerUtil.typeCheckPp(files);
+            } else 
+            {
+                tcResult = TypeCheckerUtil.typeCheckRt(files);
+            }
+            
+            if (GeneralCodeGenUtils.hasErrors(tcResult))
+            {
+                MsgPrinter.getPrinter().error("Found errors in VDM model:");
+                MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
+                return;
+            }
+
+            List<SClassDefinition> classList = tcResult.result;
+
+            vdm2uml.convert(projectName, classList);
+            
+            URI uri = URI.createFileURI(outputDir.getPath() + "/" + projectName);
+
+            try 
+            {
+                vdm2uml.save(uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (AnalysisException e)
+        {
+            MsgPrinter.getPrinter().println("Could not code generate model: "
+					+ e.getMessage());
         }
-
-        List<SClassDefinition> classList = tcResult.result;
-
-        vdm2uml.convert(projectName, classList);
         
-        URI uri = URI.createFileURI(outputDir.getPath() + "/" + projectName);
-        try
-        {
-            vdm2uml.save(uri);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static void handleRt(List<File> files, File outputDir, 
-        boolean preferAssociations, boolean deployArtifactsOutsideNodes, String projectName)
-    {
-        Vdm2Uml vdm2uml = new Vdm2Uml(false, false);
-
-        TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(files);
-        
-        if (GeneralCodeGenUtils.hasErrors(tcResult))
-        {
-            MsgPrinter.getPrinter().error("Found errors in VDM model:");
-            MsgPrinter.getPrinter().errorln(GeneralCodeGenUtils.errorStr(tcResult));
-            return;
-        }
-
-        List<SClassDefinition> classList = tcResult.result;
-
-        vdm2uml.convert(projectName, classList);
-        
-        URI uri = URI.createFileURI(outputDir.getPath() + "/" + projectName);
-        try
-        {
-            vdm2uml.save(uri);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public static List<File> filterFiles(List<File> files)
