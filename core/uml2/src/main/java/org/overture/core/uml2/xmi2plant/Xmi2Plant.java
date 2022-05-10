@@ -109,6 +109,7 @@ public class Xmi2Plant
             console.out.println("# Into: " + outputDir + "\n#");
             console.out.println("-------------------------------------------------------------------------");
             Map<String, AClassClassDefinition> classes = new HashMap<String, AClassClassDefinition>();
+            
             for (Element e : model.getOwnedElements())
             {
                 if (e instanceof Class)
@@ -122,13 +123,13 @@ public class Xmi2Plant
             console.out.println("Writing source files");
             for (Entry<String, AClassClassDefinition> c : classes.entrySet())
             {
-                writeClassFile(outputDir, c);
+                writeFile(outputDir, c);
             }
             console.out.println("Conversion completed.");
         }
     }
 
-	private void writeClassFile(File outputDir,
+	private void writeFile(File outputDir,
             Entry<String, AClassClassDefinition> c)
     {
         try
@@ -138,21 +139,43 @@ public class Xmi2Plant
                     + "." + extension));
             PrintWriter out = new PrintWriter(outFile);
 
+            out.println("@startuml Alarm \n" +
+            "allow_mixing \n" +
+            "skinparam packageStyle frame \n" +
+            "skinparam Shadowing false \n" +
+            
+            "skinparam classAttributeIconSize 0 \n" +
+            "skinparam ClassBorderThickness 0.5 \n" +
+            "skinparam class { \n" +
+            "    BackgroundColor AntiqueWhite \n" +
+            "    ArrowColor Black \n" +
+            "    BorderColor Black \n" +
+            "} \n" + 
+            "package VdmModel {");
+
             out.println(c.getValue().apply(new PrettyPrinterVisitor(), new PrettyPrinterEnv()));
+            
+            out.println("} \n" + "@enduml");
+
+
             out.close();
         } catch (IOException e)
-        {
-            System.out.print("Error in writeclassfile" + e.getMessage());
-        } catch (AnalysisException e)
-        {
-            System.out.print("Error in writeclassfile" + e.getMessage());
-        }
+		{
+			System.out.print("Error in writeclassfile" + e.getMessage());
+		} 
+        catch (AnalysisException e)
+		{
+			System.out.print("Error in writeclassfile" + e.getMessage());
+		}
     }
 
     private AClassClassDefinition createClass(Class class_)
 	{
         AClassClassDefinition c = AstFactory.newAClassClassDefinition();
+
+        
 		c.setName(new LexNameToken(class_.getName(), class_.getName(), null));
+        
 
         return c;
     }
