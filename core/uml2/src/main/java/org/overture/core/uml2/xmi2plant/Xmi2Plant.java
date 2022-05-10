@@ -26,7 +26,7 @@ import org.eclipse.uml2.uml.Stereotype; */
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.PlantClassDefinition;
 /* import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -108,7 +108,7 @@ public class Xmi2Plant
                     + model.getName() + "\n#");
             console.out.println("# Into: " + outputDir + "\n#");
             console.out.println("-------------------------------------------------------------------------");
-            Map<String, AClassClassDefinition> classes = new HashMap<String, AClassClassDefinition>();
+            Map<String, PlantClassDefinition> classes = new HashMap<String, PlantClassDefinition>();
             
             for (Element e : model.getOwnedElements())
             {
@@ -121,7 +121,7 @@ public class Xmi2Plant
             }
 
             console.out.println("Writing source files");
-            for (Entry<String, AClassClassDefinition> c : classes.entrySet())
+            for (Entry<String, PlantClassDefinition> c : classes.entrySet())
             {
                 writeFile(outputDir, c);
             }
@@ -130,7 +130,7 @@ public class Xmi2Plant
     }
 
 	private void writeFile(File outputDir,
-            Entry<String, AClassClassDefinition> c)
+            Entry<String, PlantClassDefinition> c)
     {
         try
         {
@@ -169,14 +169,14 @@ public class Xmi2Plant
 		}
     }
 
-    private AClassClassDefinition createClass(Class class_)
+    private PlantClassDefinition createClass(Class class_)
 	{
-        AClassClassDefinition c = AstFactory.newAClassClassDefinition();
-
+        //PlantClassDefinition c = new PlantClassDefinition();
         
+        PlantClassDefinition c = AstFactory.newPlantClassDefinition();
+
 		c.setName(new LexNameToken(class_.getName(), class_.getName(), null));
         
-
         return c;
     }
 }
