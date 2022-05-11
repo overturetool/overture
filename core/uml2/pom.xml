@@ -55,7 +55,7 @@
 					</filesets>
 				</configuration>
 			</plugin>
-<!-- 
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -78,7 +78,7 @@
 				</goals>
 				</execution>
 				</executions>
-			</plugin>  -->
+			</plugin> 
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -106,6 +106,7 @@
 
 		</plugins>
 	</build>
+
 	<dependencies>
    	<dependency>
 		<groupId>junit</groupId>
@@ -140,44 +141,44 @@
 	<dependency>
 		<groupId>org.eclipse.uml2</groupId>
 		<artifactId>common</artifactId>
-		<scope>system</scope>
+		<!-- <scope>system</scope> -->
 		<version>2.5.0.v20200302-1312</version>
-		<systemPath>${basedir}/src/lib/org.eclipse.uml2.common_2.5.0.v20200302-1312.jar</systemPath>
+		<!-- <systemPath>${basedir}/src/lib/org.eclipse.uml2.common_2.5.0.v20200302-1312.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.uml2</groupId>
 		<artifactId>uml</artifactId>
-		<scope>system</scope>
+		<!-- <scope>system</scope> -->
 		<version>5.5.0.v20200302-1312</version>
-		<systemPath>${basedir}/src/lib/org.eclipse.uml2.uml_5.5.0.v20200302-1312.jar</systemPath>
+		<!-- <systemPath>${basedir}/src/lib/org.eclipse.uml2.uml_5.5.0.v20200302-1312.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.emf</groupId>
 		<artifactId>ecore</artifactId>
-		<scope>system</scope>
+		<!-- <scope>system</scope> -->
 		<version>2.23.0.v20200630-0516</version>
-		<systemPath>${basedir}/src/lib/org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar</systemPath>
+		<!-- <systemPath>${basedir}/src/lib/org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.emf</groupId>
 		<artifactId>common</artifactId>
-		<scope>system</scope>
+		<!-- <scope>system</scope> -->
 		<version>2.20.0.v20200822-0801</version>
-		<systemPath>${basedir}/src/lib/org.eclipse.emf.common_2.20.0.v20200822-0801.jar</systemPath>
+		<!-- <systemPath>${basedir}/src/lib/org.eclipse.emf.common_2.20.0.v20200822-0801.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.uml2</groupId>
 		<artifactId>types</artifactId>
-		<scope>system</scope>
+		<!-- <scope>system</scope> -->
 		<version>2.0.0-v20140602-0749</version>
-		<systemPath>${basedir}/src/lib/types-2.0.0-v20140602-0749.jar</systemPath>
+		<!-- <systemPath>${basedir}/src/lib/types-2.0.0-v20140602-0749.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.emf</groupId>
 		<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-		<scope>system</scope>
+		<!-- <scope>system</scope> -->
 		<version>2.10.1</version>
-		<systemPath>${basedir}/src/lib/org.eclipse.emf.ecore.xmi-2.10.1.jar</systemPath>
+		<!-- <systemPath>${basedir}/src/lib/org.eclipse.emf.ecore.xmi-2.10.1.jar</systemPath> -->
 	</dependency>
   	</dependencies>
 </project>
