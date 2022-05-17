@@ -41,8 +41,6 @@ public class Vdm2UmlMain
         List<String> listArgs = Arrays.asList(args);
         List<File> files = new LinkedList<File>();
 
-        Settings.release = Release.VDM_10;
-
         for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
         {
             String arg = i.next();    
@@ -125,9 +123,12 @@ public class Vdm2UmlMain
             if (dialect == Dialect.VDM_PP) 
             {
                 tcResult = TypeCheckerUtil.typeCheckPp(files);
-            } else 
+            } else if (dialect == Dialect.VDM_RT) 
             {
                 tcResult = TypeCheckerUtil.typeCheckRt(files);
+            } else 
+            {
+                usage("Specify dialect either with -pp or -rt");
             }
             
             if (GeneralCodeGenUtils.hasErrors(tcResult))
