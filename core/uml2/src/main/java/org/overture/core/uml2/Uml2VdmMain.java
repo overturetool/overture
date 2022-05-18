@@ -26,7 +26,6 @@ public class Uml2VdmMain {
 
             if (arg.equals(FILE_ARG))
             {
-                MsgPrinter.getPrinter().println("file arg found \n");
                 if (i.hasNext()) 
                 {
                     umlPath = new File(i.next());

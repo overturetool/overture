@@ -33,7 +33,7 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.PlantClassDefinition;
+//import org.overture.ast.definitions.PlantClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -464,7 +464,7 @@ public class AstFactory
 		return result;
 	}
 
-	public static PlantClassDefinition newPlantClassDefinition(
+	/* public static PlantClassDefinition newPlantClassDefinition(
 			ILexNameToken className,
 			List<? extends ILexNameToken> superclasses,
 			List<PDefinition> members)
@@ -474,7 +474,7 @@ public class AstFactory
 		initClassDefinition(result, className, superclasses, members);
 
 		return result;
-	}
+	} */
 
 	protected static void initClassDefinition(SClassDefinition result,
 			ILexNameToken className,
@@ -3235,11 +3235,11 @@ public class AstFactory
 		return result;
 	}
 
-	public static PlantClassDefinition newPlantClassDefinition()
+/* 	public static PlantClassDefinition newPlantClassDefinition()
 	{
 		PlantClassDefinition result = AstFactory.newPlantClassDefinition(new LexNameToken("CLASS", "DEFAULT", new LexLocation()), new LexNameList(), new Vector<PDefinition>());
 		return result;
-	}
+	} */
 
 	public static AClassType newAClassType(ILexLocation location,
 			SClassDefinition classdef)

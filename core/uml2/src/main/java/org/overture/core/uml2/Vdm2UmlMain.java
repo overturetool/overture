@@ -41,8 +41,6 @@ public class Vdm2UmlMain
         List<String> listArgs = Arrays.asList(args);
         List<File> files = new LinkedList<File>();
 
-        Settings.release = Release.VDM_10;
-
         for (Iterator<String> i = listArgs.iterator(); i.hasNext();)
         {
             String arg = i.next();    
