@@ -123,9 +123,12 @@ public class Vdm2UmlMain
             if (dialect == Dialect.VDM_PP) 
             {
                 tcResult = TypeCheckerUtil.typeCheckPp(files);
-            } else 
+            } else if (dialect == Dialect.VDM_RT) 
             {
                 tcResult = TypeCheckerUtil.typeCheckRt(files);
+            } else 
+            {
+                usage("Specify dialect either with -pp or -rt");
             }
             
             if (GeneralCodeGenUtils.hasErrors(tcResult))
