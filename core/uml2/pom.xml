@@ -15,96 +15,7 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>inst_1</id>
-						<phase>install</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.eclipse.uml2</groupId>
-							<artifactId>common</artifactId>
-							<version>2.5.0.v20200302-1312</version>
-							<packaging>jar</packaging>
-							<file>${basedir}\src\lib\org.eclipse.uml2.common_2.5.0.v20200302-1312.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>inst_2</id>
-						<phase>install</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.eclipse.uml2</groupId>
-							<artifactId>uml</artifactId>
-							<version>5.5.0.v20200302-1312</version>
-							<packaging>jar</packaging>
-							<file>${basedir}\src\lib\org.eclipse.uml2.uml_5.5.0.v20200302-1312.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>inst_3</id>
-						<phase>install</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.eclipse.emf</groupId>
-							<artifactId>ecore</artifactId>
-							<version>2.23.0.v20200630-0516</version>
-							<packaging>jar</packaging>
-							<file>${basedir}\src\lib\org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>inst_4</id>
-						<phase>install</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.eclipse.emf</groupId>
-							<artifactId>common</artifactId>
-							<version>2.20.0.v20200822-0801</version>
-							<packaging>jar</packaging>
-							<file>${basedir}\src\lib\org.eclipse.emf.common_2.20.0.v20200822-0801.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>inst_5</id>
-						<phase>install</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.eclipse.uml2</groupId>
-							<artifactId>types</artifactId>
-							<version>2.0.0-v20140602-0749</version>
-							<packaging>jar</packaging>
-							<file>${basedir}\src\lib\types-2.0.0-v20140602-0749.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>inst_6</id>
-						<phase>install</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.eclipse.emf</groupId>
-							<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-							<version>2.10.1</version>
-							<packaging>jar</packaging>
-							<file>${basedir}\src\lib\org.eclipse.emf.ecore.xmi-2.10.1.jar</file>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -218,6 +129,109 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<?m2e execute onConfiguration?>
+						<id>inst_1</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<file>${basedir}\src\lib\org.eclipse.uml2.common_2.5.0.v20200302-1312.jar</file>
+							<groupId>org.eclipse.uml2</groupId>
+							<artifactId>common</artifactId>
+							<version>2.5.0.v20200302-1312</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+					<execution>
+						<?m2e execute onConfiguration?>
+						<id>inst_2</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<file>${basedir}\src\lib\org.eclipse.uml2.uml_5.5.0.v20200302-1312.jar</file>
+							<groupId>org.eclipse.uml2</groupId>
+							<artifactId>uml</artifactId>
+							<version>5.5.0.v20200302-1312</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+					<execution>
+						<?m2e execute onConfiguration?>
+						<id>inst_3</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<file>${basedir}/src/lib/org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar</file>
+							<groupId>org.eclipse.emf</groupId>
+							<artifactId>ecore</artifactId>
+							<version>2.23.0.v20200630-0516</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+					<execution>
+						<?m2e execute onConfiguration?>
+						<id>inst_4</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<file>${basedir}\src\lib\org.eclipse.emf.common_2.20.0.v20200822-0801.jar</file>
+							<groupId>org.eclipse.emf</groupId>
+							<artifactId>common</artifactId>
+							<version>2.20.0.v20200822-0801</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+					<execution>
+						<?m2e execute onConfiguration?>
+						<id>inst_5</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<file>${basedir}\src\lib\types-2.0.0-v20140602-0749.jar</file>
+							<groupId>org.eclipse.uml2</groupId>
+							<artifactId>types</artifactId>
+							<version>2.0.0-v20140602-0749</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+					<execution>
+						<?m2e execute onConfiguration?>
+						<id>inst_6</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<file>${basedir}\src\lib\org.eclipse.emf.ecore.xmi-2.10.1.jar</file>
+							<groupId>org.eclipse.emf</groupId>
+							<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+							<version>2.10.1</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -255,44 +269,32 @@
 	<dependency>
 		<groupId>org.eclipse.uml2</groupId>
 		<artifactId>common</artifactId>
-		<!-- <scope>system</scope> -->
 		<version>2.5.0.v20200302-1312</version>
-		<!-- <systemPath>${basedir}/src/lib/org.eclipse.uml2.common_2.5.0.v20200302-1312.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.uml2</groupId>
 		<artifactId>uml</artifactId>
-		<!-- <scope>system</scope> -->
 		<version>5.5.0.v20200302-1312</version>
-		<!-- <systemPath>${basedir}/src/lib/org.eclipse.uml2.uml_5.5.0.v20200302-1312.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.emf</groupId>
 		<artifactId>ecore</artifactId>
-		<!-- <scope>system</scope> -->
 		<version>2.23.0.v20200630-0516</version>
-		<!-- <systemPath>${basedir}/src/lib/org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.emf</groupId>
 		<artifactId>common</artifactId>
-		<!-- <scope>system</scope> -->
 		<version>2.20.0.v20200822-0801</version>
-		<!-- <systemPath>${basedir}/src/lib/org.eclipse.emf.common_2.20.0.v20200822-0801.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.uml2</groupId>
 		<artifactId>types</artifactId>
-		<!-- <scope>system</scope> -->
 		<version>2.0.0-v20140602-0749</version>
-		<!-- <systemPath>${basedir}/src/lib/types-2.0.0-v20140602-0749.jar</systemPath> -->
 	</dependency>
 	<dependency>
 		<groupId>org.eclipse.emf</groupId>
 		<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-		<!-- <scope>system</scope> -->
 		<version>2.10.1</version>
-		<!-- <systemPath>${basedir}/src/lib/org.eclipse.emf.ecore.xmi-2.10.1.jar</systemPath> -->
 	</dependency>
   	</dependencies>
 </project>
