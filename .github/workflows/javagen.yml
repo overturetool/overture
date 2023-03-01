@@ -32,3 +32,4 @@ jobs:
         run: mvn --batch-mode -pl :javagen deploy:deploy-file@deploy-to-github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
