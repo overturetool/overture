@@ -125,7 +125,7 @@
                             </javadoc>
                             <types>jar</types>
                             <classifiers>jar-with-dependencies</classifiers>
-                            <url default-value="https://maven.pkg.github.com/overturetool/overture">https://maven.pkg.github.com/${env.GITHUB_REPO}</url>
+                            <url default-value="https://maven.pkg.github.com/overturetool/overture">${env.GITHUB_PACKAGES_REPO_URL}</url>
                             <packaging>jar</packaging>
                             <repositoryId>github</repositoryId>
                         </configuration>
