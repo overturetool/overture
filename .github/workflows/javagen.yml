@@ -22,7 +22,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn --batch-mode clean package -pl :javagen -am
+        run: mvn --batch-mode clean verify -pl :javagen -am
 
       - name: Publish Test Report
         if: success() || failure()
